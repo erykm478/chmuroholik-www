@@ -173,6 +173,12 @@ def main():
         'kanal': {'id': KANAL, 'url': f'https://www.youtube.com/{UCHWYT}', 'tytul': 'Chmuroholik'},
         'filmy': [{k: v for k, v in f.items() if k != '_opis'} | {'opis': f['_opis']} for f in wynik],
     }
+    # bez zmian w filmach = nie ruszamy pliku (żeby automat nie robił pustych commitów co godzinę)
+    try:
+        if json.load(open(PLIK, encoding='utf-8')).get('filmy') == out['filmy']:
+            print('bez zmian w filmach'); return
+    except Exception:
+        pass
     os.makedirs(os.path.dirname(PLIK), exist_ok=True)
     tmp = PLIK + '.tmp'
     json.dump(out, open(tmp, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
