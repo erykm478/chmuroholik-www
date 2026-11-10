@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>103. Ansible w praktyce — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 103 kursu Linux i Bash od zera do admina: Ansible w praktyce. kursant pisze inwentarz i playbook Ansible, używa komend ad-hoc i modułów apt, dnf, copy, template, lineinfile, user, service, firewalld, rozumie handlery i zmienne, chowa hasła w ansible-vault i przed każdą zmianą robi suchy przeb">
+<meta property="og:title" content="103. Ansible w praktyce — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 103 kursu Linux i Bash od zera do admina: Ansible w praktyce. kursant pisze inwentarz i playbook Ansible, używa komend ad-hoc i modułów apt, dnf, copy, template, lineinfile, user, service, firewalld, rozumie handlery i zmienne, chowa hasła w ansible-vault i przed każdą zmianą robi suchy przeb">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 11</span></div>
+      <div class="boczny-tytul"><a href="index.html#m11">Automatyzacja: Git, Ansible i Bash w pracy admina</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-101.html" data-lekcja="101"><span class="znacznik"></span><span class="nr">101</span> Git dla admina</a></li><li><a href="lekcja-102.html" data-lekcja="102"><span class="znacznik"></span><span class="nr">102</span> Wiele serwerów naraz</a></li><li><a href="lekcja-103.html" data-lekcja="103" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">103</span> Ansible w praktyce</a></li><li><a href="lekcja-104.html" data-lekcja="104"><span class="znacznik"></span><span class="nr">104</span> Instalacja i konfiguracja ze skryptu</a></li><li><a href="lekcja-105.html" data-lekcja="105"><span class="znacznik"></span><span class="nr">105</span> Bezpieczne skrypty</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="103" data-modul="11" data-tematy="inwentarz, ansible -m ping, shell, copy, playbook, moduły apt, dnf, service, template, lineinfile, user, firewalld, handlery, zmienne, ansible-vault, --check --diff">
+    <div class="belka"><span>Lekcja 103 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m11">Moduł 11</a> › Lekcja 103</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Ansible w praktyce</h1>
+      <p class="meta"><span>⏱ ok. 13 min czytania</span><span>· moduł 11: Automatyzacja: Git, Ansible i Bash w pracy admina</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant pisze inwentarz i playbook Ansible, używa komend ad-hoc i modułów <code>apt</code>, <code>dnf</code>, <code>copy</code>, <code>template</code>, <code>lineinfile</code>, <code>user</code>, <code>service</code>, <code>firewalld</code>, rozumie handlery i zmienne, chowa hasła w <code>ansible-vault</code> i przed każdą zmianą robi suchy przebieg <code>--check --diff</code>.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#instalacja-i-inwentarz">Instalacja i inwentarz</a></li><li><a href="#ad-hoc-czyli-jedno-polecenie-do-wszystkich">Ad-hoc, czyli jedno polecenie do wszystkich</a></li><li><a href="#playbook-czyli-lista-zadan-w-yaml-u">Playbook, czyli lista zadań w YAML-u</a></li><li><a href="#szablony-i-zmienne">Szablony i zmienne</a></li><li><a href="#check-diff-czyli-przymiarka-przed-szyciem">--check --diff, czyli przymiarka przed szyciem</a></li><li><a href="#handlery-czyli-przeladuj-ale-tylko-jesli-trzeba">Handlery, czyli „przeładuj, ale tylko jeśli trzeba”</a></li><li><a href="#ansible-vault-czyli-sejf-na-hasla">ansible-vault, czyli sejf na hasła</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga-flag">Ściąga flag</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p>Po lewej skrypt, który instaluje nginx, wrzuca konfigurację, zakłada konta i otwiera port. Działa. Raz. Odpalisz drugi raz i dopisze tę samą linijkę do konfiguracji drugi raz. Na RHEL wywali się na <code>apt</code>. Po prawej to samo w Ansible. Możesz go uruchomić sto razy, a za drugim razem powie: „wszystko już jest, nic nie robię”.</p><p>Skrypt to przepis: „wlej, zamieszaj, piecz”. Ansible to zdjęcie gotowego ciasta z podpisem: „ma wyglądać tak”. Kucharz sam sprawdza, czego brakuje, i robi tylko to. Ansible to lista zadań opisująca stan docelowy. Dziś stawiamy nim dwa serwery WWW.</p></section><section><h2 id="instalacja-i-inwentarz">Instalacja i inwentarz</h2><p>Ansible instalujesz tylko na swoim komputerze, czyli na <strong>węźle sterującym</strong>. Na serwerach nie instalujesz nic. Wystarczy im SSH i Python, który na Ubuntu i RHEL już jest.</p><div class="kod"><pre><code>sudo apt install ansible          # [Ubuntu] razem z kolekcjami modułów
+sudo dnf install ansible-core     # [RHEL] sam rdzeń
+ansible-galaxy collection install ansible.posix   # [RHEL] tu jest moduł firewalld
+ansible --version</code></pre></div><p>U mnie <code>ansible [core 2.21.6]</code>. Wersja w repozytorium Twojej dystrybucji będzie starsza, ale wszystko z tej lekcji zadziała.</p><p><strong>Inwentarz</strong> to lista gości z przydziałem do stolików. Kto jest kim i w jakiej grupie:</p><div class="kod"><pre><code># inventory.ini
+[web]
+web1
+web2
+
+[db]
+db1
+
+[produkcja:children]
+web
+db
+
+[lokalny]
+localhost ansible_connection=local</code></pre></div><p>Nazwy <code>web1</code>, <code>web2</code>, <code>db1</code> biorą się z Twojego <code>~/.ssh/config</code> z poprzedniej lekcji. Ansible łączy się zwykłym SSH, więc używa tej samej książki adresowej. Bez niej dopisujesz adres w inwentarzu: <code>web1 ansible_host=192.168.122.11 ansible_user=eryk</code>. Grupa <code>produkcja</code> składa się z grup, a <code>ansible_connection=local</code> znaczy „nie łącz się nigdzie, rób u mnie”. Świetne do ćwiczeń.</p><p>Obok kładziesz <code>ansible.cfg</code>, żeby nie podawać inwentarza za każdym razem:</p><div class="kod"><pre><code>[defaults]
+inventory = inventory.ini</code></pre></div><div class="kod"><pre><code>ansible-inventory --graph</code></pre></div><div class="kod"><pre><code>@all:
+  |--@ungrouped:
+  |--@produkcja:
+  |  |--@web:
+  |  |  |--web1
+  |  |  |--web2
+  |  |--@db:
+  |  |  |--db1
+  |--@lokalny:
+  |  |--localhost</code></pre></div></section><section><h2 id="ad-hoc-czyli-jedno-polecenie-do-wszystkich">Ad-hoc, czyli jedno polecenie do wszystkich</h2><p>Pierwsze, co robisz z nowym inwentarzem: sprawdzasz, czy wszyscy słyszą.</p><div class="kod"><pre><code>ansible produkcja -m ping</code></pre></div><div class="kod"><pre><code>web1 | SUCCESS =&gt; {
+    &quot;changed&quot;: false,
+    &quot;ping&quot;: &quot;pong&quot;
+}</code></pre></div><p>I tak samo <code>web2</code> i <code>db1</code>. Uwaga, to nie jest ping z lekcji o sieci. Ten <code>ping</code> loguje się przez SSH i sprawdza, czy na serwerze działa Python. Jak sprawdzenie, czy kucharz nie tylko jest w kuchni, ale też umie zapalić kuchenkę.</p><p><code>-m</code> to <strong>moduł</strong>, czyli narzędzie, którym Ansible coś robi. <code>-a</code> to argumenty. Twoja pętla z poprzedniej lekcji w jednej linijce:</p><div class="kod"><pre><code>ansible web -m shell -a &#x27;uptime -p; df -h / | tail -1&#x27;</code></pre></div><div class="kod"><pre><code>web2 | CHANGED | rc=0 &gt;&gt;
+up 6 hours, 26 minutes
+/dev/vda1        25G  5.8G   18G  25% /
+web1 | CHANGED | rc=0 &gt;&gt;
+up 6 hours, 26 minutes
+/dev/vda1        25G  6.1G   18G  26% /</code></pre></div><p>Równolegle, z podpisami. Domyślnie pięć serwerów naraz, zmienisz to przez <code>-f 20</code>. Moduł <code>shell</code> zawsze mówi <code>CHANGED</code>, bo nie wie, co Twoja komenda zrobiła. Ansible wie tylko tyle, że coś uruchomił. Teraz moduł, który wie:</p><div class="kod"><pre><code>ansible web1 -b -m apt -a &#x27;name=figlet state=present&#x27;
+ansible web1 -b -m apt -a &#x27;name=figlet state=present&#x27;</code></pre></div><div class="kod"><pre><code>web1 | CHANGED =&gt; {
+    &quot;changed&quot;: true,
+web1 | SUCCESS =&gt; {
+    &quot;changed&quot;: false</code></pre></div><p>Za pierwszym razem zainstalował. Za drugim sprawdził, że jest, i nic nie zrobił. To jest <strong>idempotencja</strong>: ten sam efekt bez względu na to, ile razy klikniesz. Jak przycisk w windzie: naciśniesz pięć razy „3” i dalej jedziesz na trzecie, a nie na piętnaste. <code>-b</code> to „become”, czyli sudo. Jeśli sudo chce hasła, dodaj <code>-K</code> i Ansible raz o nie zapyta.</p><p>Kopiowanie pliku na serwery to moduł <code>copy</code>:</p><div class="kod"><pre><code>ansible db -b -m copy -a &#x27;src=motd.txt dest=/etc/motd mode=0644&#x27;</code></pre></div></section><section><h2 id="playbook-czyli-lista-zadan-w-yaml-u">Playbook, czyli lista zadań w YAML-u</h2><p>Ad-hoc jest dobre do pytań. Do budowania serwerów piszesz <strong>playbook</strong>: plik YAML z listą zadań. YAML to format, w którym wcięcia są częścią składni. Dwie spacje, nigdy tabulator. Jak w wojsku: krok w lewo, krok w prawo i masz błąd składni.</p><p>Zmienne grupy <code>web</code> w osobnym pliku <code>group_vars/web/vars.yml</code>. Ansible sam go wczyta dla każdego serwera z tej grupy:</p><div class="kod"><pre><code>---
+http_port: 8080
+strona_tytul: &quot;Sklep z kapciami&quot;
+admini:
+  - ola
+  - bartek</code></pre></div><p>I playbook <code>web.yml</code>:</p><div class="kod"><pre><code>---
+- name: Serwery WWW z nginx
+  hosts: web
+  become: true
+
+  tasks:
+    - name: Zainstaluj nginx (Ubuntu/Debian)
+      ansible.builtin.apt:
+        name: nginx
+        state: present
+        update_cache: true
+        cache_valid_time: 3600
+      when: ansible_facts[&#x27;os_family&#x27;] == &#x27;Debian&#x27;
+
+    - name: Zainstaluj nginx (RHEL/Rocky/Alma)
+      ansible.builtin.dnf:
+        name: nginx
+        state: present
+      when: ansible_facts[&#x27;os_family&#x27;] == &#x27;RedHat&#x27;
+
+    - name: Ukryj wersję nginx w nagłówkach
+      ansible.builtin.lineinfile:
+        path: /etc/nginx/nginx.conf
+        regexp: &#x27;^\s*#?\s*server_tokens&#x27;
+        line: &quot;\tserver_tokens off;&quot;
+        insertafter: &#x27;^http \{&#x27;
+      notify: Przeładuj nginx
+
+    - name: Usuń domyślną stronę (Ubuntu/Debian)
+      ansible.builtin.file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+      when: ansible_facts[&#x27;os_family&#x27;] == &#x27;Debian&#x27;
+      notify: Przeładuj nginx
+
+    - name: Konfiguracja strony
+      ansible.builtin.template:
+        src: strona.conf.j2
+        dest: /etc/nginx/conf.d/strona.conf
+        owner: root
+        group: root
+        mode: &quot;0644&quot;
+      notify: Przeładuj nginx
+
+    - name: Folder strony
+      ansible.builtin.file:
+        path: /var/www/strona
+        state: directory
+        mode: &quot;0755&quot;
+
+    - name: Strona główna
+      ansible.builtin.template:
+        src: index.html.j2
+        dest: /var/www/strona/index.html
+        mode: &quot;0644&quot;
+
+    - name: Konta adminów
+      ansible.builtin.user:
+        name: &quot;{{ item }}&quot;
+        groups: &quot;{{ &#x27;sudo&#x27; if ansible_facts[&#x27;os_family&#x27;] == &#x27;Debian&#x27; else &#x27;wheel&#x27; }}&quot;
+        append: true
+        shell: /bin/bash
+      loop: &quot;{{ admini }}&quot;
+
+    - name: Otwórz port w zaporze (RHEL)
+      ansible.posix.firewalld:
+        port: &quot;{{ http_port }}/tcp&quot;
+        permanent: true
+        immediate: true
+        state: enabled
+      when: ansible_facts[&#x27;os_family&#x27;] == &#x27;RedHat&#x27;
+
+    - name: Nginx działa i startuje z systemem
+      ansible.builtin.service:
+        name: nginx
+        state: started
+        enabled: true
+
+  handlers:
+    - name: Przeładuj nginx
+      ansible.builtin.service:
+        name: nginx
+        state: reloaded</code></pre></div><p>Czytamy od góry. <code>hosts: web</code> to dla kogo. <code>become: true</code> to sudo dla całości. Każde zadanie ma <code>name</code>, czyli opis po ludzku, i jeden moduł z parametrami. Prawie wszystkie mówią o <strong>stanie</strong>, nie o czynności: <code>state: present</code> to „ma być zainstalowany”, <code>state: absent</code> to „ma go nie być”, <code>state: started</code> to „ma działać”.</p><ul><li><code>when</code> to bramkarz. Ansible na początku zbiera <strong>fakty</strong> o każdym serwerze, czyli system, wersję, adresy, pamięć. <code>ansible_facts[&#x27;os_family&#x27;]</code> to <code>Debian</code> na Ubuntu i <code>RedHat</code> na RHEL, Rocky i Almie. Jeden playbook, dwie rodziny.</li><li><code>lineinfile</code> pilnuje jednej linijki w pliku: znajdzie tę pasującą do <code>regexp</code> i podmieni ją na <code>line</code>, a jak nie znajdzie, dopisze. Nigdy dwa razy.</li><li><code>user</code> z <code>loop</code> zakłada każde konto z listy. Na Ubuntu admini są w grupie <code>sudo</code>, na RHEL w <code>wheel</code>.</li><li><code>firewalld</code> na RHEL otwiera port na stałe (<code>permanent</code>) i od razu (<code>immediate</code>). Na Ubuntu odpowiednikiem jest <code>community.general.ufw</code>.</li><li><code>service</code> pilnuje, żeby usługa działała i wstawała z systemem. Pod spodem na obu systemach rozmawia z systemd.</li></ul><p>Pełna nazwa <code>ansible.builtin.apt</code> mówi, z której kolekcji jest moduł. Krótkie <code>apt:</code> też zadziała, ale linter będzie marudził.</p></section><section><h2 id="szablony-i-zmienne">Szablony i zmienne</h2><p><code>copy</code> wrzuca plik jak jest. <code>template</code> najpierw wypełnia luki. Jak formularz w urzędzie: ten sam druk, ale każdy serwer wpisuje swoje dane. Szablony pisze się w języku Jinja2, zmienne w podwójnych klamrach. <code>templates/strona.conf.j2</code>:</p><div class="kod"><pre><code># {{ ansible_managed }}
+server {
+    listen {{ http_port }};
+    server_name {{ inventory_hostname }};
+    root /var/www/strona;
+    index index.html;
+}</code></pre></div><p>I <code>templates/index.html.j2</code>:</p><div class="kod"><pre><code>&lt;h1&gt;{{ strona_tytul }}&lt;/h1&gt;
+&lt;p&gt;Serwer: {{ inventory_hostname }}, system: {{ ansible_facts[&#x27;distribution&#x27;] }} {{ ansible_facts[&#x27;distribution_version&#x27;] }}&lt;/p&gt;</code></pre></div><p><code>inventory_hostname</code> to nazwa serwera z inwentarza, a <code>ansible_managed</code> wstawia ostrzeżenie „Ansible managed”. To tabliczka dla kolegów: nie poprawiaj ręcznie, bo i tak nadpiszę. Zmienne mogą przyjść z wielu miejsc: z <code>group_vars</code>, z <code>host_vars/web1.yml</code> dla jednego serwera, z sekcji <code>vars:</code> w playbooku albo z linii komend przez <code>-e http_port=9090</code>. Ta ostatnia wygrywa ze wszystkim.</p></section><section><h2 id="check-diff-czyli-przymiarka-przed-szyciem">--check --diff, czyli przymiarka przed szyciem</h2><p>Zanim cokolwiek zmienisz na produkcji, robisz suchy przebieg. <code>--check</code> mówi „pokaż, co byś zrobił, ale nic nie rób”, a <code>--diff</code> dokłada różnice w plikach:</p><div class="kod"><pre><code>ansible-playbook web.yml --check --diff</code></pre></div><div class="kod"><pre><code>TASK [Ukryj wersję nginx w nagłówkach] ****************************************
+@@ -18,7 +18,7 @@
+ 	sendfile on;
+ 	tcp_nopush on;
+ 	types_hash_max_size 2048;
+-	# server_tokens off;
++	server_tokens off;
+
+TASK [Konfiguracja strony] *****************************************************
+@@ -0,0 +1,7 @@
++# Ansible managed
++server {
++    listen 8080;
++    server_name web1;
+...
+TASK [Otwórz port w zaporze (RHEL)] ********************************************
+skipping: [web1]
+skipping: [web2]</code></pre></div><p>Wygląda dobrze? Dopiero wtedy prawdziwy przebieg:</p><div class="kod"><pre><code>ansible-playbook web.yml -l web1
+curl http://web1:8080/</code></pre></div><div class="kod"><pre><code>TASK [Ukryj wersję nginx w nagłówkach] *****************************************
+changed: [web1]
+...
+TASK [Konta adminów] ***********************************************************
+changed: [web1] =&gt; (item=ola)
+changed: [web1] =&gt; (item=bartek)
+TASK [Otwórz port w zaporze (RHEL)] ********************************************
+skipping: [web1]
+TASK [Nginx działa i startuje z systemem] **************************************
+changed: [web1]
+RUNNING HANDLER [Przeładuj nginx] **********************************************
+changed: [web1]
+PLAY RECAP *********************************************************************
+web1    : ok=10   changed=8    unreachable=0    failed=0    skipped=2 ...
+&lt;h1&gt;Sklep z kapciami&lt;/h1&gt;
+&lt;p&gt;Serwer: web1, system: Ubuntu 24.04&lt;/p&gt;</code></pre></div><p><code>-l web1</code> to „tylko ten jeden”. Na pierwszym serwerze sprawdzasz, potem puszczasz na resztę. U mnie nginx był już zainstalowany, więc to zadanie mówiło <code>ok</code>.</p><p>I najpiękniejsze zastosowanie <code>--check --diff</code>: wykrywanie samowolki. Ktoś poprawił stronę ręcznie na serwerze. Suchy przebieg od razu to pokazuje:</p><div class="kod"><pre><code>TASK [Strona główna] ***********************************************************
+--- before: /var/www/strona/index.html
+@@ -1,3 +1,2 @@
+ &lt;h1&gt;Sklep z kapciami&lt;/h1&gt;
+ &lt;p&gt;Serwer: web1, system: Ubuntu 24.04&lt;/p&gt;
+-web1 ręcznie poprawione</code></pre></div><p>Prawdziwe uruchomienie przywróci stan z playbooka. Ansible jest jak mama, która wie, gdzie miały stać kapcie, i co wieczór je tam odstawia.</p></section><section><h2 id="handlery-czyli-przeladuj-ale-tylko-jesli-trzeba">Handlery, czyli „przeładuj, ale tylko jeśli trzeba”</h2><p>Przeładowanie nginx po każdym uruchomieniu playbooka byłoby jak restart routera co godzinę „na wszelki wypadek”. <strong>Handler</strong> to zadanie, które uruchamia się tylko wtedy, gdy ktoś go zawołał przez <code>notify</code>, i tylko wtedy, gdy to zadanie coś naprawdę zmieniło. Do tego raz, na końcu, nawet jeśli wołały go trzy zadania. Jak kelner, który zbiera zamówienia od całego stolika i idzie do kuchni raz, a nie po każdym gościu.</p><p>W przebiegu wyżej trzy zadania wołały <code>Przeładuj nginx</code>, a handler wykonał się raz, po wszystkich zadaniach. Przy drugim uruchomieniu nic się nie zmienia, więc nikt go nie woła i nginx nie jest niepotrzebnie szarpany.</p></section><section><h2 id="ansible-vault-czyli-sejf-na-hasla">ansible-vault, czyli sejf na hasła</h2><p>Playbooki trzymasz w Gicie z lekcji 101. Hasło do bazy w zwykłym pliku YAML to znowu zdjęcie karty płatniczej na grupie. <code>ansible-vault</code> szyfruje plik hasłem:</p><div class="kod"><pre><code>ansible-vault create group_vars/web/vault.yml      # nowy, od razu w edytorze
+ansible-vault encrypt group_vars/web/vault.yml     # albo istniejący
+head -2 group_vars/web/vault.yml
+ansible-vault view group_vars/web/vault.yml</code></pre></div><div class="kod"><pre><code>$ANSIBLE_VAULT;1.1;AES256
+34313734643332323830306538363735613135613331643232666565666638646462376566623563
+---
+vault_db_haslo: &quot;Kapc1e-2026!&quot;</code></pre></div><p>Zaszyfrowany plik spokojnie commitujesz. Konwencja: w sejfie zmienne z przedrostkiem <code>vault_</code>, a w zwykłym <code>vars.yml</code> jawne <code>db_haslo: &quot;{{ vault_db_haslo }}&quot;</code>. Dzięki temu <code>grep db_haslo</code> dalej znajdzie, skąd się bierze hasło. Użycie w zadaniu, z <code>no_log</code>, żeby hasło nie wyciekło na ekran ani do logów:</p><div class="kod"><pre><code>    - name: Plik z hasłem do bazy
+      ansible.builtin.template:
+        src: db.conf.j2
+        dest: /etc/sklep/db.conf
+        owner: root
+        group: root
+        mode: &quot;0600&quot;
+      no_log: true</code></pre></div><p>Uruchomienie bez hasła do sejfu:</p><div class="kod"><pre><code>[ERROR]: Attempting to decrypt but no vault secrets found.</code></pre></div><p>Więc <code>ansible-playbook baza.yml --ask-vault-pass</code> albo <code>--vault-password-file ~/.vault_pass</code> z plikiem <code>chmod 600</code>, który <strong>nie</strong> trafia do repozytorium.</p><p>Uwaga, pułapka: sejf leży w <code>group_vars/web/</code>, więc Ansible próbuje go otworzyć przy <strong>każdym</strong> playbooku dla grupy <code>web</code>. U mnie po dodaniu sejfu nawet <code>web.yml</code>, który hasła do bazy w ogóle nie używa, zatrzymał się na tym samym błędzie. Hasło do sejfu podajesz więc zawsze albo ustawiasz <code>vault_password_file</code> w <code>ansible.cfg</code>.</p></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p>Ansible nie ma na serwerach żadnego agenta. Podejrzyjmy z <code>-vvv</code>:</p><div class="kod"><pre><code>&lt;db1&gt; SSH: EXEC ssh ... db1 &#x27;/bin/sh -c &#x27;&quot;&#x27;&quot;&#x27;( umask 77 &amp;&amp; mkdir -p &quot;` echo /home/eryk/.ansible/tmp `&quot;...
+&lt;db1&gt; PUT /home/eryk/.ansible/tmp/ansible-local-21756x13phrbg/tmpby7m0tg6 TO /home/eryk/.ansible/tmp/ansible-tmp-.../AnsiballZ_ping.py
+&lt;db1&gt; SSH: EXEC ssh ... -tt db1 &#x27;/bin/sh -c &#x27;&quot;&#x27;&quot;&#x27;/usr/bin/python3.12 /home/eryk/.ansible/tmp/ansible-tmp-.../AnsiballZ_ping.py ...
+&lt;db1&gt; SSH: EXEC ssh ... db1 &#x27;/bin/sh -c &#x27;&quot;&#x27;&quot;&#x27;rm -f -r /home/eryk/.ansible/tmp/ansible-tmp-.../ &gt; /dev/null 2&gt;&amp;1&#x27;&quot;&#x27;&quot;&#x27;&#x27;</code></pre></div><p>Dla każdego zadania: tworzy folder tymczasowy, wysyła przez SFTP mały program w Pythonie z modułem w środku, uruchamia go, odbiera wynik w JSON-ie i sprząta. Moduł sam porównuje stan obecny z docelowym i mówi <code>changed: true</code> albo <code>false</code>. Stamtąd biorą się kolory: zielony <code>ok</code>, żółty <code>changed</code>, czerwony <code>failed</code>. Zadania idą po kolei, ale każde na wszystkich serwerach naraz, po pięć (<code>forks</code>).</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p><code>pipelining = True</code> w sekcji <code>[ssh_connection]</code> pomija zapis pliku i wysyła moduł prosto na wejście Pythona. Szybciej, ale z sudo wymaga, żeby w sudoers nie było <code>requiretty</code>.</p></aside></section><section><h2 id="sciaga-flag">Ściąga flag</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga</th><th>Co robi</th></tr><tr><td><code>ansible</code></td><td><code>-m MODUŁ -a &#x27;ARG&#x27;</code></td><td>ad-hoc: jeden moduł na grupie</td></tr><tr><td><code>ansible</code></td><td><code>-b</code> / <code>-K</code></td><td>sudo / zapytaj o hasło do sudo</td></tr><tr><td><code>ansible</code></td><td><code>-f 20</code></td><td>20 serwerów naraz zamiast 5</td></tr><tr><td><code>ansible-playbook</code></td><td><code>--check --diff</code></td><td>suchy przebieg z różnicami</td></tr><tr><td><code>ansible-playbook</code></td><td><code>-l web1</code></td><td>tylko wybrane serwery</td></tr><tr><td><code>ansible-playbook</code></td><td><code>-e zmienna=wartość</code></td><td>zmienna z najwyższym priorytetem</td></tr><tr><td><code>ansible-playbook</code></td><td><code>--syntax-check</code></td><td>tylko sprawdź składnię</td></tr><tr><td><code>ansible-playbook</code></td><td><code>--force-handlers</code></td><td>uruchom handlery nawet po błędzie</td></tr><tr><td><code>ansible-playbook</code></td><td><code>--ask-vault-pass</code></td><td>zapytaj o hasło do sejfu</td></tr><tr><td><code>ansible-playbook</code></td><td><code>-v</code> / <code>-vvv</code></td><td>więcej szczegółów / wszystko, z SSH</td></tr><tr><td><code>ansible-vault</code></td><td><code>create</code> / <code>edit</code> / <code>view</code></td><td>nowy / edycja / podgląd sejfu</td></tr><tr><td><code>ansible-vault</code></td><td><code>encrypt</code> / <code>decrypt</code></td><td>zaszyfruj / odszyfruj plik</td></tr><tr><td><code>ansible-inventory</code></td><td><code>--graph</code></td><td>drzewko grup i serwerów</td></tr><tr><td><code>ansible-doc</code></td><td><code>MODUŁ</code></td><td>dokumentacja modułu z przykładami</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>Zmieniasz konfigurację, playbook leci, a kilka zadań dalej coś się wysypuje. Naprawiasz, uruchamiasz ponownie, wszystko zielone. A nginx dalej działa ze starą konfiguracją. Sprawdziłem to na prostym playbooku:</p><div class="kod"><pre><code>TASK [Zmień konfigurację] ******************************************************
+changed: [localhost]
+TASK [Coś, co się wysypie] *****************************************************
+fatal: [localhost]: FAILED! =&gt; {&quot;changed&quot;: false, ... &quot;rc&quot;: 1 ...}</code></pre></div><p>Drugie uruchomienie, już bez błędu w konfiguracji:</p><div class="kod"><pre><code>TASK [Zmień konfigurację] ******************************************************
+ok: [localhost]</code></pre></div><p>I handler już się nie odpali. Nigdy.</p><p>Dlaczego? Handlery uruchamiają się na końcu, a przy błędzie Ansible na danym serwerze przerywa i do końca nie dochodzi. Zamówienie przepadło. Przy drugim uruchomieniu plik już jest poprawny, więc zadanie mówi <code>ok</code>, nikt nie woła handlera, a usługa cały czas pracuje na starej konfiguracji. Naprawa: <code>ansible-playbook web.yml --force-handlers</code> albo <code>force_handlers: true</code> w playbooku. A gdy już wpadłeś, przeładuj ręcznie: <code>ansible web -b -m service -a &#x27;name=nginx state=reloaded&#x27;</code>.</p><p>Drugi klasyk: <code>UNREACHABLE!</code> z <code>Permission denied (publickey)</code>. To nie Ansible, tylko zwykłe SSH. Sprawdź najpierw <code>ssh web1</code> bez Ansible.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><p>Na dwóch maszynach wirtualnych (albo na jednej i <code>localhost</code> z <code>ansible_connection=local</code>) zrób inwentarz z grupą <code>web</code>. Napisz playbook, który: instaluje nginx (z <code>when</code> na Ubuntu i RHEL), wrzuca szablonem stronę z nazwą serwera i zmienną <code>strona_tytul</code>, zakłada użytkownika <code>deploy</code> i pilnuje, żeby nginx działał. Zaszyfruj <code>ansible-vault</code> plik ze zmienną <code>vault_db_haslo</code> i wrzuć ją do <code>/etc/sklep/db.conf</code> z prawami <code>0600</code>. Uruchom najpierw <code>--check --diff</code>, potem naprawdę, potem drugi raz i sprawdź, czy w podsumowaniu jest <code>changed=0</code>. Zmień ręcznie plik strony i wykryj to suchym przebiegiem.</p><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><p>Większość masz już w playbooku <code>web.yml</code> z poprzedniej lekcji. Do zadania dokładasz konto <code>deploy</code> i plik z hasłem:</p><div class="kod"><pre><code>    - name: Konto deploy
+      ansible.builtin.user:
+        name: deploy
+        shell: /bin/bash</code></pre></div><div class="kod"><pre><code>ansible-vault create group_vars/web/vault.yml       # vault_db_haslo: &quot;...&quot;
+echo &#x27;db_haslo: &quot;{{ vault_db_haslo }}&quot;&#x27; &gt;&gt; group_vars/web/vars.yml
+ansible-playbook web.yml --check --diff --ask-vault-pass
+ansible-playbook web.yml --ask-vault-pass
+ansible-playbook web.yml --ask-vault-pass           # drugi raz</code></pre></div><p>W drugim przebiegu w <code>PLAY RECAP</code> ma być <code>changed=0</code>. Jeśli coś dalej świeci się na żółto, to zwykle <code>shell</code> albo <code>command</code> bez <code>changed_when</code>, bo Ansible nie wie, czy Twoja komenda coś zmieniła, więc na wszelki wypadek mówi „tak”. Na koniec dopisz coś ręcznie w <code>/var/www/strona/index.html</code> i odpal <code>--check --diff</code>. Minusik przy Twojej linijce to Ansible, który już ostrzy nożyczki.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Ansible to luksus. Ale czasem dostajesz goły serwer, na którym masz tylko Basha, i skrypt musi zainstalować pakiety bez żadnych pytań. W następnej lekcji <code>apt</code> i <code>dnf</code> bez pytań, <code>DEBIAN_FRONTEND=noninteractive</code> i jak napisać w Bashu skrypt, który można uruchomić sto razy, tak jak playbook.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-102.html" rel="prev">← 102. Wiele serwerów naraz</a><a class="btn domyslny zolty" href="lekcja-104.html" rel="next">104. Instalacja i konfiguracja ze skryptu →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

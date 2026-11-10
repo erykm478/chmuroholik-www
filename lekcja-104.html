@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>104. Instalacja i konfiguracja ze skryptu — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 104 kursu Linux i Bash od zera do admina: Instalacja i konfiguracja ze skryptu. kursant pisze skrypt, który instaluje pakiety przez apt i dnf bez żadnych pytań (DEBIAN_FRONTEND=noninteractive, debconf, -y), zmienia konfigurację przez sed tak, że można go uruchomić dowolnie wiele razy, i rozum">
+<meta property="og:title" content="104. Instalacja i konfiguracja ze skryptu — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 104 kursu Linux i Bash od zera do admina: Instalacja i konfiguracja ze skryptu. kursant pisze skrypt, który instaluje pakiety przez apt i dnf bez żadnych pytań (DEBIAN_FRONTEND=noninteractive, debconf, -y), zmienia konfigurację przez sed tak, że można go uruchomić dowolnie wiele razy, i rozum">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 11</span></div>
+      <div class="boczny-tytul"><a href="index.html#m11">Automatyzacja: Git, Ansible i Bash w pracy admina</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-101.html" data-lekcja="101"><span class="znacznik"></span><span class="nr">101</span> Git dla admina</a></li><li><a href="lekcja-102.html" data-lekcja="102"><span class="znacznik"></span><span class="nr">102</span> Wiele serwerów naraz</a></li><li><a href="lekcja-103.html" data-lekcja="103"><span class="znacznik"></span><span class="nr">103</span> Ansible w praktyce</a></li><li><a href="lekcja-104.html" data-lekcja="104" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">104</span> Instalacja i konfiguracja ze skryptu</a></li><li><a href="lekcja-105.html" data-lekcja="105"><span class="znacznik"></span><span class="nr">105</span> Bezpieczne skrypty</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="104" data-modul="11" data-tematy="apt i dnf bez pytań, DEBIAN_FRONTEND=noninteractive, idempotencja, edycja konfiguracji sed">
+    <div class="belka"><span>Lekcja 104 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m11">Moduł 11</a> › Lekcja 104</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Instalacja i konfiguracja ze skryptu</h1>
+      <p class="meta"><span>⏱ ok. 11 min czytania</span><span>· moduł 11: Automatyzacja: Git, Ansible i Bash w pracy admina</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant pisze skrypt, który instaluje pakiety przez <code>apt</code> i <code>dnf</code> bez żadnych pytań (<code>DEBIAN_FRONTEND=noninteractive</code>, debconf, <code>-y</code>), zmienia konfigurację przez <code>sed</code> tak, że można go uruchomić dowolnie wiele razy, i rozumie, czym jest idempotencja w Bashu.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#apt-bez-pytan">apt bez pytań</a></li><li><a href="#dnf-bez-pytan">dnf bez pytań</a></li><li><a href="#idempotencja-w-bashu">Idempotencja w Bashu</a></li><li><a href="#sed-ktory-nie-psuje-przy-drugim-przebiegu">sed, który nie psuje przy drugim przebiegu</a></li><li><a href="#caly-skrypt">Cały skrypt</a></li><li><a href="#pulapka-pierwsza-wartosc-wygrywa">Pułapka: pierwsza wartość wygrywa</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga-flag">Ściąga flag</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p>Piątek, 17:30. Odpalasz skrypt instalujący pakiety na nowym serwerze i idziesz po kurtkę. W poniedziałek wracasz. Skrypt stoi. Od trzech dni. A na ekranie:</p><div class="kod"><pre><code>Configuring iperf3
+------------------
+
+Choose this option if Iperf3 should start automatically as a daemon, now and at
+boot time.
+
+Start Iperf3 as a daemon automatically? [yes/no]</code></pre></div><p>Jeden pakiet zadał jedno pytanie i cały weekend czekał na odpowiedź. Jak kurier, który stoi pod drzwiami, bo nikt nie podpisał się na tablecie. Dziś uczymy się instalować tak, żeby nikt o nic nie pytał, i pisać skrypty, które po drugim uruchomieniu niczego nie psują.</p></section><section><h2 id="apt-bez-pytan">apt bez pytań</h2><p>Hurtownia z kurierem, czyli menedżer pakietów, pyta o trzy rodzaje rzeczy. Trzeba wyłączyć wszystkie trzy.</p><p><strong>Pytanie 1: „czy na pewno?”.</strong> To załatwia <code>-y</code>.</p><p><strong>Pytanie 2: pytania samego pakietu.</strong> Na Debianie i Ubuntu zadaje je <strong>debconf</strong>, czyli formularz konfiguracyjny pakietu. Niebieskie okienko przy instalacji Postfixa albo pytanie o iperf3 z haka. Wyłączasz je zmienną:</p><div class="kod"><pre><code>sudo DEBIAN_FRONTEND=noninteractive apt-get install -y iperf3</code></pre></div><p>Nieinteraktywnie debconf bierze odpowiedź domyślną. A jeśli chcesz inną niż domyślna? Wypełniasz formularz z wyprzedzeniem. Nazwę pytania znajdziesz w pliku <code>templates</code> pakietu albo przez <code>debconf-get-selections</code> z pakietu <code>debconf-utils</code> na maszynie, gdzie pakiet już jest.</p><div class="kod"><pre><code>echo &#x27;iperf3 iperf3/start_daemon boolean false&#x27; | sudo debconf-set-selections
+sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -q iperf3
+sudo debconf-show iperf3</code></pre></div><div class="kod"><pre><code>* iperf3/start_daemon: false</code></pre></div><p>Gwiazdka znaczy: odpowiedź była ustawiona, a nie zgadnięta. Format linijki to: pakiet, nazwa pytania, typ, wartość.</p><p><strong>Pytanie 3: plik konfiguracyjny.</strong> Zmieniłeś ręcznie plik w <code>/etc</code>, a aktualizacja pakietu przynosi nową wersję tego pliku. dpkg pyta: wziąć twoją czy nową? W skrypcie odpowiadasz z góry:</p><div class="kod"><pre><code>sudo DEBIAN_FRONTEND=noninteractive apt-get -y \
+    -o Dpkg::Options::=--force-confdef \
+    -o Dpkg::Options::=--force-confold \
+    upgrade</code></pre></div><p><code>--force-confdef</code> znaczy „zrób to, co jest domyślne”, a gdy domyślnego nie ma, <code>--force-confold</code> mówi „zostaw moją wersję”. Nowa wersja ląduje obok jako <code>.dpkg-dist</code> i możesz ją spokojnie porównać <code>diff</code>-em.</p><p>[Ubuntu] Na Ubuntu jest jeszcze <strong>needrestart</strong>, który po aktualizacji pyta, które usługi zrestartować. W konfiguracji na Ubuntu 24.04 jest napisane, że przy wywołaniu z APT domyślnie restartuje sam, a w trybie nieinteraktywnym nie pyta. Jeśli wolisz tylko listę bez restartów: <code>NEEDRESTART_MODE=l</code>.</p><p>I jeszcze jedno: w skryptach <code>apt-get</code>, nie <code>apt</code>. Sam <code>apt</code> mówi to wprost:</p><div class="kod"><pre><code>WARNING: apt does not have a stable CLI interface. Use with caution in scripts.</code></pre></div><p><code>apt</code> jest dla ludzi: kolorki, pasek postępu, format może się zmienić. <code>apt-get</code> jest dla skryptów.</p></section><section><h2 id="dnf-bez-pytan">dnf bez pytań</h2><p>[RHEL] Tu jest prościej, bo pakiety RPM z zasady nie zadają pytań przy instalacji. Zostaje „czy na pewno?”:</p><div class="kod"><pre><code>sudo dnf install -y -q chrony vim-enhanced
+sudo dnf upgrade -y</code></pre></div><p><code>-y</code> przy okazji zgadza się na import klucza GPG nowego repozytorium, więc dodawaj tylko repozytoria, którym ufasz. Pliki konfiguracyjne RPM załatwia po swojemu: twoja wersja zostaje, a nowa ląduje obok jako <code>.rpmnew</code>. Albo odwrotnie, stara jako <code>.rpmsave</code>. Po dużej aktualizacji warto poszukać: <code>sudo find /etc -name &#x27;*.rpmnew&#x27;</code>.</p></section><section><h2 id="idempotencja-w-bashu">Idempotencja w Bashu</h2><p>Pamiętasz przycisk w windzie z lekcji o Ansible? Ansible ma idempotencję w modułach. W Bashu musisz ją napisać sam. Zasada jedna: <strong>najpierw sprawdź, potem zrób</strong>. Porównaj:</p><div class="kod"><pre><code># Źle: każde uruchomienie dopisuje kolejną linijkę
+echo &#x27;PermitRootLogin no&#x27; &gt;&gt; sshd_config
+
+# Dobrze: dopisz tylko, jeśli takiej linijki jeszcze nie ma
+grep -qxF &#x27;PermitRootLogin no&#x27; sshd_config || echo &#x27;PermitRootLogin no&#x27; &gt;&gt; sshd_config</code></pre></div><p><code>grep -q</code> nic nie wypisuje, tylko daje kciuk w górę albo w dół. <code>-x</code> znaczy „cała linijka”, <code>-F</code> znaczy „to zwykły tekst, nie wzorzec”. Więcej przykładów z tej samej rodziny:</p><div class="kod"><pre><code>mkdir -p /opt/app                                  # nie krzyczy, gdy już jest
+id deploy &amp;&gt;/dev/null || useradd -m deploy          # konto tylko raz
+ln -sfn /opt/app/v2 /opt/app/current               # link zawsze w dobre miejsce
+install -m 0644 -o root -g root app.conf /etc/app/  # plik z prawami za jednym razem
+dpkg-query -W -f=&#x27;${Status}&#x27; htop 2&gt;/dev/null | grep -q &#x27;ok installed&#x27;   # [Ubuntu] jest?
+rpm -q htop &amp;&gt;/dev/null                             # [RHEL] jest?</code></pre></div><p><code>systemctl enable --now</code> też jest idempotentne: włączona usługa zostaje włączona.</p></section><section><h2 id="sed-ktory-nie-psuje-przy-drugim-przebiegu">sed, który nie psuje przy drugim przebiegu</h2><p>Najczęstsza konfiguracja w Linuksie to „klucz wartość” w pliku tekstowym, często zakomentowana: <code>#PermitRootLogin prohibit-password</code>. Chcesz ją ustawić. Przypadki są trzy: linijka zakomentowana, linijka z inną wartością, linijki nie ma wcale. Do tego czwarty: już jest dobrze i nic nie rób. Jak rubryka w formularzu: wpisujesz tylko, gdy jest pusta albo błędna. Nie dopisujesz drugiej rubryki na marginesie.</p><div class="kod"><pre><code>ustaw() {
+    local plik=$1 klucz=$2 wartosc=$3
+    if grep -qE &quot;^${klucz}[[:space:]]+${wartosc}[[:space:]]*$&quot; &quot;$plik&quot;; then
+        return 0
+    fi
+    [[ -e $plik.orig ]] || cp -p -- &quot;$plik&quot; &quot;$plik.orig&quot;
+    if grep -qE &quot;^#?[[:space:]]*${klucz}[[:space:]]&quot; &quot;$plik&quot;; then
+        sed -i -E &quot;0,/^#?[[:space:]]*${klucz}[[:space:]].*/s//${klucz} ${wartosc}/&quot; &quot;$plik&quot;
+    else
+        printf &#x27;%s %s\n&#x27; &quot;$klucz&quot; &quot;$wartosc&quot; &gt;&gt; &quot;$plik&quot;
+    fi
+    log &quot;SSH: $klucz $wartosc&quot;
+    zmieniono_ssh=1
+}</code></pre></div><p>Co tu się dzieje:</p><ul><li>Najpierw sprawdzenie: jest dokładnie tak, jak chcemy? Wychodzimy bez dotykania pliku.</li><li>Kopia <code>.orig</code> robiona tylko raz. Inaczej drugie uruchomienie nadpisałoby oryginał już zmienioną wersją.</li><li><code>sed -i -E</code> zmienia plik w miejscu, a <code>0,/wzorzec/</code> to adres z GNU sed: „od początku do pierwszego trafienia”. Podmieniamy tylko <strong>pierwsze</strong> wystąpienie, zakomentowane albo nie. Puste <code>s//.../</code> używa ostatniego wzorca, żeby nie pisać go dwa razy.</li><li>Nie było takiego klucza? Dopisujemy na końcu.</li></ul><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p><code>0,/re/</code> to rozszerzenie GNU, na macOS ze standardowym <code>sed</code> nie zadziała. Tam przyda się <code>gsed</code> z Homebrew albo <code>awk</code>. Klucz i wartość trafiają tu do wyrażenia regularnego, więc funkcja jest dla zwykłych słów, nie dla ścieżek z ukośnikami.</p></aside></section><section><h2 id="caly-skrypt">Cały skrypt</h2><div class="kod"><pre><code>#!/usr/bin/env bash
+# przygotuj-serwer.sh - idempotentne przygotowanie serwera (Ubuntu/Debian i RHEL)
+# Można uruchamiać wiele razy: robi tylko to, czego jeszcze nie ma.
+set -euo pipefail
+
+SSHD_KONF=${SSHD_KONF:-/etc/ssh/sshd_config}
+ADMIN=${ADMIN:-deploy}
+zmieniono_ssh=0
+
+log() { printf &#x27;[%(%F %T)T] %s\n&#x27; -1 &quot;$*&quot;; }
+
+(( EUID == 0 )) || { echo &quot;Uruchom jako root (sudo).&quot; &gt;&amp;2; exit 1; }
+
+# 1. Która rodzina systemu?
+# shellcheck source=/dev/null
+. /etc/os-release
+case &quot; ${ID} ${ID_LIKE:-} &quot; in
+    *&quot; debian &quot;*|*&quot; ubuntu &quot;*)
+        rodzina=deb
+        pakiety=(chrony curl bash-completion vim)
+        grupa_admin=sudo
+        usluga_czasu=chrony ;;
+    *&quot; rhel &quot;*|*&quot; fedora &quot;*|*&quot; centos &quot;*)
+        rodzina=rpm
+        pakiety=(chrony curl bash-completion vim-enhanced)
+        grupa_admin=wheel
+        usluga_czasu=chronyd ;;
+    *) echo &quot;Nieznany system: $ID&quot; &gt;&amp;2; exit 1 ;;
+esac
+log &quot;System: $PRETTY_NAME (rodzina $rodzina)&quot;
+
+# 2. Pakiety: instaluj tylko brakujące, bez żadnych pytań
+brakujace=()
+for p in &quot;${pakiety[@]}&quot;; do
+    if [[ $rodzina == deb ]]; then
+        dpkg-query -W -f=&#x27;${Status}&#x27; &quot;$p&quot; 2&gt;/dev/null | grep -q &#x27;ok installed&#x27; || brakujace+=(&quot;$p&quot;)
+    else
+        rpm -q &quot;$p&quot; &amp;&gt;/dev/null || brakujace+=(&quot;$p&quot;)
+    fi
+done
+if (( ${#brakujace[@]} )); then
+    log &quot;Instaluję: ${brakujace[*]}&quot;
+    if [[ $rodzina == deb ]]; then
+        export DEBIAN_FRONTEND=noninteractive
+        apt-get update -q
+        apt-get install -y -q \
+            -o Dpkg::Options::=--force-confdef \
+            -o Dpkg::Options::=--force-confold \
+            &quot;${brakujace[@]}&quot;
+    else
+        dnf install -y -q &quot;${brakujace[@]}&quot;
+    fi
+else
+    log &quot;Pakiety: wszystko już jest&quot;
+fi
+
+# 3. Konto admina
+if id &quot;$ADMIN&quot; &amp;&gt;/dev/null; then
+    log &quot;Konto $ADMIN: już istnieje&quot;
+else
+    useradd -m -s /bin/bash -G &quot;$grupa_admin&quot; &quot;$ADMIN&quot;
+    log &quot;Konto $ADMIN: założone&quot;
+fi
+
+# 4. Jedna opcja w konfiguracji SSH: podmień albo dopisz, nigdy dwa razy
+ustaw() {
+    local plik=$1 klucz=$2 wartosc=$3
+    if grep -qE &quot;^${klucz}[[:space:]]+${wartosc}[[:space:]]*$&quot; &quot;$plik&quot;; then
+        return 0
+    fi
+    [[ -e $plik.orig ]] || cp -p -- &quot;$plik&quot; &quot;$plik.orig&quot;
+    if grep -qE &quot;^#?[[:space:]]*${klucz}[[:space:]]&quot; &quot;$plik&quot;; then
+        sed -i -E &quot;0,/^#?[[:space:]]*${klucz}[[:space:]].*/s//${klucz} ${wartosc}/&quot; &quot;$plik&quot;
+    else
+        printf &#x27;%s %s\n&#x27; &quot;$klucz&quot; &quot;$wartosc&quot; &gt;&gt; &quot;$plik&quot;
+    fi
+    log &quot;SSH: $klucz $wartosc&quot;
+    zmieniono_ssh=1
+}
+ustaw &quot;$SSHD_KONF&quot; PermitRootLogin no
+ustaw &quot;$SSHD_KONF&quot; MaxAuthTries 3
+
+if (( zmieniono_ssh )); then
+    sshd -t -f &quot;$SSHD_KONF&quot;
+    systemctl reload ssh 2&gt;/dev/null || systemctl reload sshd 2&gt;/dev/null \
+        || log &quot;UWAGA: nie udało się przeładować SSH&quot;
+else
+    log &quot;SSH: bez zmian&quot;
+fi
+
+# 5. Czas: usługa włączona i uruchomiona
+systemctl enable --now &quot;$usluga_czasu&quot; 2&gt;/dev/null \
+    || log &quot;UWAGA: nie udało się włączyć $usluga_czasu&quot;
+log &quot;Gotowe&quot;</code></pre></div><p>ShellCheck: czysto. Zwróć uwagę na różnice rodzin: <code>vim</code> kontra <code>vim-enhanced</code>, grupa <code>sudo</code> kontra <code>wheel</code>, usługa <code>chrony</code> kontra <code>chronyd</code>, a na RHEL usługa SSH nazywa się <code>sshd</code>, na Ubuntu <code>ssh</code>. Przed przeładowaniem SSH jest <code>sshd -t</code>, czyli sprawdzenie składni. Z <code>set -e</code> zły plik zatrzyma skrypt, zanim zamknie Ci drzwi.</p><p>Ostrzeżenie: ten skrypt zmienia konfigurację SSH. Testuj na maszynie wirtualnej, a na prawdziwym serwerze trzymaj otwartą drugą sesję SSH, dopóki nie sprawdzisz, że nowa sesja się loguje.</p><p>Pierwsze uruchomienie, na świeżej maszynie wirtualnej z Ubuntu:</p><div class="kod"><pre><code>[2026-11-03 22:52:23] System: Ubuntu 24.04.5 LTS (rodzina deb)
+[2026-11-03 22:52:23] Instaluję: chrony
+...
+[2026-11-03 22:52:35] Konto deploy: założone
+[2026-11-03 22:52:35] SSH: PermitRootLogin no
+[2026-11-03 22:52:35] SSH: MaxAuthTries 3
+[2026-11-03 22:52:35] Gotowe</code></pre></div><p>I drugie, chwilę później:</p><div class="kod"><pre><code>[2026-11-03 22:52:37] System: Ubuntu 24.04.5 LTS (rodzina deb)
+[2026-11-03 22:52:37] Pakiety: wszystko już jest
+[2026-11-03 22:52:37] Konto deploy: już istnieje
+[2026-11-03 22:52:37] SSH: bez zmian
+[2026-11-03 22:52:37] Gotowe</code></pre></div><div class="kod"><pre><code>diff /etc/ssh/sshd_config.orig /etc/ssh/sshd_config</code></pre></div><div class="kod"><pre><code>42c42
+&lt; #PermitRootLogin prohibit-password
+---
+&gt; PermitRootLogin no
+44c44
+&lt; #MaxAuthTries 6
+---
+&gt; MaxAuthTries 3</code></pre></div><p>Dokładnie dwie zmienione linijki, każda raz. Skrypt jest jak dobry kelner: drugi raz nie przynosi tej samej zupy.</p></section><section><h2 id="pulapka-pierwsza-wartosc-wygrywa">Pułapka: pierwsza wartość wygrywa</h2><p>Na Ubuntu na samej górze <code>sshd_config</code> stoi <code>Include /etc/ssh/sshd_config.d/*.conf</code>. A SSH dla każdej opcji bierze <strong>pierwszą</strong> wartość, jaką przeczyta. Sprawdziłem na kopii: w głównym pliku <code>PasswordAuthentication no</code>, w dołączanym <code>50-cloud-init.conf</code> jest <code>PasswordAuthentication yes</code>:</p><div class="kod"><pre><code>sudo sshd -T | grep -E &#x27;^(passwordauthentication|permitrootlogin)&#x27;</code></pre></div><div class="kod"><pre><code>permitrootlogin no
+passwordauthentication yes</code></pre></div><p>Twój <code>sed</code> zadziałał bez zarzutu, a serwer dalej wpuszcza na hasło. Dlatego nowoczesny sposób to własny plik w <code>sshd_config.d</code> z niskim numerem, na przykład <code>10-firma.conf</code>, który wczyta się przed innymi. A <code>sshd -T</code> po każdej zmianie pokazuje, co serwer naprawdę myśli. [RHEL] Na RHEL to samo: <code>Include</code> na górze i plik <code>50-redhat.conf</code> w <code>sshd_config.d</code>.</p></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p>Każdy pakiet <code>.deb</code> ma w środku skrypty: <code>preinst</code>, <code>postinst</code>, <code>config</code> i plik <code>templates</code> z pytaniami. Zajrzyjmy do iperf3 bez instalowania:</p><div class="kod"><pre><code>apt-get download iperf3
+dpkg-deb -e iperf3_*.deb ctrl
+head -4 ctrl/templates
+grep db_input ctrl/config</code></pre></div><div class="kod"><pre><code>Template: iperf3/start_daemon
+Type: boolean
+Default: false
+Description: Start Iperf3 as a daemon automatically?
+db_input high iperf3/start_daemon || true</code></pre></div><p>Skrypt <code>config</code> mówi debconfowi: zadaj pytanie o priorytecie <code>high</code>. debconf patrzy na <code>DEBIAN_FRONTEND</code>. Przy <code>Dialog</code> rysuje niebieskie okienko, przy <code>readline</code> pyta tekstem, a przy <code>noninteractive</code> nie pyta nikogo i bierze to, co ma w swojej bazie w <code>/var/cache/debconf/</code>. <code>debconf-set-selections</code> wpisuje odpowiedź właśnie do tej bazy, zanim pakiet zapyta.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p><code>sudo</code> domyślnie czyści zmienne środowiska, dlatego <code>DEBIAN_FRONTEND</code> stoi <strong>za</strong> <code>sudo</code>, w tej samej komendzie: <code>sudo DEBIAN_FRONTEND=noninteractive apt-get ...</code>. Wersja <code>DEBIAN_FRONTEND=noninteractive sudo apt-get ...</code> zmienną zgubi.</p></aside></section><section><h2 id="sciaga-flag">Ściąga flag</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga</th><th>Co robi</th></tr><tr><td><code>apt-get</code></td><td><code>-y</code></td><td>odpowiada „tak” na pytanie o instalację</td></tr><tr><td><code>apt-get</code></td><td><code>-q</code></td><td>mniej komunikatów</td></tr><tr><td><code>apt-get</code></td><td><code>-o Dpkg::Options::=--force-confdef</code></td><td>przy pliku konfiguracyjnym weź domyślną decyzję</td></tr><tr><td><code>apt-get</code></td><td><code>-o Dpkg::Options::=--force-confold</code></td><td>a jak jej brak, zostaw moją wersję</td></tr><tr><td><code>apt-get</code></td><td><code>-s</code></td><td>symulacja, nic nie instaluje</td></tr><tr><td><code>DEBIAN_FRONTEND</code></td><td><code>=noninteractive</code></td><td>debconf nie zadaje pytań</td></tr><tr><td><code>debconf-set-selections</code></td><td>(z wejścia)</td><td>odpowiedzi na pytania pakietu z wyprzedzeniem</td></tr><tr><td><code>debconf-show</code></td><td><code>PAKIET</code></td><td>jakie odpowiedzi ma pakiet</td></tr><tr><td><code>dnf</code></td><td><code>-y</code> / <code>-q</code></td><td>bez pytań / ciszej</td></tr><tr><td><code>rpm</code></td><td><code>-q PAKIET</code></td><td>czy pakiet jest zainstalowany (kod wyjścia)</td></tr><tr><td><code>dpkg-query</code></td><td><code>-W -f=&#x27;${Status}&#x27;</code></td><td>stan pakietu na Ubuntu</td></tr><tr><td><code>grep</code></td><td><code>-qxF</code></td><td>cicho, cała linijka, zwykły tekst</td></tr><tr><td><code>sed</code></td><td><code>-i</code> / <code>-i.bak</code></td><td>zmień w miejscu / z kopią</td></tr><tr><td><code>sed</code></td><td><code>-E &#x27;0,/re/s//X/&#x27;</code></td><td>podmień tylko pierwsze trafienie (GNU)</td></tr><tr><td><code>sshd</code></td><td><code>-t</code> / <code>-T</code></td><td>sprawdź składnię / pokaż końcowe ustawienia</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>Skrypt zawisł na pytaniu z haka. Admin naciska Ctrl+C i uruchamia go jeszcze raz. A apt na to:</p><div class="kod"><pre><code>E: dpkg was interrupted, you must manually run &#x27;dpkg --configure -a&#x27; to correct the problem.</code></pre></div><p>Przerwałeś dpkg w połowie konfigurowania pakietu. Pakiet jest rozpakowany, ale nieskonfigurowany. Jak meble wniesione do mieszkania, ale niezmontowane. <code>dpkg --audit</code> pokaże, kto został w połowie:</p><div class="kod"><pre><code>The following packages are only half configured, probably due to problems
+configuring them the first time.
+ iperf3               Internet Protocol bandwidth measuring tool</code></pre></div><p>Naprawa: odpowiedz z wyprzedzeniem i dokończ konfigurację bez pytań:</p><div class="kod"><pre><code>echo &#x27;iperf3 iperf3/start_daemon boolean false&#x27; | sudo debconf-set-selections
+sudo DEBIAN_FRONTEND=noninteractive dpkg --configure -a
+sudo dpkg --audit          # pusto = wszystko skonfigurowane</code></pre></div><p>I nigdy więcej <code>apt-get install</code> w skrypcie bez <code>DEBIAN_FRONTEND=noninteractive</code> i <code>-y</code>. Drugi grzech: brak <code>apt-get update</code> przed instalacją na świeżym serwerze. Lista pakietów jest stara albo pusta i dostajesz <code>E: Unable to locate package</code>. Z kolei <code>update</code> przy każdym uruchomieniu niepotrzebnie męczy repozytoria, dlatego w skrypcie robię go tylko wtedy, gdy czegoś brakuje.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><p>Napisz własny <code>przygotuj-serwer.sh</code> dla swojej maszyny wirtualnej (Ubuntu albo RHEL, a najlepiej obu). Niech instaluje bez pytań trzy pakiety, zakłada konto <code>deploy</code>, ustawia funkcją <code>ustaw</code> dwie opcje w kopii pliku <code>/etc/ssh/sshd_config</code> i sprawdza ją <code>sshd -t -f</code>. Uruchom go trzy razy i pokaż, że za drugim i trzecim razem nic się nie zmienia: <code>diff</code> kopii z <code>.orig</code> ma pokazać każdą zmianę dokładnie raz. Na Ubuntu zainstaluj nieinteraktywnie <code>iperf3</code> z odpowiedzią <code>true</code> ustawioną przez <code>debconf-set-selections</code> i sprawdź <code>debconf-show iperf3</code>.</p><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><p>Skrypt <code>przygotuj-serwer.sh</code> z poprzedniej lekcji puszczamy trzy razy na kopii konfiguracji SSH. Pierwszy przebieg zmienia, drugi i trzeci tylko sprawdzają:</p><div class="kod"><pre><code>cp /etc/ssh/sshd_config ~/sshd_test
+for i in 1 2 3; do sudo SSHD_KONF=~/sshd_test ./przygotuj-serwer.sh; done
+diff ~/sshd_test.orig ~/sshd_test
+sudo sshd -t -f ~/sshd_test &amp;&amp; echo &quot;składnia OK&quot;</code></pre></div><div class="kod"><pre><code>[2026-11-04 02:38:24] SSH: PermitRootLogin no
+[2026-11-04 02:38:24] SSH: MaxAuthTries 3
+...
+[2026-11-04 02:38:24] SSH: bez zmian
+...
+[2026-11-04 02:38:25] SSH: bez zmian
+42c42
+&lt; #PermitRootLogin prohibit-password
+---
+&gt; PermitRootLogin no
+44c44
+&lt; #MaxAuthTries 6
+---
+&gt; MaxAuthTries 3
+składnia OK</code></pre></div><p>Każda zmiana dokładnie raz. Teraz iperf3 z odpowiedzią „tak”:</p><div class="kod"><pre><code>echo &#x27;iperf3 iperf3/start_daemon boolean true&#x27; | sudo debconf-set-selections
+sudo DEBIAN_FRONTEND=noninteractive apt-get install -y iperf3
+sudo debconf-show iperf3</code></pre></div><div class="kod"><pre><code>* iperf3/start_daemon: true</code></pre></div><p>A jeśli iperf3 już był zainstalowany? Wtedy <code>apt-get install</code> nic nie zrobi, bo pakiet jest. Nową odpowiedź wczytujesz przez <code>sudo dpkg-reconfigure -f noninteractive iperf3</code>. Sprawdziłem: po <code>true</code> w <code>multi-user.target.wants</code> pojawia się <code>iperf3.service</code>, po <code>false</code> znika. Jedna linijka w bazie debconf i serwer sam wie, czego chcesz. Jak dobrze wyszkolony kelner, który pamięta, że pijesz bez cukru.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Skrypty z ostatnich lekcji biegają jako root, po wielu serwerach, z hasłami do baz. To już nie są zabawki. W następnej lekcji bezpieczne skrypty: gdzie trzymać hasła, jak nie zrobić <code>rm -rf /</code> przez pustą zmienną, czemu <code>eval</code> to zły pomysł i jakie uprawnienia dać skryptom.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-103.html" rel="prev">← 103. Ansible w praktyce</a><a class="btn domyslny zolty" href="lekcja-105.html" rel="next">105. Bezpieczne skrypty →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

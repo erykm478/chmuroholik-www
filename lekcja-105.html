@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>105. Bezpieczne skrypty — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 105 kursu Linux i Bash od zera do admina: Bezpieczne skrypty. kursant trzyma hasła poza skryptem i poza historią Gita, pisze rm -rf tak, żeby pusta zmienna nie skasowała systemu, zastępuje eval tablicami i bezpiecznym cytowaniem oraz daje skryptom uprawnienia, których nie da się przejąć.">
+<meta property="og:title" content="105. Bezpieczne skrypty — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 105 kursu Linux i Bash od zera do admina: Bezpieczne skrypty. kursant trzyma hasła poza skryptem i poza historią Gita, pisze rm -rf tak, żeby pusta zmienna nie skasowała systemu, zastępuje eval tablicami i bezpiecznym cytowaniem oraz daje skryptom uprawnienia, których nie da się przejąć.">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 11</span></div>
+      <div class="boczny-tytul"><a href="index.html#m11">Automatyzacja: Git, Ansible i Bash w pracy admina</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-101.html" data-lekcja="101"><span class="znacznik"></span><span class="nr">101</span> Git dla admina</a></li><li><a href="lekcja-102.html" data-lekcja="102"><span class="znacznik"></span><span class="nr">102</span> Wiele serwerów naraz</a></li><li><a href="lekcja-103.html" data-lekcja="103"><span class="znacznik"></span><span class="nr">103</span> Ansible w praktyce</a></li><li><a href="lekcja-104.html" data-lekcja="104"><span class="znacznik"></span><span class="nr">104</span> Instalacja i konfiguracja ze skryptu</a></li><li><a href="lekcja-105.html" data-lekcja="105" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">105</span> Bezpieczne skrypty</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="105" data-modul="11" data-tematy="hasła i sekrety, rm -rf w skryptach, czemu nie eval, uprawnienia skryptów">
+    <div class="belka"><span>Lekcja 105 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m11">Moduł 11</a> › Lekcja 105</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Bezpieczne skrypty</h1>
+      <p class="meta"><span>⏱ ok. 13 min czytania</span><span>· moduł 11: Automatyzacja: Git, Ansible i Bash w pracy admina</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant trzyma hasła poza skryptem i poza historią Gita, pisze <code>rm -rf</code> tak, żeby pusta zmienna nie skasowała systemu, zastępuje <code>eval</code> tablicami i bezpiecznym cytowaniem oraz daje skryptom uprawnienia, których nie da się przejąć.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#hasla-gdzie-ich-nie-trzymac">Hasła: gdzie ich nie trzymać</a></li><li><a href="#hasla-gdzie-je-trzymac">Hasła: gdzie je trzymać</a></li><li><a href="#rm-rf-ktory-nie-zje-systemu">rm -rf, który nie zje systemu</a></li><li><a href="#czemu-nie-eval">Czemu nie eval</a></li><li><a href="#uprawnienia-skryptow">Uprawnienia skryptów</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga-flag">Ściąga flag</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p class="ekran">repozytorium na GitHubie, plik <code>kopia.sh</code>, podświetlona linijka z hasłem</p><p>Styczeń 2015. Użytkownicy Steama na Linuksie zgłaszają, że po uruchomieniu Steama zniknęły im wszystkie pliki. Nie tylko gry. Wszystko, do czego ich konto miało prawo zapisu. Winowajca to jedna linijka w skrypcie <code>steam.sh</code>:</p><div class="kod"><pre><code>rm -rf &quot;$STEAMROOT/&quot;*</code></pre></div><p>Zmienna <code>STEAMROOT</code> w pewnych sytuacjach była pusta. Na przykład gdy ktoś przeniósł folder Steama. A pusta zmienna plus ukośnik plus gwiazdka to <code>/*</code>. Czyli „skasuj wszystko od korzenia”. Zgłoszenie ma numer 3671 w repozytorium steam-for-linux, poczytaj, bo to lepsze niż horror.</p><p>Skrypty z ostatnich lekcji chodzą jako root, po wielu serwerach naraz, z hasłami do baz. Dziś cztery rzeczy, które dzielą skrypt amatora od skryptu, który można zostawić na produkcji: hasła, <code>rm -rf</code>, <code>eval</code> i uprawnienia.</p></section><section><h2 id="hasla-gdzie-ich-nie-trzymac">Hasła: gdzie ich nie trzymać</h2><p>Hasło to klucz do sejfu. Pytanie nie brzmi „czy ktoś je zobaczy”, tylko „ile osób po drodze”. Trzy złe miejsca.</p><p><strong>Złe miejsce 1: w treści skryptu.</strong> Skrypt ląduje w Gicie, w kopii zapasowej, na pendrivie kolegi. A w Gicie zostaje na zawsze. Zobacz: najpierw commit z hasłem, potem „naprawa”:</p><div class="kod"><pre><code>git log -p -G &#x27;Zima&#x27; --oneline</code></pre></div><div class="kod"><pre><code>41743db Hasło przeniesione do pliku cnf
+-mysqldump -u backup -p&quot;Zima2026&quot; sklep &gt; sklep.sql
+9da73a9 Kopia bazy sklep
++mysqldump -u backup -p&quot;Zima2026&quot; sklep &gt; sklep.sql</code></pre></div><p>Hasła nie ma w aktualnej wersji pliku, ale historia pamięta. Kto sklonuje repozytorium, ten ma hasło. Wniosek jest jeden i bolesny: hasło, które trafiło do Gita, uznajesz za spalone i <strong>zmieniasz</strong>. Przepisywanie historii jest dopiero drugim krokiem.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>są skanery, które łapią sekrety przed commitem, na przykład gitleaks jako hook pre-commit. Warto mieć, ale nie zastąpi zasady „hasło nigdy w kodzie”.</p></aside><p><strong>Złe miejsce 2: w argumencie komendy.</strong> Linia poleceń każdego procesu jest publiczna. Dosłownie. Napisałem zły skrypt, który dostaje hasło jako argument, odpaliłem go jako root, a potem zajrzałem na zwykłym koncie <code>ania</code>:</p><div class="kod"><pre><code>sudo ./kopia-bazy.sh &#x27;Zima2026!&#x27; &amp;
+su ania -c &#x27;ps -eo user,pid,args&#x27; | grep &#x27;[k]opia-bazy&#x27;</code></pre></div><div class="kod"><pre><code>root      2689 bash ./kopia-bazy.sh Zima2026!</code></pre></div><p>Zwykły użytkownik widzi hasło roota. Bo <code>ps</code> czyta plik <code>/proc/PID/cmdline</code>, a ten ma prawa <code>-r--r--r--</code>, czyli czyta każdy. To jak wypisanie PIN-u flamastrem na karcie i noszenie jej w przezroczystym etui.</p><p>Ciekawostka: klient MariaDB wie o tym problemie i sam zamazuje hasło:</p><div class="kod"><pre><code>mariadb -h 10.255.255.1 --connect-timeout=5 -u backup --password=x xxxxxx</code></pre></div><p>Ale robi to sam program, już po starcie. Twój skrypt w Bashu tego nie zrobi, a większość innych programów też nie.</p><p><strong>Złe miejsce 3: zmienna środowiskowa „na wszelki wypadek”.</strong> Lepiej niż argument, bo <code>/proc/PID/environ</code> ma prawa <code>-r--------</code>:</p><div class="kod"><pre><code>cat: /proc/2689/environ: Permission denied</code></pre></div><p>Ale zmienne dziedziczy każdy proces potomny, lądują w zrzutach błędów i w logach, gdy ktoś zrobi <code>env</code> przy debugowaniu. Do haseł nadaje się średnio.</p></section><section><h2 id="hasla-gdzie-je-trzymac">Hasła: gdzie je trzymać</h2><p>Dobre miejsce to <strong>osobny plik z prawami 600</strong>, poza repozytorium, czytany przez program bezpośrednio. Jak sejf w pokoju, do którego klucz ma tylko jeden lokator. MariaDB i MySQL mają na to gotowy mechanizm:</p><div class="kod"><pre><code>sudo install -d -m 700 /etc/kopia-bazy
+sudo tee /etc/kopia-bazy/baza.cnf &gt; /dev/null &lt;&lt;&#x27;EOF&#x27;
+[client]
+user=backup
+password=Zima$2026!
+EOF
+sudo chmod 600 /etc/kopia-bazy/baza.cnf</code></pre></div><p>I w skrypcie <code>mysqldump --defaults-extra-file=/etc/kopia-bazy/baza.cnf sklep</code>. Hasła nie ma ani w skrypcie, ani w <code>ps</code>. Zwróć uwagę na <code>&lt;&lt;&#x27;EOF&#x27;</code> w apostrofach: Bash nie rusza wtedy dolara w haśle.</p><p>Inne dobre sposoby:</p><ul><li>interaktywnie: <code>read -rsp &#x27;Hasło: &#x27; haslo</code>. <code>-s</code> nie pokazuje znaków na ekranie;</li><li>przez standardowe wejście, jeśli program to umie, np. <code>chpasswd</code> czyta pary <code>login:hasło</code> ze stdin;</li><li>w Ansible: <code>ansible-vault</code>, który znasz już z lekcji 103.</li></ul><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>w usługach systemd jest <code>LoadCredential=</code>, który podaje sekret procesowi jako plik w osobnym katalogu, zamiast przez zmienną środowiskową.</p></aside><p>A teraz dobry skrypt w całości. Pilnuje, żeby plik z hasłem był nasz i nikt inny go nie czytał:</p><div class="kod"><pre><code>#!/usr/bin/env bash
+# kopia-bazy.sh BAZA - kopia bazy MariaDB/MySQL bez hasła w skrypcie
+set -euo pipefail
+umask 077
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+KONF=${KONF:-/etc/kopia-bazy/baza.cnf}   # tu jest hasło, prawa 600
+CEL=${CEL:-/var/backups/bazy}
+
+blad() { printf &#x27;BŁĄD: %s\n&#x27; &quot;$*&quot; &gt;&amp;2; exit 1; }
+
+(( $# == 1 )) || blad &quot;użycie: ${0##*/} NAZWA_BAZY&quot;
+baza=$1
+[[ $baza =~ ^[A-Za-z0-9_]+$ ]] || blad &quot;dziwna nazwa bazy: $baza&quot;
+
+# Plik z hasłem: musi istnieć, być mój i nikt inny go nie czyta
+[[ -f $KONF ]] || blad &quot;brak pliku $KONF&quot;
+read -r prawa wlasciciel &lt; &lt;(stat -c &#x27;%a %u&#x27; -- &quot;$KONF&quot;)
+[[ $wlasciciel == &quot;$EUID&quot; ]] || blad &quot;$KONF nie należy do mnie&quot;
+[[ $prawa == 600 || $prawa == 400 ]] || blad &quot;$KONF ma prawa $prawa, ustaw: chmod 600 $KONF&quot;
+
+mkdir -p -- &quot;$CEL&quot;
+tmp=$(mktemp -- &quot;${CEL:?}/.${baza}.XXXXXX&quot;)
+trap &#x27;rm -f -- &quot;$tmp&quot;&#x27; EXIT
+
+mysqldump --defaults-extra-file=&quot;$KONF&quot; --single-transaction &quot;$baza&quot; | gzip &gt; &quot;$tmp&quot;
+plik=&quot;$CEL/$baza-$(date +%F).sql.gz&quot;
+mv -- &quot;$tmp&quot; &quot;$plik&quot;
+trap - EXIT
+printf &#x27;OK: %s (%s)\n&#x27; &quot;$plik&quot; &quot;$(du -h -- &quot;$plik&quot; | cut -f1)&quot;</code></pre></div><p>ShellCheck: czysto. Trzy przebiegi na mojej bazie testowej:</p><div class="kod"><pre><code>$ ./kopia-bazy.sh sklep
+BŁĄD: /etc/kopia-bazy/baza.cnf ma prawa 644, ustaw: chmod 600 /etc/kopia-bazy/baza.cnf
+$ sudo chmod 600 /etc/kopia-bazy/baza.cnf; ./kopia-bazy.sh sklep
+OK: /var/backups/bazy/sklep-2026-11-04.sql.gz (4.0K)
+$ ./kopia-bazy.sh &#x27;sklep; id&#x27;
+BŁĄD: dziwna nazwa bazy: sklep; id</code></pre></div><p>Co tu jest dla bezpieczeństwa:</p><ul><li><code>umask 077</code>: wszystko, co skrypt utworzy, ma prawa tylko dla właściciela. Kopia bazy to też dane wrażliwe. U mnie wyszło <code>-rw-------</code>.</li><li><code>PATH</code> ustawiony na sztywno: skrypt z crona albo sudo nie odpali przypadkiem „<code>mysqldump</code>” podrzuconego komuś w katalogu domowym.</li><li>Nazwa bazy sprawdzona wyrażeniem regularnym. Bramkarz wpuszcza tylko litery, cyfry i podkreślnik. Średnik nie przejdzie.</li><li><code>mktemp</code> zamiast <code>/tmp/kopia.$$</code>. Przewidywalną nazwę ktoś mógłby podłożyć wcześniej jako link do <code>/etc/shadow</code>.</li><li><code>trap</code> sprząta niedokończony plik. Sprawdziłem ze złym hasłem: <code>mysqldump</code> zgłasza <code>Access denied</code>, skrypt kończy się kodem 2, a w katalogu kopii zostaje tylko poprzednia, porządna kopia.</li></ul></section><section><h2 id="rm-rf-ktory-nie-zje-systemu">rm -rf, który nie zje systemu</h2><p><code>rm -rf</code> w skrypcie to piła łańcuchowa. Narzędzie świetne, ale nie zostawia się jej włączonej na stole. Wróćmy do Steama. Zobacz, co Bash podstawi przy pustej zmiennej. Zamiast <code>rm</code> daję <code>echo</code>, żeby nic nie kasować:</p><div class="kod"><pre><code>KATALOG_TMP=&quot;&quot;
+echo rm -rf &quot;$KATALOG_TMP/&quot;*</code></pre></div><div class="kod"><pre><code>rm -rf /bin /bin.usr-is-merged /boot /common /container_info.json /dev ...</code></pre></div><p>„Ale przecież <code>rm</code> ma ochronę przed <code>rm -rf /</code>!” Ma. W pomocy GNU <code>rm</code> stoi:</p><div class="kod"><pre><code>      --preserve-root[=all]  do not remove &#x27;/&#x27; (default);</code></pre></div><p>Tylko że ochrona dotyczy samego <code>/</code>. A po rozwinięciu gwiazdki <code>rm</code> nie dostaje <code>/</code>, tylko <code>/bin</code>, <code>/boot</code>, <code>/etc</code> i tak dalej. Każdy z osobna wygląda niewinnie. Ochroniarz pilnuje głównych drzwi, a Ty wynosisz budynek oknami, pokój po pokoju.</p><p>Ochrona numer 1: <code>${zmienna:?komunikat}</code>. Pusta albo nieustawiona zmienna zatrzymuje komendę, zanim cokolwiek się wykona:</p><div class="kod"><pre><code>echo rm -rf &quot;${KATALOG_TMP:?pusta zmienna, nie kasuję}/&quot;*</code></pre></div><div class="kod"><pre><code>straz.sh: line 3: KATALOG_TMP: pusta zmienna, nie kasuję</code></pre></div><p>Ochrona numer 2: <code>set -u</code> łapie zmienną <strong>nieustawioną</strong>, na przykład literówkę:</p><div class="kod"><pre><code>straz2.sh: line 3: KATALOG_TMPP: unbound variable</code></pre></div><p>Ale uwaga: zmienna ustawiona na pusty tekst przechodzi przez <code>set -u</code> bez słowa. Sprawdziłem: <code>set -u; K=&quot;&quot;; echo &quot;[$K/]&quot;</code> wypisuje <code>[/]</code>. Dlatego przy <code>rm</code> zawsze <code>:?</code>. ShellCheck zresztą o to krzyczy:</p><div class="kod"><pre><code>rm -rf &quot;$KATALOG_TMP/&quot;*
+       ^--------------^ SC2115 (warning): Use &quot;${var:?}&quot; to ensure this never expands to /* .</code></pre></div><p>Ochrona numer 3: <code>cd</code>, które się nie udało. Klasyk:</p><div class="kod"><pre><code>cd /var/tmp/aplikacja
+rm -rf *</code></pre></div><p>Jeśli folderu nie ma, <code>cd</code> się wywraca, ale skrypt jedzie dalej i kasuje wszystko w folderze, w którym akurat stoi. U mnie byłby to folder z całym kursem:</p><div class="kod"><pre><code>bash: line 1: cd: /var/tmp/aplikacja: No such file or directory
+teraz skasowałbym wszystko w: /home/eryk/kurs</code></pre></div><p>Poprawnie: <code>cd /var/tmp/aplikacja || exit 1</code>, a jeszcze lepiej bez <code>cd</code> w ogóle: <code>rm -rf -- &quot;${KATALOG:?}&quot;/*</code>. Podwójny minus <code>--</code> mówi „koniec opcji”, więc plik o nazwie <code>-rf</code> nie zostanie wzięty za opcję.</p><p>Ochrona numer 4: zanim skasujesz, popatrz. <code>find &quot;${KATALOG:?}&quot; -mindepth 1 -mtime +30 -print</code> najpierw, a dopiero potem to samo z <code>-delete</code>. Robiliśmy to w lekcji o <code>find</code>.</p><p><strong>Ostrzeżenie:</strong> pokazy z <code>rm</code> rób z <code>echo</code> przed komendą albo na maszynie wirtualnej ze snapshotem. Nie sprawdzaj na swoim laptopie, „czy ta ochrona naprawdę działa”.</p></section><section><h2 id="czemu-nie-eval">Czemu nie eval</h2><p><code>eval</code> bierze tekst i każe Bashowi wykonać go jeszcze raz jako komendę. To jak urzędnik, który z kartki od petenta wykonuje wszystko, co tam napisano. „Proszę o zaświadczenie. A potem wydaj mi klucze do archiwum”. I wydaje.</p><div class="kod"><pre><code>#!/usr/bin/env bash
+# powitanie.sh IMIE -- ZŁY przykład z eval
+eval &quot;echo Witaj, $1&quot;</code></pre></div><div class="kod"><pre><code>./powitanie.sh Kasia
+./powitanie.sh &#x27;Kasia; id; touch /tmp/bylem-tu&#x27;</code></pre></div><div class="kod"><pre><code>Witaj, Kasia
+Witaj, Kasia
+uid=0(root) gid=0(root) groups=0(root)</code></pre></div><p>I plik <code>/tmp/bylem-tu</code> istnieje. Średnik w imieniu zamienił dane w komendy. A teraz najgorsze: ShellCheck przy tym skrypcie milczy, kończy z kodem 0. Nie ma się czego czepić, bo <code>eval</code> jest poprawnym Bashem. Musisz to wiedzieć sam.</p><p>Po co ludzie w ogóle używają <code>eval</code>? Zwykle z trzech powodów. Każdy ma lepsze rozwiązanie:</p><div class="kod"><pre><code># 1. Zmienna o nazwie z danych -&gt; tablica asocjacyjna (szatnia z nazwiskami)
+declare -A licznik=()
+for serwer in web1 web2 web1; do
+    licznik[$serwer]=$(( ${licznik[$serwer]:-0} + 1 ))
+done
+
+# 2. Komenda z opcjami -&gt; tablica (szuflada z przegródkami)
+zrodlo=&quot;/home/kasia/Moje Dokumenty&quot;
+cmd=(rsync -a --delete)
+[[ ${SUCHO:-1} == 1 ]] &amp;&amp; cmd+=(--dry-run)
+cmd+=(&quot;$zrodlo/&quot; &quot;/backup/kasia/&quot;)
+&quot;${cmd[@]}&quot;
+
+# 3. Tekst do wysłania przez SSH -&gt; bezpieczne cytowanie
+plik=&#x27;raport; rm -rf ~&#x27;
+ssh web1 &quot;ls -l ${plik@Q}&quot;</code></pre></div><p>Każdy element tablicy to osobna przegródka. Spacja w „Moje Dokumenty” nie rozetnie ścieżki na dwie. Tak wyglądają przegródki, gdy je wypiszę:</p><div class="kod"><pre><code>&lt;rsync&gt; &lt;-a&gt; &lt;--delete&gt; &lt;--dry-run&gt; &lt;/home/kasia/Moje Dokumenty/&gt; &lt;/backup/kasia/&gt;</code></pre></div><p>Punkt 3 jest podstępny. <code>ssh serwer &quot;komenda&quot;</code> to <code>eval</code> w przebraniu, bo zdalny Bash czyta tekst od nowa. <code>${plik@Q}</code> albo <code>printf &#x27;%q&#x27;</code> pakuje wartość w kopertę, której zdalny Bash nie rozerwie:</p><div class="kod"><pre><code>ssh web1 ls -l &#x27;raport; rm -rf ~&#x27;</code></pre></div><p>Trzeci <code>eval</code> w przebraniu to <code>source plik.conf</code>. Jeśli ktoś dopisze do konfiguracji <code>NAZWA=$(touch /tmp/x; echo sklep)</code>, to <code>source</code> grzecznie wykona <code>touch</code>. Sprawdziłem, plik się pojawił. Konfigurację, której nie piszesz sam, czytaj jako tekst:</p><div class="kod"><pre><code>declare -A konf=()
+while IFS=&#x27;=&#x27; read -r klucz wartosc; do
+    [[ $klucz =~ ^[A-Z_]+$ ]] || continue      # komentarze i śmieci pomijamy
+    konf[$klucz]=$wartosc
+done &lt; &quot;${1:?podaj plik konfiguracji}&quot;</code></pre></div><div class="kod"><pre><code>PORT     = 8080
+KATALOG  = /var/lib/app
+NAZWA    = $(touch /tmp/zrodlo; echo sklep)</code></pre></div><p>Wartość została tekstem. Nikt niczego nie wykonał.</p></section><section><h2 id="uprawnienia-skryptow">Uprawnienia skryptów</h2><p>Skrypt, który odpala root, jest wart tyle, ile najsłabszy klucz do pokoju, w którym leży. Zrobiłem pokaz: skrypt <code>kopia.sh</code> należy do roota, prawa <code>755</code>, czyli nikt poza rootem go nie zmieni. Ale folder <code>narzedzia</code> należy do zwykłego użytkownika <code>ania</code>:</p><div class="kod"><pre><code>drwxr-xr-x 2 ania    root 4096 Nov  4 08:23 narzedzia
+-rwxr-xr-x 1 root    root   44 Nov  4 08:23 narzedzia/kopia.sh</code></pre></div><p>Dopisanie do pliku nie przejdzie:</p><div class="kod"><pre><code>bash: line 1: /srv/demo/narzedzia/kopia.sh: Permission denied</code></pre></div><p>Ale właściciel folderu może plik <strong>podmienić</strong>: kopiuje go, dopisuje swoją linijkę i przenosi na miejsce oryginału. Prawo do folderu to prawo do listy lokatorów, nie do mebli. Root odpala „swój” skrypt i:</p><div class="kod"><pre><code>Robię kopię...
+PRZEJETE: root</code></pre></div><p>Właśnie oddałeś roota. Zasady:</p><ul><li>skrypt uruchamiany przez roota (cron, systemd, sudo) należy do <code>root:root</code> i ma prawa <code>755</code>, <code>750</code> albo <code>700</code>;</li><li><strong>cała ścieżka</strong> do niego też należy do roota i nikt inny nie ma do niej prawa zapisu. Folder domowy użytkownika odpada;</li><li>instaluj jednym ruchem: <code>sudo install -o root -g root -m 0750 kopia-bazy.sh /usr/local/sbin/</code>.</li></ul><p>Szybki przegląd, czy coś tu nie jest cudze albo zapisywalne dla wszystkich:</p><div class="kod"><pre><code>sudo find /usr/local/bin /usr/local/sbin /etc/cron* -type f \( -perm -o+w -o ! -user root \) -ls</code></pre></div><p>A co z bitem SUID? Może by tak <code>chmod u+s</code> na skrypcie i wtedy każdy uruchomi go jako root? Sprawdziłem:</p><div class="kod"><pre><code>-rwsr-xr-x 1 root root 52 Nov  4 08:23 kim.sh
+Działam jako: ania</code></pre></div><p>Jądro Linuksa ignoruje SUID na skryptach. Strona <code>man 2 execve</code> mówi wprost, że Linux, jak większość nowoczesnych Uniksów, ignoruje bity set-user-ID i set-group-ID na skryptach. I dobrze. Chcesz dać komuś jeden skrypt jako root? Do tego jest sudo z pełną ścieżką i argumentami:</p><div class="kod"><pre><code>kasia ALL=(root) NOPASSWD: /usr/local/sbin/kopia-bazy.sh sklep</code></pre></div><p>Taki plik sprawdzisz przed wgraniem: <code>sudo visudo -cf plik</code> mówi <code>parsed OK</code>. Kasia może zrobić kopię bazy <code>sklep</code>, a nie „cokolwiek, co ten skrypt umie”.</p></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p><code>ps</code> nie ma żadnych tajnych źródeł. Dla każdego procesu czyta katalog <code>/proc/PID</code>, a w nim <code>cmdline</code> (argumenty) i <code>environ</code> (zmienne). Jądro ustawia im różne prawa: <code>cmdline</code> czyta każdy, <code>environ</code> tylko właściciel procesu i root. Stąd różnica między hasłem w argumencie a w zmiennej.</p><p><code>eval</code> działa tak: Bash najpierw normalnie rozwija linijkę, czyli podstawia <code>$1</code>. Powstaje tekst <code>echo Witaj, Kasia; id</code>. Potem <code>eval</code> oddaje ten tekst parserowi <strong>drugi raz</strong> i parser widzi średnik, czyli dwie komendy. Zwykłe <code>echo &quot;Witaj, $1&quot;</code> parsuje się raz, a wartość zmiennej po podstawieniu jest już tylko tekstem.</p><p>Czemu jądro ignoruje SUID na skryptach? Skrypt uruchamia się dwuetapowo: jądro czyta linijkę <code>#!</code>, odpala interpreter, a interpreter <strong>ponownie otwiera plik po nazwie</strong>. Między tymi krokami ktoś mógłby podmienić plik pod tą nazwą. Uprawnienia roota dostałby wtedy cudzy kod. Prościej było tę furtkę zamurować.</p></section><section><h2 id="sciaga-flag">Ściąga flag</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga</th><th>Co robi</th></tr><tr><td><code>${zmienna:?tekst}</code></td><td></td><td>przerywa, gdy zmienna pusta albo nieustawiona</td></tr><tr><td><code>set</code></td><td><code>-u</code></td><td>błąd przy nieustawionej zmiennej (pustej nie łapie)</td></tr><tr><td><code>rm</code></td><td><code>--</code></td><td>koniec opcji, plik <code>-rf</code> to tylko plik</td></tr><tr><td><code>rm</code></td><td><code>--preserve-root</code></td><td>nie kasuje samego <code>/</code> (domyślnie), <code>/*</code> nie chroni</td></tr><tr><td><code>read</code></td><td><code>-rsp &#x27;Hasło: &#x27;</code></td><td>czyta bez echa na ekranie</td></tr><tr><td><code>umask</code></td><td><code>077</code></td><td>nowe pliki tylko dla właściciela</td></tr><tr><td><code>mktemp</code></td><td><code>SZABLON.XXXXXX</code></td><td>plik tymczasowy o nieprzewidywalnej nazwie</td></tr><tr><td><code>mysqldump</code></td><td><code>--defaults-extra-file=PLIK</code></td><td>hasło z pliku, nie z linii poleceń</td></tr><tr><td><code>printf</code></td><td><code>%q</code></td><td>cytuje wartość dla Basha</td></tr><tr><td><code>${zmienna@Q}</code></td><td></td><td>to samo co <code>%q</code>, w rozwinięciu</td></tr><tr><td><code>declare</code></td><td><code>-A</code></td><td>tablica asocjacyjna zamiast <code>eval</code></td></tr><tr><td><code>install</code></td><td><code>-o -g -m</code></td><td>kopiuje z właścicielem i prawami</td></tr><tr><td><code>stat</code></td><td><code>-c &#x27;%a %u&#x27;</code></td><td>prawa liczbowo i UID właściciela</td></tr><tr><td><code>visudo</code></td><td><code>-cf PLIK</code></td><td>sprawdza składnię pliku sudoers</td></tr><tr><td><code>git log</code></td><td><code>-p -G &#x27;tekst&#x27;</code></td><td>szuka tekstu w całej historii zmian</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>Przenosisz hasło do zmiennej na górze skryptu, „na chwilę, potem przeniosę do pliku”. Hasło bazy to <code>Zima$2026!</code>:</p><div class="kod"><pre><code>#!/usr/bin/env bash
+HASLO=&quot;Zima$2026!&quot;
+mariadb -u backup -p&quot;$HASLO&quot; -e &#x27;SELECT 1&#x27; sklep</code></pre></div><div class="kod"><pre><code>ERROR 1045 (28000): Access denied for user &#x27;backup&#x27;@&#x27;localhost&#x27; (using password: YES)</code></pre></div><p>Hasło jest dobre, w konsoli MariaDB działa, a skrypt dostaje odmowę. Dlaczego? W cudzysłowie podwójnym Bash podstawia zmienne. <code>$2</code> to drugi argument skryptu, czyli nic. Do bazy poleciało <code>Zima026!</code>. Koperta z cudzysłowów podwójnych jest przezroczysta dla dolara.</p><p>Z <code>set -u</code> dopisanym w drugiej linijce od razu widać winowajcę:</p><div class="kod"><pre><code>typowy.sh: line 3: $2: unbound variable</code></pre></div><p>A ShellCheck łapie to jeszcze przed uruchomieniem, choć opisuje na swój sposób:</p><div class="kod"><pre><code>HASLO=&quot;Zima$2026!&quot;
+           ^-- SC1037 (error): Braces are required for positionals over 9, e.g. ${10}.</code></pre></div><p>Naprawa doraźna: apostrofy, <code>HASLO=&#x27;Zima$2026!&#x27;</code>. Naprawa właściwa: hasło do pliku <code>.cnf</code> z prawami 600, gdzie dolar jest zwykłym znakiem, i zmiana hasła, jeśli ten skrypt był już w Gicie.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><p>Weź trzy swoje skrypty z kursu, przepuść je przez ShellCheck i popraw wszystkie ostrzeżenia. Usuń z nich hasła na sztywno. Wrzuć je do repozytorium Git z sensownymi opisami commitów.</p><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><p>Zadanie było: trzy skrypty przez ShellCheck, wywalić hasła na sztywno, wrzucić do Gita. Pokażę na jednym, reszta idzie tak samo. Oto „przed”:</p><div class="kod"><pre><code>#!/bin/bash
+HASLO=&quot;Lato2026!&quot;
+plik=/srv/backup/sklep-$(date +%F).sql
+mysqldump -u backup -p$HASLO sklep &gt; $plik
+echo &quot;Zrobione: $plik&quot;</code></pre></div><div class="kod"><pre><code>In backup_bazy.sh line 4:
+mysqldump -u backup -p$HASLO sklep &gt; $plik
+                                     ^---^ SC2086 (info): Double quote to prevent globbing and word splitting.</code></pre></div><p>Zauważ, co ShellCheck zgłosił: brak cudzysłowu. A czego nie zgłosił? Hasła w drugiej linijce. ShellCheck pilnuje składni, nie sumienia. Hasło musisz wyrzucić sam. „Po”:</p><div class="kod"><pre><code>#!/bin/bash
+set -euo pipefail
+# Hasło leży w osobnym pliku z prawami 600, nie w skrypcie:
+#   [client]
+#   user=backup
+#   password=...
+DANE_LOGOWANIA=&quot;/etc/backup/mysql.cnf&quot;
+plik=&quot;/srv/backup/sklep-$(date +%F).sql&quot;
+mysqldump --defaults-extra-file=&quot;$DANE_LOGOWANIA&quot; sklep &gt; &quot;$plik&quot;
+echo &quot;Zrobione: $plik&quot;</code></pre></div><div class="kod"><pre><code>shellcheck backup_bazy.sh &amp;&amp; echo &quot;ShellCheck: czysto&quot;
+git init -b main .
+printf &#x27;*.cnf\n*.env\n&#x27; &gt; .gitignore
+git add backup_bazy.sh .gitignore
+git commit -m &quot;backup_bazy: hasło przeniesione do pliku z prawami 600, cudzysłowy wg ShellChecka&quot;
+git log --oneline</code></pre></div><div class="kod"><pre><code>ShellCheck: czysto
+7cf21ff backup_bazy: hasło przeniesione do pliku z prawami 600, cudzysłowy wg ShellChecka</code></pre></div><p><code>.gitignore</code> z <code>*.cnf</code> i <code>*.env</code> to pas bezpieczeństwa: nawet jak ktoś zrobi <code>git add .</code>, pliki z hasłami nie pojadą do repozytorium. I ważne: jeśli hasło było już kiedyś w commicie, to usunięcie go z pliku nie wystarczy. Historia Gita pamięta wszystko, jak teściowa. Hasło trzeba po prostu zmienić.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>To koniec modułu o automatyzacji. Od następnej lekcji zaczynamy przygotowanie do rozmowy rekrutacyjnej i na pierwszy ogień idą pliki i uprawnienia: link twardy kontra symboliczny, i-węzły, <code>chmod 750</code>, SUID, SGID i sticky bit, czyli pytania, na których wykłada się wielu kandydatów.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-104.html" rel="prev">← 104. Instalacja i konfiguracja ze skryptu</a><a class="btn domyslny zolty" href="lekcja-106.html" rel="next">106. Pytania rekrutacyjne: pliki i uprawnienia →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

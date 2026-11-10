@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>115. Projekt 6: LAMP na trzech maszynach z Ansible, wszystko w Git — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 115 kursu Linux i Bash od zera do admina: Projekt 6: LAMP na trzech maszynach z Ansible, wszystko w Git. kursant ma repozytorium Git z inwentarzem, trzema rolami i jednym playbookiem, który na trzech maszynach wirtualnych stawia dwa serwery Apache z PHP i jedną bazę MariaDB, z hasłem schowany">
+<meta property="og:title" content="115. Projekt 6: LAMP na trzech maszynach z Ansible, wszystko w Git — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 115 kursu Linux i Bash od zera do admina: Projekt 6: LAMP na trzech maszynach z Ansible, wszystko w Git. kursant ma repozytorium Git z inwentarzem, trzema rolami i jednym playbookiem, który na trzech maszynach wirtualnych stawia dwa serwery Apache z PHP i jedną bazę MariaDB, z hasłem schowany">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 13</span></div>
+      <div class="boczny-tytul"><a href="index.html#m13">Projekty końcowe</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-110.html" data-lekcja="110"><span class="znacznik"></span><span class="nr">110</span> Projekt 1: nowy serwer w dziesięć minut</a></li><li><a href="lekcja-111.html" data-lekcja="111"><span class="znacznik"></span><span class="nr">111</span> Projekt 2: dwie strony na Apache z HTTPS</a></li><li><a href="lekcja-112.html" data-lekcja="112"><span class="znacznik"></span><span class="nr">112</span> Projekt 3: kopie zapasowe, które naprawdę da się odtworzyć</a></li><li><a href="lekcja-113.html" data-lekcja="113"><span class="znacznik"></span><span class="nr">113</span> Projekt 4: monitor, który krzyczy raz, a nie co pięć minut</a></li><li><a href="lekcja-114.html" data-lekcja="114"><span class="znacznik"></span><span class="nr">114</span> Projekt 5: analizator logów z raportem dziennym</a></li><li><a href="lekcja-115.html" data-lekcja="115" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">115</span> Projekt 6: LAMP na trzech maszynach z Ansible, wszystko w Git</a></li><li><a href="lekcja-116.html" data-lekcja="116"><span class="znacznik"></span><span class="nr">116</span> Egzamin próbny: 20 zadań, dwie godziny, zero podpowiedzi</a></li><li><a href="lekcja-117.html" data-lekcja="117"><span class="znacznik"></span><span class="nr">117</span> Co dalej: certyfikaty, laboratorium domowe i pierwsza praca</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="115" data-modul="13" data-tematy="Ansible: stos LAMP na trzech maszynach wirtualnych, wszystko w repozytorium Git">
+    <div class="belka"><span>Lekcja 115 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m13">Moduł 13</a> › Lekcja 115</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Projekt 6: LAMP na trzech maszynach z Ansible, wszystko w Git</h1>
+      <p class="meta"><span>⏱ ok. 15 min czytania</span><span>· moduł 13: Projekty końcowe</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant ma repozytorium Git z inwentarzem, trzema rolami i jednym playbookiem, który na trzech maszynach wirtualnych stawia dwa serwery Apache z PHP i jedną bazę MariaDB, z hasłem schowanym w Ansible Vault, i umie go bezpiecznie uruchamiać raz za razem.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#plan-budowy">Plan budowy</a></li><li><a href="#repozytorium-plan-biurowca">Repozytorium: plan biurowca</a></li><li><a href="#ansible-cfg-i-inwentarz">ansible.cfg i inwentarz</a></li><li><a href="#zmienne-i-sejf-na-hasla">Zmienne i sejf na hasła</a></li><li><a href="#site-yml-jeden-playbook-trzy-akty">site.yml: jeden playbook, trzy akty</a></li><li><a href="#role-czyli-segregatory-dla-stanowisk">Role, czyli segregatory dla stanowisk</a></li><li><a href="#uruchamiamy">Uruchamiamy</a></li><li><a href="#wszystko-do-gita">Wszystko do Gita</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga">Ściąga</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p>Klient chce sklep. Dwa serwery WWW, żeby jeden mógł paść, a strona dalej działała, i osobna baza danych. Możesz zalogować się na każdą maszynę i przeklikać instalację z poprzednich lekcji. Trzy razy. Bez pomyłki. A za pół roku zrobić to jeszcze raz na nowym sprzęcie i przypomnieć sobie, co właściwie wtedy wpisywałeś.</p><p>Albo piszesz to raz, wrzucasz do Gita i od tej pory cała firma ma jedno polecenie:</p><div class="kod"><pre><code>ansible-playbook site.yml</code></pre></div><p>Dziś ostatni projekt do portfolio i, szczerze, ten, który na rozmowie rekrutacyjnej robi największe wrażenie. Stos LAMP, czyli Linux, Apache, MariaDB i PHP, na trzech maszynach, jednym playbookiem, z rolami i hasłem w sejfie. Cały kod jest poniżej, a każdy jego kawałek przetestowałem.</p></section><section><h2 id="plan-budowy">Plan budowy</h2><p class="ekran">schemat, laptop z Ansible, strzałki SSH do <code>web1</code>, <code>web2</code>, <code>db1</code>; z <code>web1</code> i <code>web2</code> strzałki do <code>db1</code> na porcie 3306</p><p>Trzy maszyny wirtualne z tym samym systemem i siecią host-only:</p><div class="tabela"><table><tr><th>Maszyna</th><th>Adres</th><th>Rola</th></tr><tr><td><code>web1</code></td><td>192.168.56.11</td><td>Apache + PHP</td></tr><tr><td><code>web2</code></td><td>192.168.56.12</td><td>Apache + PHP</td></tr><tr><td><code>db1</code></td><td>192.168.56.21</td><td>MariaDB</td></tr></table></div><p>Ansible pamiętasz z modułu o automatyzacji: to lista zadań opisująca stan docelowy. Nie mówisz „zainstaluj Apache”, tylko „ma być zainstalowany”. Jeśli już jest, Ansible nic nie robi. Jak dobry kierownik budowy: nie każe stawiać ściany, która już stoi.</p><p>Na każdej maszynie potrzebujemy tylko trzech rzeczy: działającego SSH, Pythona (jest w obu rodzinach od razu) i konta z sudo. U mnie konto nazywa się <code>admin</code>. Klucz wgrywamy z laptopa:</p><div class="kod"><pre><code>for h in 192.168.56.11 192.168.56.12 192.168.56.21; do ssh-copy-id admin@$h; done</code></pre></div><p>Kluczyk w kieszeni, kłódka na każdym serwerze. Od tej pory Ansible wchodzi bez pytania o hasło.</p></section><section><h2 id="repozytorium-plan-biurowca">Repozytorium: plan biurowca</h2><p>Tak wygląda cały projekt:</p><div class="kod"><pre><code>lamp/
+├── ansible.cfg
+├── site.yml
+├── .gitignore
+├── inventory/
+│   ├── hosts.ini            # prawdziwe maszyny
+│   └── test.ini             # localhost do testów
+├── group_vars/
+│   ├── all/main.yml         # zmienne dla wszystkich
+│   ├── all/vault.yml        # hasła, zaszyfrowane
+│   ├── web/main.yml
+│   └── db/main.yml
+└── roles/
+    ├── common/tasks/main.yml
+    ├── db/{tasks,handlers,templates,vars}/
+    └── web/{tasks,handlers,templates,vars}/</code></pre></div><p>Ansible ma swoją umowę co do nazw folderów, trochę jak FHS dla Linuksa. Jeśli zadania roli leżą w <code>roles/web/tasks/main.yml</code>, Ansible sam je znajdzie. Nie trzeba mu niczego pokazywać palcem.</p></section><section><h2 id="ansible-cfg-i-inwentarz">ansible.cfg i inwentarz</h2><p><code>ansible.cfg</code> w folderze projektu to ustawienia domyślne, żeby nie dopisywać flag za każdym razem:</p><div class="kod"><pre><code>[defaults]
+inventory = inventory/hosts.ini
+vault_password_file = .vault_pass
+host_key_checking = True
+interpreter_python = auto_silent
+
+[privilege_escalation]
+become = True</code></pre></div><p><code>become = True</code> znaczy: na maszynach rób wszystko przez sudo. Instalujemy pakiety, więc bez tego daleko nie zajedziemy.</p><p>Inwentarz to książka adresowa kuriera. Kto, pod jakim adresem i w jakiej grupie:</p><div class="kod"><pre><code>[web]
+web1 ansible_host=192.168.56.11
+web2 ansible_host=192.168.56.12
+
+[db]
+db1 ansible_host=192.168.56.21
+
+[lamp:children]
+web
+db
+
+[lamp:vars]
+ansible_user=admin</code></pre></div><p><code>lamp:children</code> to grupa grup: „cały nasz sklep”. Sprawdzamy, czy Ansible rozumie to tak jak my:</p><div class="kod"><pre><code>ansible-inventory --graph</code></pre></div><div class="kod"><pre><code>@all:
+  |--@ungrouped:
+  |--@lamp:
+  |  |--@web:
+  |  |  |--web1
+  |  |  |--web2
+  |  |--@db:
+  |  |  |--db1</code></pre></div><p>I drugi inwentarz, do testów na jednej maszynie, gdzie <code>localhost</code> gra wszystkie role naraz:</p><div class="kod"><pre><code># Test na jednej maszynie: localhost gra wszystkie role naraz
+[web]
+localhost ansible_connection=local
+
+[db]
+localhost ansible_connection=local
+
+[lamp:children]
+web
+db</code></pre></div></section><section><h2 id="zmienne-i-sejf-na-hasla">Zmienne i sejf na hasła</h2><p>Zmienne wspólne dla wszystkich, <code>group_vars/all/main.yml</code>:</p><div class="kod"><pre><code>---
+app_name: sklep
+db_name: sklep
+db_user: sklep
+db_pass: &quot;{{ vault_db_pass }}&quot;     # prawdziwe hasło leży zaszyfrowane w vault.yml
+firewall_enabled: true</code></pre></div><p>Zmienne dla grup. Serwery WWW otwierają w zaporze 80 i 443, baza tylko 3306:</p><div class="kod"><pre><code># group_vars/web/main.yml
+---
+firewall_ports: [80/tcp, 443/tcp]</code></pre></div><div class="kod"><pre><code># group_vars/db/main.yml
+---
+firewall_ports: [3306/tcp]</code></pre></div><p>A hasło? Hasło do bazy w Gicie, otwartym tekstem, to jak klucz do mieszkania pod wycieraczką z karteczką „tu jest klucz”. Ansible Vault to sejf: plik jest zaszyfrowany, a Ansible otwiera go w locie, kiedy zna szyfr.</p><div class="kod"><pre><code>echo &#x27;tajne-haslo-do-sejfu&#x27; &gt; .vault_pass
+chmod 600 .vault_pass
+printf -- &#x27;---\nvault_db_pass: &quot;Zm1en-To-Hasl0&quot;\n&#x27; &gt; group_vars/all/vault.yml
+ansible-vault encrypt group_vars/all/vault.yml
+head -2 group_vars/all/vault.yml</code></pre></div><div class="kod"><pre><code>Encryption successful
+$ANSIBLE_VAULT;1.1;AES256
+64336637373033653662393764613938343432326565626362643637363065663761363266353263</code></pre></div><p>Tak wygląda sejf od środka, jeśli nie masz szyfru. <code>ansible-vault view</code> i <code>ansible-vault edit</code> otwierają go dla Ciebie. Konwencja z prefiksem <code>vault_</code> jest prosta: w zwykłym pliku widać, że zmienna <code>db_pass</code> istnieje i skąd bierze wartość, a sama wartość siedzi w sejfie. Plik <code>.vault_pass</code> nigdy nie trafia do Gita:</p><div class="kod"><pre><code># .gitignore
+.vault_pass
+*.retry</code></pre></div><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>w prawdziwej firmie szyfr do sejfu nie leży w pliku, tylko w menedżerze haseł albo w zmiennej CI, a <code>vault_password_file</code> może wskazywać na skrypt, który go stamtąd pobiera.</p></aside></section><section><h2 id="site-yml-jeden-playbook-trzy-akty">site.yml: jeden playbook, trzy akty</h2><div class="kod"><pre><code>---
+- name: Wspólne dla wszystkich maszyn
+  hosts: lamp
+  roles:
+    - common
+
+- name: Baza danych
+  hosts: db
+  roles:
+    - db
+
+- name: Serwery WWW
+  hosts: web
+  roles:
+    - web</code></pre></div><p>Kolejność ma znaczenie. Najpierw wspólne rzeczy wszędzie, potem baza, na końcu WWW, bo strona już przy pierwszym wejściu chce rozmawiać z bazą. Każdy akt dotyczy innej grupy z inwentarza.</p></section><section><h2 id="role-czyli-segregatory-dla-stanowisk">Role, czyli segregatory dla stanowisk</h2><p>Rola to segregator z instrukcjami dla jednego stanowiska w restauracji. Segregator „kucharz”, segregator „kelner”. Nowego kucharza nie uczysz od zera, dajesz mu segregator. Nowy serwer WWW dostaje rolę <code>web</code>.</p><p><strong>Rola </strong><strong><code>common</code></strong>, dla wszystkich maszyn:</p><div class="kod"><pre><code>---
+- name: &quot;[Ubuntu] świeży indeks pakietów&quot;
+  ansible.builtin.apt:
+    update_cache: true
+    cache_valid_time: 3600
+  when: ansible_os_family == &#x27;Debian&#x27;
+
+- name: Podstawowe narzędzia
+  ansible.builtin.package:
+    name: [curl, vim, tar]
+    state: present
+
+- name: &quot;[Ubuntu] ufw: najpierw SSH, potem reszta&quot;
+  community.general.ufw:
+    rule: allow
+    port: &quot;{{ item.split(&#x27;/&#x27;)[0] }}&quot;
+    proto: &quot;{{ item.split(&#x27;/&#x27;)[1] }}&quot;
+  loop: &quot;{{ [&#x27;22/tcp&#x27;] + firewall_ports | default([]) }}&quot;
+  when: firewall_enabled | bool and ansible_os_family == &#x27;Debian&#x27;
+
+- name: &quot;[Ubuntu] ufw włączony&quot;
+  community.general.ufw:
+    state: enabled
+  when: firewall_enabled | bool and ansible_os_family == &#x27;Debian&#x27;
+
+- name: &quot;[RHEL] firewalld: otwarte porty&quot;
+  ansible.posix.firewalld:
+    port: &quot;{{ item }}&quot;
+    permanent: true
+    immediate: true
+    state: enabled
+  loop: &quot;{{ firewall_ports | default([]) }}&quot;
+  when: firewall_enabled | bool and ansible_os_family == &#x27;RedHat&#x27;</code></pre></div><p><code>ansible.builtin.package</code> to twój tłumacz: na Ubuntu woła <code>apt</code>, na RHEL <code>dnf</code>. Zapora jest różna, więc tu już rozdzielamy przez <code>when</code>. Kolejności w zadaniach ufw nie zmieniaj: najpierw wpuszczamy SSH, dopiero potem włączamy ochroniarza. Odwrotnie ochroniarz wyrzuca z budynku także Ciebie, razem z Ansible. [RHEL] firewalld po instalacji ma już otwarte SSH w strefie domyślnej, więc tam dokładamy tylko nasze porty.</p><p><strong>Rola </strong><strong><code>db</code></strong><strong>.</strong> Najpierw różnice między rodzinami, w osobnych plikach:</p><div class="kod"><pre><code># roles/db/vars/Debian.yml
+---
+db_packages: [mariadb-server, python3-pymysql]
+db_socket: /run/mysqld/mysqld.sock
+db_conf: /etc/mysql/mariadb.conf.d/60-lamp.cnf</code></pre></div><div class="kod"><pre><code># roles/db/vars/RedHat.yml
+---
+db_packages: [mariadb-server, python3-PyMySQL]
+db_socket: /var/lib/mysql/mysql.sock
+db_conf: /etc/my.cnf.d/lamp.cnf</code></pre></div><p>Zadania:</p><div class="kod"><pre><code>---
+- name: Zmienne dla tej rodziny systemów
+  ansible.builtin.include_vars: &quot;{{ ansible_os_family }}.yml&quot;
+
+- name: MariaDB i biblioteka PyMySQL dla Ansible
+  ansible.builtin.package:
+    name: &quot;{{ db_packages }}&quot;
+    state: present
+
+- name: Baza słucha nie tylko na localhost
+  ansible.builtin.template:
+    src: lamp.cnf.j2
+    dest: &quot;{{ db_conf }}&quot;
+    mode: &quot;0644&quot;
+  notify: Restart mariadb
+
+- name: MariaDB działa i wstaje z systemem
+  ansible.builtin.service:
+    name: mariadb
+    state: started
+    enabled: true
+  tags: [uslugi]
+
+- name: Baza aplikacji
+  community.mysql.mysql_db:
+    name: &quot;{{ db_name }}&quot;
+    state: present
+    login_unix_socket: &quot;{{ db_socket }}&quot;
+
+- name: Użytkownik aplikacji dla każdego serwera WWW
+  community.mysql.mysql_user:
+    name: &quot;{{ db_user }}&quot;
+    password: &quot;{{ db_pass }}&quot;
+    host: &quot;{{ hostvars[item].ansible_host | default(&#x27;localhost&#x27;) }}&quot;
+    priv: &quot;{{ db_name }}.*:ALL&quot;
+    state: present
+    login_unix_socket: &quot;{{ db_socket }}&quot;
+  loop: &quot;{{ groups[&#x27;web&#x27;] }}&quot;
+  no_log: true</code></pre></div><p>Szablon <code>roles/db/templates/lamp.cnf.j2</code>:</p><div class="kod"><pre><code># {{ ansible_managed }}
+[mysqld]
+bind-address = 0.0.0.0</code></pre></div><p>I handler, <code>roles/db/handlers/main.yml</code>:</p><div class="kod"><pre><code>---
+- name: Restart mariadb
+  ansible.builtin.service:
+    name: mariadb
+    state: restarted
+  tags: [uslugi]</code></pre></div><p>Po kolei, co tu się dzieje.</p><p><code>include_vars</code> z <code>ansible_os_family</code> to rozdzielnia: Ansible na starcie zbiera fakty o maszynie, czyli co to za system, ile ma pamięci, jakie adresy. <code>ansible_os_family</code> to <code>Debian</code> dla Ubuntu i <code>RedHat</code> dla RHEL, Rocky i Almy. Wczytujemy plik o tej nazwie i dalej zadania są te same.</p><p>[Ubuntu] MariaDB domyślnie słucha tylko na <code>127.0.0.1</code>, to ustawienie siedzi w <code>50-server.cnf</code>. Nasz plik ma numer 60, więc jest czytany później i wygrywa. [RHEL] tam domyślna konfiguracja nie ogranicza adresu, ale nasz plik niczemu nie szkodzi, a wszystko jest jawnie zapisane w repozytorium.</p><p><code>notify</code> i handler to „zrób to raz, na końcu, i tylko jeśli coś się zmieniło”. Zmieniłeś konfigurację? Restart. Nie zmieniłeś? Baza działa sobie dalej i nikt jej bez potrzeby nie szarpie.</p><p>Użytkownik bazy powstaje osobno dla każdego serwera WWW, z jego adresu: <code>sklep@192.168.56.11</code> i <code>sklep@192.168.56.12</code>. Klucz do jednego pokoju, wydany na nazwisko i tylko z dwóch konkretnych miejsc. <code>no_log: true</code> sprawia, że hasło nie wyląduje w wyniku na ekranie ani w logach CI.</p><p>I wreszcie <code>tags: [uslugi]</code>. Tagi to naklejki na zadaniach. Możesz potem uruchomić tylko zadania z naklejką (<code>--tags uslugi</code>) albo wszystko oprócz nich (<code>--skip-tags uslugi</code>). Za chwilę zobaczysz, do czego mi się to przydało.</p><p><strong>Rola </strong><strong><code>web</code></strong><strong>:</strong></p><div class="kod"><pre><code># roles/web/vars/Debian.yml
+---
+web_packages: [apache2, php, libapache2-mod-php, php-mysql]
+web_services: [apache2]</code></pre></div><div class="kod"><pre><code># roles/web/vars/RedHat.yml
+---
+web_packages: [httpd, php, php-mysqlnd]
+web_services: [httpd, php-fpm]</code></pre></div><div class="kod"><pre><code>---
+- name: Zmienne dla tej rodziny systemów
+  ansible.builtin.include_vars: &quot;{{ ansible_os_family }}.yml&quot;
+
+- name: Apache i PHP
+  ansible.builtin.package:
+    name: &quot;{{ web_packages }}&quot;
+    state: present
+  notify: Restart www
+
+- name: &quot;[RHEL] SELinux: Apache może łączyć się z bazą po sieci&quot;
+  ansible.posix.seboolean:
+    name: httpd_can_network_connect_db
+    state: true
+    persistent: true
+  when: ansible_os_family == &#x27;RedHat&#x27; and ansible_selinux.status | default(&#x27;&#x27;) == &#x27;enabled&#x27;
+
+- name: Strona startowa aplikacji
+  ansible.builtin.template:
+    src: index.php.j2
+    dest: /var/www/html/index.php
+    mode: &quot;0640&quot;
+    owner: root
+    group: &quot;{{ &#x27;www-data&#x27; if ansible_os_family == &#x27;Debian&#x27; else &#x27;apache&#x27; }}&quot;
+
+- name: Bez domyślnej strony powitalnej
+  ansible.builtin.file:
+    path: /var/www/html/index.html
+    state: absent
+
+- name: Usługi WWW działają i wstają z systemem
+  ansible.builtin.service:
+    name: &quot;{{ item }}&quot;
+    state: started
+    enabled: true
+  loop: &quot;{{ web_services }}&quot;
+  tags: [uslugi]</code></pre></div><p>Handler <code>Restart www</code> wygląda jak ten od bazy, tylko przechodzi pętlą po <code>web_services</code>.</p><p>Strona, <code>roles/web/templates/index.php.j2</code>:</p><div class="kod"><pre><code>&lt;?php
+// {{ ansible_managed }}
+$db = @new mysqli(&quot;{{ hostvars[groups[&#x27;db&#x27;][0]].ansible_host | default(&#x27;127.0.0.1&#x27;) }}&quot;,
+                  &quot;{{ db_user }}&quot;, &quot;{{ db_pass }}&quot;, &quot;{{ db_name }}&quot;);
+$stan = $db-&gt;connect_errno ? &quot;BŁĄD: &quot; . $db-&gt;connect_error : &quot;OK, MariaDB &quot; . $db-&gt;server_info;
+?&gt;
+&lt;h1&gt;{{ app_name }}&lt;/h1&gt;
+&lt;p&gt;Serwuje: {{ inventory_hostname }}&lt;/p&gt;
+&lt;p&gt;Baza danych: &lt;?= htmlspecialchars($stan) ?&gt;&lt;/p&gt;</code></pre></div><p>Szablon Jinja to formularz z lukami. Ansible wpisuje w luki adres pierwszej maszyny z grupy <code>db</code>, nazwę bazy i hasło, a do każdego serwera wpisuje jego własną nazwę. Dzięki temu od razu widać, który serwer Ci odpowiedział. Plik ma uprawnienia <code>0640</code> i grupę serwera WWW, bo jest w nim hasło, a inni użytkownicy maszyny nie mają czego tam szukać.</p><p>Trzy różnice między rodzinami, które tu siedzą:</p><p>[Ubuntu] Apache to <code>apache2</code>, a PHP działa jako moduł w środku Apache (<code>libapache2-mod-php</code>).</p><p>[RHEL] Apache to <code>httpd</code>, a PHP domyślnie działa jako osobna usługa <code>php-fpm</code>, do której Apache przekazuje skrypty. Dlatego na liście usług są dwie pozycje.</p><p>[RHEL] SELinux domyślnie nie pozwala Apache otwierać połączeń do bazy na innej maszynie. Strona zwraca wtedy „Permission denied”, chociaż hasło jest dobre. Przełącznik <code>httpd_can_network_connect_db</code> to właśnie ta zgoda. To ten sam mechanizm booleanów, który znasz z modułu o SELinux.</p></section><section><h2 id="uruchamiamy">Uruchamiamy</h2><p>Najpierw sprawdzamy, czy to w ogóle jest poprawny YAML i poprawny playbook:</p><div class="kod"><pre><code>ansible-playbook site.yml --syntax-check
+ansible-playbook site.yml --list-hosts
+ansible lamp -m ping</code></pre></div><div class="kod"><pre><code>playbook: site.yml
+
+  play #1 (lamp): Wspólne dla wszystkich maszyn	TAGS: []
+    pattern: [&#x27;lamp&#x27;]
+    hosts (3):
+      web2
+      web1
+      db1</code></pre></div><p>A potem na poważnie:</p><div class="kod"><pre><code>ansible-playbook site.yml</code></pre></div><p>Zanim puścisz to na trzy maszyny, możesz sprawdzić całość na jednej, na inwentarzu testowym <code>test.ini</code>, gdzie <code>localhost</code> gra wszystkie trzy role. Tu przydają się naklejki: na maszynie do ćwiczeń, na której usługi uruchamiasz sam, a zapory nie chcesz ruszać, przepuszczasz playbook bez nich:</p><div class="kod"><pre><code>ansible-playbook -i inventory/test.ini site.yml -e firewall_enabled=false --skip-tags uslugi</code></pre></div><div class="kod"><pre><code>TASK [db : Baza słucha nie tylko na localhost] *********************************
+changed: [localhost]
+TASK [db : Baza aplikacji] *****************************************************
+ok: [localhost]
+TASK [db : Użytkownik aplikacji dla każdego serwera WWW] ***********************
+changed: [localhost] =&gt; (item=None)
+TASK [web : Apache i PHP] ******************************************************
+changed: [localhost]
+TASK [web : [RHEL] SELinux: Apache może łączyć się z bazą po sieci] ************
+skipping: [localhost]
+TASK [web : Strona startowa aplikacji] *****************************************
+changed: [localhost]</code></pre></div><p><code>(item=None)</code> to <code>no_log</code> w akcji: Ansible nie pokazuje nawet, który element pętli przerabiał. Na trzech maszynach wirtualnych uruchamiasz po prostu <code>ansible-playbook site.yml</code>, bez żadnych flag.</p><p>Sprawdzenie, czy sklep żyje:</p><div class="kod"><pre><code>curl -s http://127.0.0.1/</code></pre></div><div class="kod"><pre><code>&lt;h1&gt;sklep&lt;/h1&gt;
+&lt;p&gt;Serwuje: localhost&lt;/p&gt;
+&lt;p&gt;Baza danych: OK, MariaDB 10.11.14-MariaDB-0ubuntu0.24.04.1&lt;/p&gt;</code></pre></div><p>Na trzech maszynach wirtualnych robisz <code>curl http://192.168.56.11/</code> i <code>curl http://192.168.56.12/</code>. Dostajesz dwie różne nazwy w „Serwuje” i tę samą bazę w obu odpowiedziach.</p><p>A teraz najważniejszy test w całym Ansible. Uruchamiamy to samo drugi raz:</p><div class="kod"><pre><code>PLAY RECAP *********************************************************************
+localhost                  : ok=14   changed=0    unreachable=0    failed=0    skipped=4    rescued=0    ignored=0</code></pre></div><p><code>changed=0</code>. Wszystko jest już w stanie docelowym, więc nic się nie zmieniło. To się nazywa idempotencja i to jest różnica między playbookiem a skryptem, który po drugim uruchomieniu założyłby drugiego użytkownika, dopisał drugi raz tę samą linijkę do konfiguracji i zrestartował wszystko „na wszelki wypadek”. Jeśli w drugim przebiegu coś ciągle jest <code>changed</code>, masz w playbooku zadanie, które kłamie.</p></section><section><h2 id="wszystko-do-gita">Wszystko do Gita</h2><div class="kod"><pre><code>git init -b main
+git add .
+git status --short
+git commit -m &quot;LAMP: role common, db, web; inwentarz web1/web2/db1; hasło w vault&quot;
+git check-ignore -v .vault_pass</code></pre></div><div class="kod"><pre><code>[main (root-commit) 2a09ac2] LAMP: role common, db, web; inwentarz web1/web2/db1; hasło w vault
+.gitignore:1:.vault_pass	.vault_pass</code></pre></div><p>Przed pierwszym commitem zawsze patrz w <code>git status</code>. Jeśli widać tam <code>.vault_pass</code>, zatrzymaj się. Hasło wypchnięte na GitHuba trzeba uznać za spalone, nawet jeśli skasujesz je minutę później, bo zostaje w historii.</p><p>Od teraz każda zmiana na serwerach to commit z opisem. Za pół roku <code>git log</code> powie Ci, kto, kiedy i po co otworzył port 3306. Dokumentacja, która pisze się sama, bo inaczej nic by nie działało.</p></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p>Ansible nie ma na serwerach żadnego agenta. Dla każdego zadania robi mniej więcej to samo:</p><ol><li>Otwiera połączenie SSH do maszyny, a przy kilku zadaniach pod rząd używa tego samego połączenia.</li><li>Pakuje moduł, na przykład <code>mysql_user</code>, razem z argumentami w mały program w Pythonie i wysyła go na maszynę.</li><li>Uruchamia go tam, przez <code>sudo</code>, bo mamy <code>become</code>.</li><li>Moduł sprawdza stan, w razie potrzeby go zmienia i odsyła JSON: <code>changed</code> albo nie, <code>failed</code> albo nie.</li><li>Ansible sprząta po sobie pliki tymczasowe i bierze następne zadanie.</li></ol><p>Z tego wynikają dwie praktyczne rzeczy. Po pierwsze, moduł działa na maszynie docelowej, więc biblioteki, których potrzebuje, muszą być tam, a nie na Twoim laptopie. Stąd <code>python3-pymysql</code> w roli <code>db</code>. Po drugie, „zebranie faktów” na początku każdego aktu to osobny moduł <code>setup</code>, który sprawdza system i wypełnia zmienne <code>ansible_os_family</code>, <code>ansible_selinux</code> i setki innych.</p><p>Domyślnie Ansible pracuje na pięciu maszynach równolegle. Zadanie numer jeden leci na wszystkich, potem zadanie numer dwa na wszystkich i tak dalej. Jak kelner, który najpierw roznosi zupy na wszystkie stoliki, a dopiero potem drugie danie.</p></section><section><h2 id="sciaga">Ściąga</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga</th><th>Co robi</th></tr><tr><td><code>ansible-playbook</code></td><td><code>--syntax-check</code></td><td>sprawdza składnię, niczego nie uruchamia</td></tr><tr><td><code>ansible-playbook</code></td><td><code>--check --diff</code></td><td>próba na sucho: co by się zmieniło i jak</td></tr><tr><td><code>ansible-playbook</code></td><td><code>--list-hosts</code> / <code>--list-tasks</code></td><td>na jakich maszynach i jakie zadania</td></tr><tr><td><code>ansible-playbook</code></td><td><code>-l web1</code></td><td>tylko wybrane maszyny</td></tr><tr><td><code>ansible-playbook</code></td><td><code>--tags X</code> / <code>--skip-tags X</code></td><td>tylko zadania z naklejką / bez niej</td></tr><tr><td><code>ansible-playbook</code></td><td><code>-e zmienna=wartość</code></td><td>nadpisuje zmienną z linii poleceń</td></tr><tr><td><code>ansible-playbook</code></td><td><code>--start-at-task &quot;nazwa&quot;</code></td><td>zaczyna od wskazanego zadania</td></tr><tr><td><code>ansible</code></td><td><code>GRUPA -m ping</code></td><td>czy Ansible dosięga maszyn</td></tr><tr><td><code>ansible-inventory</code></td><td><code>--graph</code></td><td>drzewo grup i maszyn</td></tr><tr><td><code>ansible-vault</code></td><td><code>encrypt</code> / <code>view</code> / <code>edit</code></td><td>szyfruje / pokazuje / edytuje sejf</td></tr><tr><td><code>ansible-vault</code></td><td><code>encrypt_string</code></td><td>szyfruje pojedynczą wartość do wklejenia w YAML</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>Pierwsza wersja roli <code>db</code> nie miała <code>python3-pymysql</code> na liście pakietów. Wynik:</p><div class="kod"><pre><code>fatal: [db1]: FAILED! =&gt; {
+    &quot;changed&quot;: false,
+    &quot;msg&quot;: &quot;A MySQL module is required: for Python 2.7 either PyMySQL, or MySQL-python, or for Python 3.X mysqlclient or PyMySQL. Consider setting ansible_python_interpreter to use the intended Python version.&quot;
+}</code></pre></div><p>To bardzo częsty widok. Ludzie instalują wtedy PyMySQL na swoim laptopie przez <code>pip</code>, uruchamiają ponownie i… nic. Bo moduł <code>mysql_db</code> nie działa na laptopie. Jest wysyłany na <code>db1</code> i tam uruchamiany przez tamtejszego Pythona. Biblioteka musi być na serwerze: [Ubuntu] <code>python3-pymysql</code>, [RHEL] <code>python3-PyMySQL</code>. Dlatego w roli instalujemy ją w tym samym zadaniu co MariaDB, zanim pierwszy raz dotkniemy bazy.</p><p>I mały bonus z tej samej rodziny. Na serwerze, na którym ktoś wcześniej „tylko zainstalował nowszego Pythona”, polecenie <code>python3</code> może wskazywać na innego Pythona niż systemowy i Ansible nie zobaczy bibliotek zainstalowanych z pakietów. Końcówka komunikatu, „Consider setting ansible_python_interpreter”, mówi dokładnie o tym. Pomaga wskazanie systemowego Pythona, na Ubuntu 24.04 na przykład <code>-e ansible_python_interpreter=/usr/bin/python3.12</code>. Na czystej maszynie wirtualnej tego problemu nie będzie.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><p>Dodaj do repozytorium rolę <code>admini</code>, która na wszystkich trzech maszynach zakłada konta z listy w <code>group_vars/all/main.yml</code> (na przykład <code>anna</code> i <code>piotr</code>), wgrywa im klucze SSH i daje im sudo przez plik w <code>/etc/sudoers.d</code>, sprawdzany przed zapisem przez <code>visudo</code>. Zrób commit i uruchom playbook dwa razy: za drugim razem ma być <code>changed=0</code>.</p><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><p>Zadanie było takie: rola <code>admini</code>, która na wszystkich trzech maszynach zakłada konta z listy, wgrywa klucze SSH i daje sudo. Za drugim uruchomieniem ma być <code>changed=0</code>.</p><p>Najpierw lista ludzi. Trzymamy ją w zmiennych, a nie w roli, bo ludzie przychodzą i odchodzą, a rola zostaje:</p><div class="kod"><pre><code># group_vars/all/main.yml (dopisane na końcu)
+admini:
+  - name: anna
+    klucz: &quot;ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOPY4jAQA/eUKlBSNRapNBQUOh2jeYXNo+WUDGezx354 anna@laptop&quot;
+  - name: piotr
+    klucz: &quot;ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDsh6YSOG+MEiJkU/ZD3BLqbgv6HPFENlU+lMJgsWWKo piotr@laptop&quot;</code></pre></div><p>Klucz publiczny to kłódka, więc spokojnie może leżeć w repozytorium. Kluczyk, czyli klucz prywatny, zostaje w kieszeni Anny. Gdyby ktoś chciał wrzucić do Gita klucz prywatny, to tak, jakby wywiesić na drzwiach biura kopię klucza z karteczką „żeby nikt nie musiał dzwonić”.</p><p>Teraz sama rola:</p><div class="kod"><pre><code># roles/admini/tasks/main.yml
+---
+- name: Grupa adminów
+  ansible.builtin.group:
+    name: admini
+    state: present
+
+- name: Konta adminów
+  ansible.builtin.user:
+    name: &quot;{{ item.name }}&quot;
+    groups: admini
+    append: true
+    shell: /bin/bash
+    create_home: true
+  loop: &quot;{{ admini }}&quot;
+
+- name: Klucze SSH adminów
+  ansible.posix.authorized_key:
+    user: &quot;{{ item.name }}&quot;
+    key: &quot;{{ item.klucz }}&quot;
+    exclusive: true
+  loop: &quot;{{ admini }}&quot;
+
+- name: Sudo dla grupy admini (sprawdzane przez visudo przed zapisem)
+  ansible.builtin.template:
+    src: admini.sudoers.j2
+    dest: /etc/sudoers.d/admini
+    owner: root
+    group: root
+    mode: &quot;0440&quot;
+    validate: /usr/sbin/visudo -cf %s</code></pre></div><div class="kod"><pre><code># roles/admini/templates/admini.sudoers.j2
+# {{ ansible_managed }}
+%admini ALL=(ALL) ALL</code></pre></div><p>Trzy rzeczy, na które warto zwrócić uwagę. <code>append: true</code> w module <code>user</code>: bez tego Ansible ustawi listę grup na dokładnie „admini” i wyrzuci człowieka z wszystkich innych grup, do których należał. Jak przy przeprowadzce: chciałeś dopisać nazwisko na domofonie, a ktoś zdjął wszystkie pozostałe. <code>exclusive: true</code> w kluczach znaczy „w authorized_keys ma być tylko to, co jest w repozytorium”, więc stary klucz, który ktoś dopisał ręcznie trzy lata temu, zniknie. I najważniejsze: <code>validate</code> w szablonie. Ansible najpierw zapisuje plik tymczasowy, puszcza na nim <code>visudo -cf</code>, i dopiero jak visudo powie „parsed OK”, podmienia plik. Literówka w sudoers bez tej linijki to klasyczny sposób, żeby jednym commitem odebrać sudo wszystkim adminom na wszystkich serwerach naraz.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p><code>authorized_key</code> jest w kolekcji <code>ansible.posix</code>. Pełny pakiet <code>ansible</code> ją zawiera, samo <code>ansible-core</code> nie. Wtedy: <code>ansible-galaxy collection install ansible.posix</code>, a najlepiej wpisz ją do <code>collections/requirements.yml</code> w repozytorium.</p></aside><p>W <code>site.yml</code> rola dochodzi do pierwszego aktu, tego dla wszystkich maszyn:</p><div class="kod"><pre><code>- name: Wspólne dla wszystkich maszyn
+  hosts: lamp
+  roles:
+    - common
+    - admini</code></pre></div><p>Commit i dwa uruchomienia. Testowałem rolę lokalnie, stąd <code>localhost</code> zamiast web1:</p><div class="kod"><pre><code>git add group_vars/all/main.yml roles/admini site.yml
+git commit -m &quot;Rola admini: konta, klucze SSH i sudo dla grupy admini&quot;
+ansible-playbook site.yml
+ansible-playbook site.yml</code></pre></div><div class="kod"><pre><code>localhost  : ok=5  changed=2  unreachable=0  failed=0  skipped=0 ...
+localhost  : ok=5  changed=0  unreachable=0  failed=0  skipped=0 ...</code></pre></div><p>Za drugim razem zero zmian. Lista zadań opisuje stan docelowy, a stan już jest docelowy, więc Ansible tylko kiwa głową. I sprawdzenie na maszynie:</p><div class="kod"><pre><code>sudo -l -U anna</code></pre></div><div class="kod"><pre><code>User anna may run the following commands on vm:
+    (ALL) ALL</code></pre></div></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Koniec projektów, czas na sprawdzian. W następnej lekcji egzamin próbny w stylu RHCSA i LFCS: kilkanaście zadań, zegar, zero podpowiedzi. A potem rozwiązania krok po kroku.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-114.html" rel="prev">← 114. Projekt 5: analizator logów z raportem dziennym</a><a class="btn domyslny zolty" href="lekcja-116.html" rel="next">116. Egzamin próbny: 20 zadań, dwie godziny, zero podpowiedzi →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

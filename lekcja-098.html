@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>98. Kopie zapasowe na serio — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 98 kursu Linux i Bash od zera do admina: Kopie zapasowe na serio. kursant zna zasadę 3-2-1, rozróżnia kopię pełną, przyrostową i różnicową, robi kopie przez rsync, tar, borg i restic, a przede wszystkim umie z nich odtworzyć dane i sprawdzić, że odtworzenie działa.">
+<meta property="og:title" content="98. Kopie zapasowe na serio — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 98 kursu Linux i Bash od zera do admina: Kopie zapasowe na serio. kursant zna zasadę 3-2-1, rozróżnia kopię pełną, przyrostową i różnicową, robi kopie przez rsync, tar, borg i restic, a przede wszystkim umie z nich odtworzyć dane i sprawdzić, że odtworzenie działa.">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 10</span></div>
+      <div class="boczny-tytul"><a href="index.html#m10">Usługi i serwery</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-087.html" data-lekcja="87"><span class="znacznik"></span><span class="nr">87</span> Zadania o wyznaczonej godzinie i powiadomienia</a></li><li><a href="lekcja-088.html" data-lekcja="88"><span class="znacznik"></span><span class="nr">88</span> Apache: instalacja</a></li><li><a href="lekcja-089.html" data-lekcja="89"><span class="znacznik"></span><span class="nr">89</span> Apache: konfiguracja</a></li><li><a href="lekcja-090.html" data-lekcja="90"><span class="znacznik"></span><span class="nr">90</span> Apache z HTTPS</a></li><li><a href="lekcja-091.html" data-lekcja="91"><span class="znacznik"></span><span class="nr">91</span> Nginx, reverse proxy i rozkładanie ruchu</a></li><li><a href="lekcja-092.html" data-lekcja="92"><span class="znacznik"></span><span class="nr">92</span> Bazy danych dla admina</a></li><li><a href="lekcja-093.html" data-lekcja="93"><span class="znacznik"></span><span class="nr">93</span> Stos LAMP od zera</a></li><li><a href="lekcja-094.html" data-lekcja="94"><span class="znacznik"></span><span class="nr">94</span> Kontenery, część 1</a></li><li><a href="lekcja-095.html" data-lekcja="95"><span class="znacznik"></span><span class="nr">95</span> Kontenery, część 2</a></li><li><a href="lekcja-096.html" data-lekcja="96"><span class="znacznik"></span><span class="nr">96</span> Maszyny wirtualne: KVM i libvirt</a></li><li><a href="lekcja-097.html" data-lekcja="97"><span class="znacznik"></span><span class="nr">97</span> Monitorowanie</a></li><li><a href="lekcja-098.html" data-lekcja="98" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">98</span> Kopie zapasowe na serio</a></li><li><a href="lekcja-099.html" data-lekcja="99"><span class="znacznik"></span><span class="nr">99</span> Gdy serwer nie wstaje</a></li><li><a href="lekcja-100.html" data-lekcja="100"><span class="znacznik"></span><span class="nr">100</span> Metoda rozwiązywania problemów</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="98" data-modul="10" data-tematy="zasada 3-2-1, pełna, przyrostowa, różnicowa, rsync, tar, borg i restic, test odtwarzania">
+    <div class="belka"><span>Lekcja 98 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m10">Moduł 10</a> › Lekcja 98</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Kopie zapasowe na serio</h1>
+      <p class="meta"><span>⏱ ok. 13 min czytania</span><span>· moduł 10: Usługi i serwery</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant zna zasadę 3-2-1, rozróżnia kopię pełną, przyrostową i różnicową, robi kopie przez <code>rsync</code>, <code>tar</code>, borg i restic, a przede wszystkim umie z nich odtworzyć dane i sprawdzić, że odtworzenie działa.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#zasada-3-2-1">Zasada 3-2-1</a></li><li><a href="#pelna-przyrostowa-roznicowa">Pełna, przyrostowa, różnicowa</a></li><li><a href="#rsync-i-migawki-na-twardych-dowiazaniach">rsync i migawki na twardych dowiązaniach</a></li><li><a href="#borg-kopie-z-deduplikacja-i-szyfrowaniem">borg: kopie z deduplikacją i szyfrowaniem</a></li><li><a href="#restic-to-samo-inaczej">restic: to samo, inaczej</a></li><li><a href="#test-odtwarzania">Test odtwarzania</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga-flag">Ściąga flag</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p>„Macie kopię, prawda?”. Każdy admin ma kopię. Dopóki ktoś nie poprosi, żeby z niej coś przywrócić. Wtedy okazuje się, że skrypt od pół roku kończył się błędem, którego nikt nie czytał. Albo że kopia leżała na tym samym dysku, który właśnie padł. Albo że jest, ale zaszyfrowana hasłem, które znał tylko kolega, który odszedł w marcu.</p><p>Powiem to raz i będę powtarzał do końca kursu: <strong>nikogo nie obchodzi, czy robisz kopie. Obchodzi ich, czy umiesz odtworzyć dane.</strong> Dziś zbudujemy porządny system kopii, a potem zrobimy rzecz, której nie robi prawie nikt: sprawdzimy, czy z tej kopii da się coś odzyskać.</p></section><section><h2 id="zasada-3-2-1">Zasada 3-2-1</h2><p>Wyobraź sobie, że masz jedyne zdjęcia z wesela. Trzymasz je na laptopie. Laptop kradną. Dobra, nauczka, robisz kopię na dysk zewnętrzny. Trzymasz go… w torbie z laptopem. Kradną torbę. Kolejna nauczka, kopiujesz na drugi dysk i trzymasz w szufladzie w domu. Mieszkanie zalewa sąsiad z góry. Wszystko w jednym miejscu, wszystko mokre.</p><p>Z takich nauczek powstała <strong>zasada 3-2-1</strong>:</p><ul><li><strong>3</strong> kopie danych, licząc oryginał,</li><li>na <strong>2</strong> różnych nośnikach albo w dwóch różnych systemach,</li><li><strong>1</strong> kopia poza budynkiem.</li></ul><p>W serwerowni wygląda to tak: dane na serwerze, kopia na serwerze kopii w tej samej firmie, druga kopia w innym mieście albo w chmurze.</p><p>Do tego dwie rzeczy, których zasada wprost nie mówi, a dziś są równie ważne. Po pierwsze: przynajmniej jedna kopia powinna być taka, której atakujący nie skasuje, nawet jak przejmie serwer. Program szyfrujący dane dla okupu najpierw szuka kopii. Jeśli Twój serwer może skasować kopie, to może je skasować też ten, kto go przejął. Po drugie: kopia jest warta tyle, ile ostatni udany test odtwarzania.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>kopia „nie do skasowania” to na przykład repozytorium borga w trybie <code>--append-only</code> po stronie serwera kopii, kubeł S3 z blokadą obiektów albo nośnik fizycznie odłączany. Synchronizacja i RAID to nie kopie. RAID chroni przed awarią dysku, ale <code>rm</code> wykona się na obu dyskach naraz z zachwycającą sprawnością.</p></aside></section><section><h2 id="pelna-przyrostowa-roznicowa">Pełna, przyrostowa, różnicowa</h2><p>Trzy sposoby, jak często i ile kopiować. Wyobraź sobie zeszyt z notatkami ze studiów.</p><ul><li><strong>Pełna kopia</strong> — kserujesz cały zeszyt. Bezpieczne, ale drogie i długie.</li><li><strong>Przyrostowa</strong> (incremental) — kserujesz tylko strony zapisane od ostatniego ksero, jakiegokolwiek. Szybkie i tanie. Ale żeby odtworzyć zeszyt, potrzebujesz pełnej i WSZYSTKICH przyrostów po kolei. Zgubisz jeden ze środka, łańcuch pęka.</li><li><strong>Różnicowa</strong> (differential) — kserujesz wszystko, co się zmieniło od ostatniej PEŁNEJ. Każdego dnia trochę więcej stron. Do odtworzenia wystarczą dwie rzeczy: pełna i ostatnia różnicowa.</li></ul><p>Pokażę wszystkie trzy na zwykłym <code>tar</code>. Klucz to opcja <code>--listed-incremental</code>, czyli plik-notes, w którym <code>tar</code> zapisuje, co już widział.</p><div class="kod"><pre><code>mkdir -p dane kopie
+for i in 1 2 3; do echo &quot;Faktura nr $i&quot; &gt; dane/faktura$i.txt; done
+head -c 5M /dev/urandom &gt; dane/zdjecie.jpg
+
+# niedziela: pełna
+tar -czf kopie/pelna.tar.gz --listed-incremental=kopie/stan.snar dane
+cp kopie/stan.snar kopie/stan-pelna.snar
+
+# poniedziałek: nowa faktura, przyrost
+echo &quot;Faktura nr 4&quot; &gt; dane/faktura4.txt
+tar -czf kopie/przyrost1.tar.gz --listed-incremental=kopie/stan.snar dane
+
+# wtorek: kolejna, przyrost
+echo &quot;Faktura nr 5&quot; &gt; dane/faktura5.txt
+tar -czf kopie/przyrost2.tar.gz --listed-incremental=kopie/stan.snar dane
+
+# wtorek, wersja różnicowa: zawsze od notesu z pełnej
+cp kopie/stan-pelna.snar kopie/stan-roz.snar
+tar -czf kopie/roznicowa.tar.gz --listed-incremental=kopie/stan-roz.snar dane</code></pre></div><p>Co jest w środku:</p><div class="kod"><pre><code>ls -lh kopie/*.tar.gz
+tar -tzf kopie/przyrost2.tar.gz
+tar -tzf kopie/roznicowa.tar.gz</code></pre></div><div class="kod"><pre><code>-rw-r--r-- 1 root root 5.1M Nov  4 02:38 kopie/pelna.tar.gz
+-rw-r--r-- 1 root root  225 Nov  4 02:38 kopie/przyrost1.tar.gz
+-rw-r--r-- 1 root root  208 Nov  4 02:38 kopie/przyrost2.tar.gz
+-rw-r--r-- 1 root root  238 Nov  4 02:38 kopie/roznicowa.tar.gz
+
+dane/
+dane/faktura5.txt
+
+dane/
+dane/faktura4.txt
+dane/faktura5.txt</code></pre></div><p>Pełna: 5 MB. Przyrosty: po dwieście bajtów. Wtorkowy przyrost ma tylko fakturę 5, różnicowa ma 4 i 5. Dokładnie jak w zeszycie.</p><p>I teraz najważniejsze, odtworzenie. Przy przyrostach rozpakowujesz wszystko po kolei, od pełnej:</p><div class="kod"><pre><code>mkdir odtw
+for f in pelna przyrost1 przyrost2; do
+    tar -xzf kopie/$f.tar.gz --listed-incremental=/dev/null -C odtw
+done
+diff -r dane odtw/dane &amp;&amp; echo IDENTYCZNE</code></pre></div><div class="kod"><pre><code>IDENTYCZNE</code></pre></div><p><code>--listed-incremental=/dev/null</code> przy rozpakowaniu mówi <code>tar</code>-owi: „to są kawałki łańcucha, odtwarzaj także skasowania”. Jak ktoś między kopiami usunie plik, przyrost to zapamięta i przy odtwarzaniu plik też zniknie. <code>diff -r</code> porównuje dwa drzewa folderów i milczy, jeśli są identyczne. Milczenie <code>diff</code>-a to najpiękniejsza cisza w życiu admina.</p></section><section><h2 id="rsync-i-migawki-na-twardych-dowiazaniach">rsync i migawki na twardych dowiązaniach</h2><p><code>rsync</code> znasz z modułu o sieci. Kopiuje tylko różnice i świetnie nadaje się do kopii na drugi serwer. Ale zwykły <code>rsync -a --delete</code> to lustro, nie kopia. Skasujesz plik w źródle, w nocy zniknie i w lustrze.</p><p>Jest sztuczka, która z <code>rsync</code> robi system migawek. Każdy dzień w osobnym folderze, ale niezmienione pliki nie zajmują miejsca drugi raz. To opcja <code>--link-dest</code>. Pamiętasz twarde dowiązania? Jeden plik, kilka nazw, jak jedno mieszkanie z dwoma tabliczkami na drzwiach.</p><div class="kod"><pre><code>rsync -a --delete dane/ migawki/2026-11-03/
+echo &quot;Faktura nr 6&quot; &gt; dane/faktura6.txt
+rsync -a --delete --link-dest=../2026-11-03 dane/ migawki/2026-11-04/
+
+du -sh migawki/*
+ls -li migawki/*/zdjecie.jpg</code></pre></div><div class="kod"><pre><code>5.1M	migawki/2026-11-03
+8.0K	migawki/2026-11-04
+
+1484127 -rw-r--r-- 2 root root 5242880 Nov  4 02:38 migawki/2026-11-03/zdjecie.jpg
+1484127 -rw-r--r-- 2 root root 5242880 Nov  4 02:38 migawki/2026-11-04/zdjecie.jpg</code></pre></div><p>Druga migawka zajmuje 8 KB, a jest w niej komplet. Ten sam numer i-węzła i licznik dowiązań <code>2</code>: zdjęcie leży na dysku raz, ma dwie tabliczki. Ścieżka w <code>--link-dest</code> liczy się względem folderu docelowego, stąd <code>../</code>. Zapamiętaj też ukośnik na końcu źródła: <code>dane/</code> to „zawartość folderu”, <code>dane</code> to „folder razem z nazwą”.</p><p>Przed każdym <code>--delete</code> w nowym skrypcie: <code>-n</code>, czyli próba na sucho.</p><div class="kod"><pre><code>rm dane/faktura6.txt
+rsync -an --delete -v dane/ migawki/2026-11-04/</code></pre></div><div class="kod"><pre><code>sending incremental file list
+deleting faktura6.txt</code></pre></div><p>Wolisz przeczytać „deleting” na ekranie niż w mailu od księgowej.</p></section><section><h2 id="borg-kopie-z-deduplikacja-i-szyfrowaniem">borg: kopie z deduplikacją i szyfrowaniem</h2><p><code>tar</code> i <code>rsync</code> są wszędzie i to ich siła. Ale zarządzanie przyrostami, szyfrowanie i usuwanie starych kopii musisz sklejać sam. Do tego są narzędzia z deduplikacją. Pierwsze to <strong>borg</strong>.</p><p>Deduplikacja to szatnia w teatrze. Sto osób przyszło w identycznej czarnej kurtce, a szatniarz wiesza jedną i daje sto numerków. Borg tnie pliki na kawałki, liczy z każdego odcisk palca i każdy kawałek zapisuje tylko raz, choćby występował w stu kopiach.</p><p>[Ubuntu] <code>sudo apt install borgbackup</code>. [RHEL] Z repozytorium EPEL: <code>sudo dnf install borgbackup</code>.</p><div class="kod"><pre><code>export BORG_PASSPHRASE=&#x27;Dlugie-Haslo-Do-Kopii-2026&#x27;
+borg init --encryption=repokey repo-borg
+borg create --stats --compression zstd repo-borg::&#x27;{hostname}-{now:%Y-%m-%d_%H%M}&#x27; dane</code></pre></div><p>Repozytorium to magazyn, archiwum to jedna kopia w magazynie. <code>{hostname}</code> i <code>{now}</code> borg sam zamienia na nazwę serwera i datę. <code>repokey</code> znaczy, że klucz szyfrujący leży w repozytorium, zamknięty Twoim hasłem.</p><p>Dopisuję jedną fakturę i robię drugą kopię. Statystyki z drugiego razu:</p><div class="kod"><pre><code>Archive name: vm-2026-11-04_0240
+Number of files: 8
+                       Original size      Compressed size    Deduplicated size
+This archive:                5.24 MB              5.24 MB                609 B
+All archives:               10.49 MB             10.49 MB              5.25 MB</code></pre></div><p>Druga kopia ma komplet 5 MB danych, a dołożyła do magazynu 609 bajtów. Każde archiwum wygląda jak pełna kopia, a kosztuje jak przyrostowa. Najlepsze z obu światów. (Kompresja nic nie dała, bo moje „zdjęcie” to losowe bajty, a tych nie da się ścisnąć.)</p><div class="kod"><pre><code>borg list repo-borg
+borg diff repo-borg::vm-2026-11-04_0239 vm-2026-11-04_0240</code></pre></div><div class="kod"><pre><code>vm-2026-11-04_0239                   Wed, 2026-11-04 02:39:04 [45e67d1d...]
+vm-2026-11-04_0240                   Wed, 2026-11-04 02:40:05 [d9a19fff...]
+
+added          13 B dane/faktura7.txt</code></pre></div><p>Odtwarzanie. <code>borg extract</code> rozpakowuje do BIEŻĄCEGO folderu, więc najpierw wchodzisz do pustego:</p><div class="kod"><pre><code>mkdir odtw-borg &amp;&amp; cd odtw-borg
+borg extract ../repo-borg::vm-2026-11-04_0240
+cd .. &amp;&amp; diff -r dane odtw-borg/dane &amp;&amp; echo IDENTYCZNE
+
+# jeden plik ze starszej kopii
+borg extract ../repo-borg::vm-2026-11-04_0239 dane/faktura2.txt</code></pre></div><p>Stare kopie usuwasz zasadą „ile dziennych, tygodniowych, miesięcznych”:</p><div class="kod"><pre><code>borg prune --list --keep-daily=7 --keep-weekly=4 --keep-monthly=6 repo-borg
+borg compact repo-borg
+borg check repo-borg</code></pre></div><p><code>prune</code> wybiera, co skasować. W borgu 1.2 miejsce na dysku zwalnia dopiero <code>compact</code>, jak opróżnienie kosza. <code>check</code> sprawdza, czy magazyn jest cały.</p><p>Kopia po sieci to ta sama komenda, tylko repozytorium ma adres: <code>ssh://kopie@backup01/~/repo</code>. Borg łączy się przez SSH, kluczem, jak w module o sieci.</p><p>I teraz rzecz, za którą podziękujesz mi kiedyś o trzeciej w nocy:</p><div class="kod"><pre><code>borg key export repo-borg borg-klucz.txt</code></pre></div><p>Klucz i hasło trzymasz poza serwerem, na przykład w menedżerze haseł firmy. Borg sam to mówi przy <code>init</code>: „you will need both KEY AND PASSPHRASE to access this repo!”. Bez nich kopia jest najlepiej zabezpieczonym śmietnikiem na świecie.</p></section><section><h2 id="restic-to-samo-inaczej">restic: to samo, inaczej</h2><p>Drugi popularny program to <strong>restic</strong>. Idea ta sama: deduplikacja, szyfrowanie zawsze włączone, migawki. Różnice: restic to jeden plik wykonywalny i umie pisać prosto do chmury, na przykład do S3, przez SFTP albo przez własny serwer REST. Borg do pracy po sieci potrzebuje borga po drugiej stronie.</p><p>[Ubuntu] <code>sudo apt install restic</code>. [RHEL] Według dokumentacji restica z EPEL: <code>sudo dnf install epel-release</code>, potem <code>sudo dnf install restic</code>. (Na samym RHEL-u EPEL włączasz instrukcją ze strony Fedory, na Rocky i Almie wystarczy <code>epel-release</code>.)</p><div class="kod"><pre><code>export RESTIC_REPOSITORY=/srv/repo-restic
+export RESTIC_PASSWORD=&#x27;Inne-Dlugie-Haslo-2026&#x27;
+restic init
+restic backup dane
+echo &quot;Faktura nr 8&quot; &gt; dane/faktura8.txt
+restic backup dane
+restic snapshots</code></pre></div><div class="kod"><pre><code>using parent snapshot a3bf25f8
+Files:           1 new,     0 changed,     8 unmodified
+Added to the repository: 3.854 KiB (1.279 KiB stored)
+snapshot d2e4c2ad saved
+
+ID        Time                 Host        Tags        Paths
+---------------------------------------------------------------
+a3bf25f8  2026-11-04 02:40:34  vm                      .../dane
+d2e4c2ad  2026-11-04 02:40:34  vm                      .../dane</code></pre></div><p>Odtwarzanie do osobnego folderu i jeden plik:</p><div class="kod"><pre><code>restic restore latest --target odtw-restic
+restic restore latest --target odtw-r1 --include /dane/faktura8.txt
+restic forget --keep-daily 7 --keep-weekly 4 --keep-monthly 6 --prune
+restic check</code></pre></div><p><code>latest</code> to najnowsza migawka. <code>forget</code> wybiera, co usunąć, a <code>--prune</code> od razu zwalnia miejsce. Zanim puścisz to na prawdziwym repozytorium, dodaj <code>--dry-run</code>:</p><div class="kod"><pre><code>keep 1 snapshots:
+d2e4c2ad  2026-11-04 02:40:34  vm   last snapshot  .../dane
+remove 1 snapshots:
+a3bf25f8  2026-11-04 02:40:34  vm                  .../dane</code></pre></div><p>Repozytorium w chmurze albo na innym serwerze to tylko inny adres, na przykład <code>sftp:kopie@backup01:/srv/restic</code>. Dokumentacja restica mówi bez owijania: zgubisz hasło, dane przepadają. Restic powtarza to przy każdym <code>init</code>.</p><p>Co wybrać? Borg, jeśli masz własny serwer kopii z SSH. Restic, jeśli kopie mają lecieć do chmury. Oba lepsze niż „mam gdzieś skrypt z tarem, chyba działa”.</p></section><section><h2 id="test-odtwarzania">Test odtwarzania</h2><p>Kopia, z której nikt nie próbował niczego odtworzyć, to kot Schrödingera. Dopóki nie otworzysz pudełka, jest jednocześnie dobra i do niczego. Test odtwarzania to otwarcie pudełka w spokojny wtorek, a nie w piątek o 16:52.</p><p>Minimum, raz w miesiącu i po każdej zmianie skryptu:</p><ol><li>Odtwórz do osobnego folderu albo na osobną maszynę wirtualną. Nigdy na żywe dane.</li><li>Porównaj: <code>diff -r</code> dla folderów, <code>sha256sum</code> dla ważnych plików.</li><li>Dla baz danych: wczytaj zrzut do pustej bazy i zrób <code>SELECT</code>. Plik <code>.sql</code> o rozmiarze zero też jest plikiem.</li><li>Zmierz czas. Jak odtworzenie 2 TB z chmury trwa dwa dni, szef powinien to wiedzieć teraz, a nie w trakcie awarii.</li><li>Zapisz wynik: data, co odtwarzałeś, ile trwało, czy się udało.</li></ol><div class="kod"><pre><code>restic restore latest --target /tmp/test-odtw
+diff -r dane /tmp/test-odtw/dane &amp;&amp; echo IDENTYCZNE
+restic check --read-data-subset=5%</code></pre></div><p><code>--read-data-subset=5%</code> każe resticowi przeczytać i sprawdzić naprawdę 5% danych w repozytorium, a nie tylko spis treści. Co miesiąc inne 5%.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>dwa pojęcia, które padną na każdej rozmowie o kopiach. <strong>RPO</strong>: ile danych możesz stracić, czyli jak często robisz kopie. Kopia raz na dobę to RPO 24 godziny. <strong>RTO</strong>: ile może trwać odtworzenie. Te liczby ustala firma, nie admin. Admin mówi, ile to będzie kosztować.</p></aside></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p><code>tar --listed-incremental</code> zapisuje w pliku <code>.snar</code> listę folderów z numerami urządzeń, i-węzłów i czasami zmian. Przy następnym przebiegu porównuje stan z notesem i pakuje tylko to, co nowe. Do archiwum dopisuje też listę zawartości każdego folderu, dzięki temu przy odtwarzaniu wie, co trzeba skasować.</p><p><code>rsync --link-dest</code> dla każdego pliku sprawdza, czy w folderze porównawczym leży identyczny, czyli o tym samym rozmiarze, czasie i prawach. Jeśli tak, zamiast kopiować robi twarde dowiązanie, czyli dopisuje nową nazwę do istniejącego i-węzła.</p><p>Borg i restic tną pliki na kawałki o zmiennej długości. Granice kawałków wyznacza funkcja licząca skrót z „okienka” przesuwanego po danych, więc dopisanie bajtu na początku pliku nie przesuwa wszystkich kawałków. Każdy kawałek dostaje odcisk palca, czyli kryptograficzny skrót, i jeśli taki odcisk jest już w repozytorium, kawałek nie jest zapisywany drugi raz. Archiwum to w gruncie rzeczy lista odcisków palców. Dlatego kasowanie kopii nie jest proste: kawałek można usunąć dopiero wtedy, gdy nie wskazuje na niego żadne archiwum. Tym zajmuje się <code>compact</code> w borgu i <code>prune</code> w resticu.</p></section><section><h2 id="sciaga-flag">Ściąga flag</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga</th><th>Co robi</th></tr><tr><td><code>tar</code></td><td><code>--listed-incremental=PLIK</code></td><td>kopia przyrostowa z notesem stanu</td></tr><tr><td><code>tar</code></td><td><code>--listed-incremental=/dev/null</code></td><td>przy rozpakowaniu: odtwarzaj łańcuch razem ze skasowaniami</td></tr><tr><td><code>tar</code></td><td><code>-tzf</code></td><td>lista zawartości bez rozpakowania</td></tr><tr><td><code>rsync</code></td><td><code>-a --delete</code></td><td>lustro z prawami i czasami, usuwa nadmiarowe</td></tr><tr><td><code>rsync</code></td><td><code>--link-dest=DIR</code></td><td>niezmienione pliki jako twarde dowiązania</td></tr><tr><td><code>rsync</code></td><td><code>-n</code></td><td>próba na sucho</td></tr><tr><td><code>borg</code></td><td><code>init --encryption=repokey</code></td><td>nowe szyfrowane repozytorium</td></tr><tr><td><code>borg</code></td><td><code>create --stats</code></td><td>nowe archiwum ze statystyką</td></tr><tr><td><code>borg</code></td><td><code>list</code> / <code>diff</code> / <code>extract</code></td><td>lista, różnice, odtworzenie</td></tr><tr><td><code>borg</code></td><td><code>prune --keep-daily=N</code> + <code>compact</code></td><td>usuwanie starych kopii i zwolnienie miejsca</td></tr><tr><td><code>borg</code></td><td><code>key export</code></td><td>kopia klucza poza serwer</td></tr><tr><td><code>restic</code></td><td><code>init</code> / <code>backup</code> / <code>snapshots</code></td><td>repozytorium, kopia, lista</td></tr><tr><td><code>restic</code></td><td><code>restore latest --target DIR</code></td><td>odtworzenie do folderu</td></tr><tr><td><code>restic</code></td><td><code>--include ŚCIEŻKA</code></td><td>odtworzenie wybranego pliku</td></tr><tr><td><code>restic</code></td><td><code>forget --keep-daily N --prune</code></td><td>usuwanie starych migawek</td></tr><tr><td><code>restic</code></td><td><code>check --read-data-subset=5%</code></td><td>sprawdzenie części danych</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>Nocny backup borga z crona, codziennie o 2:00. Pewnego dnia danych jest więcej, kopia trwa ponad dobę i o 2:00 następnego dnia startuje druga. W skrzynce:</p><div class="kod"><pre><code>Failed to create/acquire the lock /srv/repo-borg/lock.exclusive (timeout).</code></pre></div><p>Kod wyjścia 2. Druga kopia się nie zrobiła, bo pierwsza trzyma kłódkę na repozytorium. Kłódka chroni magazyn przed dwoma piszącymi naraz i to dobrze. Źle jest, jak nikt nie czyta maili z crona i kopie nie robią się od tygodnia.</p><p>Naprawa: najpierw <code>ps aux | grep borg</code>. Jeśli borg nadal pracuje, czekaj. Jeśli nie pracuje, bo proces został zabity albo serwer się zrestartował w trakcie, to kłódka została po zmarłym. Wtedy i tylko wtedy: <code>borg break-lock repo-borg</code>. Na przyszłość: <code>flock</code> w skrypcie, jak w module o skryptach, sprawdzanie kodu wyjścia i alarm przez <code>logger</code> z poprzedniej lekcji, gdy kopia się nie udała. Kopia, która cicho nie działa, jest gorsza niż jej brak, bo daje fałszywe poczucie bezpieczeństwa.</p><p>Drugi klasyk z restica, po zmianie serwera albo hasła w zmiennej:</p><div class="kod"><pre><code>Fatal: wrong password or no key found</code></pre></div><p>Złe hasło. Jeśli to prawdziwe zgubione hasło, a nie literówka, to nie ma tylnych drzwi. Dlatego hasło do kopii trzymasz w dwóch miejscach, a test odtwarzania robisz z hasła wyjętego z sejfu, nie z historii Basha.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><ol><li>Zrób repozytorium borga albo restica i kopię swojego folderu <code>/etc</code>.</li><li>Zmień jeden plik w <code>/etc</code>, na przykład dopisz komentarz do <code>/etc/hosts</code>, i zrób drugą kopię. Pokaż różnice między kopiami (<code>borg diff</code> albo <code>restic diff</code>).</li><li>Odtwórz <code>/etc/hosts</code> z pierwszej kopii do folderu <code>/tmp/test</code> i porównaj z obecnym przez <code>diff</code>.</li><li>Ustaw usuwanie starych kopii: 7 dziennych, 4 tygodniowe, i uruchom to na sucho.</li></ol><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><p>Kopia <code>/etc</code> borgiem. Ścieżkę podaję względną, z <code>/</code>, żeby w archiwum leżało ładne <code>etc/hosts</code>, a nie cała ścieżka:</p><div class="kod"><pre><code>export BORG_PASSPHRASE=&#x27;Haslo-Do-Kopii-Etc-2026&#x27;
+sudo -E borg init -e repokey /root/repo
+cd /
+sudo -E borg create --stats /root/repo::etc-1 etc
+echo &#x27;# serwer kopii: backup01&#x27; | sudo tee -a /etc/hosts
+sudo -E borg create --stats /root/repo::etc-2 etc
+sudo -E borg diff /root/repo::etc-1 etc-2</code></pre></div><div class="kod"><pre><code>Number of files: 1860
+This archive:                8.95 MB              2.82 MB              2.72 MB
+...
+This archive:                8.95 MB              2.82 MB                825 B
+
+   +106 B     -81 B [mtime: ...] etc/hosts</code></pre></div><p>Drugi raz cały <code>/etc</code>, prawie 9 MB, a w magazynie przybyło 825 bajtów. <code>sudo -E</code> przekazuje zmienną z hasłem do <code>sudo</code>. Odtworzenie starej wersji do <code>/tmp/test</code> i porównanie:</p><div class="kod"><pre><code>mkdir -p /tmp/test &amp;&amp; cd /tmp/test
+sudo -E borg extract /root/repo::etc-1 etc/hosts
+diff /tmp/test/etc/hosts /etc/hosts</code></pre></div><div class="kod"><pre><code>4a5
+&gt; # serwer kopii: backup01</code></pre></div><p>Różnica to dokładnie moja linijka. Na koniec sprzątanie na sucho:</p><div class="kod"><pre><code>sudo -E borg prune --dry-run --list --keep-daily=7 --keep-weekly=4 /root/repo</code></pre></div><p>Na razie obie kopie zostają, bo mamy ich mniej, niż pozwala reguła. Wersja z resticiem wygląda tak samo: <code>restic backup /etc</code>, <code>restic diff ID1 ID2</code>, <code>restic restore ID1 --target /tmp/test --include /etc/hosts</code>, <code>restic forget --keep-daily 7 --keep-weekly 4 --dry-run</code>.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Kopie masz. A co, jeśli serwer w ogóle nie chce wstać? W następnej lekcji tryb ratunkowy i awaryjny, edycja wpisu w GRUB-ie, reset zapomnianego hasła roota na Red Hacie z <code>rd.break</code>, <code>fsck</code> przy starcie, kernel panic i jedna literówka w <code>/etc/fstab</code>, która potrafi położyć cały serwer.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-097.html" rel="prev">← 97. Monitorowanie</a><a class="btn domyslny zolty" href="lekcja-099.html" rel="next">99. Gdy serwer nie wstaje →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

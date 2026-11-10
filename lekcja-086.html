@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>86. Czas i język systemu — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 86 kursu Linux i Bash od zera do admina: Czas i język systemu. kursant ustawia strefę czasową i synchronizację zegara (timedatectl, chrony), czyta chronyc tracking i chronyc sources, rozumie różnicę między zegarem systemowym a sprzętowym (hwclock) oraz ustawia język i format danych systemu (l">
+<meta property="og:title" content="86. Czas i język systemu — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 86 kursu Linux i Bash od zera do admina: Czas i język systemu. kursant ustawia strefę czasową i synchronizację zegara (timedatectl, chrony), czyta chronyc tracking i chronyc sources, rozumie różnicę między zegarem systemowym a sprzętowym (hwclock) oraz ustawia język i format danych systemu (l">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 9</span></div>
+      <div class="boczny-tytul"><a href="index.html#m09">Użytkownicy i bezpieczeństwo</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-078.html" data-lekcja="78"><span class="znacznik"></span><span class="nr">78</span> Użytkownicy i grupy</a></li><li><a href="lekcja-079.html" data-lekcja="79"><span class="znacznik"></span><span class="nr">79</span> sudo i root</a></li><li><a href="lekcja-080.html" data-lekcja="80"><span class="znacznik"></span><span class="nr">80</span> Kto się logował</a></li><li><a href="lekcja-081.html" data-lekcja="81"><span class="znacznik"></span><span class="nr">81</span> Konta z jednego miejsca: LDAP i Active Directory</a></li><li><a href="lekcja-082.html" data-lekcja="82"><span class="znacznik"></span><span class="nr">82</span> SELinux bez strachu</a></li><li><a href="lekcja-083.html" data-lekcja="83"><span class="znacznik"></span><span class="nr">83</span> AppArmor</a></li><li><a href="lekcja-084.html" data-lekcja="84"><span class="znacznik"></span><span class="nr">84</span> Utwardzanie serwera</a></li><li><a href="lekcja-085.html" data-lekcja="85"><span class="znacznik"></span><span class="nr">85</span> Certyfikaty i szyfrowanie</a></li><li><a href="lekcja-086.html" data-lekcja="86" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">86</span> Czas i język systemu</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="86" data-modul="9" data-tematy="timedatectl, chrony, chronyc tracking, chronyc sources, hwclock, localectl, locale, LANG">
+    <div class="belka"><span>Lekcja 86 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m09">Moduł 9</a> › Lekcja 86</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Czas i język systemu</h1>
+      <p class="meta"><span>⏱ ok. 12 min czytania</span><span>· moduł 9: Użytkownicy i bezpieczeństwo</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant ustawia strefę czasową i synchronizację zegara (<code>timedatectl</code>, chrony), czyta <code>chronyc tracking</code> i <code>chronyc sources</code>, rozumie różnicę między zegarem systemowym a sprzętowym (<code>hwclock</code>) oraz ustawia język i format danych systemu (<code>localectl</code>, <code>locale</code>, <code>LANG</code>), wiedząc, jak to wpływa na skrypty.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#dwa-zegary-w-jednym-komputerze">Dwa zegary w jednym komputerze</a></li><li><a href="#strefa-czasowa-timedatectl">Strefa czasowa: timedatectl</a></li><li><a href="#zmiana-czasu-zegar-ktory-przeskakuje">Zmiana czasu: zegar, który przeskakuje</a></li><li><a href="#synchronizacja-chrony">Synchronizacja: chrony</a></li><li><a href="#jezyk-i-format-locale">Język i format: locale</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga-flag">Ściąga flag</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p>Awaria. Aplikacja na jednym serwerze, baza na drugim. Porównujesz logi, żeby zobaczyć, co było pierwsze. I nic się nie składa: według logów baza odpowiedziała na zapytanie siedem minut przed tym, zanim aplikacja je wysłała. Albo baza ma moce jasnowidzenia, albo zegary się rozjechały.</p><p>Zły zegar to nie kosmetyka. Certyfikaty z poprzedniej lekcji mają daty ważności. Jak zegar jest do tyłu, certyfikat wygląda na „jeszcze nieważny”. Jak do przodu, na „już wygasły”. Logowanie do domeny Active Directory z lekcji 81 opiera się na Kerberosie, który nie wpuści nikogo, kto ma zegar rozjechany o kilka minut. Dziś ustawiamy czas raz, porządnie, i przy okazji język systemu, który potrafi po cichu popsuć skrypty.</p></section><section><h2 id="dwa-zegary-w-jednym-komputerze">Dwa zegary w jednym komputerze</h2><p>W komputerze są dwa zegary. Pierwszy to zegarek na ręce: <strong>zegar sprzętowy</strong>, RTC (Real Time Clock). Mała kostka na płycie głównej z baterią, chodzi nawet przy wyłączonym komputerze. Drugi to zegar ścienny w biurze: <strong>zegar systemowy</strong>, który prowadzi jądro. Przy starcie system patrzy na zegarek na ręce i ustawia według niego zegar ścienny. Potem już każdy chodzi swoim tempem i oba się spieszą albo spóźniają. Zwykły kwarc myli się o kilka sekund dziennie.</p><p>Dlatego jest trzecia rzecz: <strong>NTP</strong>, Network Time Protocol. To dzwonienie na zegarynkę. System co jakiś czas pyta serwery czasu w internecie, która jest godzina, i delikatnie poprawia swój zegar.</p><p>Zegar sprzętowy podglądasz przez <code>hwclock</code>:</p><div class="kod"><pre><code>sudo hwclock --show       # co mówi zegarek na ręce
+sudo hwclock --systohc    # przestaw zegarek na ręce według ściennego
+sudo hwclock --hctosys    # przestaw ścienny według zegarka na ręce</code></pre></div><p><code>systohc</code> czytaj „system to hardware clock”, <code>hctosys</code> odwrotnie. Na maszynie wirtualnej albo w kontenerze często zobaczysz tylko:</p><div class="kod"><pre><code>hwclock: Cannot access the Hardware Clock via any known method.</code></pre></div><p>I to normalne, maszyna nie ma własnej kostki zegara albo nie wolno jej jej dotykać. Wtedy czasem rządzi gospodarz.</p></section><section><h2 id="strefa-czasowa-timedatectl">Strefa czasowa: timedatectl</h2><p>Komputer w środku liczy czas jednakowo dla całego świata: w UTC, czasie uniwersalnym, bez zmian na letni i zimowy. Strefa czasowa to tylko okulary, przez które ten czas wyświetla. Ten sam moment wygląda tak:</p><div class="kod"><pre><code>TZ=UTC date -d @1793750400
+TZ=Europe/Warsaw date -d @1793750400
+TZ=America/New_York date -d @1793750400
+TZ=Asia/Tokyo date -d @1793750400</code></pre></div><div class="kod"><pre><code>Wed Nov  4 00:00:00 UTC 2026
+Wed Nov  4 01:00:00 CET 2026
+Tue Nov  3 19:00:00 EST 2026
+Wed Nov  4 09:00:00 JST 2026</code></pre></div><p>Jedna liczba sekund od 1970 roku, cztery różne godziny na ścianie. Zmienna <code>TZ</code> zmienia okulary tylko dla jednej komendy. Dla całego systemu służy <code>timedatectl</code>:</p><div class="kod"><pre><code>timedatectl
+timedatectl list-timezones | grep Europe/W
+sudo timedatectl set-timezone Europe/Warsaw</code></pre></div><div class="kod"><pre><code>               Local time: Tue 2026-11-03 22:15:51 CET
+           Universal time: Tue 2026-11-03 21:15:51 UTC
+                 RTC time: Tue 2026-11-03 21:15:50
+                Time zone: Europe/Warsaw (CET, +0100)
+System clock synchronized: yes
+              NTP service: active
+          RTC in local TZ: no</code></pre></div><p>(Układ pól jak w dokumentacji Red Hata, u Ciebie będą inne godziny.) Czytamy: czas lokalny, czas uniwersalny, czas zegarka na ręce, strefa. <code>System clock synchronized: yes</code> znaczy, że zegarynka odpowiada. <code>NTP service: active</code>, że ktoś do niej dzwoni. A <code>RTC in local TZ: no</code> to dobra wiadomość: zegar sprzętowy trzyma czas w UTC. Tak ma być na serwerze.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p><code>timedatectl set-local-rtc 1</code> każe trzymać zegar sprzętowy w czasie lokalnym. Robi się to tylko na komputerze z Windowsem obok, bo Windows domyślnie trzyma RTC lokalnie. Na serwerze nie, bo przy zmianie czasu na letni i zimowy zaczynają się cuda.</p></aside><p>Pod spodem <code>set-timezone</code> robi jedną prostą rzecz: przestawia dowiązanie <code>/etc/localtime</code> na plik strefy z <code>/usr/share/zoneinfo</code>:</p><div class="kod"><pre><code>ls -l /etc/localtime</code></pre></div><div class="kod"><pre><code>lrwxrwxrwx 1 root root 35 ... /etc/localtime -&gt; ../usr/share/zoneinfo/Europe/Warsaw</code></pre></div><p>[Ubuntu] Na Ubuntu jest jeszcze tekstowy <code>/etc/timezone</code> i kreator <code>sudo dpkg-reconfigure tzdata</code>, ale <code>timedatectl</code> załatwia wszystko.</p><p>Czy serwery trzymać w czasie lokalnym, czy w UTC? W wielu firmach serwery chodzą w UTC, żeby logi z Warszawy, Dublina i Singapuru dało się położyć obok siebie. Jedno jest pewne: wszystkie serwery jednego systemu w tej samej strefie. Inaczej wracamy do bazy-jasnowidza z haka.</p></section><section><h2 id="zmiana-czasu-zegar-ktory-przeskakuje">Zmiana czasu: zegar, który przeskakuje</h2><p>Strefa <code>Europe/Warsaw</code> zna nasze zmiany czasu. Popatrz, co się dzieje w nocy 29 marca 2026:</p><div class="kod"><pre><code>zdump -v Europe/Warsaw | grep 2026</code></pre></div><div class="kod"><pre><code>Europe/Warsaw  Sun Mar 29 00:59:59 2026 UT = Sun Mar 29 01:59:59 2026 CET isdst=0 gmtoff=3600
+Europe/Warsaw  Sun Mar 29 01:00:00 2026 UT = Sun Mar 29 03:00:00 2026 CEST isdst=1 gmtoff=7200
+Europe/Warsaw  Sun Oct 25 00:59:59 2026 UT = Sun Oct 25 02:59:59 2026 CEST isdst=1 gmtoff=7200
+Europe/Warsaw  Sun Oct 25 01:00:00 2026 UT = Sun Oct 25 02:00:00 2026 CET isdst=0 gmtoff=3600</code></pre></div><p>Po 01:59:59 przychodzi od razu 03:00:00. Godzina 02:30 tej nocy po prostu nie istnieje. A w październiku godzina od 02:00 do 03:00 zdarza się dwa razy. Zapamiętaj to sobie na następna lekcja o cronie. Zadanie ustawione na 02:30 potrafi raz w roku nie odpalić się wcale, a raz w roku się zdublować. Kolejny powód, żeby poważne serwery chodziły w UTC, które nie zna zmiany czasu.</p></section><section><h2 id="synchronizacja-chrony">Synchronizacja: chrony</h2><p>Teraz zegarynka. Na RHEL od wersji 8 i na Ubuntu od 25.10 domyślnie dzwoni do niej <strong>chrony</strong>. [Ubuntu] Na Ubuntu 24.04 domyślnie pracuje prostszy <code>systemd-timesyncd</code>. Możesz go zamienić na chrony jedną instalacją, pakiety się wykluczają:</p><div class="kod"><pre><code>sudo apt install chrony          # [Ubuntu], usuwa systemd-timesyncd
+sudo dnf install chrony          # [RHEL], zwykle już jest
+sudo timedatectl set-ntp true
+systemctl status chrony          # [Ubuntu]
+systemctl status chronyd         # [RHEL]</code></pre></div><p>Zwróć uwagę na nazwy: na Ubuntu usługa to <code>chrony</code>, na RHEL <code>chronyd</code>. Plik ustawień: <code>/etc/chrony/chrony.conf</code> na Ubuntu, <code>/etc/chrony.conf</code> na RHEL. W środku najważniejsze są linijki z serwerami czasu:</p><div class="kod"><pre><code>pool ntp.ubuntu.com        iburst maxsources 4
+pool 0.ubuntu.pool.ntp.org iburst maxsources 1
+...
+driftfile /var/lib/chrony/chrony.drift</code></pre></div><p><code>pool</code> to grupa serwerów pod jedną nazwą, <code>server</code> to jeden konkretny serwer. <code>iburst</code> znaczy „na starcie zapytaj kilka razy szybko”, żeby zegar złapał synchronizację w sekundy, a nie w minuty. W firmie zamiast publicznych serwerów wpisujesz własny serwer czasu albo kontroler domeny. Po zmianie: <code>sudo systemctl restart chronyd</code> (albo <code>chrony</code> na Ubuntu).</p><p>I dwie komendy, które musisz znać. Czy zegar jest dobry?</p><div class="kod"><pre><code>chronyc tracking</code></pre></div><div class="kod"><pre><code>Reference ID    : 7F000001 (localhost)
+Stratum         : 9
+Ref time (UTC)  : Tue Nov 03 21:14:37 2026
+System time     : 0.000002805 seconds fast of NTP time
+Last offset     : +0.000000076 seconds
+RMS offset      : 0.000006855 seconds
+Frequency       : 0.014 ppm fast
+...
+Update interval : 5.1 seconds
+Leap status     : Normal</code></pre></div><p>To prawdziwy wynik z mojego laboratorium, w którym jeden chrony udawał serwer czasu dla drugiego. U Ciebie zamiast <code>localhost</code> będzie nazwa albo adres serwera z internetu. Najważniejsze linijki:</p><ul><li><code>Reference ID</code> — z kim się synchronizujesz.</li><li><code>Stratum</code> — ile pięter od wzorca. Stratum 1 to serwer podłączony bezpośrednio do zegara atomowego albo GPS. Każdy kolejny serwer w łańcuchu dodaje jedno piętro. 9 w laboratorium, w internecie zwykle 2 albo 3.</li><li><code>System time</code> — o ile Twój zegar się teraz myli. Tu: niespełna 3 mikrosekundy. Można z tym żyć.</li><li><code>Frequency</code> — jak bardzo Twój kwarc się spieszy albo spóźnia, w milionowych częściach. chrony to zapamiętuje w pliku drift i poprawia na bieżąco.</li><li><code>Leap status: Normal</code> — synchronizacja działa. <code>Not synchronised</code> znaczy kłopoty.</li></ul><p>A z kim rozmawiasz?</p><div class="kod"><pre><code>chronyc sources -v</code></pre></div><div class="kod"><pre><code>MS Name/IP address         Stratum Poll Reach LastRx Last sample               
+===============================================================================
+^* localhost                     8   0   377     3  +6500ns[+6576ns] +/-   10us</code></pre></div><p><code>^</code> to serwer, <code>*</code> to „ten aktualnie wybrany jako najlepszy”. <code>+</code> przy innych to „używany pomocniczo”, <code>?</code> to „nie odpowiada”. Kolumna <code>Reach</code> to ósemkowy zapis ostatnich ośmiu prób: <code>377</code> znaczy, że wszystkie osiem się udało. <code>0</code> znaczy, że zegarynka milczy. Wtedy pierwsze podejrzenie: zapora blokuje wychodzący UDP na porcie 123. Opcja <code>-v</code> dopisuje nad tabelą legendę wszystkich znaczków, więc nie musisz tego wkuwać.</p><p>chrony poprawia zegar łagodnie: trochę przyspiesza albo zwalnia, zamiast przeskakiwać, żeby czas w logach nie cofał się nagle. Jeśli zegar jest rozjechany o godziny, możesz kazać skoczyć od razu: <code>sudo chronyc makestep</code>.</p></section><section><h2 id="jezyk-i-format-locale">Język i format: locale</h2><p>Teraz druga połowa lekcji. <strong>Locale</strong> to zestaw ustawień regionalnych: język komunikatów, format daty, przecinek czy kropka w liczbach, kolejność sortowania liter. Jak tłumacz z kompletem przyzwyczajeń danego kraju.</p><div class="kod"><pre><code>locale
+locale -a</code></pre></div><div class="kod"><pre><code>LANG=pl_PL.UTF-8
+LANGUAGE=
+LC_CTYPE=&quot;pl_PL.UTF-8&quot;
+LC_NUMERIC=&quot;pl_PL.UTF-8&quot;
+...
+C
+C.utf8
+en_US.utf8
+pl_PL.utf8</code></pre></div><p><code>LANG</code> to ustawienie domyślne. Zmienne <code>LC_*</code> nadpisują pojedyncze dziedziny: <code>LC_TIME</code> daty, <code>LC_NUMERIC</code> liczby, <code>LC_COLLATE</code> sortowanie, <code>LC_MESSAGES</code> język komunikatów. A <code>LC_ALL</code> to młotek, który nadpisuje wszystko naraz. Kolejność ważności: <code>LC_ALL</code>, potem konkretne <code>LC_*</code>, na końcu <code>LANG</code>. <code>C</code> (albo <code>POSIX</code>) to locale „gołe”: angielskie komunikaty, kropka w liczbach, sortowanie po kodach znaków.</p><p>Popatrz, jak to samo zmienia wynik:</p><div class="kod"><pre><code>LC_ALL=C date -d @1793750400
+LC_ALL=pl_PL.UTF-8 date -d @1793750400 &#x27;+%A, %d %B %Y&#x27;
+LC_ALL=pl_PL.UTF-8 date +%x
+LC_ALL=en_US.UTF-8 date +%x</code></pre></div><div class="kod"><pre><code>Wed Nov  4 01:00:00 CET 2026
+środa, 04 listopada 2026
+03.11.2026
+11/03/2026</code></pre></div><p>I sortowanie:</p><div class="kod"><pre><code>LC_ALL=C sort slowa.txt
+LC_ALL=pl_PL.UTF-8 sort slowa.txt</code></pre></div><div class="kod"><pre><code>Ala lis zebra łoś Żaba
+Ala lis łoś zebra Żaba</code></pre></div><p>W <code>C</code> polskie litery lądują na końcu, bo mają dalsze kody. W polskim locale łoś stoi grzecznie po lisie. Jak w słowniku.</p><p>Ustawienie dla całego systemu:</p><div class="kod"><pre><code>localectl status
+localectl list-locales
+sudo localectl set-locale LANG=pl_PL.UTF-8
+sudo localectl set-keymap pl</code></pre></div><p>[RHEL] Locale zapisuje się w <code>/etc/locale.conf</code>, układ klawiatury konsoli w <code>/etc/vconsole.conf</code>. Brakujące języki doinstalowujesz pakietami: <code>sudo dnf install glibc-langpack-pl</code>. [Ubuntu] Locale leży w <code>/etc/default/locale</code>. Brakujące generujesz: <code>sudo locale-gen pl_PL.UTF-8</code> albo przez kreator <code>sudo dpkg-reconfigure locales</code>.</p><p>Na serwerze wiele osób zostawia <code>LANG=en_US.UTF-8</code> albo <code>C.UTF-8</code>, nawet w Polsce. Powód prosty: komunikat błędu po angielsku wklejasz w wyszukiwarkę i znajdujesz tysiąc odpowiedzi. Po polsku znajdziesz trzy, w tym jedną swoją sprzed roku.</p></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p>Jądro trzyma czas jako liczbę sekund (i ułamków) od 1 stycznia 1970 UTC, tak zwaną epokę Uniksa. Nic nie wie o strefach. Zamianą na „środa, 01:00 CET” zajmuje się biblioteka C w każdym programie: czyta zmienną <code>TZ</code>, a jak jej nie ma, plik <code>/etc/localtime</code>. Dlatego zmiana strefy działa od razu dla nowych programów, a długo działające usługi czasem trzeba zrestartować, żeby zauważyły.</p><p>chronyd wysyła zapytania NTP po UDP na port 123, mierzy, ile trwała podróż pakietu tam i z powrotem, i z tego liczy, o ile myli się lokalny zegar. Poprawkę przekazuje jądru przez wywołanie systemowe, które każe zegarowi chodzić odrobinę szybciej albo wolniej. <code>timedatectl</code> to tylko pilot do usługi <code>systemd-timedated</code>. <code>set-ntp true</code> włącza tę usługę synchronizacji, którą pakiet zgłosił w <code>/usr/lib/systemd/ntp-units.d/</code>. Na Ubuntu z chrony jest tam plik <code>50-chrony.list</code> z jedną linijką: <code>chrony.service</code>.</p><p>Locale też obsługuje biblioteka C. Program na starcie woła <code>setlocale</code>, ta patrzy w <code>LC_ALL</code>, <code>LC_*</code> i <code>LANG</code> i ładuje skompilowane dane z <code>/usr/lib/locale</code>. Jeśli locale nie ma, program dostaje <code>C</code> i ewentualnie narzeka. O tym narzekaniu za chwilę.</p></section><section><h2 id="sciaga-flag">Ściąga flag</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga</th><th>Co robi</th></tr><tr><td><code>timedatectl</code></td><td>(bez argumentów)</td><td>czas, strefa, stan synchronizacji</td></tr><tr><td><code>timedatectl</code></td><td><code>list-timezones</code></td><td>lista stref</td></tr><tr><td><code>timedatectl</code></td><td><code>set-timezone STREFA</code></td><td>ustawia strefę (<code>/etc/localtime</code>)</td></tr><tr><td><code>timedatectl</code></td><td><code>set-ntp true</code></td><td>włącza synchronizację</td></tr><tr><td><code>timedatectl</code></td><td><code>set-time &#x27;RRRR-MM-DD GG:MM:SS&#x27;</code></td><td>ręczne ustawienie (tylko przy wyłączonym NTP)</td></tr><tr><td><code>timedatectl</code></td><td><code>set-local-rtc 0</code></td><td>RTC w UTC</td></tr><tr><td><code>chronyc</code></td><td><code>tracking</code></td><td>jak dobry jest zegar</td></tr><tr><td><code>chronyc</code></td><td><code>sources -v</code></td><td>serwery czasu z legendą</td></tr><tr><td><code>chronyc</code></td><td><code>sourcestats</code></td><td>statystyki dla źródeł</td></tr><tr><td><code>chronyc</code></td><td><code>makestep</code></td><td>natychmiastowy skok zegara</td></tr><tr><td><code>hwclock</code></td><td><code>--show</code> / <code>--systohc</code> / <code>--hctosys</code></td><td>odczyt RTC / RTC wg systemu / system wg RTC</td></tr><tr><td><code>date</code></td><td><code>-d @SEKUNDY</code>, <code>+FORMAT</code></td><td>zamiana epoki na datę, własny format</td></tr><tr><td><code>zdump</code></td><td><code>-v STREFA</code></td><td>przejścia na czas letni/zimowy</td></tr><tr><td><code>locale</code></td><td><code>-a</code></td><td>dostępne locale</td></tr><tr><td><code>localectl</code></td><td><code>set-locale LANG=...</code></td><td>locale systemu</td></tr><tr><td><code>localectl</code></td><td><code>set-keymap pl</code></td><td>układ klawiatury konsoli</td></tr><tr><td><code>locale-gen</code></td><td><code>pl_PL.UTF-8</code></td><td>[Ubuntu] generuje locale</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>Dwa klasyki, oba z locale.</p><p><strong>Pierwszy:</strong> łączysz się z Maca po SSH, robisz <code>apt upgrade</code> i dostajesz ścianę ostrzeżeń:</p><div class="kod"><pre><code>perl: warning: Setting locale failed.
+perl: warning: Please check that your locale settings:
+	LANGUAGE = (unset),
+	LC_ALL = &quot;de_DE.UTF-8&quot;,
+...
+bash: warning: setlocale: LC_ALL: cannot change locale (de_DE.UTF-8): No such file or directory</code></pre></div><p>Skąd niemieckie locale na polskim serwerze? Klient SSH ma w <code>/etc/ssh/ssh_config</code> linijkę <code>SendEnv LANG LC_*</code>, a serwer Ubuntu w <code>sshd_config</code> ma <code>AcceptEnv LANG LC_*</code>. Twój laptop grzecznie przesyła swoje ustawienia regionalne, a serwer grzecznie je przyjmuje, tylko że takiego locale nie ma. Jak gość, który przychodzi do restauracji z własnym menu w języku, którego nie zna kucharz. Naprawa: wygeneruj to locale na serwerze (<code>locale-gen</code>) albo nie wysyłaj go z laptopa.</p><p><strong>Drugi, groźniejszy, bo cichy:</strong> skrypt działał latami, ktoś zmienił locale serwera na polskie i nagle sumy się nie zgadzają:</p><div class="kod"><pre><code>LC_ALL=C seq 0.5 0.5 1.5 | awk &#x27;{s+=$1} END{print s}&#x27;
+LC_ALL=pl_PL.UTF-8 seq 0.5 0.5 1.5 | awk &#x27;{s+=$1} END{print s}&#x27;
+LC_ALL=pl_PL.UTF-8 seq 0.5 0.5 1.5</code></pre></div><div class="kod"><pre><code>3
+2
+0,5
+1,0
+1,5</code></pre></div><p>Polskie locale mówi „u nas ułamki pisze się z przecinkiem”, więc <code>seq</code> wypisuje <code>0,5</code>. A awk czyta liczby po swojemu, z kropką, i z <code>0,5</code> bierze tylko <code>0</code>. Wynik 2 zamiast 3, bez żadnego błędu. Księgowa by się nie pomyliła, a skrypt tak. Zasada: skrypt, który przetwarza liczby, daty albo wynik innych programów, ustawia sobie na początku <code>export LC_ALL=C</code>. Wtedy działa tak samo na każdym serwerze, niezależnie od tego, kto i jak go skonfigurował.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><p>Ustaw strefę czasową Europe/Warsaw, włącz synchronizację czasu i sprawdź <code>chronyc tracking</code>. Potem sprawdź komendą <code>openssl</code>, do kiedy jest ważny certyfikat strony google.com.</p><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><p>Strefa czasowa, synchronizacja czasu i sprawdzenie, czy zegar naprawdę chodzi:</p><div class="kod"><pre><code>sudo timedatectl set-timezone Europe/Warsaw
+sudo timedatectl set-ntp true
+timedatectl
+chronyc tracking</code></pre></div><p>W <code>timedatectl</code> patrzysz na dwie linijki: <code>Time zone: Europe/Warsaw (CET, +0100)</code> i <code>System clock synchronized: yes</code>. W <code>chronyc tracking</code> najważniejsze jest <code>Leap status : Normal</code>, czyli „mam z kim gadać i wszystko gra”, oraz <code>System time</code>, czyli o ile Twój zegar różni się od wzorca. Jak tam są milisekundy albo mniej, możesz spać spokojnie. Jak widzisz <code>Not synchronised</code>, to <code>chronyc sources</code> pokaże, czy serwer w ogóle widzi jakiekolwiek źródło czasu.</p><p>Druga część, data ważności certyfikatu Google:</p><div class="kod"><pre><code>openssl s_client -connect google.com:443 -servername google.com &lt;/dev/null 2&gt;/dev/null \
+  | openssl x509 -noout -dates</code></pre></div><p>Dostajesz dwie linijki: <code>notBefore=</code> i <code>notAfter=</code>. Pierwsza mówi, od kiedy certyfikat jest ważny, druga do kiedy. U Google zobaczysz, że certyfikat żyje krótko, kilka miesięcy. Wielkie firmy wymieniają certyfikaty częściej niż niektórzy z nas szczoteczki do zębów. <code>&lt;/dev/null</code> jest po to, żeby <code>s_client</code> nie czekał w nieskończoność, aż coś do niego napiszesz.</p><p>I zapamiętaj ten moment: sprawdziłeś to ręcznie. A gdyby tak serwer sam sprawdzał to co noc i pisał do Ciebie, jak zostanie mniej niż dwa tygodnie? Do tego potrzebny jest budzik. I o budziku jest ta lekcja.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Zegar chodzi, strefa ustawiona. Czas to wykorzystać. W następnej lekcji zadania o wyznaczonej godzinie: cron, crontab, <code>at</code>, timery systemd i odwieczna zagadka admina: „skrypt ręcznie działa, a z crona nie”.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-085.html" rel="prev">← 85. Certyfikaty i szyfrowanie</a><a class="btn domyslny zolty" href="lekcja-087.html" rel="next">87. Zadania o wyznaczonej godzinie i powiadomienia →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

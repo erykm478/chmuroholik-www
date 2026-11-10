@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>116. Egzamin próbny: 20 zadań, dwie godziny, zero podpowiedzi — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 116 kursu Linux i Bash od zera do admina: Egzamin próbny: 20 zadań, dwie godziny, zero podpowiedzi. kursant robi na czas egzamin próbny w stylu RHCSA i LFCS na własnej maszynie wirtualnej, sprawdza się automatycznym skryptem i wie, jak rozwiązać każde z dwudziestu zadań.">
+<meta property="og:title" content="116. Egzamin próbny: 20 zadań, dwie godziny, zero podpowiedzi — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 116 kursu Linux i Bash od zera do admina: Egzamin próbny: 20 zadań, dwie godziny, zero podpowiedzi. kursant robi na czas egzamin próbny w stylu RHCSA i LFCS na własnej maszynie wirtualnej, sprawdza się automatycznym skryptem i wie, jak rozwiązać każde z dwudziestu zadań.">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 13</span></div>
+      <div class="boczny-tytul"><a href="index.html#m13">Projekty końcowe</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-110.html" data-lekcja="110"><span class="znacznik"></span><span class="nr">110</span> Projekt 1: nowy serwer w dziesięć minut</a></li><li><a href="lekcja-111.html" data-lekcja="111"><span class="znacznik"></span><span class="nr">111</span> Projekt 2: dwie strony na Apache z HTTPS</a></li><li><a href="lekcja-112.html" data-lekcja="112"><span class="znacznik"></span><span class="nr">112</span> Projekt 3: kopie zapasowe, które naprawdę da się odtworzyć</a></li><li><a href="lekcja-113.html" data-lekcja="113"><span class="znacznik"></span><span class="nr">113</span> Projekt 4: monitor, który krzyczy raz, a nie co pięć minut</a></li><li><a href="lekcja-114.html" data-lekcja="114"><span class="znacznik"></span><span class="nr">114</span> Projekt 5: analizator logów z raportem dziennym</a></li><li><a href="lekcja-115.html" data-lekcja="115"><span class="znacznik"></span><span class="nr">115</span> Projekt 6: LAMP na trzech maszynach z Ansible, wszystko w Git</a></li><li><a href="lekcja-116.html" data-lekcja="116" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">116</span> Egzamin próbny: 20 zadań, dwie godziny, zero podpowiedzi</a></li><li><a href="lekcja-117.html" data-lekcja="117"><span class="znacznik"></span><span class="nr">117</span> Co dalej: certyfikaty, laboratorium domowe i pierwsza praca</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="116" data-modul="13" data-tematy="zadania w stylu egzaminów RHCSA i LFCS na czas">
+    <div class="belka"><span>Lekcja 116 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m13">Moduł 13</a> › Lekcja 116</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Egzamin próbny: 20 zadań, dwie godziny, zero podpowiedzi</h1>
+      <p class="meta"><span>⏱ ok. 24 min czytania</span><span>· moduł 13: Projekty końcowe</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant robi na czas egzamin próbny w stylu RHCSA i LFCS na własnej maszynie wirtualnej, sprawdza się automatycznym skryptem i wie, jak rozwiązać każde z dwudziestu zadań.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#jak-wygladaja-prawdziwe-egzaminy">Jak wyglądają prawdziwe egzaminy</a></li><li><a href="#zasady-i-przygotowanie">Zasady i przygotowanie</a></li><li><a href="#egzamin-zadania">Egzamin: zadania</a></li><li><a href="#sprawdzamy-skrypt-egzaminatora">Sprawdzamy: skrypt egzaminatora</a></li><li><a href="#rozwiazania-krok-po-kroku">Rozwiązania krok po kroku</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga-teraz-kontra-na-stale">Ściąga: „teraz” kontra „na stałe”</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p>Sala egzaminacyjna. Albo Twój pokój z kamerką i egzaminatorem po drugiej stronie internetu. Przed Tobą lista zadań i maszyna. Żadnych pytań typu „wybierz A, B, C albo D”. Masz po prostu zrobić: założyć użytkowników, podzielić dysk, postawić stronę, naprawić start systemu. Na koniec ktoś wyłącza Ci maszynę, uruchamia ją od nowa i sprawdza, co przetrwało. Nie to, co wpisałeś. To, co zostało.</p><p>Tak wyglądają RHCSA od Red Hata i LFCS od Linux Foundation. I tak wygląda dzisiejsza lekcja. Dwadzieścia zadań, dwie godziny, a na końcu skrypt, który sam Ci policzy punkty. Rozwiązania są w drugiej połowie lekcji. Jeśli obejrzysz je przed egzaminem, to tak, jakbyś na kartkówce przepisał odpowiedzi od siebie z przyszłości. Technicznie działa, ale niczego się nie dowiesz.</p></section><section><h2 id="jak-wygladaja-prawdziwe-egzaminy">Jak wyglądają prawdziwe egzaminy</h2><p>Zanim zaczniemy, krótko, jak to wygląda naprawdę. Sprawdziłem na oficjalnych stronach.</p><p>RHCSA, czyli egzamin EX200, Red Hat opisuje jako egzamin praktyczny, oparty na Red Hat Enterprise Linux 10. Na egzaminie nie ma internetu i nie wolno mieć żadnych notatek ani dokumentacji, ani papierowej, ani elektronicznej. Masz tylko to, co jest w systemie: <code>man</code>, <code>--help</code>, <code>/usr/share/doc</code>. Lista celów egzaminu jest publiczna. Są tam między innymi: repozytoria RPM i od RHEL 10 także repozytoria Flatpak, przerywanie startu systemu, żeby dostać się do maszyny, profile <code>tuned</code>, trwały dziennik, partycje GPT, LVM, swap, montowanie po UUID, NFS i autofs, zadania w <code>cron</code>, <code>at</code> i timerach systemd, sieć IPv4 i IPv6, <code>firewalld</code>, użytkownicy i hasła, klucze SSH, SELinux z etykietami portów i wartościami logicznymi.</p><p>LFCS od Linux Foundation według strony organizatora to egzamin online z egzaminatorem, oparty na zadaniach, dwie godziny. Instrukcja dla zdających mówi o 17 do 20 zadaniach. Każde zadanie ma podany host, na który wchodzisz przez <code>ssh nazwa</code>. Wolno korzystać z man i z dokumentacji zainstalowanej w systemie. LFCS ma szerszy zakres niż RHCSA: kontenery, Git, certyfikaty SSL, parametry jądra, routing, odwrotne proxy.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>LFCS zabrania restartu maszyny bazowej, tej, z której łączysz się po SSH. Restart maszyny zadania to inna sprawa. W instrukcji jest też ciekawostka: Ctrl+W zamyka kartę przeglądarki z egzaminem, więc zamiast niego trzeba używać Ctrl+Alt+W. Ludzie tracili przez to minuty życia.</p></aside><p>Nasz egzamin jest mieszanką: zadania od 1 do 16 w stylu RHCSA, od 17 do 20 w stylu LFCS.</p></section><section><h2 id="zasady-i-przygotowanie">Zasady i przygotowanie</h2><ol><li>Maszyna wirtualna z Rocky Linux, AlmaLinux albo RHEL 10. Minimum 2 GB RAM. Dodaj do niej drugi, pusty dysk 2 GB. Jeśli masz tylko Ubuntu, też da się: przy różnicach podam obie wersje, a zadania z SELinuksem i Flatpakiem potraktuj jako teorię.</li><li>Zrób migawkę maszyny, czyli snapshot. Egzamin robi z maszyną różne rzeczy, a po wszystkim chcesz wrócić do czystego stanu i zrobić go drugi raz.</li><li>Wyłącz internet w przeglądarce. Serio. Na egzaminie nie ma Google&#x27;a, nie ma czatbotów, nie ma Stack Overflow. Jest <code>man</code>.</li><li>Dwie godziny na zegarze. Nie zatrzymujesz go na kawę.</li><li>Na koniec restart i skrypt sprawdzający. Ten restart to nie złośliwość, tylko istota egzaminu: liczy się tylko to, co przetrwa restart.</li></ol><p>I jeszcze jeden krok przygotowania, mój ulubiony. Zapomnij hasło roota:</p><div class="kod"><pre><code>openssl rand -base64 18 | sed &#x27;s/^/root:/&#x27; | sudo chpasswd</code></pre></div><p>To ustawia rootowi losowe hasło, którego nikt nigdy nie zobaczył. Nawet Ty. Rób to WYŁĄCZNIE na maszynie wirtualnej z migawką i z kontem, które ma sudo. Na prawdziwym serwerze to nie jest ćwiczenie, to wypowiedzenie.</p><p>Dane do zadań, w których potrzebny jest adres: maszyna ma kartę w sieci 192.168.56.0/24, brama i serwer DNS to 192.168.56.1. Jeśli Twoja sieć wygląda inaczej, podmień adresy na swoje.</p></section><section><h2 id="egzamin-zadania">Egzamin: zadania</h2><p>Zatrzymaj teraz wideo. Serio. Wróć, kiedy skończysz albo kiedy skończy się czas.</p><p><strong>Zadanie 1. Hasło roota.</strong> Nie znasz hasła roota. Uruchom maszynę ponownie, przerwij start systemu i ustaw rootowi hasło <code>Egzamin2026</code>. Po starcie SELinux ma działać w trybie Enforcing.</p><p><strong>Zadanie 2. Sieć.</strong> Ustaw nazwę hosta <code>serwer1.lab.local</code>. Ustaw na stałe adres IPv4 192.168.56.50/24, bramę 192.168.56.1 i serwer DNS 192.168.56.1.</p><p><strong>Zadanie 3. Oprogramowanie.</strong> Skonfiguruj dostęp do repozytoriów BaseOS i AppStream z płyty instalacyjnej podpiętej do maszyny. Zainstaluj z nich serwer Apache. Dodaj repozytorium Flatpak i zainstaluj z niego jedną aplikację.</p><p><strong>Zadanie 4. Użytkownicy.</strong> Utwórz grupę <code>sysadmins</code>. Utwórz użytkowników <code>natalia</code> i <code>harry</code>, którzy należą do niej jako do grupy dodatkowej. Utwórz użytkownika <code>sarah</code>, który nie należy do <code>sysadmins</code> i nie ma dostępu do powłoki interaktywnej. Wszyscy troje mają hasło <code>Trudne123!</code>.</p><p><strong>Zadanie 5. Hasła i sudo.</strong> Hasło natalii ma być ważne maksymalnie 90 dni. Harry ma móc uruchamiać przez sudo dowolne polecenie bez podawania hasła.</p><p><strong>Zadanie 6. Folder wspólny.</strong> Utwórz folder <code>/common/admin</code>, którego grupą jest <code>sysadmins</code>. Członkowie grupy mogą w nim czytać i pisać, inni nie mają żadnego dostępu. Nowe pliki w tym folderze mają automatycznie dostawać grupę <code>sysadmins</code>. Dodatkowo sarah ma mieć prawo do czytania zawartości folderu, ale nie do pisania.</p><p><strong>Zadanie 7. Szukanie.</strong> Znajdź wszystkie pliki należące do użytkownika <code>harry</code> i skopiuj je z zachowaniem uprawnień do folderu <code>/root/znalezione</code>. Wszystkie linijki z pliku <code>/etc/services</code>, w których występuje słowo <code>ssh</code>, zapisz posortowane do pliku <code>/root/ssh-linie</code>.</p><p><strong>Zadanie 8. Archiwum.</strong> Zrób archiwum całego folderu <code>/etc</code> skompresowane bzip2 i zapisz je jako <code>/root/etc-backup.tar.bz2</code>.</p><p><strong>Zadanie 9. Harmonogram.</strong> Użytkownik natalia ma codziennie o 14:23 wysyłać do dziennika systemowego wiadomość <code>egzamin trwa</code>.</p><p><strong>Zadanie 10. LVM.</strong> Na drugim dysku utwórz partycję GPT o rozmiarze 1 GiB. Zrób na niej grupę woluminów <code>dane_vg</code> z rozmiarem fizycznego kawałka (PE) 8 MiB i wolumin logiczny <code>dane_lv</code> o rozmiarze 500 MiB. Załóż na nim system plików XFS i zamontuj na stałe w <code>/dane</code>, używając UUID.</p><p><strong>Zadanie 11. Swap.</strong> Na tym samym dysku dodaj partycję wymiany 256 MiB i włącz ją na stałe. Istniejący swap ma zostać.</p><p><strong>Zadanie 12. Powiększenie.</strong> Powiększ <code>dane_lv</code> do 800 MiB razem z systemem plików, bez odmontowywania.</p><p><strong>Zadanie 13. Strona WWW.</strong> Apache ma serwować stronę z tekstem <code>Egzamin OK</code> na porcie 82. Strona ma być osiągalna z innych maszyn i ma wstawać po restarcie. SELinux zostaje w trybie Enforcing.</p><p><strong>Zadanie 14. Start i dziennik.</strong> Ustaw system tak, żeby domyślnie startował w trybie tekstowym. Dziennik systemowy ma przetrwać restart.</p><p><strong>Zadanie 15. Wydajność i czas.</strong> Ustaw profil tuned, który system sam poleca. Skonfiguruj klienta czasu, żeby synchronizował się z serwerem <code>zegar.lab.local</code>. Uruchom <code>sleep 3600</code> w tle z priorytetem nice 10.</p><p><strong>Zadanie 16. Skrypt.</strong> Napisz skrypt <code>/usr/local/bin/kto.sh</code>. Dla każdego podanego argumentu, nazwy użytkownika, wypisuje jego UID i powłokę, a jeśli taki użytkownik nie istnieje, wypisuje <code>brak</code>. Uruchomiony bez argumentów wypisuje na stderr, jak go używać, i kończy się kodem 2.</p><p><strong>Zadanie 17. Jądro.</strong> Włącz na stałe przekazywanie pakietów IPv4 (<code>net.ipv4.ip_forward</code>).</p><p><strong>Zadanie 18. Certyfikat.</strong> Wygeneruj certyfikat z podpisem własnym dla nazwy <code>egzamin.lab.local</code>, ważny 365 dni, z kluczem RSA 2048. Certyfikat zapisz w <code>/root/egz.crt</code>, klucz w <code>/root/egz.key</code>, dostępny tylko dla roota.</p><p><strong>Zadanie 19. Git.</strong> Utwórz repozytorium Git w <code>/root/konfig</code>, skopiuj do niego <code>/etc/hosts</code> i zrób commit z opisem.</p><p><strong>Zadanie 20. Kontener.</strong> Uruchom kontener z serwerem nginx o nazwie <code>www</code>, dostępny na porcie 8081 maszyny. Kontener ma się sam uruchamiać po restarcie systemu.</p><p>Koniec czasu. Teraz restart:</p><div class="kod"><pre><code>sudo systemctl reboot</code></pre></div></section><section><h2 id="sprawdzamy-skrypt-egzaminatora">Sprawdzamy: skrypt egzaminatora</h2><p>Prawdziwy egzaminator też ma skrypt. Nie patrzy w Twoją historię komend. Patrzy na stan systemu. Napisałem podobny. Każdy test to mała funkcja, która zwraca kciuk w górę albo w dół. Uwaga na pierwszą linijkę: jest <code>set -uo pipefail</code>, ale celowo bez <code>-e</code>. Tu oblany test nie może zatrzymać całego skryptu, ma tylko odjąć punkt.</p><div class="kod"><pre><code>#!/usr/bin/env bash
+# sprawdz_egzamin.sh — automatycznie sprawdza zadania z egzaminu próbnego
+# Uruchom jako root PO RESTARCIE maszyny: sudo ./sprawdz_egzamin.sh
+set -uo pipefail          # bez -e: oblany test ma odjąć punkt, a nie zatrzymać skrypt
+
+punkty=0
+razem=0
+
+sprawdz() {               # sprawdz &quot;opis&quot; funkcja_testowa
+    local opis=$1; shift
+    razem=$((razem + 1))
+    if &quot;$@&quot; &gt;/dev/null 2&gt;&amp;1; then
+        printf &#x27;[ OK ] %s\n&#x27; &quot;$opis&quot;
+        punkty=$((punkty + 1))
+    else
+        printf &#x27;[ -- ] %s\n&#x27; &quot;$opis&quot;
+    fi
+}
+
+# --- testy: każdy zwraca 0 (zaliczone) albo coś innego (oblane) ---
+t_host()    { [[ $(hostname) == serwer1.lab.local ]]; }
+t_grupa()   { id -nG natalia | grep -qw sysadmins &amp;&amp; id -nG harry | grep -qw sysadmins; }
+t_sarah()   { [[ $(getent passwd sarah | cut -d: -f7) == */nologin ]]; }
+t_chage()   { [[ $(getent shadow natalia | cut -d: -f5) == 90 ]]; }
+t_sudo()    { sudo -l -U harry | grep -q &#x27;NOPASSWD: ALL&#x27;; }
+t_folder()  { [[ $(stat -c &#x27;%G %a&#x27; /common/admin) == &#x27;sysadmins 2770&#x27; ]]; }
+t_acl()     { getfacl -p /common/admin | grep -qx &#x27;user:sarah:r-x&#x27;; }
+t_find()    { [[ -n $(find /root/znalezione -type f -user harry) ]]; }
+t_grep()    { [[ -s /root/ssh-linie ]] &amp;&amp; ! grep -qvw ssh /root/ssh-linie; }
+t_tar()     { tar -tjf /root/etc-backup.tar.bz2; }
+t_cron()    { crontab -l -u natalia | grep -Eq &#x27;^23[[:space:]]+14[[:space:]]&#x27;; }
+t_fstab()   { grep -Eq &#x27;^UUID=[^[:space:]]+[[:space:]]+/dane[[:space:]]+xfs&#x27; /etc/fstab; }
+t_mount()   { findmnt /dane; }
+t_lv()      { local mb; mb=$(lvs --noheadings --units m --nosuffix -o lv_size dane_vg/dane_lv)
+              (( ${mb%.*} &gt;= 800 )); }
+t_swap()    { [[ -n $(swapon --noheadings --show) ]] &amp;&amp; grep -Eq &#x27;[[:space:]]swap[[:space:]]&#x27; /etc/fstab; }
+t_www()     { curl -s http://localhost:82/ | grep -q &#x27;Egzamin OK&#x27;; }
+t_target()  { [[ $(systemctl get-default) == multi-user.target ]]; }
+t_journal() { [[ -d /var/log/journal ]]; }
+t_sysctl()  { grep -rqsE &#x27;^net\.ipv4\.ip_forward[[:space:]]*=[[:space:]]*1&#x27; /etc/sysctl.d/ &amp;&amp;
+              [[ $(sysctl -n net.ipv4.ip_forward) == 1 ]]; }
+t_cert()    { openssl x509 -in /root/egz.crt -noout -subject | grep -q &#x27;egzamin.lab.local&#x27; &amp;&amp;
+              openssl x509 -in /root/egz.crt -noout -checkend $((300 * 86400)); }
+t_git()     { git -C /root/konfig log --oneline -1 -- hosts | grep -q .; }
+t_skrypt()  { /usr/local/bin/kto.sh; [[ $? -eq 2 ]]; }
+
+sprawdz &quot;nazwa hosta serwer1.lab.local&quot;                   t_host
+sprawdz &quot;natalia i harry w grupie sysadmins&quot;              t_grupa
+sprawdz &quot;sarah bez powłoki interaktywnej&quot;                 t_sarah
+sprawdz &quot;hasło natalii ważne maksymalnie 90 dni&quot;          t_chage
+sprawdz &quot;harry ma sudo bez hasła&quot;                         t_sudo
+sprawdz &quot;/common/admin: grupa sysadmins, prawa 2770&quot;      t_folder
+sprawdz &quot;sarah ma ACL r-x na /common/admin&quot;               t_acl
+sprawdz &quot;pliki harry&#x27;ego w /root/znalezione&quot;              t_find
+sprawdz &quot;/root/ssh-linie tylko z linijkami o ssh&quot;         t_grep
+sprawdz &quot;archiwum /root/etc-backup.tar.bz2 jest czytelne&quot; t_tar
+sprawdz &quot;cron natalii o 14:23&quot;                            t_cron
+sprawdz &quot;/dane w fstab po UUID, typ xfs&quot;                  t_fstab
+sprawdz &quot;/dane zamontowane&quot;                               t_mount
+sprawdz &quot;dane_lv ma co najmniej 800 MB&quot;                   t_lv
+sprawdz &quot;swap aktywny i wpisany do fstab&quot;                 t_swap
+sprawdz &quot;strona na porcie 82 odpowiada&quot;                   t_www
+sprawdz &quot;domyślny cel multi-user.target&quot;                  t_target
+sprawdz &quot;dziennik zapisywany na dysk&quot;                     t_journal
+sprawdz &quot;ip_forward włączony na stałe&quot;                    t_sysctl
+sprawdz &quot;certyfikat egzamin.lab.local ważny &gt; 300 dni&quot;    t_cert
+sprawdz &quot;repozytorium /root/konfig z commitem hosts&quot;      t_git
+sprawdz &quot;kto.sh bez argumentu kończy się kodem 2&quot;         t_skrypt
+
+echo
+echo &quot;Wynik: ${punkty}/${razem}&quot;
+(( punkty * 10 &gt;= razem * 7 ))     # kod 0, jeśli co najmniej 70%</code></pre></div><p>Sprawdzanie warunku 70% na liczbach całkowitych, bo Bash nie umie ułamków: zamiast <code>punkty/razem &gt;= 0.7</code> mnożymy obie strony, <code>punkty*10 &gt;= razem*7</code>. Matematyka z podstawówki ratuje skrypt.</p><p>Skrypt przechodzi ShellChecka bez uwag. Na maszynie, na której zrobiłem dopiero część zadań, wynik wyglądał tak (skrócone):</p><div class="kod"><pre><code>[ -- ] nazwa hosta serwer1.lab.local
+[ OK ] natalia i harry w grupie sysadmins
+[ OK ] sarah bez powłoki interaktywnej
+...
+[ -- ] /dane zamontowane
+[ -- ] dane_lv ma co najmniej 800 MB
+[ -- ] swap aktywny i wpisany do fstab
+[ -- ] strona na porcie 82 odpowiada
+[ -- ] domyślny cel multi-user.target
+...
+[ OK ] kto.sh bez argumentu kończy się kodem 2
+
+Wynik: 15/22</code></pre></div><p>Zadań jest dwadzieścia, a testów dwadzieścia dwa, bo niektóre zadania mają po kilka części. Zadań 1, 3, 15 i 20 skrypt nie sprawdza: hasło roota sprawdzisz, logując się, a resztę zobaczysz w rozwiązaniach. Próg zdania przyjmijmy 70%. Organizatorzy podają swoje progi na stronach egzaminów i mogą je zmieniać.</p></section><section><h2 id="rozwiazania-krok-po-kroku">Rozwiązania krok po kroku</h2><p><strong>1. Hasło roota.</strong> To przerwanie startu systemu. Instrukcja z dokumentacji Red Hata wygląda tak. Restart, w menu GRUB-a strzałką na pierwszą pozycję i klawisz <code>e</code>. W linijce zaczynającej się od <code>linux</code> dopisujesz na końcu <code>rd.break</code> i startujesz przez Ctrl+X. Lądujesz w powłoce awaryjnej, zanim system wystartuje na dobre. Prawdziwy dysk jest podpięty w <code>/sysroot</code> i to tylko do odczytu.</p><div class="kod"><pre><code>mount -o remount,rw /sysroot
+chroot /sysroot
+passwd root                 # wpisujesz Egzamin2026 dwa razy
+touch /.autorelabel
+exit
+exit</code></pre></div><p><code>chroot</code> to przeprowadzka: od tej chwili <code>/</code> to Twój prawdziwy system, a nie mini-system startowy. <code>touch /.autorelabel</code> to kartka dla SELinuksa: „przy następnym starcie przepisz wszystkie etykiety plików”. Bez tego plik <code>/etc/shadow</code> ma złą etykietę, bo zmieniłeś go w momencie, kiedy SELinux nie pilnował, i po starcie nikt nie może się zalogować. Nawet z nowym hasłem. Ponowne etykietowanie trwa chwilę i system sam się raz zrestartuje. Nie panikuj, to normalne.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>dokumentacja podaje też szybszy wariant: <code>rd.break enforcing=0</code>, po starcie <code>restorecon /etc/shadow</code> i <code>setenforce 1</code>. Szybszy, ale łatwiej coś pominąć w stresie. Procedurę sprawdzałem w dokumentacji RHEL 8. Na RHEL 10 przećwicz ją na swojej maszynie, zanim pójdziesz na egzamin.</p></aside><p>[Ubuntu] Tu zamiast <code>rd.break</code> zwykle dopisuje się <code>init=/bin/bash</code>, potem <code>mount -o remount,rw /</code> i <code>passwd</code>. SELinuksa nie ma, więc kartki dla niego też nie.</p><p><strong>2. Sieć.</strong></p><div class="kod"><pre><code>hostnamectl set-hostname serwer1.lab.local
+nmcli connection show                       # jak nazywa się Twoje połączenie?
+nmcli connection modify enp0s8 ipv4.method manual \
+    ipv4.addresses 192.168.56.50/24 ipv4.gateway 192.168.56.1 ipv4.dns 192.168.56.1
+nmcli connection up enp0s8
+ip -4 addr show enp0s8</code></pre></div><p>Nazwa <code>enp0s8</code> jest przykładowa. Weź swoją z <code>nmcli connection show</code>. Kolejność ma znaczenie: najpierw adres, potem <code>method manual</code>. Jeśli ustawisz <code>manual</code> bez adresu, nmcli odmówi. Na egzaminie robisz to przy konsoli maszyny, nie przez SSH. Zmiana adresu przez SSH to piłowanie gałęzi, na której siedzisz.</p><p>[Ubuntu] Sieć ustawiasz w pliku netplan w <code>/etc/netplan/</code> i <code>sudo netplan try</code>, który sam cofnie zmiany po 120 sekundach, jeśli nie potwierdzisz. Najlepszy wynalazek dla ludzi, którzy pracują zdalnie.</p><p><strong>3. Oprogramowanie.</strong> Płyta podpięta do maszyny, montujemy ją i opisujemy repozytoria:</p><div class="kod"><pre><code>mkdir -p /mnt/iso
+mount -o ro /dev/sr0 /mnt/iso
+echo &#x27;/dev/sr0  /mnt/iso  iso9660  ro,nofail  0 0&#x27; &gt;&gt; /etc/fstab</code></pre></div><div class="kod"><pre><code># /etc/yum.repos.d/lokalne.repo
+[BaseOS]
+name=BaseOS z płyty
+baseurl=file:///mnt/iso/BaseOS
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+
+[AppStream]
+name=AppStream z płyty
+baseurl=file:///mnt/iso/AppStream
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release</code></pre></div><div class="kod"><pre><code>dnf repolist
+dnf install -y httpd</code></pre></div><p>Na Rocky i Almie plik z kluczem nazywa się inaczej: podejrzyj <code>ls /etc/pki/rpm-gpg/</code>. Jeśli zadanie ma podany adres zamiast płyty, w <code>baseurl</code> wpisujesz <code>http://...</code> zamiast <code>file://...</code>.</p><p>Flatpak, nowość na RHEL 10. Według dokumentacji Red Hata:</p><div class="kod"><pre><code>dnf install -y flatpak
+flatpak remote-add --if-not-exists rhel https://flatpaks.redhat.io/rhel.flatpakrepo
+flatpak remotes
+flatpak search calculator
+flatpak install rhel &lt;identyfikator-aplikacji&gt;</code></pre></div><p>Repozytorium Red Hata wymaga zalogowania do rejestru (<code>podman login flatpaks.registry.redhat.io</code>). Na egzaminie dostaniesz adres repozytorium w treści zadania, a komendy są te same. Na Rocky albo Almie możesz poćwiczyć z Flathubem.</p><p><strong>4. Użytkownicy.</strong></p><div class="kod"><pre><code>groupadd sysadmins
+useradd -G sysadmins natalia
+useradd -G sysadmins harry
+useradd -s /sbin/nologin sarah
+for u in natalia harry sarah; do echo &quot;$u:Trudne123!&quot; | chpasswd; done
+id natalia
+getent passwd sarah</code></pre></div><div class="kod"><pre><code>uid=1001(natalia) gid=1002(natalia) groups=1002(natalia),1001(sysadmins)
+sarah:x:1003:1004::/home/sarah:/sbin/nologin</code></pre></div><p><code>-G</code> duże, czyli grupa dodatkowa. Małe <code>-g</code> zmieniłoby grupę główną, a o to zadanie nie prosiło. Jedna litera, a różnica jak między „dopisz do listy gości” i „przemelduj na stałe”. Numery UID i GID u Ciebie mogą być inne.</p><p>[Ubuntu] <code>useradd</code> nie zakłada folderu domowego bez <code>-m</code>, a <code>nologin</code> leży w <code>/usr/sbin/nologin</code>. Dlatego skrypt sprawdzający patrzy tylko na końcówkę <code>*/nologin</code>.</p><p><strong>5. Hasła i sudo.</strong></p><div class="kod"><pre><code>chage -M 90 natalia
+chage -l natalia | grep -i maximum
+echo &#x27;harry ALL=(ALL) NOPASSWD: ALL&#x27; &gt; /etc/sudoers.d/harry
+chmod 440 /etc/sudoers.d/harry
+visudo -cf /etc/sudoers.d/harry
+sudo -l -U harry</code></pre></div><div class="kod"><pre><code>Maximum number of days between password change		: 90
+/etc/sudoers.d/harry: parsed OK
+User harry may run the following commands on serwer1:
+    (ALL) NOPASSWD: ALL</code></pre></div><p>Nigdy nie edytuj głównego <code>/etc/sudoers</code> echem. Osobny plik w <code>sudoers.d</code> i od razu <code>visudo -c</code>. Jeden plik, jeden człowiek, jedno sprawdzenie.</p><p><strong>6. Folder wspólny.</strong></p><div class="kod"><pre><code>mkdir -p /common/admin
+chgrp sysadmins /common/admin
+chmod 2770 /common/admin
+setfacl -m u:sarah:rx /common/admin
+ls -ld /common/admin
+getfacl -p /common/admin</code></pre></div><div class="kod"><pre><code>drwxrws---+ 2 root sysadmins 4096 Nov  4 08:24 /common/admin
+# file: /common/admin
+# owner: root
+# group: sysadmins
+# flags: -s-
+user::rwx
+user:sarah:r-x
+group::rwx
+mask::rwx
+other::---</code></pre></div><p>2770 rozbieramy na kawałki: 2 to SGID, czyli „wszystko, co tu powstanie, dostaje grupę folderu”. 7 dla właściciela, 7 dla grupy, 0 dla reszty. Literka <code>s</code> w miejscu <code>x</code> grupy to właśnie SGID, a plusik na końcu znaczy „uwaga, są tu jeszcze listy ACL”. Sprawdziłem w praktyce: plik założony przez natalię dostał grupę <code>sysadmins</code>, a sarah może zrobić <code>ls</code>, ale <code>touch</code> kończy się <code>Permission denied</code>. ACL to dorobiony klucz do jednego pokoju dla jednej osoby, bez wpisywania jej do całej grupy.</p><p><strong>7. Szukanie.</strong></p><div class="kod"><pre><code>mkdir -p /root/znalezione
+find / -user harry -type f -exec cp -a {} /root/znalezione/ \; 2&gt;/dev/null
+ls -la /root/znalezione
+grep -w ssh /etc/services | sort &gt; /root/ssh-linie</code></pre></div><p><code>2&gt;/dev/null</code> wycisza krzyki z <code>/proc</code>, gdzie pliki znikają w trakcie szukania. <code>cp -a</code> zachowuje właściciela, prawa i daty. Na świeżym koncie harry&#x27;ego <code>find</code> znajdzie pliki z <code>/etc/skel</code> w jego domu i jego skrzynkę pocztową w <code>/var/spool/mail</code>. <code>grep -w</code> szuka całego słowa, więc nie złapie na przykład <code>sshell</code>.</p><p><strong>8. Archiwum.</strong></p><div class="kod"><pre><code>tar -cjf /root/etc-backup.tar.bz2 /etc
+tar -tjf /root/etc-backup.tar.bz2 | head -3</code></pre></div><div class="kod"><pre><code>tar: Removing leading `/&#x27; from member names
+etc/
+etc/rc2.d/</code></pre></div><p><code>j</code> to bzip2, <code>z</code> to gzip, <code>J</code> to xz. Komunikat o usuwaniu <code>/</code> to nie błąd, to troska: tar nie pozwoli, żeby rozpakowanie archiwum nadpisało Ci prawdziwe <code>/etc</code>.</p><p><strong>9. Harmonogram.</strong></p><div class="kod"><pre><code>crontab -e -u natalia</code></pre></div><div class="kod"><pre><code>23 14 * * * logger &quot;egzamin trwa&quot;</code></pre></div><p>Minuta, godzina, dzień miesiąca, miesiąc, dzień tygodnia. Najpierw minuta. Jeśli napiszesz <code>14 23</code>, natalia będzie pisać do dziennika o 23:14, jak nastolatka w social mediach.</p><p><strong>10. LVM.</strong> Najpierw sprawdź nazwę dysku. Na maszynach wirtualnych to zwykle <code>/dev/vdb</code> albo <code>/dev/sdb</code>. Pomyłka dysku w tym zadaniu to formatowanie systemu, więc dwa razy patrzysz w <code>lsblk</code>, zanim naciśniesz Enter.</p><div class="kod"><pre><code>lsblk
+parted -s /dev/vdb mklabel gpt mkpart dane 1MiB 1025MiB set 1 lvm on
+pvcreate /dev/vdb1
+vgcreate -s 8M dane_vg /dev/vdb1
+lvcreate -n dane_lv -L 500M dane_vg
+mkfs.xfs /dev/dane_vg/dane_lv
+mkdir /dane
+blkid /dev/dane_vg/dane_lv</code></pre></div><p>Teraz <code>/etc/fstab</code>. UUID z <code>blkid</code>, a nie ręcznie przepisywany, bo jedna literówka w 36 znakach i system nie wstanie:</p><div class="kod"><pre><code>echo &quot;UUID=$(blkid -s UUID -o value /dev/dane_vg/dane_lv)  /dane  xfs  defaults  0 0&quot; &gt;&gt; /etc/fstab
+systemctl daemon-reload
+mount -a
+findmnt --verify
+findmnt /dane</code></pre></div><p>Partycje sprawdzałem na dysku z pliku (loop device): <code>parted</code> dało dokładnie taki układ, a <code>blkid</code> taki wynik dla XFS:</p><div class="kod"><pre><code>Number  Start   End     Size    File system  Name    Flags
+ 1      1049kB  1075MB  1074MB               dane    lvm
+/dev/loop0p1: UUID=&quot;87d1c373-727f-4ba9-8fe0-ac3f382ed89e&quot; BLOCK_SIZE=&quot;512&quot; TYPE=&quot;xfs&quot; PARTLABEL=&quot;dane&quot; ...</code></pre></div><p>[Ubuntu] Wszystko tak samo, tylko <code>mkfs.xfs</code> może wymagać pakietu <code>xfsprogs</code>.</p><p><strong>11. Swap.</strong></p><div class="kod"><pre><code>parted -s /dev/vdb mkpart swapik linux-swap 1025MiB 1281MiB
+mkswap /dev/vdb2
+echo &quot;UUID=$(blkid -s UUID -o value /dev/vdb2)  none  swap  defaults  0 0&quot; &gt;&gt; /etc/fstab
+swapon -a
+swapon --show</code></pre></div><div class="kod"><pre><code>NAME      TYPE      SIZE USED PRIO
+/dev/vdb2 partition 256M   0B   -2</code></pre></div><p>U Ciebie w wyniku będzie też stary swap. Ma zostać, zadanie mówi o tym wprost. „Dodaj” to nie „zamień”.</p><p><strong>12. Powiększenie.</strong></p><div class="kod"><pre><code>lvextend -r -L 800M /dev/dane_vg/dane_lv
+df -h /dane</code></pre></div><p><code>-r</code> to „resize filesystem”: lvextend sam powiększy XFS-a, za Ciebie wywoła <code>xfs_growfs</code>. Bez <code>-r</code> regał na kółkach jest większy, ale półki w środku zostały stare. XFS można powiększać, ale nie można go zmniejszać. Zapamiętaj to, to ulubione pytanie rekrutacyjne.</p><p><strong>13. Strona WWW na porcie 82.</strong> Tu spotykają się trzy ochroniarze: Apache, SELinux i zapora. Każdego trzeba przekonać osobno.</p><div class="kod"><pre><code>echo &#x27;Egzamin OK&#x27; &gt; /var/www/html/index.html
+sed -i &#x27;s/^Listen 80$/Listen 82/&#x27; /etc/httpd/conf/httpd.conf
+semanage port -l | grep &#x27;^http_port_t&#x27;
+semanage port -a -t http_port_t -p tcp 82
+restorecon -Rv /var/www/html
+systemctl enable --now httpd
+firewall-cmd --permanent --add-port=82/tcp
+firewall-cmd --reload
+curl http://localhost:82/</code></pre></div><p>Bez <code>semanage port</code> Apache nie wstanie, a w dzienniku znajdziesz komunikat, który podaje dokumentacja Red Hata: <code>(13)Permission denied: AH00072: make_sock: could not bind to address</code>. Uprawnienia są w porządku, port wolny, a SELinux mówi „Apache ma prawo tylko do okienek z etykietą http_port_t”. <code>restorecon</code> to bonus: jeśli plik strony zrobiłeś w <code>/root</code> i przeniosłeś <code>mv</code>, zabrał ze sobą złą etykietę i Apache dostanie 403.</p><p>[Ubuntu] Pakiet <code>apache2</code>, port w <code>/etc/apache2/ports.conf</code>, zapora <code>ufw allow 82/tcp</code>, a SELinuksa nie ma. AppArmor domyślnie Apache&#x27;owi w tym nie przeszkadza.</p><p><strong>14. Start i dziennik.</strong></p><div class="kod"><pre><code>systemctl set-default multi-user.target
+mkdir -p /etc/systemd/journald.conf.d
+printf &#x27;[Journal]\nStorage=persistent\n&#x27; &gt; /etc/systemd/journald.conf.d/trwaly.conf
+systemctl restart systemd-journald
+journalctl --list-boots</code></pre></div><p>Według dokumentacji systemd <code>Storage=persistent</code> każe trzymać dziennik w <code>/var/log/journal</code>, a przy ustawieniu <code>auto</code> o wszystkim decyduje to, czy ten folder istnieje. Dlatego samo <code>mkdir /var/log/journal</code> też często wystarcza. Po kolejnym restarcie <code>journalctl --list-boots</code> ma pokazać więcej niż jeden start.</p><p><strong>15. Wydajność i czas.</strong></p><div class="kod"><pre><code>dnf install -y tuned
+systemctl enable --now tuned
+tuned-adm recommend
+tuned-adm profile virtual-guest      # to, co pokazało recommend
+tuned-adm active</code></pre></div><p>Na maszynie wirtualnej <code>recommend</code> zwykle odpowiada <code>virtual-guest</code>. Wpisz to, co Ci pokazało, a nie to, co ja powiedziałem.</p><p>Czas: w <code>/etc/chrony.conf</code> [RHEL] albo <code>/etc/chrony/chrony.conf</code> [Ubuntu] zakomentuj linijki <code>pool</code>, dopisz:</p><div class="kod"><pre><code>server zegar.lab.local iburst</code></pre></div><div class="kod"><pre><code>systemctl restart chronyd          # [Ubuntu]: chrony
+chronyc sources</code></pre></div><p>I priorytet:</p><div class="kod"><pre><code>nice -n 10 sleep 3600 &amp;
+ps -o pid,ni,cmd -C sleep</code></pre></div><p><strong>16. Skrypt.</strong></p><div class="kod"><pre><code>#!/bin/bash
+# kto.sh — dla każdego podanego użytkownika wypisuje UID i powłokę
+if [ $# -eq 0 ]; then
+    echo &quot;Użycie: $0 UŻYTKOWNIK...&quot; &gt;&amp;2
+    exit 2
+fi
+kod=0
+for u in &quot;$@&quot;; do
+    if wpis=$(getent passwd &quot;$u&quot;); then
+        IFS=: read -r _ _ uid _ _ _ powloka &lt;&lt;&lt; &quot;$wpis&quot;
+        echo &quot;$u: UID $uid, powłoka $powloka&quot;
+    else
+        echo &quot;$u: brak&quot;
+        kod=1
+    fi
+done
+exit &quot;$kod&quot;</code></pre></div><div class="kod"><pre><code>install -m 755 kto.sh /usr/local/bin/kto.sh
+kto.sh; echo &quot;kod=$?&quot;
+kto.sh root sarah duch; echo &quot;kod=$?&quot;</code></pre></div><div class="kod"><pre><code>Użycie: /usr/local/bin/kto.sh UŻYTKOWNIK...
+kod=2
+root: UID 0, powłoka /bin/bash
+sarah: UID 1003, powłoka /sbin/nologin
+duch: brak
+kod=1</code></pre></div><p><code>IFS=: read</code> z here-stringiem rozkłada linijkę z <code>/etc/passwd</code> na pola, jak sortowanie listów do przegródek. Podkreślniki to pola, które nas nie interesują. ShellCheck: zero uwag.</p><p><strong>17. Jądro.</strong></p><div class="kod"><pre><code>echo &#x27;net.ipv4.ip_forward = 1&#x27; &gt; /etc/sysctl.d/90-egzamin.conf
+sysctl --system
+sysctl net.ipv4.ip_forward</code></pre></div><div class="kod"><pre><code>net.ipv4.ip_forward = 1</code></pre></div><p>Samo <code>sysctl -w</code> działa tylko do restartu. Plik w <code>/etc/sysctl.d</code> to wersja na stałe. Egzaminator zrestartuje maszynę, więc wersja „do restartu” to zero punktów.</p><p><strong>18. Certyfikat.</strong></p><div class="kod"><pre><code>openssl req -x509 -newkey rsa:2048 -nodes -days 365 \
+    -subj &quot;/CN=egzamin.lab.local&quot; -keyout /root/egz.key -out /root/egz.crt
+chmod 600 /root/egz.key
+openssl x509 -in /root/egz.crt -noout -subject -enddate</code></pre></div><div class="kod"><pre><code>subject=CN = egzamin.lab.local
+notAfter=Nov  4 07:26:29 2027 GMT</code></pre></div><p><code>-x509</code> to „od razu certyfikat, a nie prośba o certyfikat”. <code>-nodes</code> to „no DES”, czyli klucz bez hasła, inaczej Apache przy każdym starcie pytałby Cię o hasło jak bankomat.</p><p><strong>19. Git.</strong></p><div class="kod"><pre><code>git init /root/konfig
+cp /etc/hosts /root/konfig/
+cd /root/konfig
+git add hosts
+git -c user.name=&quot;Admin&quot; -c user.email=&quot;admin@lab.local&quot; commit -m &quot;Kopia /etc/hosts&quot;
+git log --oneline</code></pre></div><div class="kod"><pre><code>ec253e9 Kopia /etc/hosts</code></pre></div><p>Jeśli Git przy commicie zapyta „Who are you?”, nie panikuj. Albo <code>-c</code> jak wyżej, albo raz <code>git config --global user.name</code> i <code>user.email</code>.</p><p><strong>20. Kontener.</strong></p><p>[Ubuntu] z Dockerem:</p><div class="kod"><pre><code>docker run -d --name www --restart unless-stopped -p 8081:80 nginx
+curl -sI http://localhost:8081 | head -1</code></pre></div><p>[RHEL] z Podmanem. Podman nie ma demona, który pilnowałby kontenerów po restarcie, więc <code>--restart</code> sam nie wystarczy. Potrzebna jest usługa, która je podniesie:</p><div class="kod"><pre><code>podman run -d --name www --restart always -p 8081:80 docker.io/library/nginx
+systemctl enable podman-restart.service</code></pre></div><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>elegantsza droga na Podmanie to Quadlet: plik <code>.container</code> w <code>/etc/containers/systemd/</code>, z którego systemd sam robi usługę. To temat na osobna lekcja, a na RHCSA kontenerów w ogóle nie ma na liście celów dla RHEL 10.</p></aside></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p>Czemu egzaminy praktyczne restartują maszynę? Bo w Linuksie są dwie warstwy prawdy. Pierwsza to stan w pamięci: działające procesy, adresy na kartach, zamontowane dyski, wartości w <code>/proc/sys</code>. Druga to pliki na dysku: <code>/etc/fstab</code>, <code>/etc/sysctl.d</code>, pliki połączeń NetworkManagera, linki w <code>/etc/systemd/system</code> tworzone przez <code>enable</code>. Przy starcie systemd, nasz kierownik zmiany, czyta tę drugą warstwę i z niej odbudowuje pierwszą.</p><p>Prawie każde zadanie ma więc dwie komendy: jedną „teraz” i jedną „na stałe”. <code>mount</code> i wpis w fstab. <code>sysctl -w</code> i plik w <code>sysctl.d</code>. <code>systemctl start</code> i <code>enable</code>. <code>firewall-cmd</code> i <code>--permanent</code>. <code>swapon</code> i fstab. <code>setenforce</code> i <code>/etc/selinux/config</code>. Najczęstsza przyczyna oblania nie jest taka, że ktoś czegoś nie umie. Ktoś zrobił tylko połowę „teraz”.</p><p>A skrypt sprawdzający? Działa jak egzaminator: nie czyta historii Basha, tylko odpytuje system. <code>findmnt</code>, <code>swapon --show</code>, <code>systemctl get-default</code>, <code>sudo -l -U</code>. Każdy test to kciuk w górę albo w dół, a <code>sprawdz</code> je liczy.</p></section><section><h2 id="sciaga-teraz-kontra-na-stale">Ściąga: „teraz” kontra „na stałe”</h2><div class="tabela"><table><tr><th>Co</th><th>Teraz (do restartu)</th><th>Na stałe</th></tr><tr><td>system plików</td><td><code>mount /dev/... /dane</code></td><td>wpis w <code>/etc/fstab</code> + <code>mount -a</code></td></tr><tr><td>swap</td><td><code>swapon /dev/vdb2</code></td><td>wpis <code>swap</code> w <code>/etc/fstab</code></td></tr><tr><td>parametr jądra</td><td><code>sysctl -w klucz=wartość</code></td><td>plik w <code>/etc/sysctl.d/</code> + <code>sysctl --system</code></td></tr><tr><td>usługa</td><td><code>systemctl start</code></td><td><code>systemctl enable</code> (albo <code>enable --now</code>)</td></tr><tr><td>zapora RHEL</td><td><code>firewall-cmd --add-port=82/tcp</code></td><td>to samo z <code>--permanent</code> + <code>--reload</code></td></tr><tr><td>zapora Ubuntu</td><td>—</td><td><code>ufw allow 82/tcp</code> (od razu na stałe)</td></tr><tr><td>SELinux</td><td><code>setenforce 0/1</code></td><td><code>SELINUX=</code> w <code>/etc/selinux/config</code></td></tr><tr><td>port dla SELinuksa</td><td>—</td><td><code>semanage port -a</code> (od razu na stałe)</td></tr><tr><td>cel startu</td><td><code>systemctl isolate multi-user.target</code></td><td><code>systemctl set-default multi-user.target</code></td></tr><tr><td>nazwa hosta</td><td><code>hostname nazwa</code></td><td><code>hostnamectl set-hostname nazwa</code></td></tr><tr><td>adres IP</td><td><code>ip addr add</code></td><td><code>nmcli connection modify</code> [RHEL], netplan [Ubuntu]</td></tr><tr><td>dziennik</td><td>—</td><td><code>Storage=persistent</code> albo folder <code>/var/log/journal</code></td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>Literówka w <code>/etc/fstab</code>. Klasyka egzaminu i klasyka życia. Wpisujesz UUID ręcznie, mylisz jedną literkę, nie sprawdzasz, restartujesz na koniec egzaminu. A system wita Cię tak:</p><div class="kod"><pre><code>You are in emergency mode. After logging in, type &quot;journalctl -xb&quot; to view
+system logs, &quot;systemctl reboot&quot; to reboot, &quot;systemctl default&quot; or &quot;exit&quot;
+to boot into default mode.
+Give root password for maintenance
+(or press Control-D to continue):</code></pre></div><p>Tryb awaryjny. Systemd czekał na dysk, którego nie ma, i się poddał. A teraz najgorsze: jeśli wcześniej nie zrobiłeś zadania 1, czyli nie znasz hasła roota, nawet tu nie wejdziesz. Egzamin ma poczucie humoru.</p><p>Naprawa, zanim cokolwiek się stanie: po każdej zmianie w fstab robisz <code>mount -a</code> i <code>findmnt --verify</code>. Sprawdziłem, co mówi <code>findmnt</code> przy UUID z jedną złą literą na końcu:</p><div class="kod"><pre><code>/dane
+   [E] unreachable on boot required source: UUID=87d1c373-727f-4ba9-8fe0-ac3f382ed89f
+0 parse errors, 1 error, 0 warnings</code></pre></div><p>A przy poprawnym:</p><div class="kod"><pre><code>Success, no errors or warnings detected</code></pre></div><p>Jeśli już wylądowałeś w trybie awaryjnym: podajesz hasło roota, <code>journalctl -xb | grep -i fail</code>, poprawiasz <code>/etc/fstab</code>, <code>systemctl daemon-reload</code>, <code>mount -a</code>, <code>exit</code>. Trzy minuty, jeśli wiesz, co robić. Pół egzaminu, jeśli nie wiesz.</p><p>Drugi błąd, równie popularny: ktoś robi wszystko przez SSH, a w zadaniu 2 zmienia adres karty, przez którą jest połączony. Połączenie zrywa się w połowie komendy. Dlatego zadania sieciowe robisz z konsoli maszyny wirtualnej, a na prawdziwym serwerze zawsze z otwartą drugą sesją albo dostępem do konsoli.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><p>Zrób egzamin jeszcze raz za tydzień, od czystej migawki, z zegarem na dwie godziny i bez zaglądania do tej lekcji. Przy każdym zadaniu zanotuj czas, w którym je skończyłeś. Na koniec uruchom skrypt sprawdzający i porównaj wynik z pierwszym podejściem. Zadania, które zajęły Ci ponad 10 minut albo które oblałeś, przećwicz po trzy razy na czystej maszynie.</p><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><p>Zadanie było proste do powiedzenia i trudne do zrobienia: egzamin drugi raz, od czystej migawki, z zegarem i z notowaniem czasu każdego zadania.</p><p>Notowanie czasu na kartce jest w porządku, ale jesteśmy adminami, więc zrobimy to tak, jak robią admini: jedną funkcją. Wklejasz ją do terminala przed startem egzaminu:</p><div class="kod"><pre><code>z() { printf &#x27;%s %s\n&#x27; &quot;$(date +%T)&quot; &quot;$1&quot; &gt;&gt; ~/egzamin-czasy.txt; }</code></pre></div><p>Zaczynasz zadanie 1? Wpisujesz <code>z 1</code>. Zaczynasz zadanie 2? <code>z 2</code>. Na koniec <code>z koniec</code>. Funkcja to przycisk w windzie: jedno naciśnięcie, a w środku dzieje się wszystko, co trzeba. Potem mały skrypt, który policzy różnice i pokaże, gdzie utknąłeś:</p><div class="kod"><pre><code>#!/usr/bin/env bash
+# czasy.sh — liczy, ile minut zajęło każde zadanie egzaminu
+# Plik wejściowy: linijki &quot;GG:MM:SS numer_zadania&quot; (start) i na końcu &quot;GG:MM:SS koniec&quot;
+set -euo pipefail
+plik=${1:-$HOME/egzamin-czasy.txt}
+[[ -r $plik ]] || { echo &quot;Brak pliku: $plik&quot; &gt;&amp;2; exit 1; }
+
+awk &#x27;
+function sek(t,  a) { split(t, a, &quot;:&quot;); return a[1]*3600 + a[2]*60 + a[3] }
+NR &gt; 1 { min = (sek($1) - sek(poprz_czas)) / 60
+         printf &quot;zadanie %-3s %5.1f min%s\n&quot;, poprz_zad, min, (min &gt; 10 ? &quot;   &lt;-- do powtórki&quot; : &quot;&quot;) }
+{ poprz_czas = $1; poprz_zad = $2 }
+&#x27; &quot;$plik&quot;</code></pre></div><p>awk czyta plik linijka po linijce i zawsze pamięta poprzednią. Czas zadania to różnica między jego startem a startem następnego. Funkcja <code>sek</code> zamienia godzinę na sekundy, bo odejmowanie „10:21:10 minus 10:07:30” to coś, czego nie lubi nikt, łącznie z awk. Na moim przykładowym pliku:</p><div class="kod"><pre><code>zadanie 1     7.5 min
+zadanie 2    13.7 min   &lt;-- do powtórki
+zadanie 3     4.8 min
+zadanie 4     3.7 min
+zadanie 5    14.4 min   &lt;-- do powtórki
+zadanie 10    7.9 min</code></pre></div><p>ShellCheck czysty, a bez pliku skrypt grzecznie mówi „Brak pliku” na stderr i kończy się kodem 1.</p><p>Co zwykle wychodzi przy drugim podejściu? Zadania z użytkownikami i uprawnieniami lecą dwa razy szybciej, bo to pamięć mięśniowa. Za to sieć, LVM i SELinux dalej bolą. To dobrze. To znaczy, że wiesz, co ćwiczyć. Trzy powtórki każdego czerwonego zadania na czystej maszynie i za trzecim razem robisz je, myśląc o obiedzie.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Ostatnia lekcja kursu. Co dalej: który certyfikat wybrać, jak zbudować domowe laboratorium, czego uczyć się po Bashu i jak szukać pierwszej pracy jako admin w Polsce. I szczera rozmowa o tym, co dał Ci ten kurs, a czego żaden kurs nie da.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-115.html" rel="prev">← 115. Projekt 6: LAMP na trzech maszynach z Ansible, wszystko w Git</a><a class="btn domyslny zolty" href="lekcja-117.html" rel="next">117. Co dalej: certyfikaty, laboratorium domowe i pierwsza praca →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

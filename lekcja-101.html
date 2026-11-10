@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>101. Git dla admina — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 101 kursu Linux i Bash od zera do admina: Git dla admina. kursant trzyma swoje skrypty i konfigurację w Gicie: robi commity, czyta historię i różnice, używa gałęzi, wysyła repozytorium na serwer, GitLaba lub GitHuba przez klucz SSH, a /etc pilnuje etckeeperem.">
+<meta property="og:title" content="101. Git dla admina — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 101 kursu Linux i Bash od zera do admina: Git dla admina. kursant trzyma swoje skrypty i konfigurację w Gicie: robi commity, czyta historię i różnice, używa gałęzi, wysyła repozytorium na serwer, GitLaba lub GitHuba przez klucz SSH, a /etc pilnuje etckeeperem.">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 11</span></div>
+      <div class="boczny-tytul"><a href="index.html#m11">Automatyzacja: Git, Ansible i Bash w pracy admina</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-101.html" data-lekcja="101" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">101</span> Git dla admina</a></li><li><a href="lekcja-102.html" data-lekcja="102"><span class="znacznik"></span><span class="nr">102</span> Wiele serwerów naraz</a></li><li><a href="lekcja-103.html" data-lekcja="103"><span class="znacznik"></span><span class="nr">103</span> Ansible w praktyce</a></li><li><a href="lekcja-104.html" data-lekcja="104"><span class="znacznik"></span><span class="nr">104</span> Instalacja i konfiguracja ze skryptu</a></li><li><a href="lekcja-105.html" data-lekcja="105"><span class="znacznik"></span><span class="nr">105</span> Bezpieczne skrypty</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="101" data-modul="11" data-tematy="git init, clone, add, commit, log, diff, branch, merge, pull, push, .gitignore, klucz SSH do GitLaba i GitHuba, skrypty w repozytorium, etckeeper">
+    <div class="belka"><span>Lekcja 101 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m11">Moduł 11</a> › Lekcja 101</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Git dla admina</h1>
+      <p class="meta"><span>⏱ ok. 11 min czytania</span><span>· moduł 11: Automatyzacja: Git, Ansible i Bash w pracy admina</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant trzyma swoje skrypty i konfigurację w Gicie: robi commity, czyta historię i różnice, używa gałęzi, wysyła repozytorium na serwer, GitLaba lub GitHuba przez klucz SSH, a <code>/etc</code> pilnuje etckeeperem.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#git-czyli-album-ze-zdjeciami-twojego-biurka">Git, czyli album ze zdjęciami Twojego biurka</a></li><li><a href="#diff-czyli-znajdz-roznice-z-gazety">diff, czyli „znajdź różnicę” z gazety</a></li><li><a href="#gitignore-czyli-lista-rzeczy-ktorych-nie-fotografu">.gitignore, czyli lista rzeczy, których nie fotografujemy</a></li><li><a href="#galezie-czyli-brudnopis-obok-czystopisu">Gałęzie, czyli brudnopis obok czystopisu</a></li><li><a href="#repozytorium-na-serwerze-clone-push-pull">Repozytorium na serwerze: clone, push, pull</a></li><li><a href="#klucz-ssh-do-gitlaba-i-githuba">Klucz SSH do GitLaba i GitHuba</a></li><li><a href="#etckeeper-czyli-git-ktory-sam-pilnuje-etc">etckeeper, czyli Git, który sam pilnuje /etc</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga-flag">Ściąga flag</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p>Poniedziałek rano. Na serwerze ktoś zmienił plik. Kto? Kiedy? Co dokładnie? I jak to było wcześniej? Cisza w kursie. Wszyscy byli w piątek „tylko na chwilę”.</p><p>A teraz ta sama scena na serwerze z Gitem:</p><div class="kod"><pre><code>cd /etc &amp;&amp; sudo git log --oneline -3
+sudo git diff HEAD~1 -- ssh/sshd_config</code></pre></div><p>Dwie komendy. Masz autora, godzinę, opis i dokładnie tę jedną linijkę, która się zmieniła. Jedną komendą możesz ją cofnąć. Dziś Git, czyli wehikuł czasu dla plików tekstowych. Programiści używają go do kodu, a admin do skryptów i konfiguracji.</p></section><section><h2 id="git-czyli-album-ze-zdjeciami-twojego-biurka">Git, czyli album ze zdjęciami Twojego biurka</h2><p>Wyobraź sobie, że po każdej ważnej zmianie robisz zdjęcie całego biurka i podpisujesz je: „dodałem skrypt do kopii”, „zmieniłem próg alarmu”. Album rośnie, a Ty w każdej chwili możesz otworzyć dowolne zdjęcie i zobaczyć, jak było. To jest <strong>Git</strong>: system kontroli wersji. Zdjęcie z podpisem to <strong>commit</strong>. Album to <strong>repozytorium</strong>, w skrócie repo.</p><p>Jest jeszcze stolik przed aparatem. Nie fotografujesz wszystkiego, tylko to, co na niego położysz. Ten stolik to <strong>poczekalnia</strong> (staging, index). <code>git add</code> kładzie plik na stolik, <code>git commit</code> robi zdjęcie.</p><p>Instalacja: <code>sudo apt install git</code> [Ubuntu], <code>sudo dnf install git</code> [RHEL]. Zanim zrobisz pierwsze zdjęcie, przedstaw się, bo każde zdjęcie jest podpisane:</p><div class="kod"><pre><code>git config --global user.name &quot;Eryk Admin&quot;
+git config --global user.email &quot;eryk@example.com&quot;
+git config --global init.defaultBranch main</code></pre></div><p>To ląduje w <code>~/.gitconfig</code>. Teraz repozytorium na skrypty:</p><div class="kod"><pre><code>mkdir skrypty &amp;&amp; cd skrypty
+git init
+# tu wkładasz kopia.sh, skrypt z modułu o skryptach
+git status</code></pre></div><div class="kod"><pre><code>Initialized empty Git repository in /home/eryk/skrypty/.git/
+On branch main
+
+No commits yet
+
+Untracked files:
+  (use &quot;git add &lt;file&gt;...&quot; to include in what will be committed)
+	kopia.sh</code></pre></div><p>Git widzi plik, ale go nie pilnuje. „Untracked” to gość bez przepustki. Kładziemy go na stolik i robimy zdjęcie:</p><div class="kod"><pre><code>git add kopia.sh
+git commit -m &quot;Dodaj skrypt kopia.sh&quot;
+git log --oneline</code></pre></div><div class="kod"><pre><code>[main (root-commit) 3c38898] Dodaj skrypt kopia.sh
+ 1 file changed, 5 insertions(+)
+ create mode 100755 kopia.sh
+3c38898 Dodaj skrypt kopia.sh</code></pre></div><p>Ten dziwny <code>3c38898</code> to początek identyfikatora commita. Zauważ też <code>100755</code>: Git pamięta, że plik jest wykonywalny. Prawa właściciela i grupy już nie, ale o tym przy etckeeperze.</p></section><section><h2 id="diff-czyli-znajdz-roznice-z-gazety">diff, czyli „znajdź różnicę” z gazety</h2><p>Zmieniam skrypt: kopia ma zachować daty pliku i wypisać komunikat. Zanim zrobię zdjęcie, pytam Gita, co się zmieniło:</p><div class="kod"><pre><code>git diff</code></pre></div><div class="kod"><pre><code>@@ -2,4 +2,5 @@
+ # kopia.sh - kopia pliku z dzisiejszą datą w nazwie
+ set -euo pipefail
+ plik=${1:?Podaj nazwę pliku}
+-cp -- &quot;$plik&quot; &quot;$plik.$(date +%F)&quot;
++cp -p -- &quot;$plik&quot; &quot;$plik.$(date +%F)&quot;
++echo &quot;Kopia gotowa: $plik.$(date +%F)&quot;</code></pre></div><p>Minus to linijka, która wyleciała, plus to linijka, która przyszła. Jak zabawa „znajdź pięć różnic”, tylko Git od razu zakreśla je na czerwono i zielono. <code>git diff</code> pokazuje zmiany jeszcze nieodłożone na stolik, <code>git diff --staged</code> te, które już na nim leżą, a <code>git log -p</code> całą historię razem ze zmianami.</p></section><section><h2 id="gitignore-czyli-lista-rzeczy-ktorych-nie-fotografu">.gitignore, czyli lista rzeczy, których nie fotografujemy</h2><p>W folderze ze skryptami leży plik <code>.env</code> z hasłem i <code>kopia.log</code>. Nie chcesz ich w albumie. Hasło w repozytorium to jak zdjęcie karty płatniczej wrzucone na rodzinną grupę: niby swoi, ale jednak.</p><div class="kod"><pre><code>printf &#x27;%s\n&#x27; &#x27;.env&#x27; &#x27;*.log&#x27; &#x27;*.tmp&#x27; &gt; .gitignore
+git status --short</code></pre></div><div class="kod"><pre><code> M kopia.sh
+?? .gitignore</code></pre></div><p><code>.env</code> i <code>kopia.log</code> zniknęły z listy. <code>M</code> to plik zmieniony, <code>??</code> nowy. Sam <code>.gitignore</code> commitujesz, żeby każdy, kto sklonuje repo, miał tę samą listę.</p><div class="kod"><pre><code>git add .gitignore kopia.sh
+git commit -m &quot;kopia.sh: zachowaj daty i wypisz komunikat; dodaj .gitignore&quot;</code></pre></div><p>Dobry opis commita mówi, co i po co. „poprawki” albo „asdf” za pół roku nie powie Ci nic. A za pół roku czytasz to Ty, tylko bardziej zmęczony.</p></section><section><h2 id="galezie-czyli-brudnopis-obok-czystopisu">Gałęzie, czyli brudnopis obok czystopisu</h2><p>Chcesz dopisać nowy skrypt, ale nie chcesz psuć tego, co działa. Bierzesz brudnopis. W Gicie to <strong>gałąź</strong> (branch).</p><div class="kod"><pre><code>git switch -c dysk          # nowa gałąź i od razu na nią
+# tu powstaje dysk.sh
+shellcheck dysk.sh
+git add dysk.sh
+git commit -m &quot;Dodaj dysk.sh: alarm przy zajętości dysku&quot;
+git branch</code></pre></div><div class="kod"><pre><code>* dysk
+  main</code></pre></div><p>Gwiazdka to gałąź, na której stoisz. Wracasz na <code>main</code> i robisz <code>ls</code>: pliku <code>dysk.sh</code> nie ma. Nie panikuj, żyje w brudnopisie. Kiedy jest gotowy, przepisujesz go do czystopisu, czyli <strong>scalasz</strong> (merge):</p><div class="kod"><pre><code>git switch main
+git merge dysk
+git log --oneline --graph --all</code></pre></div><div class="kod"><pre><code>Updating ae077a9..ded0042
+Fast-forward
+ dysk.sh | 10 ++++++++++
+* ded0042 Dodaj dysk.sh: alarm przy zajętości dysku
+* ae077a9 kopia.sh: zachowaj daty i wypisz komunikat; dodaj .gitignore
+* 3c38898 Dodaj skrypt kopia.sh</code></pre></div><p>„Fast-forward” znaczy, że na <code>main</code> nic się w międzyczasie nie działo, więc Git tylko przesunął zakładkę do przodu. Starsze poradniki zamiast <code>git switch</code> używają <code>git checkout</code>. Działa tak samo, <code>switch</code> jest po prostu czytelniejszy.</p></section><section><h2 id="repozytorium-na-serwerze-clone-push-pull">Repozytorium na serwerze: clone, push, pull</h2><p>Album na jednym laptopie to dalej jeden laptop. Kopia albumu w sejfie w innym budynku to <strong>zdalne repozytorium</strong> (remote). Najprostsze: goły katalog na Twoim serwerze, dostępny po SSH, kluczem z modułu o SSH. „Goły” (bare) znaczy: sam album, bez biurka z plikami.</p><div class="kod"><pre><code>ssh web1 &#x27;sudo mkdir -p /srv/git &amp;&amp; sudo chown &quot;$USER&quot;: /srv/git&#x27;
+ssh web1 &#x27;git init --bare -b main /srv/git/skrypty.git&#x27;
+git remote add origin web1:/srv/git/skrypty.git
+git push -u origin main</code></pre></div><div class="kod"><pre><code>To web1:/srv/git/skrypty.git
+ * [new branch]      main -&gt; main
+branch &#x27;main&#x27; set up to track &#x27;origin/main&#x27;.</code></pre></div><p><code>origin</code> to tylko przezwisko adresu. <code>push</code> wysyła Twoje commity do sejfu. Kolega albo drugi serwer bierze kopię przez <code>clone</code>, coś zmienia i wysyła:</p><div class="kod"><pre><code>git clone web1:/srv/git/skrypty.git
+cd skrypty
+# zmiana progu w dysk.sh
+git commit -am &quot;dysk.sh: domyślny próg 85%&quot;
+git push</code></pre></div><p><code>-a</code> przy commicie sam kładzie na stolik wszystkie zmienione pliki, które Git już zna. Nowych nie. A Ty u siebie ściągasz to przez <code>pull</code>:</p><div class="kod"><pre><code>From web1:/srv/git/skrypty
+   ded0042..5f4a84f  main       -&gt; origin/main
+Updating ded0042..5f4a84f
+Fast-forward
+ dysk.sh | 2 +-</code></pre></div><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p><code>pull</code> to w praktyce <code>fetch</code> (ściągnij) plus <code>merge</code> (scal) albo <code>rebase</code>. Na serwerach produkcyjnych, gdzie nikt niczego nie edytuje ręcznie, bezpieczne jest <code>git pull --ff-only</code>: albo czyste przewinięcie do przodu, albo odmowa.</p></aside></section><section><h2 id="klucz-ssh-do-gitlaba-i-githuba">Klucz SSH do GitLaba i GitHuba</h2><p>GitLab i GitHub to takie sejfy w chmurze z ładną stroną WWW. GitHub od 13 sierpnia 2021 roku nie przyjmuje hasła do konta przy operacjach Git z terminala, a GitLab nie przyjmie go, gdy masz włączone logowanie dwuskładnikowe. Więc idziesz po kluczu. Zasada jak w module o SSH: kłódka na serwerze, kluczyk w kieszeni. Tylko tym razem kłódkę wieszasz na swoim profilu.</p><div class="kod"><pre><code>ssh-keygen -t ed25519 -C &quot;eryk@laptop-github&quot;
+cat ~/.ssh/id_ed25519.pub</code></pre></div><div class="kod"><pre><code>Generating public/private ed25519 key pair.
+...
+The key fingerprint is:
+SHA256:V7SwnRDjqGljyju9Sp8YoN0Gso9uhyff3mUhHbSdIGM eryk@laptop-github</code></pre></div><p>Do przeglądarki kopiujesz wyłącznie linijkę z pliku <code>.pub</code>. W GitHubie: Settings, SSH and GPG keys, New SSH key. W GitLabie: ikonka profilu, Preferences (Edit profile), SSH Keys. Potem test:</p><div class="kod"><pre><code>ssh -T git@github.com
+ssh -T git@gitlab.com</code></pre></div><p>Oba serwisy odpowiadają powitaniem z Twoją nazwą użytkownika i nie dają powłoki, bo to nie jest serwer do logowania, tylko sejf. Od tej chwili adresy repozytoriów wybierasz w wersji SSH, na przykład <code>git@github.com:eryk/skrypty.git</code>.</p><p>Prywatny klucz, plik bez <code>.pub</code>, nie wychodzi z Twojego komputera. Nigdy. Ani do repozytorium, ani na czat, ani „na chwilę na pendrive”.</p></section><section><h2 id="etckeeper-czyli-git-ktory-sam-pilnuje-etc">etckeeper, czyli Git, który sam pilnuje /etc</h2><p>Skrypty commitujesz sam. Ale <code>/etc</code> zmienia się też za Twoimi plecami: instalujesz pakiet, a ten dorzuca swój plik. <strong>etckeeper</strong> wkłada <code>/etc</code> do repozytorium Gita i robi commity za Ciebie: przed i po każdym <code>apt</code>, plus raz dziennie.</p><div class="kod"><pre><code>sudo apt install etckeeper      # [Ubuntu] od razu robi init i pierwszy commit
+sudo dnf install etckeeper      # [RHEL] z repozytorium EPEL, potem:
+sudo etckeeper init &amp;&amp; sudo etckeeper commit &quot;Stan początkowy&quot;</code></pre></div><p>[RHEL] Automatyczne commity przy <code>dnf</code> daje osobna wtyczka; sprawdź <code>dnf search etckeeper</code>, zanim uznasz, że działa. Teraz ktoś zmienia konfigurację SSH:</p><div class="kod"><pre><code>sudo etckeeper unclean &amp;&amp; echo &quot;są niezapisane zmiany&quot;
+cd /etc &amp;&amp; sudo git diff
+sudo etckeeper commit &quot;SSH: zakaz logowania roota&quot;
+sudo git log --oneline</code></pre></div><div class="kod"><pre><code>są niezapisane zmiany
+-#PermitRootLogin prohibit-password
++PermitRootLogin no
+e5d0b3b SSH: zakaz logowania roota
+144f9d7 Stan początkowy</code></pre></div><p>Po <code>apt install</code> w historii pojawi się commit w stylu <code>committing changes in /etc made by &quot;apt install htop&quot;</code>. Masz pełną kronikę serwera bez pisania ani jednego słowa.</p><p>Czemu nie zwykły <code>git init</code> w <code>/etc</code>? Bo Git nie pamięta właściciela, grupy ani większości uprawnień. etckeeper zapisuje je w pliku <code>/etc/.etckeeper</code>, a u mnie są tam linijki takie jak <code>maybe chmod 0640 &#x27;shadow&#x27;</code>. Przy okazji: w tym repozytorium leży <code>/etc/shadow</code> z hashami haseł. Dlatego <code>/etc/.git</code> ma prawa <code>700</code>, a takie repo wysyłasz co najwyżej na własny serwer po SSH. Na publicznego GitHuba nigdy.</p></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p>Cały album siedzi w ukrytym folderze <code>.git</code>. Zajrzyjmy:</p><div class="kod"><pre><code>cat .git/HEAD
+cat .git/refs/heads/main
+git cat-file -p HEAD~1 | head -4</code></pre></div><div class="kod"><pre><code>ref: refs/heads/main
+1c64ba00cf4cae9b8d21bf332db2c713bf55e84a
+tree 7d076209c8e6a419df27a5e5d6900623bd89c914
+parent 05a9ea031032212e50371aaf45df7ae0f41a65d4
+parent bc2272ca2b151781958c46a47b350e4ca8b5b9f2
+author Eryk Admin &lt;eryk@example.com&gt; 1793741612 +0100</code></pre></div><p>Gałąź to plik z jednym numerem w środku. Tak, cały „brudnopis” to 41 bajtów. <code>HEAD</code> to karteczka „jesteś tutaj”. Commit to mały tekst: wskazuje drzewo plików (tree), rodzica (parent) i autora. Ten akurat ma dwóch rodziców, bo to scalenie. Numer commita to skrót SHA-1 z jego zawartości, więc zmiana choćby przecinka w historii zmienia wszystkie numery dalej. Dlatego historii nie da się po cichu podmienić.</p><p>Każda wersja pliku to osobny obiekt w <code>.git/objects</code>. Git trzyma całe pliki, nie same różnice, a <code>diff</code> liczy w locie. Na dysku oszczędza kompresją i paczkami.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p><code>git cat-file -p &#x27;HEAD^{tree}&#x27;</code> pokaże tryby <code>100644</code> i <code>100755</code>. To jedyne „uprawnienia”, jakie Git zna. Nowsze wersje Gita umieją też SHA-256, ale domyślnie dalej jest SHA-1.</p></aside></section><section><h2 id="sciaga-flag">Ściąga flag</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga</th><th>Co robi</th></tr><tr><td><code>git config</code></td><td><code>--global user.name/user.email</code></td><td>podpis pod commitami</td></tr><tr><td><code>git init</code></td><td><code>--bare -b main</code></td><td>goły album na serwerze, gałąź main</td></tr><tr><td><code>git status</code></td><td><code>--short</code></td><td>krótko: M zmieniony, A dodany, ?? nowy</td></tr><tr><td><code>git add</code></td><td><code>-p</code></td><td>dodawaj zmiany kawałkami, z pytaniem</td></tr><tr><td><code>git commit</code></td><td><code>-m &quot;opis&quot;</code></td><td>commit z opisem</td></tr><tr><td><code>git commit</code></td><td><code>-a</code></td><td>najpierw dodaj wszystkie znane zmienione pliki</td></tr><tr><td><code>git log</code></td><td><code>--oneline --graph --all</code></td><td>historia w skrócie, z gałęziami</td></tr><tr><td><code>git log</code></td><td><code>-p -- PLIK</code></td><td>historia jednego pliku ze zmianami</td></tr><tr><td><code>git diff</code></td><td><code>--staged</code></td><td>różnice na stoliku</td></tr><tr><td><code>git switch</code></td><td><code>-c NAZWA</code></td><td>nowa gałąź i przejście na nią</td></tr><tr><td><code>git merge</code></td><td><code>--ff-only</code></td><td>scal tylko, jeśli to przewinięcie</td></tr><tr><td><code>git push</code></td><td><code>-u origin main</code></td><td>wyślij i zapamiętaj, dokąd</td></tr><tr><td><code>git pull</code></td><td><code>--ff-only</code> / <code>--no-rebase</code></td><td>ściągnij bez niespodzianek / ze scaleniem</td></tr><tr><td><code>git restore</code></td><td><code>PLIK</code></td><td>wyrzuć niezapisane zmiany w pliku</td></tr><tr><td><code>etckeeper</code></td><td><code>unclean</code></td><td>kod 0, gdy w /etc są niezapisane zmiany</td></tr><tr><td><code>etckeeper</code></td><td><code>commit &quot;opis&quot;</code></td><td>commit całego /etc z uprawnieniami</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>Pierwszy commit na nowym serwerze:</p><div class="kod"><pre><code>Author identity unknown
+
+*** Please tell me who you are.
+...
+fatal: unable to auto-detect email address (got &#x27;root@vm.(none)&#x27;)</code></pre></div><p>Git nie zrobi zdjęcia bez podpisu. Naprawa: dwie linijki <code>git config --global</code> z początku lekcji.</p><p>Drugi klasyk, groźniejszy. Wrzuciłeś hasło do repozytorium, zauważyłeś, robisz <code>git rm --cached baza.conf</code>, dopisujesz go do <code>.gitignore</code>, commit. Ulga? A teraz:</p><div class="kod"><pre><code>git log -p -S &#x27;DB_PASS&#x27; --format=&#x27;%h %s&#x27;</code></pre></div><div class="kod"><pre><code>8307e22 usun haslo z repo
+-DB_PASS=Lato2026!
+53ac37a konfiguracja bazy
++DB_PASS=Lato2026!</code></pre></div><p>Hasło dalej jest w albumie, na starym zdjęciu. Każdy, kto sklonuje repo, je zobaczy. Usunięcie pliku nie usuwa historii. Jedyna pewna naprawa: <strong>zmień to hasło</strong>. Czyszczenie historii specjalnymi narzędziami to dopiero drugi krok, bo kopie mogą już krążyć. Przy okazji, trzeci znajomy: przy <code>git pull</code>, gdy Ty i kolega zmieniliście coś jednocześnie, Git odpowie <code>fatal: Need to specify how to reconcile divergent branches.</code> Wybierz <code>git pull --no-rebase</code> (scalenie) albo ustaw to raz na stałe przez <code>git config --global pull.rebase false</code>.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><p>Załóż repozytorium <code>skrypty</code>, wrzuć do niego dwa swoje skrypty z kursu i zrób <code>.gitignore</code> na <code>*.log</code> i <code>.env</code>. Zrób gałąź <code>poprawki</code>, zmień w niej jeden skrypt, scal do <code>main</code> i pokaż <code>git log --oneline --graph</code>. Na maszynie wirtualnej utwórz gołe repozytorium w <code>/srv/git/skrypty.git</code>, wypchnij do niego <code>main</code> przez SSH, sklonuj w innym folderze i sprawdź, że pliki są. Na koniec zainstaluj etckeeper, zmień coś w <code>/etc/hosts</code> i znajdź tę zmianę w <code>git log -p</code>.</p><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><p>Repozytorium, <code>.gitignore</code>, gałąź i scalenie:</p><div class="kod"><pre><code>mkdir skrypty &amp;&amp; cd skrypty &amp;&amp; git init
+cp ~/kurs/kopia.sh ~/kurs/dysk.sh .
+printf &#x27;%s\n&#x27; &#x27;*.log&#x27; &#x27;.env&#x27; &gt; .gitignore
+git add . &amp;&amp; git commit -m &quot;Pierwsze skrypty i .gitignore&quot;
+git switch -c poprawki
+# zmiana w dysk.sh
+git commit -am &quot;dysk.sh: próg z argumentu&quot;
+git switch main &amp;&amp; git merge poprawki
+git log --oneline --graph</code></pre></div><p>Gołe repozytorium na maszynie wirtualnej i klon w innym miejscu:</p><div class="kod"><pre><code>ssh vm &#x27;sudo mkdir -p /srv/git &amp;&amp; sudo chown &quot;$USER&quot;: /srv/git &amp;&amp; git init --bare -b main /srv/git/skrypty.git&#x27;
+git remote add origin vm:/srv/git/skrypty.git
+git push -u origin main
+git clone vm:/srv/git/skrypty.git /tmp/test-klonu &amp;&amp; ls /tmp/test-klonu</code></pre></div><p>I etckeeper:</p><div class="kod"><pre><code>sudo apt install etckeeper            # [RHEL] dnf z EPEL + etckeeper init
+echo &#x27;192.168.122.20 web2&#x27; | sudo tee -a /etc/hosts
+sudo etckeeper commit &quot;hosts: web2&quot;
+sudo git -C /etc log -p -1</code></pre></div><p>Jeśli w <code>git log -p</code> zobaczyłeś zielony plusik przy <code>web2</code>, wszystko gra. Jeśli zamiast tego zobaczyłeś <code>Author identity unknown</code>, to Git po raz drugi prosi, żebyś się przedstawił. Grzecznie, ale stanowczo.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Masz już repozytorium ze skryptami i klucz SSH. W następnej lekcji jeden laptop, dziesięć serwerów: pętla po serwerach przez SSH, porządny <code>~/.ssh/config</code> i uruchamianie komend na wszystkich naraz, równolegle.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-100.html" rel="prev">← 100. Metoda rozwiązywania problemów</a><a class="btn domyslny zolty" href="lekcja-102.html" rel="next">102. Wiele serwerów naraz →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

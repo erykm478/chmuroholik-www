@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>113. Projekt 4: monitor, który krzyczy raz, a nie co pięć minut — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 113 kursu Linux i Bash od zera do admina: Projekt 4: monitor, który krzyczy raz, a nie co pięć minut. kursant ma skrypt, który co pięć minut sprawdza dyski, pamięć, obciążenie i usługi, pamięta poprzedni stan i wysyła mail tylko wtedy, gdy coś się zepsuło, nadal jest zepsute po kilku godzinac">
+<meta property="og:title" content="113. Projekt 4: monitor, który krzyczy raz, a nie co pięć minut — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 113 kursu Linux i Bash od zera do admina: Projekt 4: monitor, który krzyczy raz, a nie co pięć minut. kursant ma skrypt, który co pięć minut sprawdza dyski, pamięć, obciążenie i usługi, pamięta poprzedni stan i wysyła mail tylko wtedy, gdy coś się zepsuło, nadal jest zepsute po kilku godzinac">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 13</span></div>
+      <div class="boczny-tytul"><a href="index.html#m13">Projekty końcowe</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-110.html" data-lekcja="110"><span class="znacznik"></span><span class="nr">110</span> Projekt 1: nowy serwer w dziesięć minut</a></li><li><a href="lekcja-111.html" data-lekcja="111"><span class="znacznik"></span><span class="nr">111</span> Projekt 2: dwie strony na Apache z HTTPS</a></li><li><a href="lekcja-112.html" data-lekcja="112"><span class="znacznik"></span><span class="nr">112</span> Projekt 3: kopie zapasowe, które naprawdę da się odtworzyć</a></li><li><a href="lekcja-113.html" data-lekcja="113" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">113</span> Projekt 4: monitor, który krzyczy raz, a nie co pięć minut</a></li><li><a href="lekcja-114.html" data-lekcja="114"><span class="znacznik"></span><span class="nr">114</span> Projekt 5: analizator logów z raportem dziennym</a></li><li><a href="lekcja-115.html" data-lekcja="115"><span class="znacznik"></span><span class="nr">115</span> Projekt 6: LAMP na trzech maszynach z Ansible, wszystko w Git</a></li><li><a href="lekcja-116.html" data-lekcja="116"><span class="znacznik"></span><span class="nr">116</span> Egzamin próbny: 20 zadań, dwie godziny, zero podpowiedzi</a></li><li><a href="lekcja-117.html" data-lekcja="117"><span class="znacznik"></span><span class="nr">117</span> Co dalej: certyfikaty, laboratorium domowe i pierwsza praca</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="113" data-modul="13" data-tematy="monitor dysku, pamięci i usług z powiadomieniem mailem">
+    <div class="belka"><span>Lekcja 113 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m13">Moduł 13</a> › Lekcja 113</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Projekt 4: monitor, który krzyczy raz, a nie co pięć minut</h1>
+      <p class="meta"><span>⏱ ok. 17 min czytania</span><span>· moduł 13: Projekty końcowe</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant ma skrypt, który co pięć minut sprawdza dyski, pamięć, obciążenie i usługi, pamięta poprzedni stan i wysyła mail tylko wtedy, gdy coś się zepsuło, nadal jest zepsute po kilku godzinach albo zostało naprawione; do tego umie skonfigurować wysyłanie poczty z serwera.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#plan-dyzurny-z-notesem">Plan: dyżurny z notesem</a></li><li><a href="#poczta-z-serwera-skrzynka-na-rogu">Poczta z serwera: skrzynka na rogu</a></li><li><a href="#skrypt-pelny-kod">Skrypt: pełny kod</a></li><li><a href="#co-tu-jest-ciekawego">Co tu jest ciekawego</a></li><li><a href="#uruchomienie-cala-awaria-w-szesciu-krokach">Uruchomienie: cała awaria w sześciu krokach</a></li><li><a href="#harmonogram">Harmonogram</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga">Ściąga</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p>Pierwszy monitor, jaki napisałem, był bardzo sumienny. Co pięć minut sprawdzał dysk i jeśli było powyżej progu, wysyłał mail. Dysk zapełnił się w piątek wieczorem. W poniedziałek miałem 288 maili dziennie, razy trzy dni. Wiesz, ile z nich przeczytałem? Zero. Bo po trzecim założyłem filtr, który je chował. A w niedzielę w nocy, między nimi, przyszedł jeden inny: „usługa mariadb: inactive”. Też poszedł do filtra. To się nazywa zmęczenie alarmami i jest prawdziwym problemem w każdym zespole utrzymania. Bajka o chłopcu, który wołał „wilk!”, tylko chłopiec jest skryptem w Bashu i nie ma sumienia. Dziś piszemy monitor, który ma pamięć. Krzyczy, gdy coś się zepsuje. Milczy, gdy dalej jest zepsute. Przypomina po kilku godzinach. I mówi „naprawione”, żebyś wiedział, że możesz iść spać.</p></section><section><h2 id="plan-dyzurny-z-notesem">Plan: dyżurny z notesem</h2><p>Wyobraź sobie dyżurnego w budynku. Co godzinę robi obchód: kotłownia, magazyn, winda. I ma notes. Jeśli winda stoi, a w notesie z ostatniego obchodu jest „jechała”, dzwoni do kierownika. Jeśli winda stoi, a w notesie już jest „stoi, dzwoniłem o 14:00”, nie dzwoni drugi raz o 15:00. Zadzwoni wieczorem, jeśli dalej stoi. A gdy winda ruszy, zadzwoni z dobrą wiadomością. Nasz skrypt to ten dyżurny. Obchód obejmuje:</p><ol><li><strong>Dyski.</strong> Zajętość miejsca i i-węzłów dla każdego lokalnego systemu plików. Pełne i-węzły przy wolnym miejscu to klasyk z lekcji 100: miliony malutkich plików, a <code>df -h</code> mówi, że wszystko w porządku.</li><li><strong>Pamięć.</strong> Ile jest dostępnej, nie wolnej. Różnica za chwilę.</li><li><strong>Obciążenie.</strong> Load average z 5 minut porównany z liczbą rdzeni.</li><li><strong>Usługi.</strong> Czy <code>ssh</code>, <code>cron</code>, <code>apache2</code> i co tam jeszcze masz, są aktywne. Notes to folder <code>/var/lib/monitor</code> z małym plikiem na każdą kontrolę: ostatni stan i czas ostatniego powiadomienia.</li></ol></section><section><h2 id="poczta-z-serwera-skrzynka-na-rogu">Poczta z serwera: skrzynka na rogu</h2><p>Zanim monitor zacznie krzyczeć, musi mieć czym. Serwer sam z siebie nie umie dostarczyć maila do Twojej skrzynki. Mógłby próbować bezpośrednio, ale wielu dostawców chmury blokuje wychodzący port 25, a poczta z przypadkowego adresu IP ląduje w spamie albo nigdzie. Dlatego serwer oddaje list listonoszowi: prawdziwemu serwerowi poczty firmy albo usługi pocztowej, z logowaniem, na porcie 587 z szyfrowaniem. A jak programy na serwerze oddają list? Od dziesięcioleci jest jedna umowa: komenda <code>/usr/sbin/sendmail</code>. To skrzynka pocztowa na rogu. Każdy program, od crona po nasz skrypt, wrzuca do niej list, a co się dzieje dalej, to już sprawa poczty. Kto stoi za tą skrzynką, wybierasz sam:</p><ul><li><strong>Postfix jako klient wysyłający</strong>, przerabiany w lekcji 87. Pełna poczta z kolejką, ponawia wysyłkę, gdy listonosz chwilowo nie odbiera. Działa tak samo na Ubuntu i RHEL.</li><li><strong>msmtp</strong>, malutki program, który po prostu łączy się z serwerem SMTP i oddaje list. Bez kolejki, bez demona. [Ubuntu] pakiet <code>msmtp-mta</code> sam podstawia się pod <code>/usr/sbin/sendmail</code>. Uwaga: wyklucza się z Postfixem, bo obaj chcą być tą jedną skrzynką. [RHEL] <code>msmtp</code> jest w EPEL. Konfiguracja msmtp dla całego systemu leży w <code>/etc/msmtprc</code>:</li></ul><div class="kod"><pre><code>defaults
+auth on
+tls on
+tls_trust_file system
+logfile /var/log/msmtp.log
+
+account firma
+host smtp.mojafirma.pl
+port 587
+from web1@mojafirma.pl
+user web1@mojafirma.pl
+passwordeval cat /etc/msmtp-haslo
+
+account default : firma</code></pre></div><p><code>port 587</code> z <code>tls on</code> to szyfrowanie przez STARTTLS: połączenie zaczyna się otwartym tekstem i zaraz przechodzi na szyfrowane. <code>passwordeval</code> bierze hasło z wyniku komendy, dzięki czemu samo hasło leży w osobnym pliku <code>/etc/msmtp-haslo</code> z prawami 600 i nie wycieknie, gdy ktoś pokaże konfigurację koledze. <code>account default : firma</code> znaczy „domyślne konto dziedziczy wszystko po koncie firma”. Najlepiej załóż dla serwerów osobną skrzynkę albo hasło aplikacji, a nie używaj swojego prywatnego konta. Jak serwer wycieknie, wymieniasz jedno hasło, a nie swoje życie.</p></section><section><h2 id="skrypt-pelny-kod">Skrypt: pełny kod</h2><p>Plik <code>/usr/local/sbin/monitor.sh</code>:</p><div class="kod"><pre><code>#!/usr/bin/env bash
+# monitor.sh — dysk, pamięć, obciążenie i usługi; mail tylko przy zmianie stanu
+# Użycie: monitor.sh       (sprawdź; z crona co 5 minut)
+#         monitor.sh -m    (wyślij mail testowy i zakończ)
+set -euo pipefail
+
+# ---------- Ustawienia domyślne (nadpisuje je /etc/monitor.conf) ----------
+PROG_DYSK=85            # alarm, gdy system plików zajęty w co najmniej tylu %
+PROG_INODY=90           # to samo dla i-węzłów
+PROG_PAMIEC=10          # alarm, gdy dostępnej pamięci zostało mniej niż tyle %
+PROG_LOAD=&quot;&quot;            # alarm, gdy load z 5 minut większy; pusty = 2 x liczba rdzeni
+USLUGI=(ssh cron)       # nazwy usług systemd ([RHEL]: sshd crond)
+POMIN=(&#x27;/snap/*&#x27;)       # punkty montowania, których nie sprawdzać (wzorce)
+MAIL_DO=&quot;&quot;              # adres na alarmy; pusty = tylko dziennik
+MAIL_OD=&quot;monitor@$(hostname -f 2&gt;/dev/null || hostname)&quot;
+PRZYPOMNIJ_PO=360       # minuty: przypomnij, gdy problem dalej trwa
+STAN=/var/lib/monitor
+KONF=${MONITOR_KONF:-/etc/monitor.conf}
+# shellcheck source=/dev/null
+[[ -r $KONF ]] &amp;&amp; . &quot;$KONF&quot;
+PROG_LOAD=${PROG_LOAD:-$(( $(nproc) * 2 ))}
+
+HOST=$(hostname -s)
+TERAZ=$(date +%s)
+declare -A WYNIK=()     # klucz -&gt; OK albo ALARM
+declare -A OPIS=()      # klucz -&gt; opis dla człowieka
+
+# sprawdz KLUCZ CZY_ZLE OPIS — zapisz wynik jednej kontroli
+sprawdz() {
+    if (( $2 )); then WYNIK[$1]=ALARM; else WYNIK[$1]=OK; fi
+    OPIS[$1]=$3
+}
+
+# wyslij_mail TEMAT — treść ze standardowego wejścia, przez sendmail (Postfix albo msmtp)
+wyslij_mail() {
+    local temat=$1
+    {
+        printf &#x27;From: %s\nTo: %s\n&#x27; &quot;$MAIL_OD&quot; &quot;$MAIL_DO&quot;
+        printf &#x27;Subject: =?UTF-8?B?%s?=\n&#x27; &quot;$(printf &#x27;%s&#x27; &quot;$temat&quot; | base64 -w0)&quot;
+        printf &#x27;Date: %s\nMIME-Version: 1.0\n&#x27; &quot;$(date -R)&quot;
+        printf &#x27;Content-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\n\n&#x27;
+        cat
+    } | /usr/sbin/sendmail -t -i
+}
+
+install -d -m 700 &quot;$STAN&quot;
+exec 9&gt;&quot;$STAN/.lock&quot;
+flock -n 9 || exit 0     # poprzedni przebieg jeszcze trwa: nic nie rób
+
+if [[ ${1:-} == -m ]]; then
+    [[ -n $MAIL_DO ]] || { echo &quot;Ustaw MAIL_DO w $KONF&quot; &gt;&amp;2; exit 1; }
+    echo &quot;Test z $HOST, $(date &#x27;+%F %T&#x27;). Jeśli to czytasz, alarmy dojdą.&quot; \
+        | wyslij_mail &quot;[monitor] $HOST: test powiadomień&quot;
+    echo &quot;Wysłano mail testowy do $MAIL_DO&quot;; exit 0
+fi
+
+# ---------- 1. Dyski: miejsce i i-węzły ----------
+while read -r zajete inody punkt; do
+    for w in &quot;${POMIN[@]}&quot;; do
+        # shellcheck disable=SC2053  # $w to celowo wzorzec, nie napis
+        [[ $punkt == $w ]] &amp;&amp; continue 2
+    done
+    zajete=${zajete%\%}; inody=${inody%\%}
+    [[ $inody == - ]] &amp;&amp; inody=0          # np. btrfs nie liczy i-węzłów
+    sprawdz &quot;dysk:$punkt&quot; $(( zajete &gt;= PROG_DYSK )) &quot;$punkt zajęty w $zajete% (próg $PROG_DYSK%)&quot;
+    sprawdz &quot;inody:$punkt&quot; $(( inody &gt;= PROG_INODY )) &quot;$punkt: i-węzły zajęte w $inody% (próg $PROG_INODY%)&quot;
+done &lt; &lt;(df --local --output=pcent,ipcent,target -x tmpfs -x devtmpfs -x squashfs -x overlay | tail -n +2)
+
+# ---------- 2. Pamięć ----------
+read -r pam_calk pam_dost &lt; &lt;(awk &#x27;/^MemTotal:/{t=$2} /^MemAvailable:/{a=$2} END{print t, a}&#x27; /proc/meminfo)
+proc_dost=$(( pam_dost * 100 / pam_calk ))
+sprawdz pamiec $(( proc_dost &lt; PROG_PAMIEC )) \
+    &quot;dostępna pamięć: $proc_dost% ($(( pam_dost / 1024 )) MiB z $(( pam_calk / 1024 )) MiB, próg $PROG_PAMIEC%)&quot;
+
+# ---------- 3. Obciążenie ----------
+read -r _ load5 _ &lt; /proc/loadavg
+sprawdz load &quot;$(awk -v l=&quot;$load5&quot; -v p=&quot;$PROG_LOAD&quot; &#x27;BEGIN{print (l &gt; p) ? 1 : 0}&#x27;)&quot; \
+    &quot;load average z 5 minut: $load5 (próg $PROG_LOAD przy $(nproc) rdzeniach)&quot;
+
+# ---------- 4. Usługi ----------
+for u in &quot;${USLUGI[@]}&quot;; do
+    if [[ $(cat /proc/1/comm) == systemd ]]; then
+        stan=$(systemctl is-active &quot;$u&quot; 2&gt;/dev/null || true)
+    else
+        # bez systemd (kontener): sprawdzamy, czy działa proces o tej nazwie
+        case $u in ssh) p=sshd ;; *) p=$u ;; esac
+        if pgrep -x &quot;$p&quot; &gt;/dev/null; then stan=active; else stan=inactive; fi
+    fi
+    sprawdz &quot;usluga:$u&quot; &quot;$([[ $stan == active ]] &amp;&amp; echo 0 || echo 1)&quot; &quot;usługa $u: $stan&quot;
+done
+
+# ---------- 5. Porównanie z poprzednim stanem i powiadomienia ----------
+zmiany=() przypomnienia=() aktualne=()
+for k in $(printf &#x27;%s\n&#x27; &quot;${!WYNIK[@]}&quot; | sort); do
+    plik=$STAN/$(printf &#x27;%s&#x27; &quot;$k&quot; | tr &#x27;/:&#x27; &#x27;__&#x27;)
+    poprzedni=OK; wyslano=0
+    [[ -f $plik ]] &amp;&amp; read -r poprzedni wyslano &lt; &quot;$plik&quot;
+    teraz=${WYNIK[$k]}
+    printf &#x27;%-6s %s\n&#x27; &quot;$teraz&quot; &quot;${OPIS[$k]}&quot;
+    [[ $teraz == ALARM ]] &amp;&amp; aktualne+=(&quot;ALARM  ${OPIS[$k]}&quot;)
+
+    if [[ $teraz != &quot;$poprzedni&quot; ]]; then
+        if [[ $teraz == ALARM ]]; then zmiany+=(&quot;NOWY ALARM   ${OPIS[$k]}&quot;); else zmiany+=(&quot;NAPRAWIONE   ${OPIS[$k]}&quot;); fi
+        wyslano=$TERAZ
+        logger -t monitor -p &quot;user.$([[ $teraz == ALARM ]] &amp;&amp; echo warning || echo notice)&quot; \
+            &quot;$teraz: ${OPIS[$k]}&quot; 2&gt;/dev/null || true
+    elif [[ $teraz == ALARM ]] &amp;&amp; (( TERAZ - wyslano &gt;= PRZYPOMNIJ_PO * 60 )); then
+        przypomnienia+=(&quot;NADAL ŹLE    ${OPIS[$k]}&quot;)
+        wyslano=$TERAZ
+    fi
+    printf &#x27;%s %s\n&#x27; &quot;$teraz&quot; &quot;$wyslano&quot; &gt; &quot;$plik&quot;
+done
+
+if (( ${#zmiany[@]} + ${#przypomnienia[@]} &gt; 0 )); then
+    if (( ${#aktualne[@]} &gt; 0 )); then temat=&quot;[monitor] $HOST: ALARM (${#aktualne[@]})&quot;; else temat=&quot;[monitor] $HOST: wszystko OK&quot;; fi
+    tresc=$(
+        echo &quot;Serwer: $HOST    Czas: $(date &#x27;+%F %T&#x27;)&quot;
+        echo
+        printf &#x27;%s\n&#x27; &quot;${zmiany[@]}&quot; &quot;${przypomnienia[@]}&quot; | sed &#x27;/^$/d&#x27;
+        echo
+        echo &quot;Aktualne problemy (${#aktualne[@]}):&quot;
+        printf &#x27;  %s\n&#x27; &quot;${aktualne[@]:-brak}&quot;
+        echo
+        echo &quot;Najwięksi zjadacze pamięci:&quot;
+        ps -eo pid,rss,comm --sort=-rss | head -n 4 || true
+    )
+    if [[ -n $MAIL_DO ]]; then
+        if wyslij_mail &quot;$temat&quot; &lt;&lt;&lt; &quot;$tresc&quot;; then
+            echo &quot;&gt;&gt; wysłano: $temat&quot;
+        else
+            logger -t monitor -p user.err &quot;nie udało się wysłać maila do $MAIL_DO&quot; 2&gt;/dev/null || true
+            echo &quot;&gt;&gt; BŁĄD wysyłki maila&quot; &gt;&amp;2
+        fi
+    else
+        echo &quot;&gt;&gt; (bez MAIL_DO) $temat&quot;
+    fi
+fi
+exit $(( ${#aktualne[@]} &gt; 0 ))</code></pre></div><p>I przykładowe <code>/etc/monitor.conf</code> dla serwera z projektu 2:</p><div class="kod"><pre><code># /etc/monitor.conf
+PROG_DYSK=85
+PROG_PAMIEC=10
+USLUGI=(ssh cron apache2 mariadb)     # [RHEL]: (sshd crond httpd mariadb)
+POMIN=(&#x27;/snap/*&#x27; &#x27;/boot/efi&#x27;)
+MAIL_DO=admin@mojafirma.pl
+MAIL_OD=web1@mojafirma.pl</code></pre></div><p><code>MAIL_OD</code> ustaw na ten sam adres, co <code>from</code> w msmtp. Wiele serwerów poczty odrzuca listy, w których nadawca w nagłówku nie zgadza się z kontem, które się zalogowało. Jak list z cudzym podpisem.</p></section><section><h2 id="co-tu-jest-ciekawego">Co tu jest ciekawego</h2><p><strong>Dwie szatnie.</strong> <code>WYNIK</code> i <code>OPIS</code> to tablice asocjacyjne, czyli nasze szatnie z nazwiskami z modułu o skryptach. Klucz to na przykład <code>dysk:/srv/dane</code> albo <code>usluga:ssh</code>, a pod nim wisi wynik i opis. Dzięki temu dodanie nowej kontroli to jedna linijka <code>sprawdz KLUCZ CZY_ZLE OPIS</code>, a cała logika powiadomień działa sama.</p><p><strong>Dostępna, a nie wolna pamięć.</strong> Linux zajmuje wolny RAM na pamięć podręczną dysku, bo pusta pamięć to zmarnowana pamięć. Dlatego „wolnej” jest zwykle mało i nic w tym złego. Monitor, który patrzy na <code>MemFree</code>, krzyczy bez przerwy. Jądro w <code>/proc/meminfo</code> podaje <code>MemAvailable</code>: szacunek, ile pamięci programy mogą dostać bez wpychania czegoś do swapu. To jest ta liczba z kolumny <code>available</code> w <code>free -h</code>. Lodówka pełna resztek z wczoraj nie jest pełna, resztki się wyrzuci, gdy przyjdzie nowe jedzenie.</p><p><strong><code>df --output</code></strong><strong>.</strong> Zamiast ciąć <code>awk</code>-iem wynik <code>df -h</code>, prosimy <code>df</code> dokładnie o kolumny: procent miejsca, procent i-węzłów, punkt montowania. <code>--local</code> pomija dyski sieciowe, a <code>-x</code> wyklucza systemy plików w pamięci, które tylko by szumiały. Złota zasada skryptów: poproś narzędzie o dokładnie ten format, który chcesz, zamiast parsować ładny wydruk dla ludzi.</p><p><strong>Ułamki przez </strong><strong><code>awk</code></strong><strong>.</strong> Load average to liczba z przecinkiem, na przykład <code>0.08</code>, a arytmetyka Basha zna tylko liczby całkowite. Dlatego porównanie robi <code>awk</code>, który wypisuje 1 albo 0. <code>$(( 0.08 &gt; 4 ))</code> skończyłoby się błędem składni.</p><p><strong>Usługi z zapasowym planem.</strong> Na normalnym serwerze pytamy kierownika zmiany: <code>systemctl is-active</code>. Bez systemd, na przykład w kontenerze Dockera, skrypt szuka procesu o tej nazwie przez <code>pgrep -x</code>. Jedyny wyjątek w tłumaczeniu: usługa <code>ssh</code> to proces <code>sshd</code>.</p><p><strong>Notes, czyli stan na dysku.</strong> Dla każdej kontroli plik w <code>$STAN</code> z dwiema wartościami: ostatni stan i czas ostatniego powiadomienia. Ukośniki i dwukropki w kluczu zamieniamy przez <code>tr</code> na podkreślniki, bo <code>dysk:/srv/dane</code> nie może być nazwą pliku. Mail idzie w trzech sytuacjach: zmiana z OK na ALARM, zmiana z ALARM na OK i ALARM trwający dłużej niż <code>PRZYPOMNIJ_PO</code> minut od ostatniego maila. W monitoringu nazywa się to alarmowaniem na zbocze: liczy się zmiana, a nie stan.</p><p><strong>Polskie znaki w temacie.</strong> Nagłówki maila z definicji są w ASCII. Temat „test powiadomień” wysłany wprost potrafi dojść jako krzaki. Zapis <code>=?UTF-8?B?...?=</code> to standardowy sposób na znaki spoza ASCII w nagłówku: tekst w Base64 z informacją, że to UTF-8. Program pocztowy odkoduje go sam. Treść listu dostaje nagłówek <code>Content-Type: text/plain; charset=UTF-8</code>.</p><p><strong><code>sendmail -t -i</code></strong><strong>.</strong> <code>-t</code> każe wziąć adresata z nagłówka <code>To:</code>, a <code>-i</code> mówi, że samotna kropka w linijce nie kończy listu. Te same opcje rozumie Postfix i msmtp, więc skrypt nie wie i nie musi wiedzieć, kto stoi za skrzynką.</p><p><strong>Kod wyjścia.</strong> Skrypt kończy się kodem 1, gdy jest jakikolwiek ALARM. Dzięki temu ten sam skrypt możesz podłączyć pod inny system monitorowania, który rozumie tylko kciuk w górę albo w dół. [dla zaawansowanych: <code>|| true</code> przy <code>ps | head</code> nie jest ozdobą. <code>head</code> kończy się po czterech linijkach, a jeśli <code>ps</code> jeszcze pisze, dostaje SIGPIPE. Z <code>pipefail</code> całe podstawienie <code>$( )</code> zwróciłoby wtedy błąd, a <code>set -e</code> zabiłby monitor w momencie wysyłania alarmu. Najgorszy możliwy moment.]</p></section><section><h2 id="uruchomienie-cala-awaria-w-szesciu-krokach">Uruchomienie: cała awaria w sześciu krokach</h2><p>W laboratorium podmontowałem jako <code>/srv/dane</code> plik 20 MB z systemem ext4 przez urządzenie loop, żeby dało się go szybko zapełnić. Zamiast prawdziwego serwera poczty postawiłem na porcie 2525 malutki serwer SMTP, który każdy list zapisuje do pliku. W konfiguracji <code>USLUGI=(ssh)</code>. Najpierw mail testowy, zawsze najpierw mail testowy:</p><div class="kod"><pre><code>sudo monitor.sh -m</code></pre></div><div class="kod"><pre><code>Wysłano mail testowy do admin@firma.lab</code></pre></div><p>Krok 1, wszystko działa:</p><div class="kod"><pre><code>OK     / zajęty w 45% (próg 85%)
+OK     /srv/dane zajęty w 1% (próg 85%)
+OK     /: i-węzły zajęte w 4% (próg 90%)
+OK     /srv/dane: i-węzły zajęte w 1% (próg 90%)
+OK     load average z 5 minut: 0.08 (próg 4 przy 2 rdzeniach)
+OK     dostępna pamięć: 90% (7246 MiB z 8027 MiB, próg 10%)
+OK     usługa ssh: active
+kod=0</code></pre></div><p>Cisza, żaden mail. Krok 2, ktoś wrzuca wielki plik:</p><div class="kod"><pre><code>sudo dd if=/dev/zero of=/srv/dane/wielki.plik bs=1M count=13 status=none
+sudo monitor.sh</code></pre></div><div class="kod"><pre><code>ALARM  /srv/dane zajęty w 98% (próg 85%)
+...
+&gt;&gt; wysłano: [monitor] web1: ALARM (1)
+kod=1</code></pre></div><p>Krok 3, pięć minut później, dysk dalej pełny: kontrola wypisuje ALARM, ale żadnego <code>&gt;&gt; wysłano</code>. Dyżurny zajrzał do notesu, już dzwonił. Krok 4, pada SSH:</p><div class="kod"><pre><code>ALARM  /srv/dane zajęty w 98% (próg 85%)
+ALARM  usługa ssh: inactive
+&gt;&gt; wysłano: [monitor] web1: ALARM (2)</code></pre></div><p>Tak wygląda ten mail w skrzynce:</p><div class="kod"><pre><code>Temat: [monitor] web1: ALARM (2)
+
+Serwer: web1    Czas: 2026-11-04 08:25:15
+
+NOWY ALARM   usługa ssh: inactive
+
+Aktualne problemy (2):
+  ALARM  /srv/dane zajęty w 98% (próg 85%)
+  ALARM  usługa ssh: inactive
+
+Najwięksi zjadacze pamięci:
+    PID   RSS COMMAND
+      8 20316 python3
+    220  4112 ps
+    172  4076 bash</code></pre></div><p>W temacie nowa sprawa, a w treści pełen obraz, więc o trzeciej w nocy z telefonu wiesz, czy wstać. Krok 5: żeby nie czekać sześciu godzin na przypomnienie, uruchomiłem skrypt z <code>PRZYPOMNIJ_PO=0</code> i przyszedł mail z <code>NADAL ŹLE</code> przy obu problemach. Krok 6, naprawa: kasuję plik, startuję SSH.</p><div class="kod"><pre><code>&gt;&gt; wysłano: [monitor] web1: wszystko OK</code></pre></div><div class="kod"><pre><code>Temat: [monitor] web1: wszystko OK
+
+NAPRAWIONE   /srv/dane zajęty w 1% (próg 85%)
+NAPRAWIONE   usługa ssh: active
+
+Aktualne problemy (0):
+  brak</code></pre></div><p>Pięć maili na całą awarię, liczy się z testowym. Mój pierwszy monitor wysłałby w tym czasie kilkaset. A notes po wszystkim:</p><div class="kod"><pre><code>sudo ls /var/lib/monitor; sudo cat /var/lib/monitor/dysk__srv_dane</code></pre></div><div class="kod"><pre><code>dysk__  dysk__srv_dane  inody__  inody__srv_dane  load  pamiec  usluga_ssh
+OK 1793777116</code></pre></div><p><code>dysk__</code> to katalog główny <code>/</code>, któremu <code>tr</code> zamienił ukośnik na podkreślnik. [dla zaawansowanych: awarię usługi ćwicz na VM, z prawdziwym <code>systemctl stop ssh</code>, oczywiście z otwartą konsolą maszyny wirtualnej, a nie przez SSH, które właśnie zatrzymujesz.]</p></section><section><h2 id="harmonogram">Harmonogram</h2><p>Budzik co pięć minut, plik <code>/etc/cron.d/monitor</code>:</p><div class="kod"><pre><code># /etc/cron.d/monitor
+*/5 * * * * root /usr/local/sbin/monitor.sh &gt;/dev/null 2&gt;&amp;1</code></pre></div><p>Wersja z timerem systemd wygląda tak samo jak przy kopiach z projektu 3, tylko w <code>kopia.timer</code> zamieniasz <code>OnCalendar</code> na <code>*:0/5</code>, czyli co pięć minut od pełnej godziny:</p><div class="kod"><pre><code>systemd-analyze calendar &#x27;*:0/5&#x27;</code></pre></div><div class="kod"><pre><code>  Original form: *:0/5
+Normalized form: *-*-* *:00/5:00
+    Next elapse: Wed 2026-11-04 08:30:00 CET</code></pre></div></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p>Co się dzieje, gdy skrypt wrzuca list do <code>/usr/sbin/sendmail</code>, a za skrzynką stoi msmtp? msmtp otwiera połączenie TCP z serwerem poczty i prowadzi z nim rozmowę w protokole SMTP. To zwykły tekst, linijka po linijce, jak rozmowa przy okienku na poczcie. Opcja <code>-v</code> pokazuje ją całą. Tu z moim testowym serwerem, strzałka <code>--&gt;</code> to my, <code>&lt;--</code> to serwer:</p><div class="kod"><pre><code>printf &#x27;Subject: test\n\nhej\n&#x27; | msmtp -v admin@firma.lab</code></pre></div><div class="kod"><pre><code>&lt;-- 220 sink ESMTP
+--&gt; EHLO localhost
+&lt;-- 250-sink
+&lt;-- 250 8BITMIME
+--&gt; MAIL FROM:&lt;monitor@web1.lab&gt;
+&lt;-- 250 OK
+--&gt; RCPT TO:&lt;admin@firma.lab&gt;
+&lt;-- 250 OK
+--&gt; DATA
+&lt;-- 354 dawaj
+--&gt; From: monitor@web1.lab
+--&gt; Date: Wed, 04 Nov 2026 08:25:17 +0100
+--&gt; Subject: test</code></pre></div><p>Przywitanie, „od kogo”, „do kogo”, „oto treść”, kropka na końcu. Z prawdziwym serwerem zaraz po <code>EHLO</code> pojawi się <code>STARTTLS</code>, przejście na szyfrowanie, i <code>AUTH</code>, logowanie. Ważny szczegół: <code>MAIL FROM</code> i <code>RCPT TO</code> to koperta, a <code>From:</code> i <code>To:</code> w treści to nagłówki listu. Mogą się różnić, tak jak adres na kopercie może się różnić od nagłówka listu w środku. Na tym zresztą opiera się większość sztuczek spamerów i dlatego serwery poczty tak pilnie porównują jedno z drugim. A load average? Przypomnienie z modułu o procesach: to średnia liczba procesów, które chcą pracować albo czekają na dysk. Kolejka do kas w Biedronce. Na dwóch rdzeniach, czyli dwóch kasach, load 2 znaczy, że każda kasa ma jednego klienta. Load 4 znaczy, że za każdym stoi drugi. Dlatego próg liczymy z <code>nproc</code>, a nie wpisujemy na sztywno: skrypt skopiowany na serwer z 32 rdzeniami sam się dostosuje.</p></section><section><h2 id="sciaga">Ściąga</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga</th><th>Co robi</th></tr><tr><td><code>df</code></td><td><code>--output=pcent,ipcent,target</code></td><td>tylko wybrane kolumny, wygodne do skryptów</td></tr><tr><td><code>df</code></td><td><code>--local -x TYP</code></td><td>bez dysków sieciowych i bez wskazanych typów</td></tr><tr><td><code>systemctl</code></td><td><code>is-active USŁUGA</code></td><td>wypisuje <code>active</code>, <code>inactive</code> albo <code>failed</code></td></tr><tr><td><code>pgrep</code></td><td><code>-x NAZWA</code></td><td>szuka procesu o dokładnie tej nazwie</td></tr><tr><td><code>ps</code></td><td><code>-eo pid,rss,comm --sort=-rss</code></td><td>procesy posortowane od największej pamięci</td></tr><tr><td><code>logger</code></td><td><code>-t ZNACZNIK -p user.warning</code></td><td>wpis do dziennika z priorytetem</td></tr><tr><td><code>sendmail</code></td><td><code>-t -i</code></td><td>adresat z nagłówka, kropka nie kończy listu</td></tr><tr><td><code>msmtp</code></td><td><code>-v</code></td><td>pokazuje całą rozmowę SMTP</td></tr><tr><td><code>msmtp</code></td><td><code>-C PLIK</code></td><td>użyj wskazanego pliku konfiguracji</td></tr><tr><td><code>base64</code></td><td><code>-w0</code></td><td>koduje bez łamania linii</td></tr><tr><td><code>systemd-analyze</code></td><td><code>calendar &#x27;*:0/5&#x27;</code></td><td>pokazuje, kiedy zadziała wyrażenie czasu</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>Instalujesz msmtp, odpalasz <code>monitor.sh -m</code> i zamiast maila:</p><div class="kod"><pre><code>msmtp: account default not found: no configuration file available</code></pre></div><p>I kod wyjścia 78. msmtp jest, ale nie ma ani <code>/etc/msmtprc</code>, ani <code>~/.msmtprc</code> u użytkownika, który go uruchomił. Pułapka jest podwójna. Jeśli konfigurację zrobiłeś w swoim domowym folderze, to test z Twojego konta zadziała, a monitor z crona, jako root, już nie, bo root ma inny dom. Działa ręcznie, a z crona nie: wracamy do lekcji 87, jak co tydzień. Dlatego konfiguracja serwerowa idzie do <code>/etc/msmtprc</code>, a test robisz dokładnie tak, jak zrobi to cron: <code>sudo monitor.sh -m</code>. Drugi wariant tego samego: mail testowy z serwera w chmurze nie dochodzi, a w <code>/var/log/msmtp.log</code> wisi przekroczony czas połączenia. Sprawdź port. Jeśli w konfiguracji masz 25, zmień na 587, bo wielu dostawców chmury blokuje wychodzący port 25 właśnie po to, żeby ich serwery nie rozsyłały spamu. <code>nc -zv smtp.mojafirma.pl 587</code> z lekcji 71 powie Ci w sekundę, czy listonosz w ogóle otwiera drzwi. I trzeci, najbardziej podstępny: monitor działa, ale nikt nie monitoruje monitora. Ktoś zakomentował linię w cronie i od miesiąca jest cisza, którą bierzesz za spokój. Prosta obrona: raz w tygodniu, na przykład w poniedziałek rano, osobny wpis w cronie odpala <code>monitor.sh -m</code>. Gdy w poniedziałek nie przyjdzie mail testowy, wiesz, że zepsuł się sam alarm.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><p>Rozbuduj monitor z projektu 4 o sprawdzanie, ile dni zostało do wygaśnięcia certyfikatu HTTPS Twojej strony; poniżej 14 dni ma wysłać ostrzeżenie.</p><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><p>Zadanie brzmiało: monitor z projektu 4 ma sprawdzać, ile dni zostało do końca ważności certyfikatu HTTPS, i poniżej 14 dni krzyczeć. Zrobiłem z tego osobny mały skrypt, bo przyda się też poza monitorem.</p><div class="kod"><pre><code>#!/usr/bin/env bash
+# sprawdz_cert.sh — ile dni zostało do końca ważności certyfikatu HTTPS
+# Użycie: sprawdz_cert.sh HOST [PORT] [PROG_DNI]
+set -euo pipefail
+
+HOST=&quot;${1:?Użycie: $0 HOST [PORT] [PROG_DNI]}&quot;
+PORT=&quot;${2:-443}&quot;
+PROG=&quot;${3:-14}&quot;
+
+# 1. Pobieramy certyfikat i wyciągamy z niego datę końca ważności
+if ! koniec=$(timeout 10 openssl s_client -connect &quot;${HOST}:${PORT}&quot; \
+                -servername &quot;$HOST&quot; &lt;/dev/null 2&gt;/dev/null \
+              | openssl x509 -noout -enddate 2&gt;/dev/null); then
+    echo &quot;BŁĄD: nie udało się pobrać certyfikatu z ${HOST}:${PORT}&quot; &gt;&amp;2
+    logger -t monitor -p user.err &quot;Certyfikat ${HOST}:${PORT} — nie da się pobrać&quot;
+    exit 2
+fi
+koniec=&quot;${koniec#notAfter=}&quot;          # &quot;Nov 13 21:40:00 2026 GMT&quot;
+
+# 2. Liczymy dni: (sekundy końca - sekundy teraz) / 86400
+dni=$(( ( $(date -d &quot;$koniec&quot; +%s) - $(date +%s) ) / 86400 ))
+
+if (( dni &lt; PROG )); then
+    echo &quot;UWAGA: certyfikat ${HOST} wygasa za ${dni} dni (${koniec})&quot;
+    logger -t monitor -p user.warning &quot;Certyfikat ${HOST} wygasa za ${dni} dni&quot;
+    exit 1
+fi
+echo &quot;OK: certyfikat ${HOST} ważny jeszcze ${dni} dni (do ${koniec})&quot;</code></pre></div><p><code>openssl s_client</code> puka do serwera jak przeglądarka i dostaje certyfikat. <code>openssl x509 -enddate</code> czyta z niego datę „ważny do”. <code>date -d</code> zamienia tę datę na sekundy od 1970 roku, odejmujemy „teraz”, dzielimy przez liczbę sekund w dobie. <code>-servername</code> jest ważne: na jednym adresie IP często siedzi kilka stron i bez tego serwer może pokazać certyfikat nie tej strony, o którą pytasz.</p><p>Jak to przetestować, nie czekając dwa i pół miesiąca, aż Twój certyfikat zacznie umierać? Robimy sobie certyfikat, który żyje tylko 10 dni, i stawiamy na chwilę malutki serwer TLS z samego <code>openssl</code>:</p><div class="kod"><pre><code>openssl req -x509 -newkey rsa:2048 -nodes -keyout k10.pem -out c10.pem -days 10 -subj /CN=localhost
+openssl req -x509 -newkey rsa:2048 -nodes -keyout k90.pem -out c90.pem -days 90 -subj /CN=localhost
+openssl s_server -accept 18443 -cert c10.pem -key k10.pem -quiet &amp;
+openssl s_server -accept 18444 -cert c90.pem -key k90.pem -quiet &amp;
+./sprawdz_cert.sh localhost 18443; echo &quot;kod: $?&quot;
+./sprawdz_cert.sh localhost 18444; echo &quot;kod: $?&quot;
+./sprawdz_cert.sh localhost 18999; echo &quot;kod: $?&quot;</code></pre></div><div class="kod"><pre><code>UWAGA: certyfikat localhost wygasa za 9 dni (Nov 13 21:33:41 2026 GMT)
+kod: 1
+OK: certyfikat localhost ważny jeszcze 89 dni (do Feb  1 21:33:41 2027 GMT)
+kod: 0
+BŁĄD: nie udało się pobrać certyfikatu z localhost:18999
+kod: 2</code></pre></div><p>Czemu 9, a nie 10? Bo dzielenie w Bashu obcina ułamki: 9 dni i 23 godziny to dla niego 9. Przy ostrzeżeniach to dobra cecha, lepiej krzyknąć dzień za wcześnie niż dzień za późno. Po teście zabij oba serwery: <code>kill %1 %2</code>.</p><p>W monitorze z projektu 4 dopisujesz jedno wywołanie obok sprawdzania dysku i pamięci, a gdy kod wyjścia jest różny od zera, przekazujesz wypisany komunikat do tej samej funkcji, która wysyła maila. Trzy różne kody wyjścia to nie fanaberia: 1 znaczy „certyfikat zaraz padnie”, 2 znaczy „w ogóle nie mogę go pobrać”, czyli pewnie leży cała strona. To dwa różne poziomy paniki.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>krótsza droga to <code>openssl x509 -checkend $((14*86400))</code>. Zwraca kod 1 i pisze „Certificate will expire”, jeśli certyfikat wygaśnie w ciągu podanej liczby sekund. Nie podaje jednak liczby dni, a człowiek w mailu woli przeczytać „zostało 9 dni” niż „wygaśnie”.</p></aside></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Monitor mówi, że coś się dzieje. Ale co się działo przez całą noc, kto próbował się włamać i które strony sypały błędami, wiedzą tylko logi. W projekcie 5 piszemy analizator logów, który co rano robi z nich krótki raport dzienny.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-112.html" rel="prev">← 112. Projekt 3: kopie zapasowe, które naprawdę da się odtworzyć</a><a class="btn domyslny zolty" href="lekcja-114.html" rel="next">114. Projekt 5: analizator logów z raportem dziennym →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>112. Projekt 3: kopie zapasowe, które naprawdę da się odtworzyć — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 112 kursu Linux i Bash od zera do admina: Projekt 3: kopie zapasowe, które naprawdę da się odtworzyć. kursant ma skrypt, który codziennie robi archiwum plików i bazy, trzyma kopie dzienne, tygodniowe i miesięczne, sam sprawdza, czy z kopii da się odzyskać dane, i zostawia raport w pliku, w dz">
+<meta property="og:title" content="112. Projekt 3: kopie zapasowe, które naprawdę da się odtworzyć — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 112 kursu Linux i Bash od zera do admina: Projekt 3: kopie zapasowe, które naprawdę da się odtworzyć. kursant ma skrypt, który codziennie robi archiwum plików i bazy, trzyma kopie dzienne, tygodniowe i miesięczne, sam sprawdza, czy z kopii da się odzyskać dane, i zostawia raport w pliku, w dz">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 13</span></div>
+      <div class="boczny-tytul"><a href="index.html#m13">Projekty końcowe</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-110.html" data-lekcja="110"><span class="znacznik"></span><span class="nr">110</span> Projekt 1: nowy serwer w dziesięć minut</a></li><li><a href="lekcja-111.html" data-lekcja="111"><span class="znacznik"></span><span class="nr">111</span> Projekt 2: dwie strony na Apache z HTTPS</a></li><li><a href="lekcja-112.html" data-lekcja="112" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">112</span> Projekt 3: kopie zapasowe, które naprawdę da się odtworzyć</a></li><li><a href="lekcja-113.html" data-lekcja="113"><span class="znacznik"></span><span class="nr">113</span> Projekt 4: monitor, który krzyczy raz, a nie co pięć minut</a></li><li><a href="lekcja-114.html" data-lekcja="114"><span class="znacznik"></span><span class="nr">114</span> Projekt 5: analizator logów z raportem dziennym</a></li><li><a href="lekcja-115.html" data-lekcja="115"><span class="znacznik"></span><span class="nr">115</span> Projekt 6: LAMP na trzech maszynach z Ansible, wszystko w Git</a></li><li><a href="lekcja-116.html" data-lekcja="116"><span class="znacznik"></span><span class="nr">116</span> Egzamin próbny: 20 zadań, dwie godziny, zero podpowiedzi</a></li><li><a href="lekcja-117.html" data-lekcja="117"><span class="znacznik"></span><span class="nr">117</span> Co dalej: certyfikaty, laboratorium domowe i pierwsza praca</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="112" data-modul="13" data-tematy="system kopii zapasowych z rotacją, raportem i testem odtwarzania">
+    <div class="belka"><span>Lekcja 112 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m13">Moduł 13</a> › Lekcja 112</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Projekt 3: kopie zapasowe, które naprawdę da się odtworzyć</h1>
+      <p class="meta"><span>⏱ ok. 19 min czytania</span><span>· moduł 13: Projekty końcowe</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant ma skrypt, który codziennie robi archiwum plików i bazy, trzyma kopie dzienne, tygodniowe i miesięczne, sam sprawdza, czy z kopii da się odzyskać dane, i zostawia raport w pliku, w dzienniku i w mailu.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#plan-spizarnia-z-datami-na-sloikach">Plan: spiżarnia z datami na słoikach</a></li><li><a href="#konfiguracja-osobno-od-kodu">Konfiguracja osobno od kodu</a></li><li><a href="#skrypt-pelny-kod">Skrypt: pełny kod</a></li><li><a href="#co-tu-jest-ciekawego">Co tu jest ciekawego</a></li><li><a href="#uruchomienie">Uruchomienie</a></li><li><a href="#test-odtwarzania-na-zadanie-i-uszkodzona-kopia">Test odtwarzania na żądanie i uszkodzona kopia</a></li><li><a href="#harmonogram-cron-albo-timer">Harmonogram: cron albo timer</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga">Ściąga</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p>Piątek, za kwadrans piąta. Dysk w serwerze umiera. Spokojnie, mamy kopie! Codziennie o drugiej w nocy, od trzech lat, cron grzecznie je robi. Otwierasz folder z kopiami. Ostatni plik ma zero bajtów. Przedostatni też. Okazuje się, że od pół roku, od kiedy ktoś zmienił hasło do bazy, skrypt pada w połowie. Cron robił kopie z takim samym zaangażowaniem, z jakim kot pilnuje lodówki. W branży krąży takie powiedzenie: kopia, której nikt nie odtworzył, to nie kopia, to nadzieja. Dziś budujemy system, który nie żyje nadzieją. Robi archiwum, trzyma kopie według mądrego klucza, a potem sam próbuje je odtworzyć i mówi Ci wynik. Codziennie. Bez Twojego udziału.</p></section><section><h2 id="plan-spizarnia-z-datami-na-sloikach">Plan: spiżarnia z datami na słoikach</h2><p>Kopie zapasowe to spiżarnia. Pytania są te same co u babci: co wkładamy, gdzie stoi, jak długo trzymamy i czy ktoś czasem otwiera słoik, żeby sprawdzić, czy nie spłeśniał.</p><ol><li><strong>Co.</strong> Pliki: <code>/etc</code>, czyli cała konfiguracja, <code>/var/www</code> ze stronami z projektu 2, <code>/home</code>. Plus baza danych, ale nie jako pliki z <code>/var/lib/mysql</code>, tylko zrzut przez <code>mysqldump</code>. Kopiowanie plików działającej bazy to jak fotografowanie kuchni w trakcie gotowania: na zdjęciu pół jajka w powietrzu.</li><li><strong>Gdzie.</strong> <code>/srv/kopie</code>. Najlepiej na osobnym dysku, a w zadaniu na koniec dorzucimy wysyłkę na drugą maszynę. Pamiętasz zasadę 3-2-1 z lekcji 98: trzy kopie, dwa różne nośniki, jedna poza budynkiem.</li><li><strong>Jak długo.</strong> Rotacja „dziadek, ojciec, syn”: 7 kopii dziennych, 4 niedzielne, 6 z pierwszego dnia miesiąca. Dzięki temu masz wczoraj i przedwczoraj, ale też stan sprzed miesiąca, gdy okazuje się, że ktoś skasował plik trzy tygodnie temu i dopiero teraz zauważył.</li><li><strong>Czy da się odtworzyć.</strong> Po każdej kopii: suma kontrolna, pełne rozpakowanie do folderu tymczasowego, porównanie liczby plików i sprawdzenie kanarka. O kanarku za chwilę.</li><li><strong>Raport.</strong> Zawsze, także gdy się nie uda. Zwłaszcza gdy się nie uda.</li></ol></section><section><h2 id="konfiguracja-osobno-od-kodu">Konfiguracja osobno od kodu</h2><p>Ustawienia trzymamy w osobnym pliku <code>/etc/kopia.conf</code>. Skrypt ma rozsądne wartości domyślne, a plik je nadpisuje. Ten sam skrypt na pięciu serwerach, pięć różnych kartek z ustawieniami. Przykład dla serwera z projektu 2:</p><div class="kod"><pre><code># /etc/kopia.conf
+CEL=/srv/kopie
+ZRODLA=(/etc /var/www /home /root)
+DNI=7
+TYGODNIE=4
+MIESIACE=6
+BAZY_MYSQL=1
+MAIL_DO=admin@mojafirma.pl</code></pre></div><p>Uwaga, ważne: ten plik jest wczytywany kropką, czyli wykonywany jak kod, z prawami roota. Kto może go edytować, ten może zrobić na serwerze wszystko. Dlatego: właściciel root, prawa 600.</p><div class="kod"><pre><code>sudo chown root:root /etc/kopia.conf &amp;&amp; sudo chmod 600 /etc/kopia.conf</code></pre></div><p>A hasło do bazy? Na świeżej MariaDB root z systemu wchodzi do bazy bez hasła, przez gniazdo, bo baza ufa temu, że system już go sprawdził. Jeśli u Ciebie jest inaczej, hasło idzie do osobnego pliku z prawami 600 i podajesz go przez <code>MYSQL_OPCJE=(--defaults-extra-file=/root/.kopia.cnf)</code>. Nigdy w skrypcie, pamiętasz lekcja 105.</p></section><section><h2 id="skrypt-pelny-kod">Skrypt: pełny kod</h2><p>Plik <code>/usr/local/sbin/kopia.sh</code>. <code>sbin</code>, bo to narzędzie dla roota.</p><div class="kod"><pre><code>#!/usr/bin/env bash
+# kopia.sh — kopie zapasowe z rotacją, raportem i testem odtwarzania
+# Użycie: sudo kopia.sh          (kopia + rotacja + test + raport)
+#         sudo kopia.sh -t PLIK  (tylko test odtwarzania wskazanego archiwum)
+set -euo pipefail
+umask 077
+
+# ---------- Ustawienia domyślne (nadpisuje je /etc/kopia.conf) ----------
+CEL=/srv/kopie                      # dokąd zapisywać archiwa
+ZRODLA=(/etc /var/www /home)        # co kopiować
+WYKLUCZ=(&#x27;*.tmp&#x27; &#x27;*/.cache/*&#x27;)      # czego nie kopiować
+DNI=7                               # ile kopii dziennych trzymać
+TYGODNIE=4                          # ile niedzielnych
+MIESIACE=6                          # ile z pierwszego dnia miesiąca
+BAZY_MYSQL=0                        # 1 = zrzut MariaDB/MySQL przed kopią
+MYSQL_OPCJE=()                      # np. (--defaults-extra-file=/root/.kopia.cnf)
+MAIL_DO=&quot;&quot;                          # adres na raport; pusty = bez maila
+STAN=/var/lib/kopia                 # kanarek i zrzuty baz
+KONF=${KOPIA_KONF:-/etc/kopia.conf}
+# shellcheck source=/dev/null
+[[ -r $KONF ]] &amp;&amp; . &quot;$KONF&quot;
+
+DZIS=${KOPIA_DATA:-$(date +%F)}     # KOPIA_DATA=2026-11-01 tylko do testów rotacji
+HOST=$(hostname -s)
+START=$(date +%s)
+RAPORT=$(mktemp)
+SPRZATAJ=(&quot;$RAPORT&quot;)
+STATUS=OK
+
+log()  { printf &#x27;%s\n&#x27; &quot;$*&quot; | tee -a &quot;$RAPORT&quot;; }
+blad() { STATUS=BŁĄD; log &quot;BŁĄD: $*&quot;; exit 1; }
+
+sprzatanie() {
+    local kod=$?
+    (( kod == 0 )) || STATUS=BŁĄD
+    if [[ -n ${PLIK_RAPORTU:-} ]]; then
+        log &quot;Czas: $(( $(date +%s) - START )) s, status: $STATUS&quot;
+        cp &quot;$RAPORT&quot; &quot;$PLIK_RAPORTU&quot;
+        logger -t kopia &quot;status=$STATUS raport=$PLIK_RAPORTU&quot; || true
+        if [[ -n $MAIL_DO ]] &amp;&amp; command -v mail &gt;/dev/null; then
+            mail -s &quot;[kopia] $HOST $DZIS: $STATUS&quot; &quot;$MAIL_DO&quot; &lt; &quot;$RAPORT&quot; || true
+        fi
+    fi
+    rm -rf -- &quot;${SPRZATAJ[@]}&quot;
+    exit &quot;$kod&quot;
+}
+trap sprzatanie EXIT
+
+# test_odtwarzania ARCHIWUM — czy z kopii da się naprawdę coś odzyskać
+test_odtwarzania() {
+    local plik=$1 tmp w_archiwum odtworzone
+    log &quot;Test odtwarzania: $(basename &quot;$plik&quot;)&quot;
+    [[ -f $plik &amp;&amp; -f $plik.sha256 ]] || blad &quot;brak archiwum albo sumy kontrolnej: $plik&quot;
+    ( cd &quot;$(dirname &quot;$plik&quot;)&quot; &amp;&amp; sha256sum --quiet -c &quot;$(basename &quot;$plik&quot;).sha256&quot; ) \
+        || blad &quot;suma kontrolna się NIE zgadza, archiwum uszkodzone&quot;
+    log &quot;  [ OK ] suma SHA-256 zgodna&quot;
+
+    tmp=$(mktemp -d &quot;$CEL/.test.XXXXXX&quot;); SPRZATAJ+=(&quot;$tmp&quot;)
+    tar -xzf &quot;$plik&quot; -C &quot;$tmp&quot; || blad &quot;tar nie umie rozpakować archiwum&quot;
+    w_archiwum=$(tar -tzf &quot;$plik&quot; | grep -vc &#x27;/$&#x27;)
+    odtworzone=$(find &quot;$tmp&quot; -mindepth 1 ! -type d | wc -l)
+    (( w_archiwum == odtworzone )) || blad &quot;w archiwum $w_archiwum plików, odtworzono $odtworzone&quot;
+    log &quot;  [ OK ] odtworzono wszystkie $odtworzone plików&quot;
+
+    [[ -f $tmp$STAN/kanarek ]] || blad &quot;w kopii nie ma kanarka&quot;
+    log &quot;  [ OK ] kanarek żyje: $(cat &quot;$tmp$STAN/kanarek&quot;)&quot;
+    grep -qxF &quot;$(cat &quot;$STAN/kanarek&quot;)&quot; &quot;$tmp$STAN/kanarek&quot; \
+        || log &quot;  [INFO] to starsza kopia, kanarek z innego dnia niż bieżący&quot;
+
+    if [[ -f $tmp$STAN/bazy.sql.gz ]]; then
+        gzip -t &quot;$tmp$STAN/bazy.sql.gz&quot; || blad &quot;zrzut bazy uszkodzony&quot;
+        zcat &quot;$tmp$STAN/bazy.sql.gz&quot; | tail -n 1 | grep -q &#x27;Dump completed&#x27; \
+            || blad &quot;zrzut bazy urwany w połowie&quot;
+        log &quot;  [ OK ] zrzut bazy kompletny&quot;
+    fi
+    rm -rf -- &quot;$tmp&quot;
+}
+
+# rotuj KATALOG ILE — zostaw ILE najnowszych archiwów, resztę usuń
+rotuj() {
+    local kat=$1 ile=$2 p
+    local -a pliki
+    (( ile &gt;= 1 )) || blad &quot;rotacja $kat: liczba kopii musi być co najmniej 1&quot;
+    mapfile -t pliki &lt; &lt;(find &quot;$kat&quot; -maxdepth 1 -name &quot;kopia-$HOST-*.tar.gz&quot; -printf &#x27;%f\n&#x27; | sort -r)
+    for p in &quot;${pliki[@]:ile}&quot;; do
+        rm -f -- &quot;${kat:?}/$p&quot; &quot;${kat:?}/$p.sha256&quot;
+        log &quot;  usunięto stare: $(basename &quot;$kat&quot;)/$p&quot;
+    done
+    log &quot;  $(basename &quot;$kat&quot;): zostało $(( ${#pliki[@]} &lt; ile ? ${#pliki[@]} : ile )) z $ile&quot;
+}
+
+# ---------- Start ----------
+[[ $EUID -eq 0 ]] || { echo &quot;Uruchom przez sudo&quot; &gt;&amp;2; exit 1; }
+install -d -m 700 &quot;$CEL&quot; &quot;$CEL/dzienne&quot; &quot;$CEL/tygodniowe&quot; &quot;$CEL/miesieczne&quot; &quot;$STAN&quot;
+exec 9&gt;&quot;$CEL/.lock&quot;
+flock -n 9 || { echo &quot;Kopia już trwa (blokada $CEL/.lock)&quot; &gt;&amp;2; exit 1; }
+
+if [[ ${1:-} == -t ]]; then
+    [[ -n ${2:-} ]] || { echo &quot;Użycie: $0 -t ARCHIWUM&quot; &gt;&amp;2; exit 1; }
+    test_odtwarzania &quot;$2&quot;
+    exit 0
+fi
+
+PLIK_RAPORTU=$CEL/raport-ostatni.txt
+log &quot;=== Kopia $HOST, $DZIS ===&quot;
+
+# ---------- 1. Kanarek i zrzut baz ----------
+printf &#x27;%s %s\n&#x27; &quot;$DZIS&quot; &quot;$(head -c 6 /dev/urandom | od -An -tx1 | tr -d &#x27; \n&#x27;)&quot; &gt; &quot;$STAN/kanarek&quot;
+if (( BAZY_MYSQL )); then
+    SPRZATAJ+=(&quot;$STAN/bazy.sql.gz.czesc&quot;)
+    mysqldump &quot;${MYSQL_OPCJE[@]}&quot; --all-databases --single-transaction --routines --events \
+        | gzip &gt; &quot;$STAN/bazy.sql.gz.czesc&quot; || blad &quot;mysqldump się nie udał&quot;
+    mv &quot;$STAN/bazy.sql.gz.czesc&quot; &quot;$STAN/bazy.sql.gz&quot;
+    log &quot;Zrzut baz: $(du -h &quot;$STAN/bazy.sql.gz&quot; | cut -f1)&quot;
+fi
+
+# ---------- 2. Archiwum ----------
+PLIK=$CEL/dzienne/kopia-$HOST-$DZIS.tar.gz
+SCIEZKI=()
+for z in &quot;${ZRODLA[@]}&quot; &quot;$STAN&quot;; do
+    if [[ -e $z ]]; then SCIEZKI+=(&quot;${z#/}&quot;); else log &quot;UWAGA: nie ma $z, pomijam&quot;; fi
+done
+WYK=()
+for w in &quot;${WYKLUCZ[@]}&quot;; do WYK+=(--exclude=&quot;$w&quot;); done
+
+SPRZATAJ+=(&quot;$PLIK.czesc&quot;)
+rc=0
+tar -czf &quot;$PLIK.czesc&quot; -C / &quot;${WYK[@]}&quot; --exclude=&quot;${CEL#/}&quot; &quot;${SCIEZKI[@]}&quot; 2&gt;&quot;$RAPORT.tar&quot; || rc=$?
+SPRZATAJ+=(&quot;$RAPORT.tar&quot;)
+if (( rc == 1 )); then
+    log &quot;UWAGA: część plików zmieniała się w trakcie kopiowania:&quot;
+    sed &#x27;s/^/    /&#x27; &quot;$RAPORT.tar&quot; | tee -a &quot;$RAPORT&quot;
+elif (( rc &gt; 1 )); then
+    cat &quot;$RAPORT.tar&quot; &gt;&gt; &quot;$RAPORT&quot;
+    blad &quot;tar zakończył się kodem $rc&quot;
+fi
+mv &quot;$PLIK.czesc&quot; &quot;$PLIK&quot;
+( cd &quot;$CEL/dzienne&quot; &amp;&amp; sha256sum &quot;$(basename &quot;$PLIK&quot;)&quot; &gt; &quot;$(basename &quot;$PLIK&quot;).sha256&quot; )
+log &quot;Archiwum: $(basename &quot;$PLIK&quot;), $(du -h &quot;$PLIK&quot; | cut -f1), źródła: ${ZRODLA[*]}&quot;
+
+# ---------- 3. Kopie tygodniowe i miesięczne (twarde dowiązania, zero miejsca) ----------
+if [[ $(date -d &quot;$DZIS&quot; +%u) == 7 ]]; then
+    ln -f &quot;$PLIK&quot; &quot;$PLIK.sha256&quot; &quot;$CEL/tygodniowe/&quot;
+    log &quot;Niedziela: dowiązanie w tygodniowe/&quot;
+fi
+if [[ $(date -d &quot;$DZIS&quot; +%d) == 01 ]]; then
+    ln -f &quot;$PLIK&quot; &quot;$PLIK.sha256&quot; &quot;$CEL/miesieczne/&quot;
+    log &quot;Pierwszy dzień miesiąca: dowiązanie w miesieczne/&quot;
+fi
+
+# ---------- 4. Rotacja ----------
+log &quot;Rotacja:&quot;
+rotuj &quot;$CEL/dzienne&quot; &quot;$DNI&quot;
+rotuj &quot;$CEL/tygodniowe&quot; &quot;$TYGODNIE&quot;
+rotuj &quot;$CEL/miesieczne&quot; &quot;$MIESIACE&quot;
+
+# ---------- 5. Test odtwarzania świeżej kopii ----------
+test_odtwarzania &quot;$PLIK&quot;
+
+# ---------- 6. Podsumowanie ----------
+log &quot;Miejsce w $CEL: $(df -h --output=avail &quot;$CEL&quot; | tail -n 1 | tr -d &#x27; &#x27;) wolne, kopie zajmują $(du -sh &quot;$CEL&quot; | cut -f1)&quot;</code></pre></div></section><section><h2 id="co-tu-jest-ciekawego">Co tu jest ciekawego</h2><p><strong>Raport zawsze, nawet przy katastrofie.</strong> Funkcja <code>sprzatanie</code> jest podpięta pod <code>trap ... EXIT</code>, czyli to nasza sprzątaczka na koniec imprezy. Wchodzi zawsze: gdy skrypt skończył się dobrze, gdy <code>set -e</code> zatrzymał go na pierwszej kontrolce i gdy sami wołamy <code>blad</code>. Najpierw sprawdza kod wyjścia. Jeśli nie zero, status to BŁĄD. Potem zapisuje raport do pliku, do dziennika systemowego przez <code>logger</code> i wysyła maila. Na końcu sprząta pliki tymczasowe z tablicy <code>SPRZATAJ</code>. Czyli scenariusz z haka, cichy upadek przez pół roku, odpada: każdy upadek kończy się mailem ze słowem BŁĄD w temacie.</p><p><strong><code>umask 077</code></strong><strong>.</strong> W kopii jest <code>/etc/shadow</code> z haszami haseł i klucze certyfikatów z projektu 2. Archiwum czytelne dla wszystkich to jak trzymanie zapasowych kluczy do całego biurowca w szufladzie na korytarzu. <code>umask 077</code> sprawia, że wszystko, co skrypt utworzy, ma prawa tylko dla właściciela.</p><p><strong><code>flock</code></strong><strong>.</strong> Gdy kopia trwa dłużej niż zwykle, a cron odpali kolejną, dwie kopie piszące do tego samego folderu to proszenie się o kłopoty. <code>exec 9&gt;plik</code> otwiera plik blokady jako deskryptor 9, a <code>flock -n 9</code> próbuje zająć blokadę bez czekania. Kartka „zajęte” na drzwiach łazienki. Blokadę zwalnia jądro, gdy proces się kończy, nawet po <code>kill -9</code>, więc nie ma problemu z kartką, którą ktoś zapomniał zdjąć.</p><p><strong>Najpierw </strong><strong><code>.czesc</code></strong><strong>, potem </strong><strong><code>mv</code></strong><strong>.</strong> Archiwum powstaje pod nazwą z końcówką <code>.czesc</code>. Dopiero gdy <code>tar</code> skończy, zmieniamy nazwę na docelową. Zmiana nazwy w obrębie jednego systemu plików jest niepodzielna: albo plik jest cały pod nową nazwą, albo go nie ma. Nigdy nie zobaczysz pół archiwum udającego całe. Jak z ciastem: nie wystawiasz go na ladę, dopóki nie wyjdzie z pieca.</p><p><strong><code>tar -C /</code></strong><strong> i ścieżki bez ukośnika.</strong> Usuwamy początkowy <code>/</code> ze źródeł, <code>${z#/}</code>, i każemy <code>tar</code> zacząć od katalogu głównego. W archiwum są wtedy ścieżki <code>etc/hosts</code>, a nie <code>/etc/hosts</code>. Dzięki temu rozpakowujesz kopię tam, gdzie chcesz, a nie przypadkiem na żywy system.</p><p><strong>Kod wyjścia tara: 1 to nie 2.</strong> O tym w typowym błędzie, bo to klasyk.</p><p><strong>Suma SHA-256 obok archiwum.</strong> Plik <code>.sha256</code> to odcisk palca kopii. Jeśli dysk albo transfer przestawią choćby jeden bit, odcisk się nie zgodzi.</p><p><strong>Rotacja przez sortowanie nazw.</strong> W nazwie jest data w formacie <code>RRRR-MM-DD</code>, więc alfabetycznie znaczy chronologicznie. <code>sort -r</code> stawia najnowsze na początku, a <code>${pliki[@]:ile}</code> bierze wszystko od pozycji <code>ile</code> do końca, czyli te za stare. Szuflada z przegródkami, z której wyrzucasz wszystko poza pierwszymi siedmioma. <code>${kat:?}</code> przy <code>rm</code> to bezpiecznik z lekcji 105: gdyby zmienna była pusta, skrypt stanie, zamiast kasować od korzenia.</p><p><strong>Tygodniowe i miesięczne za darmo.</strong> Kopia niedzielna nie jest kopiowana, tylko dowiązana twardym linkiem <code>ln -f</code>. Pamiętasz z lekcji 106: twardy link to druga etykieta na tym samym i-węźle. Jeden słoik, trzy karteczki: „połówka tygodnia”, „niedziela”, „początek miesiąca”. Rotacja dziennych zdejmuje tylko swoją karteczkę, a słoik zostaje, dopóki ma choć jedną.</p><p><strong>Kanarek.</strong> Górnicy brali do kopalni kanarka, bo padał od gazu wcześniej niż człowiek. U nas kanarek to mały plik z dzisiejszą datą i losowym napisem, zapisywany tuż przed kopią. Po rozpakowaniu sprawdzamy, czy jest w środku. Jeśli kanarek z dzisiejszą datą jest w kopii, to wiemy, że kopia jest dzisiejsza, a nie na przykład stary plik, który ktoś podmienił.</p><p><strong>Sprawdzenie zrzutu bazy.</strong> <code>mysqldump</code> kończy plik linijką <code>-- Dump completed on ...</code>. Jeśli zrzut się urwie, tej linijki nie ma. Prosty test, a łapie najgorszy przypadek: plik, który wygląda na pełny, ale kończy się w połowie tabeli z zamówieniami.</p></section><section><h2 id="uruchomienie">Uruchomienie</h2><div class="kod"><pre><code>sudo install -m 700 kopia.sh /usr/local/sbin/kopia.sh
+sudo kopia.sh</code></pre></div><p>Wynik z mojego laboratorium, z bazą MariaDB i jednym celowo błędnym źródłem w konfiguracji, żebyś zobaczył, jak wygląda ostrzeżenie:</p><div class="kod"><pre><code>=== Kopia vm, 2026-11-04 ===
+Zrzut baz: 512K
+UWAGA: nie ma /nie/ma/takiego, pomijam
+Archiwum: kopia-vm-2026-11-04.tar.gz, 2.2M, źródła: /etc /var/www /nie/ma/takiego
+Rotacja:
+  usunięto stare: dzienne/kopia-vm-2026-10-28.tar.gz
+  dzienne: zostało 7 z 7
+  tygodniowe: zostało 2 z 4
+  miesieczne: zostało 1 z 3
+Test odtwarzania: kopia-vm-2026-11-04.tar.gz
+  [ OK ] suma SHA-256 zgodna
+  [ OK ] odtworzono wszystkie 3087 plików
+  [ OK ] kanarek żyje: 2026-11-04 48613f07c9c1
+  [ OK ] zrzut bazy kompletny
+Miejsce w /srv/kopie: 24G wolne, kopie zajmują 14M
+Czas: 3 s, status: OK</code></pre></div><p>Skąd „usunięto stare” przy pierwszym uruchomieniu? Bo nie czekałem dwóch miesięcy na nagranie. Zmienna <code>KOPIA_DATA</code> pozwala udawać inny dzień, więc przepuściłem skrypt w pętli przez kolejne daty:</p><div class="kod"><pre><code>d=2026-09-01
+while [[ $d &lt; 2026-11-05 ]]; do
+    sudo KOPIA_DATA=$d kopia.sh &gt;/dev/null || echo &quot;PORAŻKA $d&quot;
+    d=$(date -d &quot;$d +1 day&quot; +%F)
+done
+ls /srv/kopie/*/ | grep -v sha256</code></pre></div><div class="kod"><pre><code>/srv/kopie/dzienne/:
+kopia-vm-2026-10-29.tar.gz
+kopia-vm-2026-10-30.tar.gz
+kopia-vm-2026-10-31.tar.gz
+kopia-vm-2026-11-01.tar.gz
+kopia-vm-2026-11-02.tar.gz
+kopia-vm-2026-11-03.tar.gz
+kopia-vm-2026-11-04.tar.gz
+
+/srv/kopie/miesieczne/:
+kopia-vm-2026-09-01.tar.gz
+kopia-vm-2026-10-01.tar.gz
+kopia-vm-2026-11-01.tar.gz
+
+/srv/kopie/tygodniowe/:
+kopia-vm-2026-10-11.tar.gz
+kopia-vm-2026-10-18.tar.gz
+kopia-vm-2026-10-25.tar.gz
+kopia-vm-2026-11-01.tar.gz</code></pre></div><p>Sześćdziesiąt pięć dni w niecałe trzy minuty, prawie jak wakacje. Siedem dziennych, cztery niedzielne, a miesięczne trzy, bo w testowej konfiguracji miałem <code>MIESIACE=3</code>. 1 listopada 2026 to niedziela i pierwszy dzień miesiąca, więc ten jeden plik siedzi w trzech folderach naraz. Dowód, że to ten sam słoik:</p><div class="kod"><pre><code>ls -li /srv/kopie/*/kopia-vm-2026-11-01.tar.gz</code></pre></div><div class="kod"><pre><code>1505004 -rw------- 3 root root 1713850 Nov  4 02:50 /srv/kopie/dzienne/kopia-vm-2026-11-01.tar.gz
+1505004 -rw------- 3 root root 1713850 Nov  4 02:50 /srv/kopie/miesieczne/kopia-vm-2026-11-01.tar.gz
+1505004 -rw------- 3 root root 1713850 Nov  4 02:50 /srv/kopie/tygodniowe/kopia-vm-2026-11-01.tar.gz</code></pre></div><p>Ten sam numer i-węzła, licznik linków 3. Miejsce na dysku zajęte raz.</p></section><section><h2 id="test-odtwarzania-na-zadanie-i-uszkodzona-kopia">Test odtwarzania na żądanie i uszkodzona kopia</h2><p>Opcja <code>-t</code> sprawdza dowolne archiwum, na przykład stare tygodniowe:</p><div class="kod"><pre><code>sudo kopia.sh -t /srv/kopie/tygodniowe/kopia-vm-2026-10-11.tar.gz</code></pre></div><div class="kod"><pre><code>Test odtwarzania: kopia-vm-2026-10-11.tar.gz
+  [ OK ] suma SHA-256 zgodna
+  [ OK ] odtworzono wszystkie 3085 plików
+  [ OK ] kanarek żyje: 2026-10-11 d1d751b2be5a
+  [INFO] to starsza kopia, kanarek z innego dnia niż bieżący</code></pre></div><p>A teraz psujemy. Jeden bajt w środku archiwum, symulacja umierającego dysku. Uwaga, <code>dd</code> z <code>conv=notrunc</code> pisze po istniejącym pliku, więc rób to na kopii, której nie potrzebujesz, w laboratorium:</p><div class="kod"><pre><code>printf &#x27;\xff&#x27; | sudo dd of=/srv/kopie/dzienne/kopia-vm-2026-11-03.tar.gz bs=1 seek=500000 conv=notrunc status=none
+sudo kopia.sh -t /srv/kopie/dzienne/kopia-vm-2026-11-03.tar.gz; echo &quot;kod=$?&quot;</code></pre></div><div class="kod"><pre><code>Test odtwarzania: kopia-vm-2026-11-03.tar.gz
+kopia-vm-2026-11-03.tar.gz: FAILED
+sha256sum: WARNING: 1 computed checksum did NOT match
+BŁĄD: suma kontrolna się NIE zgadza, archiwum uszkodzone
+kod=1</code></pre></div><p>Jeden bajt na 1,7 megabajta i odcisk palca od razu się nie zgadza. Druga próba uruchomienia, gdy pierwsza jeszcze trwa:</p><div class="kod"><pre><code>Kopia już trwa (blokada /srv/kopie/.lock)</code></pre></div><p>I najczęstszy prawdziwy scenariusz: ktoś skasował jeden plik i chce go z powrotem. Nigdy nie rozpakowujesz kopii prosto na <code>/</code>. Rozpakowujesz do folderu obok, patrzysz i dopiero kopiujesz:</p><div class="kod"><pre><code>mkdir -p /tmp/odzysk
+sudo tar -xzf /srv/kopie/dzienne/kopia-vm-2026-11-02.tar.gz -C /tmp/odzysk etc/hosts
+ls -l /tmp/odzysk/etc
+diff /tmp/odzysk/etc/hosts /etc/hosts</code></pre></div><div class="kod"><pre><code>total 4
+-rw-r--r-- 1 root root 81 Nov  4 02:36 hosts</code></pre></div><p>Nazwę w archiwum podajesz bez początkowego ukośnika, dokładnie tak, jak wypisuje ją <code>tar -tzf</code>. Uprawnienia i data pliku wróciły razem z nim. [dla zaawansowanych: nasz test odtwarzania bazy sprawdza, czy zrzut jest cały, ale nie ładuje go do bazy. Pełny test to uruchomienie tymczasowej instancji MariaDB, na przykład w kontenerze z lekcji 94, załadowanie zrzutu i jedno zapytanie typu <code>SELECT COUNT(*)</code> na najważniejszej tabeli. Raz w miesiącu warto. A jeśli kopie mają wyjść poza firmę, szyfruj je, na przykład <code>gpg</code> z lekcji 85, albo od razu przesiądź się na restic lub borg z lekcji 98, które szyfrują i deduplikują same.]</p></section><section><h2 id="harmonogram-cron-albo-timer">Harmonogram: cron albo timer</h2><p>Wersja klasyczna, budzik, plik <code>/etc/cron.d/kopia</code>:</p><div class="kod"><pre><code># /etc/cron.d/kopia — codziennie o 2:30
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+30 2 * * * root /usr/local/sbin/kopia.sh &gt;/dev/null 2&gt;&amp;1</code></pre></div><p>Wynik wyrzucamy do <code>/dev/null</code>, bo raport i tak ląduje w pliku, w dzienniku i w mailu. W plikach w <code>/etc/cron.d</code> jest kolumna z użytkownikiem, której nie ma w <code>crontab -e</code>. Pamiętasz lekcja 87. Wersja nowoczesna, dwa pliki systemd. <code>/etc/systemd/system/kopia.service</code>:</p><div class="kod"><pre><code>[Unit]
+Description=Kopia zapasowa (kopia.sh)
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/kopia.sh
+Nice=10
+IOSchedulingClass=idle</code></pre></div><p>I <code>/etc/systemd/system/kopia.timer</code>:</p><div class="kod"><pre><code>[Unit]
+Description=Codzienna kopia zapasowa o 2:30
+
+[Timer]
+OnCalendar=*-*-* 02:30:00
+RandomizedDelaySec=15min
+Persistent=true
+
+[Install]
+WantedBy=timers.target</code></pre></div><div class="kod"><pre><code>sudo systemd-analyze verify /etc/systemd/system/kopia.timer /etc/systemd/system/kopia.service
+systemd-analyze calendar &#x27;*-*-* 02:30:00&#x27;
+sudo systemctl daemon-reload
+sudo systemctl enable --now kopia.timer
+systemctl list-timers kopia.timer</code></pre></div><div class="kod"><pre><code>Normalized form: *-*-* 02:30:00
+    Next elapse: Thu 2026-11-05 02:30:00 CET
+       (in UTC): Thu 2026-11-05 01:30:00 UTC
+       From now: 23h left</code></pre></div><p>Co daje timer ponad crona? <code>Persistent=true</code>: jeśli serwer był wyłączony o 2:30, kopia zrobi się zaraz po starcie, a cron po prostu ją przegapi. <code>Nice=10</code> i <code>IOSchedulingClass=idle</code> mówią jądru, żeby kopia ustępowała miejsca klientom sklepu, jak ktoś, kto zamiata sklep, ale odsuwa się, gdy wchodzi klient. Do tego cały wynik masz w <code>journalctl -u kopia.service</code>. [dla zaawansowanych: pliki jednostek sprawdzisz przed włączeniem przez <code>systemd-analyze verify</code>, a wyrażenie czasu przez <code>systemd-analyze calendar</code>. Przy <code>logger</code> w skrypcie stoi <code>|| true</code>, żeby brak dziennika, na przykład w chroocie z płyty ratunkowej, nie zabijał raportu.]</p></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p>Co się dzieje przy <code>tar -czf</code>? <code>tar</code> chodzi po drzewie katalogów i każdy plik zapisuje jako nagłówek z nazwą, właścicielem, prawami i datą, a za nim treść. To wszystko leci jednym strumieniem przez <code>gzip</code>, który kompresuje całość naraz. Wada: żeby wyciągnąć jeden plik z końca archiwum, <code>tar</code> musi rozpakować wszystko przed nim. Przy kilku gigabajtach to kwestia minut. Narzędzia jak restic i borg tną pliki na kawałki i trzymają indeks, więc pojedynczy plik wyciągają od razu, a powtarzające się kawałki zapisują raz. Nasz skrypt to dobry pierwszy system i świetny materiał na rozmowę o pracy. Przy dużych danych przesiadka na restic albo borg to naturalny następny krok. Czemu folder testowy powstaje w <code>$CEL</code>, a nie w <code>/tmp</code>? Bo w wielu systemach <code>/tmp</code> jest w pamięci RAM, w tmpfs. Rozpakowanie kilku gigabajtów do RAM-u to sposób na zabicie serwera testem, który miał mu pomóc. Na dysku kopii miejsce i tak musi być. <code>flock</code> to nie plik z napisem „zajęte”, tylko blokada trzymana przez jądro na otwartym pliku. Sam plik <code>.lock</code> może leżeć na dysku latami. Liczy się tylko to, czy jakiś żywy proces trzyma go otwartego z blokadą. Dlatego nie ma problemu ze „zdechniętą” blokadą po awarii, typowego dla skryptów, które robią <code>touch /tmp/kopia.lock</code>.</p></section><section><h2 id="sciaga">Ściąga</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga</th><th>Co robi</th></tr><tr><td><code>tar</code></td><td><code>-czf PLIK -C /</code></td><td>tworzy archiwum gzip, ścieżki liczone od <code>/</code></td></tr><tr><td><code>tar</code></td><td><code>--exclude=WZORZEC</code></td><td>pomija pasujące pliki</td></tr><tr><td><code>tar</code></td><td><code>-tzf</code></td><td>wypisuje zawartość bez rozpakowania</td></tr><tr><td><code>tar</code></td><td><code>-xzf PLIK -C KATALOG ŚCIEŻKA</code></td><td>wyciąga jeden plik do wskazanego folderu</td></tr><tr><td><code>sha256sum</code></td><td><code>-c --quiet</code></td><td>sprawdza sumy, odzywa się tylko przy błędzie</td></tr><tr><td><code>flock</code></td><td><code>-n</code></td><td>nie czeka, gdy blokada zajęta, tylko kończy się błędem</td></tr><tr><td><code>ln</code></td><td><code>-f</code></td><td>twardy link, nadpisuje istniejący</td></tr><tr><td><code>mysqldump</code></td><td><code>--single-transaction</code></td><td>spójny zrzut InnoDB bez blokowania tabel</td></tr><tr><td><code>mysqldump</code></td><td><code>--all-databases --routines --events</code></td><td>wszystkie bazy razem z procedurami i zdarzeniami</td></tr><tr><td><code>gzip</code></td><td><code>-t</code></td><td>test integralności archiwum gzip</td></tr><tr><td><code>logger</code></td><td><code>-t ZNACZNIK</code></td><td>wpis do dziennika systemowego</td></tr><tr><td><code>systemd-analyze</code></td><td><code>verify</code>, <code>calendar</code></td><td>sprawdza pliki jednostek i wyrażenie czasu</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>Skrypt z <code>set -e</code> robi kopię przez <code>tar</code>, w nocy działa, a raz na kilka dni pada bez żadnej kopii. W logach:</p><div class="kod"><pre><code>tar: www/blog/b.log: file changed as we read it</code></pre></div><p>I nic więcej. Zrobiłem to celowo, z drugim procesem dopisującym do pliku w trakcie kopiowania:</p><div class="kod"><pre><code>#!/usr/bin/env bash
+set -euo pipefail
+( for i in $(seq 200); do echo x &gt;&gt; www/blog/b.log; sleep 0.01; done ) &amp;
+tar -czf /tmp/x.tgz www
+echo &quot;Kopia gotowa&quot;</code></pre></div><div class="kod"><pre><code>tar: www/blog/b.log: file changed as we read it
+kod=1</code></pre></div><p>Napis „Kopia gotowa” się nie pojawił. Co się stało? GNU tar kończy się kodem 1, gdy któryś plik zmienił się w trakcie czytania. To ostrzeżenie: archiwum jest, tylko ten jeden plik może być w nim w stanie „pomiędzy”. Kod 2 to dopiero prawdziwa awaria. A <code>set -e</code> nie zna niuansów, dla niego wszystko poza zerem to kciuk w dół, więc staje przy pierwszej kontrolce. Na serwerze z logami, które rosną cały czas, to się dzieje regularnie. Naprawa jest w naszym skrypcie: <code>|| rc=$?</code> przechwytuje kod, zamiast pozwolić <code>set -e</code> zabić skrypt. Kod 1 to ostrzeżenie w raporcie, kod 2 i wyżej to błąd. I tak wygląda to w raporcie:</p><div class="kod"><pre><code>UWAGA: część plików zmieniała się w trakcie kopiowania:
+    tar: var/www/blog/duzy.log: file changed as we read it</code></pre></div><p>Ile w tym prawdy? Plik, który się zmieniał, może być w kopii niespójny. Dla logów to bez znaczenia. Dla plików bazy danych to katastrofa, i to jest drugi powód, żeby bazy kopiować przez <code>mysqldump</code>, a nie przez <code>tar</code> na <code>/var/lib/mysql</code>.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><p>Dopisz do <code>kopia.sh</code> krok 7: wysyłanie całego katalogu kopii na drugą maszynę wirtualną przez <code>rsync</code> po SSH z logowaniem kluczem. Adres celu trzymaj w <code>/etc/kopia.conf</code> w zmiennej <code>ZDALNIE</code>, na przykład <code>ZDALNIE=kopie@backup:/srv/kopie/web1</code>. Gdy <code>ZDALNIE</code> jest puste, krok ma się pomijać, a gdy <code>rsync</code> się nie uda, raport ma mieć status BŁĄD. Potem na drugiej maszynie sprawdź <code>sha256sum -c</code>, że archiwa doszły całe.</p><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><p>Kopia poza serwerem. Do ustawień w <code>kopia.sh</code> dochodzą dwie zmienne:</p><div class="kod"><pre><code>ZDALNIE=&quot;&quot;                          # np. kopie@backup:/srv/kopie/web1; pusty = bez wysyłki
+RSYNC_SSH=&quot;ssh -o BatchMode=yes&quot;    # jak rsync ma się łączyć (port, klucz)</code></pre></div><p>A na końcu skryptu krok 7:</p><div class="kod"><pre><code># ---------- 7. Kopia poza serwerem (3-2-1) ----------
+if [[ -n $ZDALNIE ]]; then
+    rsync -aH --delete -e &quot;$RSYNC_SSH&quot; --exclude=.lock --exclude=&#x27;.test.*&#x27; \
+        &quot;$CEL/&quot; &quot;$ZDALNIE/&quot; 2&gt;&gt;&quot;$RAPORT&quot; || blad &quot;rsync do $ZDALNIE się nie udał&quot;
+    log &quot;Wysłano kopie na $ZDALNIE&quot;
+else
+    log &quot;UWAGA: ZDALNIE puste, kopie są tylko na tym serwerze&quot;
+fi</code></pre></div><p><code>BatchMode=yes</code> to ważny drobiazg. Bez niego SSH, któremu nie zadziała klucz, grzecznie zapyta o hasło i będzie czekał do rana, bo w cronie nikt nie odpowie. Z nim od razu kończy się błędem, a błąd trafia do raportu. W <code>/etc/kopia.conf</code>:</p><div class="kod"><pre><code>ZDALNIE=kopie@backup:/srv/kopie/web1
+RSYNC_SSH=&quot;ssh -i /root/.ssh/kopia_ed25519 -o BatchMode=yes&quot;</code></pre></div><p>Klucz bez hasła, osobny, tylko do kopii. Pamiętasz z lekcji 76: <code>ssh-keygen -t ed25519 -f /root/.ssh/kopia_ed25519 -N &#x27;&#x27;</code>, a publiczny do <code>authorized_keys</code> użytkownika <code>kopie</code> na maszynie z kopiami. Wynik i sprawdzenie po drugiej stronie:</p><div class="kod"><pre><code>  [ OK ] zrzut bazy kompletny
+Wysłano kopie na kopie@backup:/srv/kopie/web1
+Czas: 1 s, status: OK</code></pre></div><div class="kod"><pre><code>cd /srv/kopie/web1/dzienne &amp;&amp; sha256sum -c *.sha256</code></pre></div><div class="kod"><pre><code>kopia-vm-2026-10-29.tar.gz: OK
+kopia-vm-2026-10-30.tar.gz: OK
+kopia-vm-2026-10-31.tar.gz: OK
+kopia-vm-2026-11-01.tar.gz: OK
+kopia-vm-2026-11-02.tar.gz: OK
+kopia-vm-2026-11-03.tar.gz: OK
+kopia-vm-2026-11-04.tar.gz: OK</code></pre></div><p>A gdy maszyna z kopiami nie odpowiada, raport mówi to wprost:</p><div class="kod"><pre><code>ssh: connect to host 127.0.0.1 port 2298: Connection refused
+rsync: connection unexpectedly closed (0 bytes received so far) [sender]
+BŁĄD: rsync do kopie@backup:/srv/kopie/web1 się nie udał</code></pre></div><p>Teraz smaczek, na którym bardzo łatwo się wyłożyć: litera <code>H</code>. Pierwszą wersję zrobiłem ze zwykłym <code>rsync -a</code> i porównałem obie strony:</p><div class="kod"><pre><code>1499189 -rw------- 1 root root 1713886 Nov  4 02:52 web1/dzienne/kopia-vm-2026-11-01.tar.gz
+1499197 -rw------- 1 root root 1713886 Nov  4 02:52 web1/miesieczne/kopia-vm-2026-11-01.tar.gz
+1499201 -rw------- 1 root root 1713886 Nov  4 02:52 web1/tygodniowe/kopia-vm-2026-11-01.tar.gz</code></pre></div><p>Trzy różne i-węzły, licznik linków 1. <code>-a</code> nie zachowuje twardych linków, więc nasz jeden słoik z trzema karteczkami po drugiej stronie zamienił się w trzy słoiki. Z <code>-aH</code> jest jeden i-węzeł z licznikiem 3, a całość zajmuje 14 MB zamiast 17. Przy prawdziwych kopiach to różnica między „mieści się” a „kup nowy dysk”. I rzecz najważniejsza, czyli <code>--delete</code>. Dzięki niemu rotacja działa też po drugiej stronie. Ale pomyśl: ktoś przejmuje serwer i kasuje <code>/srv/kopie</code>. O 2:30 nasz skrypt grzecznie skasuje też kopie zdalne. Albo gorzej: włamywacz ma na serwerze klucz roota do maszyny z kopiami i sam je wyczyści. Dwie obrony. Pierwsza: zablokuj, co ten klucz może zrobić. Na maszynie z kopiami w <code>authorized_keys</code>:</p><div class="kod"><pre><code>command=&quot;/usr/bin/rrsync -wo /srv/kopie&quot;,restrict ssh-ed25519 AAAA... kopia@web1</code></pre></div><p><code>rrsync</code> to strażnik dostarczany z rsync: wpuszcza tylko rsync, tylko do tego folderu, <code>-wo</code> znaczy „tylko zapis”. Ścieżkę podajesz wtedy względną: <code>ZDALNIE=kopie@backup:web1</code>. Sprawdziłem, co się stanie, gdy ktoś spróbuje czegoś więcej:</p><div class="kod"><pre><code>/usr/bin/rrsync error: reading from write-only server is not allowed
+/usr/bin/rrsync error: SSH_ORIGINAL_COMMAND does not run rsync</code></pre></div><p>Druga obrona, lepsza: odwrócić kierunek. To maszyna z kopiami łączy się z serwerem i sama pobiera archiwa. Serwer nie ma żadnego klucza do niej, więc nawet przejęty serwer nie sięgnie do kopii. Listonosz, który sam odbiera paczki, zamiast dać każdemu nadawcy klucz do magazynu.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Kopie raportują się mailem, ale my jeszcze nie umiemy porządnie wysyłać maili z serwera. W następnym projekcie to naprawiamy i budujemy monitor: dysk, pamięć i usługi, z alarmem na skrzynkę, który krzyczy raz, a nie co pięć minut przez całą noc.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-111.html" rel="prev">← 111. Projekt 2: dwie strony na Apache z HTTPS</a><a class="btn domyslny zolty" href="lekcja-113.html" rel="next">113. Projekt 4: monitor, który krzyczy raz, a nie co pięć minut →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

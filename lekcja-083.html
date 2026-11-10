@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>83. AppArmor — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 83 kursu Linux i Bash od zera do admina: AppArmor. kursant wie, czym AppArmor różni się od SELinuksa, sprawdza jego stan przez aa-status, czyta profil, przełącza go między trybami enforce i complain, znajduje odmowę w dzienniku i dopisuje własny wyjątek bez wyłączania ochrony.">
+<meta property="og:title" content="83. AppArmor — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 83 kursu Linux i Bash od zera do admina: AppArmor. kursant wie, czym AppArmor różni się od SELinuksa, sprawdza jego stan przez aa-status, czyta profil, przełącza go między trybami enforce i complain, znajduje odmowę w dzienniku i dopisuje własny wyjątek bez wyłączania ochrony.">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 9</span></div>
+      <div class="boczny-tytul"><a href="index.html#m09">Użytkownicy i bezpieczeństwo</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-078.html" data-lekcja="78"><span class="znacznik"></span><span class="nr">78</span> Użytkownicy i grupy</a></li><li><a href="lekcja-079.html" data-lekcja="79"><span class="znacznik"></span><span class="nr">79</span> sudo i root</a></li><li><a href="lekcja-080.html" data-lekcja="80"><span class="znacznik"></span><span class="nr">80</span> Kto się logował</a></li><li><a href="lekcja-081.html" data-lekcja="81"><span class="znacznik"></span><span class="nr">81</span> Konta z jednego miejsca: LDAP i Active Directory</a></li><li><a href="lekcja-082.html" data-lekcja="82"><span class="znacznik"></span><span class="nr">82</span> SELinux bez strachu</a></li><li><a href="lekcja-083.html" data-lekcja="83" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">83</span> AppArmor</a></li><li><a href="lekcja-084.html" data-lekcja="84"><span class="znacznik"></span><span class="nr">84</span> Utwardzanie serwera</a></li><li><a href="lekcja-085.html" data-lekcja="85"><span class="znacznik"></span><span class="nr">85</span> Certyfikaty i szyfrowanie</a></li><li><a href="lekcja-086.html" data-lekcja="86"><span class="znacznik"></span><span class="nr">86</span> Czas i język systemu</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="83" data-modul="9" data-tematy="profile, aa-status, aa-enforce, aa-complain">
+    <div class="belka"><span>Lekcja 83 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m09">Moduł 9</a> › Lekcja 83</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>AppArmor</h1>
+      <p class="meta"><span>⏱ ok. 9 min czytania</span><span>· moduł 9: Użytkownicy i bezpieczeństwo</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant wie, czym AppArmor różni się od SELinuksa, sprawdza jego stan przez <code>aa-status</code>, czyta profil, przełącza go między trybami enforce i complain, znajduje odmowę w dzienniku i dopisuje własny wyjątek bez wyłączania ochrony.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#przepustka-z-lista-pomieszczen">Przepustka z listą pomieszczeń</a></li><li><a href="#kto-ma-przepustke-aa-status">Kto ma przepustkę: aa-status</a></li><li><a href="#jak-wyglada-przepustka">Jak wygląda przepustka</a></li><li><a href="#tryby-enforce-i-complain">Tryby: enforce i complain</a></li><li><a href="#gdzie-sa-odmowy">Gdzie są odmowy</a></li><li><a href="#dopisanie-wyjatku-folder-local">Dopisanie wyjątku: folder local</a></li><li><a href="#wlasny-profil">Własny profil</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga-flag">Ściąga flag</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p class="ekran">Ubuntu, terminal, <code>sudo tcpdump -i any -w /srv/zrzut.txt</code></p><p>Ubuntu, jesteś rootem, chcesz zapisać ruch sieciowy do pliku. A tcpdump na to:</p><div class="kod"><pre><code>tcpdump: /srv/zrzut.txt: Permission denied</code></pre></div><p>Root. Permission denied. To jak dyrektor, któremu portier nie wydaje kluczy do własnego gabinetu. Zmieniasz nazwę na <code>/srv/zrzut.pcap</code> i nagle działa. Jakby system miał alergię na rozszerzenie <code>.txt</code>.</p><p>Nie ma alergii. Ma AppArmora. I to, co wygląda na złośliwość, to bardzo sensowna zasada zapisana w jednym pliku. Dziś go przeczytamy.</p></section><section><h2 id="przepustka-z-lista-pomieszczen">Przepustka z listą pomieszczeń</h2><p>W poprzedniej lekcji SELinux był ochroniarzem, który patrzy na kolory plakietek i naklejki na drzwiach. Wszystko w budynku ma naklejkę.</p><p>AppArmor robi to inaczej. Nie nakleja niczego na drzwi. Zamiast tego wybrani pracownicy dostają imienną przepustkę z listą pomieszczeń: „tcpdump może wejść do pokoju 12, czytać w archiwum, pisać tylko do teczek z napisem .pcap”. Ochroniarz sprawdza przepustkę i nazwę pokoju. Kto nie ma przepustki, chodzi tylko na zwykłych kluczach.</p><p>Ta przepustka to <strong>profil</strong>. A reguły mówią o <strong>ścieżkach</strong>, nie o etykietach. Stąd najważniejsza różnica w praktyce:</p><div class="tabela"><table><tr><th></th><th>SELinux</th><th>AppArmor</th></tr><tr><td>Czego się trzyma</td><td>etykiet na plikach i procesach</td><td>ścieżek w profilu programu</td></tr><tr><td>Kogo pilnuje</td><td>cały system według polityki</td><td>tylko programy, które mają profil</td></tr><tr><td>Gdzie domyślnie</td><td>RHEL, Rocky, Alma, Fedora</td><td>Ubuntu, Debian</td></tr><tr><td><code>mv</code> z domowego folderu</td><td>psuje (stara naklejka)</td><td>nie ma znaczenia</td></tr><tr><td>Nowa ścieżka dla usługi</td><td><code>semanage fcontext</code> + <code>restorecon</code></td><td>dopisanie ścieżki do profilu</td></tr></table></div><p>AppArmor jest prostszy do czytania. Profil otwierasz w edytorze i od razu widzisz, co wolno. W SELinuksie regulamin ma tysiące reguł skompilowanych w binarny plik. Za to SELinux pilnuje dokładniej. Na rozmowie rekrutacyjnej to pytanie pada częściej niż „gdzie widzisz się za pięć lat”.</p><p>[RHEL] Na RHEL i pochodnych AppArmora po prostu nie ma. [Ubuntu] Na Ubuntu jest zainstalowany i włączony od pierwszego uruchomienia.</p></section><section><h2 id="kto-ma-przepustke-aa-status">Kto ma przepustkę: aa-status</h2><div class="kod"><pre><code>sudo aa-status</code></pre></div><div class="kod"><pre><code>apparmor module is loaded.
+117 profiles are loaded.
+41 profiles are in enforce mode.
+   /usr/bin/man
+   tcpdump
+   ...
+4 profiles are in complain mode.
+   ...
+3 processes have profiles defined.
+2 processes are in enforce mode.
+   /usr/sbin/rsyslogd (812)
+   ...
+0 processes are unconfined but have a profile defined.</code></pre></div><p>Liczby u Ciebie będą inne, ważny jest układ. Profile załadowane. Ile pilnuje naprawdę (enforce), a ile tylko notuje (complain). I które działające procesy są pod nadzorem. Ostatnia linijka jest podstępna: „procesy bez nadzoru, choć mają profil”. To programy uruchomione, zanim profil się załadował. Pomaga restart usługi.</p><p>W kontenerze albo na systemie bez AppArmora zobaczysz krótko:</p><div class="kod"><pre><code>apparmor not present.</code></pre></div><p><code>aa-status</code> jest w pakiecie <code>apparmor</code>. Komendy <code>aa-enforce</code>, <code>aa-complain</code>, <code>aa-genprof</code> i <code>aa-logprof</code> są w osobnym pakiecie:</p><div class="kod"><pre><code>sudo apt install apparmor-utils</code></pre></div></section><section><h2 id="jak-wyglada-przepustka">Jak wygląda przepustka</h2><p>Profile leżą w <code>/etc/apparmor.d/</code>. Nazwa pliku to zwykle ścieżka programu z kropkami zamiast ukośników: <code>/usr/bin/tcpdump</code> ma profil <code>usr.bin.tcpdump</code>. Otwórzmy go:</p><div class="kod"><pre><code>less /etc/apparmor.d/usr.bin.tcpdump</code></pre></div><div class="kod"><pre><code>profile tcpdump /usr/bin/tcpdump {
+  #include &lt;abstractions/base&gt;
+  #include &lt;abstractions/nameservice&gt;
+  #include &lt;abstractions/user-tmp&gt;
+
+  capability net_raw,
+  network raw,
+  network packet,
+  ...
+  # for -F and -w
+  audit deny @{HOME}/.* mrwkl,
+  owner @{HOME}/** rw,
+
+  # for -r, -F and -w
+  /**.[pP][cC][aA][pP] rw,
+  /**.[pP][cC][aA][pP][nN][gG] rw,
+  /**.[cC][aA][pP] rw,
+  ...
+  #include &lt;local/usr.bin.tcpdump&gt;
+}</code></pre></div><p>Czytamy jak przepustkę:</p><ul><li><code>profile tcpdump /usr/bin/tcpdump</code> — przepustka nazywa się tcpdump i dostaje ją program z tej ścieżki.</li><li><code>#include &lt;abstractions/base&gt;</code> — gotowe zestawy uprawnień, których potrzebuje prawie każdy program: biblioteki, <code>/dev/null</code> i tak dalej. Jak „standardowy pakiet socjalny”.</li><li><code>capability net_raw</code> — które supermoce roota wolno mu użyć. Tu: surowe gniazda sieciowe, bez tego nie podsłuchasz ruchu.</li><li><code>/**.[pP][cC][aA][pP] rw</code> — czytaj i pisz pliki z końcówką <code>.pcap</code>, w dowolnym miejscu, w dowolnej wielkości liter. <code>**</code> to „w dowolnej głębokości folderów”.</li><li><code>owner @{HOME}/** rw</code> — we własnym folderze domowym wolno wszystko, ale tylko własne pliki.</li><li><code>audit deny @{HOME}/.* mrwkl</code> — ale ukrytych plików w domu nie ruszać. Bo tam są klucze SSH i ustawienia. Gdyby ktoś przejął tcpdump, mógłby nadpisać Ci <code>.bashrc</code>.</li></ul><p>I mamy zagadkę z haka. <code>/srv/zrzut.txt</code> nie kończy się na <code>.pcap</code>, nie jest w domu i nie jest w <code>/tmp</code> (to daje <code>abstractions/user-tmp</code>). Na przepustce nie ma takiego pokoju. Root czy nie root: odmowa.</p><p>Literki uprawnień to: <code>r</code> czytanie, <code>w</code> pisanie, <code>m</code> mapowanie do pamięci jako kod, <code>k</code> blokady, <code>l</code> dowiązania, <code>x</code> uruchamianie, najczęściej jako <code>ix</code>, czyli „uruchom z tą samą przepustką”. Każda reguła kończy się przecinkiem. Zapamiętaj ten przecinek, wróci w typowym błędzie.</p></section><section><h2 id="tryby-enforce-i-complain">Tryby: enforce i complain</h2><p>Profil może pracować w dwóch trybach. Brzmi znajomo, bo to prawie to samo, co w SELinuksie:</p><ul><li><strong>enforce</strong> — pilnuje i blokuje. Odmowy trafiają do dziennika.</li><li><strong>complain</strong> — wpuszcza, ale zapisuje, co by zablokował. Tryb do nauki i szukania problemów.</li></ul><p>Przełączanie:</p><div class="kod"><pre><code>sudo aa-complain /usr/bin/tcpdump
+sudo aa-enforce /usr/bin/tcpdump</code></pre></div><div class="kod"><pre><code>Setting /usr/bin/tcpdump to complain mode.
+Setting /usr/bin/tcpdump to enforce mode.</code></pre></div><p>A co się naprawdę dzieje? Popatrz na pierwszą linijkę profilu po <code>aa-complain</code>:</p><div class="kod"><pre><code>grep &#x27;^profile&#x27; /etc/apparmor.d/usr.bin.tcpdump</code></pre></div><div class="kod"><pre><code>profile tcpdump /usr/bin/tcpdump flags=(complain) {</code></pre></div><p>Narzędzie po prostu dopisuje w pliku <code>flags=(complain)</code> i przeładowuje profil. <code>aa-enforce</code> to zdejmuje. Żadnej magii, edycja tekstu z przeładowaniem.</p><p>Jest też trzecie wyjście, awaryjne: wyłączenie jednego profilu.</p><div class="kod"><pre><code>sudo aa-disable /usr/bin/tcpdump
+ls -l /etc/apparmor.d/disable/</code></pre></div><div class="kod"><pre><code>Disabling /usr/bin/tcpdump.
+lrwxrwxrwx 1 root root 34 ... usr.bin.tcpdump -&gt; /etc/apparmor.d/usr.bin.tcpdump</code></pre></div><p>W folderze <code>disable</code> pojawia się dowiązanie, a profil jest wyrzucany z jądra. To jak zabranie przepustki jednemu pracownikowi, a nie zwolnienie całej ochrony. Ale i tak: do szukania problemu używaj complain, nie disable.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>całego AppArmora od Ubuntu 24.04 nie wyłączysz, zatrzymując usługę. Jest wbudowany w jądro, więc dokumentacja Ubuntu każe dodać <code>apparmor=0</code> do <code>GRUB_CMDLINE_LINUX</code> w <code>/etc/default/grub</code>, zrobić <code>update-grub</code> i restart. Jeśli czujesz potrzebę tego robić, to raczej czujesz zmęczenie.</p></aside></section><section><h2 id="gdzie-sa-odmowy">Gdzie są odmowy</h2><p>AppArmor zapisuje odmowy w dzienniku jądra. Najszybciej:</p><div class="kod"><pre><code>sudo journalctl -k | grep DENIED
+sudo dmesg | grep DENIED</code></pre></div><p>Wpis wygląda mniej więcej tak (rozbity na dwie linijki):</p><div class="kod"><pre><code>audit: type=1400 audit(1768214339.499:511): apparmor=&quot;DENIED&quot; operation=&quot;mknod&quot; class=&quot;file&quot;
+profile=&quot;tcpdump&quot; name=&quot;/srv/zrzut.txt&quot; pid=17786 comm=&quot;tcpdump&quot; requested_mask=&quot;c&quot; denied_mask=&quot;c&quot; fsuid=0 ouid=0</code></pre></div><p>Czytamy jak mandat z poprzedniej lekcji:</p><ul><li><code>apparmor=&quot;DENIED&quot;</code> — zablokowane. W trybie complain zobaczysz tu <code>ALLOWED</code>.</li><li><code>operation=&quot;mknod&quot;</code> — próba utworzenia pliku.</li><li><code>profile=&quot;tcpdump&quot;</code> — która przepustka.</li><li><code>name=</code> — do jakiej ścieżki.</li><li><code>requested_mask=&quot;c&quot;</code> — czego chciał: <code>c</code> jak create, utworzyć.</li></ul><p>Jeśli masz zainstalowany <code>auditd</code>, te same wpisy lądują w <code>/var/log/audit/audit.log</code>. Bez niego w dzienniku systemd.</p></section><section><h2 id="dopisanie-wyjatku-folder-local">Dopisanie wyjątku: folder local</h2><p>Chcesz, żeby tcpdump mógł zapisywać do <code>/srv/zrzuty/</code>? Nie edytuj głównego profilu. Przy aktualizacji pakietu może zostać nadpisany albo apt zacznie zadawać pytania. Popatrz na ostatnią linijkę profilu: <code>#include &lt;local/usr.bin.tcpdump&gt;</code>. To miejsce specjalnie na Twoje dopiski.</p><div class="kod"><pre><code>sudo mkdir -p /srv/zrzuty
+echo &#x27;/srv/zrzuty/** rw,&#x27; | sudo tee -a /etc/apparmor.d/local/usr.bin.tcpdump
+sudo apparmor_parser -r /etc/apparmor.d/usr.bin.tcpdump
+sudo tcpdump -i any -c 10 -w /srv/zrzuty/test.txt</code></pre></div><p><code>apparmor_parser -r</code> to replace: wczytaj profil na nowo do jądra. Bez tego zmiana w pliku nic nie robi. To jak wydrukowanie nowej przepustki i zostawienie jej w drukarce.</p><p>Jedno ograniczenie: reguły <code>deny</code> wygrywają z regułami pozwalającymi. Ukrytych plików w domu nie odblokujesz dopiskiem w <code>local</code>, bo profil ma na nie wyraźne <code>deny</code>. I dobrze.</p></section><section><h2 id="wlasny-profil">Własny profil</h2><p>Do własnych programów służą dwa pomocniki. <code>sudo aa-genprof /usr/local/bin/raport.sh</code> tworzy szkic profilu: uruchamiasz program w drugim terminalu, robisz wszystko, co program normalnie robi, a narzędzie pyta o każdą zauważoną akcję: pozwolić, zabronić, uogólnić. Później <code>sudo aa-logprof</code> czyta dziennik i proponuje dopiski do istniejących profili.</p><p>Mały ręczny profil wygląda tak:</p><div class="kod"><pre><code>abi &lt;abi/4.0&gt;,
+include &lt;tunables/global&gt;
+
+profile raport /usr/local/bin/raport.sh {
+  include &lt;abstractions/base&gt;
+  include &lt;abstractions/bash&gt;
+
+  /usr/local/bin/raport.sh r,
+  /usr/bin/bash ix,
+  /usr/bin/date ix,
+  /usr/bin/df ix,
+  /etc/hostname r,
+  /var/log/raport/ r,
+  /var/log/raport/** w,
+}</code></pre></div><p>Zanim go załadujesz, sprawdź składnię bez ładowania do jądra:</p><div class="kod"><pre><code>sudo apparmor_parser -QTK /etc/apparmor.d/usr.local.bin.raport &amp;&amp; echo OK</code></pre></div><div class="kod"><pre><code>OK</code></pre></div><p><code>-Q</code> znaczy „tylko skompiluj, nie ładuj”. Potem <code>apparmor_parser -r</code> i najlepiej najpierw <code>aa-complain</code>, żeby przez kilka dni zebrać w dzienniku to, o czym zapomniałeś.</p></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p>AppArmor to, tak jak SELinux, moduł bezpieczeństwa jądra (LSM). Plik tekstowy profilu czyta <code>apparmor_parser</code>, kompiluje go do postaci binarnej i wysyła do jądra. Przy starcie systemu robi to usługa <code>apparmor.service</code> dla wszystkich profili z <code>/etc/apparmor.d</code>.</p><p>Gdy jakiś proces uruchamia program, jądro patrzy na ścieżkę pliku. Pasuje do któregoś profilu? Nowy proces dostaje tę przepustkę na całe życie. Potem przy każdym otwarciu pliku, użyciu supermocy czy gniazda sieciowego jądro sprawdza najpierw zwykłe uprawnienia, potem przepustkę.</p><p>I tu jest słaby punkt podejścia „po ścieżkach”: ten sam plik pod inną nazwą to dla AppArmora inna rzecz. Dlatego profile pilnują też tworzenia dowiązań (<code>l</code>). SELinux z naklejkami tego problemu nie ma, ma za to problem z <code>mv</code>. Nie ma idealnego ochroniarza, są tylko różne rodzaje pecha.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>AppArmor pilnuje też kontenerów i snapów. Docker na Ubuntu domyślnie zakłada kontenerom profil <code>docker-default</code>, a każda aplikacja ze Snapa dostaje własny profil. Dlatego <code>aa-status</code> na zwykłym laptopie potrafi pokazać ponad sto profili.</p></aside></section><section><h2 id="sciaga-flag">Ściąga flag</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga</th><th>Co robi</th></tr><tr><td><code>aa-status</code></td><td></td><td>stan: profile, tryby, procesy pod nadzorem</td></tr><tr><td><code>aa-enforce</code></td><td><code>/ścieżka/programu</code></td><td>profil w tryb enforce</td></tr><tr><td><code>aa-complain</code></td><td><code>/ścieżka/programu</code></td><td>profil w tryb complain (dopisuje <code>flags=(complain)</code>)</td></tr><tr><td><code>aa-disable</code></td><td><code>/ścieżka/programu</code></td><td>wyłącza jeden profil (dowiązanie w <code>disable/</code>)</td></tr><tr><td><code>apparmor_parser</code></td><td><code>-r</code></td><td>przeładuj profil w jądrze</td></tr><tr><td><code>apparmor_parser</code></td><td><code>-R</code></td><td>usuń profil z jądra</td></tr><tr><td><code>apparmor_parser</code></td><td><code>-QTK</code></td><td>tylko sprawdź składnię, bez ładowania i cache</td></tr><tr><td><code>aa-genprof</code></td><td><code>/ścieżka</code></td><td>interaktywnie buduje nowy profil</td></tr><tr><td><code>aa-logprof</code></td><td></td><td>proponuje dopiski na podstawie dziennika</td></tr><tr><td><code>journalctl</code></td><td><code>-k | grep DENIED</code></td><td>odmowy w dzienniku jądra</td></tr><tr><td><code>systemctl</code></td><td><code>reload apparmor</code></td><td>przeładuj wszystkie profile</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>Zapomniany przecinek. Dopisujesz regułę, przeładowujesz i dostajesz:</p><div class="kod"><pre><code>AppArmor parser error for /etc/apparmor.d/usr.local.bin.raport in profile ... at line 13: missing an end of line character? (entry: /etc/hostname)</code></pre></div><p>Parser mówi „brakuje końca linijki”, ale chodzi o przecinek po <code>/etc/hostname r</code>. Każda reguła w profilu kończy się przecinkiem, nawet ostatnia przed klamrą. Gorzej, jeśli zmienisz profil i nie przeładujesz: plik mówi jedno, jądro pilnuje według starej wersji, a Ty od godziny szukasz błędu w miejscu, gdzie go już nie ma. Po każdej zmianie: <code>apparmor_parser -r</code> i <code>aa-status</code>.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><p>Na maszynie wirtualnej z Ubuntu:</p><ol><li>Sprawdź <code>aa-status</code>: ile profili jest w trybie enforce, a ile w complain?</li><li>Spróbuj zapisać <code>sudo tcpdump -i any -c 5 -w /srv/test.txt</code> i znajdź odmowę w dzienniku jądra.</li><li>Przełącz tcpdump w complain, ponów zapis, znajdź w dzienniku wpis <code>ALLOWED</code> i wróć do enforce.</li><li>Pozwól tcpdumpowi zapisywać do <code>/srv/zrzuty/</code> przez plik w <code>/etc/apparmor.d/local/</code> i sprawdź, że działa.</li></ol><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><p>Ubuntu, AppArmor. Najpierw spis:</p><div class="kod"><pre><code>sudo aa-status | grep -E &#x27;profiles are in (enforce|complain) mode&#x27;</code></pre></div><p>U mnie kilkadziesiąt w enforce i kilka w complain. Liczby zależą od tego, co masz zainstalowane, więc nie porównuj się z sąsiadem. Potem odmowa:</p><div class="kod"><pre><code>sudo tcpdump -i any -c 5 -w /srv/test.txt
+sudo journalctl -k | grep DENIED | tail -1</code></pre></div><p>W dzienniku: <code>apparmor=&quot;DENIED&quot;</code>, <code>profile=&quot;tcpdump&quot;</code>, <code>name=&quot;/srv/test.txt&quot;</code>. Teraz tryb nauki:</p><div class="kod"><pre><code>sudo aa-complain /usr/bin/tcpdump
+sudo tcpdump -i any -c 5 -w /srv/test.txt
+sudo journalctl -k | grep ALLOWED | tail -1
+sudo aa-enforce /usr/bin/tcpdump</code></pre></div><p>Zapis przechodzi, a w dzienniku ten sam wpis, tylko z <code>apparmor=&quot;ALLOWED&quot;</code>. Ochroniarz przepuścił, ale zapisał w zeszycie. I na koniec wyjątek:</p><div class="kod"><pre><code>sudo mkdir -p /srv/zrzuty
+echo &#x27;/srv/zrzuty/** rw,&#x27; | sudo tee -a /etc/apparmor.d/local/usr.bin.tcpdump
+sudo apparmor_parser -r /etc/apparmor.d/usr.bin.tcpdump
+sudo tcpdump -i any -c 5 -w /srv/zrzuty/test.txt</code></pre></div><p>Jeśli zapomniałeś o <code>aa-enforce</code> po teście, to tcpdump do dziś chodzi bez nadzoru. Taki strażnik, który na próbę zostawił otwarte drzwi i poszedł na obiad. Sprawdź <code>aa-status</code>.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Mamy dwóch ochroniarzy. Ale ochroniarz nie pomoże, jeśli tylne drzwi są otwarte, a hasło do SSH to „admin123”. W następnej lekcji robimy przegląd całego budynku: utwardzanie serwera, fail2ban, auditd i automatyczni audytorzy, którzy wystawią Twojemu serwerowi ocenę.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-082.html" rel="prev">← 82. SELinux bez strachu</a><a class="btn domyslny zolty" href="lekcja-084.html" rel="next">84. Utwardzanie serwera →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

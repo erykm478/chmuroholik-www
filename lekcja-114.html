@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>114. Projekt 5: analizator logów z raportem dziennym — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 114 kursu Linux i Bash od zera do admina: Projekt 5: analizator logów z raportem dziennym. kursant ma skrypt, który co rano przegląda logi Apache i SSH z poprzedniej doby, robi z nich krótki raport z rankingami i alarmami, zapisuje go do pliku, wysyła mailem i odpala się sam z crona albo time">
+<meta property="og:title" content="114. Projekt 5: analizator logów z raportem dziennym — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 114 kursu Linux i Bash od zera do admina: Projekt 5: analizator logów z raportem dziennym. kursant ma skrypt, który co rano przegląda logi Apache i SSH z poprzedniej doby, robi z nich krótki raport z rankingami i alarmami, zapisuje go do pliku, wysyła mailem i odpala się sam z crona albo time">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 13</span></div>
+      <div class="boczny-tytul"><a href="index.html#m13">Projekty końcowe</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-110.html" data-lekcja="110"><span class="znacznik"></span><span class="nr">110</span> Projekt 1: nowy serwer w dziesięć minut</a></li><li><a href="lekcja-111.html" data-lekcja="111"><span class="znacznik"></span><span class="nr">111</span> Projekt 2: dwie strony na Apache z HTTPS</a></li><li><a href="lekcja-112.html" data-lekcja="112"><span class="znacznik"></span><span class="nr">112</span> Projekt 3: kopie zapasowe, które naprawdę da się odtworzyć</a></li><li><a href="lekcja-113.html" data-lekcja="113"><span class="znacznik"></span><span class="nr">113</span> Projekt 4: monitor, który krzyczy raz, a nie co pięć minut</a></li><li><a href="lekcja-114.html" data-lekcja="114" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">114</span> Projekt 5: analizator logów z raportem dziennym</a></li><li><a href="lekcja-115.html" data-lekcja="115"><span class="znacznik"></span><span class="nr">115</span> Projekt 6: LAMP na trzech maszynach z Ansible, wszystko w Git</a></li><li><a href="lekcja-116.html" data-lekcja="116"><span class="znacznik"></span><span class="nr">116</span> Egzamin próbny: 20 zadań, dwie godziny, zero podpowiedzi</a></li><li><a href="lekcja-117.html" data-lekcja="117"><span class="znacznik"></span><span class="nr">117</span> Co dalej: certyfikaty, laboratorium domowe i pierwsza praca</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="114" data-modul="13" data-tematy="analizator logów z raportem dziennym">
+    <div class="belka"><span>Lekcja 114 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m13">Moduł 13</a> › Lekcja 114</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Projekt 5: analizator logów z raportem dziennym</h1>
+      <p class="meta"><span>⏱ ok. 17 min czytania</span><span>· moduł 13: Projekty końcowe</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant ma skrypt, który co rano przegląda logi Apache i SSH z poprzedniej doby, robi z nich krótki raport z rankingami i alarmami, zapisuje go do pliku, wysyła mailem i odpala się sam z crona albo timera systemd.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#co-wlasciwie-siedzi-w-logach">Co właściwie siedzi w logach</a></li><li><a href="#logi-do-cwiczen">Logi do ćwiczeń</a></li><li><a href="#awk-czyli-szatnia-z-nazwiskami">awk, czyli szatnia z nazwiskami</a></li><li><a href="#caly-skrypt">Cały skrypt</a></li><li><a href="#uruchamiamy">Uruchamiamy</a></li><li><a href="#niech-wstaje-sam">Niech wstaje sam</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga">Ściąga</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p>Poniedziałek rano. Szef wchodzi i pyta: „Czy ktoś nas w weekend atakował? I czemu klient mówi, że w niedzielę strona rzucała błędami?”.</p><p>Możesz odpowiedzieć „sprawdzę” i spędzić godzinę z <code>less</code> w logach. Albo otwierasz maila, który przyszedł o 6:15, i czytasz z kartki: 79 nieudanych logowań, najczęściej na roota; 59 błędów 500; ktoś szukał na naszej stronie pliku <code>.env</code> i panelu WordPressa, którego nigdy nie mieliśmy.</p><p>Dziś budujemy tego maila. Piąty projekt do portfolio: analizator logów, który sam wstaje rano, czyta, liczy i pisze raport. Ty w tym czasie śpisz. Albo udajesz, że nie śpisz na porannym spotkaniu.</p></section><section><h2 id="co-wlasciwie-siedzi-w-logach">Co właściwie siedzi w logach</h2><p>Serwer WWW to recepcja hotelu, pamiętasz. Każdy hotel ma księgę gości: kto przyszedł, kiedy, o co prosił i czy dostał. Log dostępu Apache to właśnie taka księga. Jedna linijka to jedna wizyta:</p><div class="kod"><pre><code>10.0.0.15 - - [02/Nov/2026:12:34:55 +0100] &quot;GET /blog/linux HTTP/1.1&quot; 404 15048 &quot;-&quot; &quot;Mozilla/5.0&quot;</code></pre></div><p>Po kolei, kolumny oddzielone spacjami, tak jak widzi je <code>awk</code>:</p><ul><li><code>$1</code> — adres IP gościa,</li><li><code>$4</code> — data i godzina, z nawiasem kwadratowym na początku,</li><li><code>$7</code> — adres, o który prosił,</li><li><code>$9</code> — kod odpowiedzi: 200 dostał, 404 nie ma takiego pokoju, 500 recepcjonista zemdlał,</li><li><code>$10</code> — ile bajtów mu wysłaliśmy.</li></ul><p>To jest tak zwany format „combined”, domyślny dla logu dostępu w obu rodzinach dystrybucji. Różni się tylko miejsce:</p><p>[Ubuntu] <code>/var/log/apache2/access.log</code> [RHEL] <code>/var/log/httpd/access_log</code></p><p>Druga księga to dziennik bramki SSH, kto próbował wejść na serwer:</p><p>[Ubuntu] <code>/var/log/auth.log</code> [RHEL] <code>/var/log/secure</code></p><p>I tu jest pułapka, na którą sam wpadłem. W Ubuntu 24.04 rsyslog zapisuje datę w nowym, dokładnym formacie:</p><div class="kod"><pre><code>2026-11-02T08:45:38.000000+01:00 serwer sshd[32636]: Failed password for root from 198.51.100.23 port 32955 ssh2</code></pre></div><p>A w wielu innych systemach, w tym zwykle na RHEL, data jest w starym stylu, bez roku:</p><div class="kod"><pre><code>Nov  2 08:45:38 serwer sshd[32636]: Failed password for root from 198.51.100.23 port 32955 ssh2</code></pre></div><p>Zwróć uwagę na dwie spacje po „Nov”. Dzień jest wyrównany do dwóch znaków spacją. Nasz skrypt musi rozumieć oba formaty, bo nie wiemy, na jakim serwerze wyląduje.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>format zależy od szablonu w konfiguracji rsyslog. Jeśli w <code>/etc/rsyslog.conf</code> jest <code>RSYSLOG_TraditionalFileFormat</code>, dostajesz stary styl; bez tego rsyslog używa formatu RFC 3339. Sprawdziłem na Ubuntu 24.04: rsyslog 8.2312 bez dodatkowych ustawień pisze <code>2026-11-03T22:33:27.953466+01:00</code>. Zamiast plików można też pytać <code>journalctl -u ssh</code> / <code>-u sshd</code> z <code>--since yesterday --until today</code>, ale plikowa wersja działa także na starych serwerach i na kopii logów przyniesionej na pendrivie.</p></aside></section><section><h2 id="logi-do-cwiczen">Logi do ćwiczeń</h2><p>Na świeżej maszynie wirtualnej logi są prawie puste, a ćwiczyć na produkcyjnym serwerze firmy to zły pomysł. Więc robimy sobie sztuczne. Ten skrypt produkuje 600 wizyt WWW i 120 wpisów SSH na wczoraj i drugie tyle na dziś:</p><div class="kod"><pre><code>#!/usr/bin/env bash
+# generuj_logi.sh — robi przykładowe logi do ćwiczeń (Apache + SSH) za wczoraj i dziś
+set -euo pipefail
+cel=&quot;${1:-./logi}&quot;
+mkdir -p &quot;$cel&quot;
+RANDOM=42                                   # ziarno: za każdym razem te same &quot;losowe&quot; dane
+
+ip_list=(203.0.113.7 198.51.100.23 192.0.2.44 203.0.113.99 10.0.0.15 192.0.2.200)
+urls=(/ / /index.php /kontakt /blog/linux /img/logo.png /wp-login.php /.env /api/status)
+kody=(200 200 200 200 200 304 301 404 404 500)
+dni=(&quot;$(date -d yesterday +%F)&quot; &quot;$(date +%F)&quot;)
+
+: &gt; &quot;$cel/access.log&quot;; : &gt; &quot;$cel/auth.log&quot;
+for dzien in &quot;${dni[@]}&quot;; do
+    d_apache=$(LC_ALL=C date -d &quot;$dzien&quot; +%d/%b/%Y)
+    for _ in $(seq 1 600); do
+        printf -v czas &#x27;%02d:%02d:%02d&#x27; $((RANDOM % 24)) $((RANDOM % 60)) $((RANDOM % 60))
+        ip=${ip_list[RANDOM % ${#ip_list[@]}]}
+        url=${urls[RANDOM % ${#urls[@]}]}
+        kod=${kody[RANDOM % ${#kody[@]}]}
+        printf &#x27;%s - - [%s:%s +0100] &quot;GET %s HTTP/1.1&quot; %s %d &quot;-&quot; &quot;Mozilla/5.0&quot;\n&#x27; \
+            &quot;$ip&quot; &quot;$d_apache&quot; &quot;$czas&quot; &quot;$url&quot; &quot;$kod&quot; $((RANDOM * 3)) &gt;&gt; &quot;$cel/access.log&quot;
+    done
+    for _ in $(seq 1 120); do
+        printf -v czas &#x27;%02d:%02d:%02d&#x27; $((RANDOM % 24)) $((RANDOM % 60)) $((RANDOM % 60))
+        ip=${ip_list[RANDOM % 4]}
+        case $((RANDOM % 6)) in
+            0|1|2) msg=&quot;Failed password for root from $ip port $((RANDOM + 1024)) ssh2&quot; ;;
+            3)     msg=&quot;Failed password for invalid user admin from $ip port $((RANDOM + 1024)) ssh2&quot; ;;
+            4)     msg=&quot;Invalid user test from $ip port $((RANDOM + 1024))&quot; ;;
+            5)     msg=&quot;Accepted publickey for eryk from 10.0.0.15 port $((RANDOM + 1024)) ssh2&quot; ;;
+        esac
+        printf &#x27;%sT%s.000000+01:00 serwer sshd[%d]: %s\n&#x27; &quot;$dzien&quot; &quot;$czas&quot; $((RANDOM + 1000)) &quot;$msg&quot; &gt;&gt; &quot;$cel/auth.log&quot;
+    done
+done
+# Logi nie są posortowane po czasie — dla analizatora to bez znaczenia
+echo &quot;Gotowe: $(wc -l &lt; &quot;$cel/access.log&quot;) linijek WWW, $(wc -l &lt; &quot;$cel/auth.log&quot;) linijek SSH w $cel&quot;</code></pre></div><div class="kod"><pre><code>Gotowe: 1200 linijek WWW, 240 linijek SSH w ./logi</code></pre></div><p><code>RANDOM=42</code> to ziarno losowania. Wpisanie liczby do <code>RANDOM</code> sprawia, że „losowe” liczby za każdym razem wychodzą te same. Brzmi jak oszustwo i trochę nim jest, ale dzięki temu Twój raport będzie wyglądał tak samo jak mój na ekranie. Adresy IP są z puli zarezerwowanej do dokumentacji, więc nikogo niewinnego nie oskarżamy o włamanie.</p></section><section><h2 id="awk-czyli-szatnia-z-nazwiskami">awk, czyli szatnia z nazwiskami</h2><p>Całe serce analizatora to <code>awk</code> i jego tablice. Pamiętasz słownik, czyli szatnię z nazwiskami? Podchodzi gość, szatniarz patrzy na numerek i dorzuca kreskę przy jego wieszaku. Na koniec wieczoru widzi, kto przyszedł ile razy.</p><p><code>ip[$1]++</code> robi dokładnie to: dla każdej linijki dorzuca kreskę przy wieszaku podpisanym adresem IP. Nie trzeba wcześniej zakładać wieszaków, pojawiają się same przy pierwszym gościu.</p><div class="kod"><pre><code>LC_ALL=C awk -v d=&quot;[02/Nov/2026:&quot; &#x27;index($4, d) == 1 { ip[$1]++ }
+  END { for (i in ip) print ip[i], i }&#x27; logi/access.log | sort -rn | head -3</code></pre></div><div class="kod"><pre><code>108 198.51.100.23
+102 192.0.2.200
+100 10.0.0.15</code></pre></div><p><code>index($4, d) == 1</code> znaczy: czwarta kolumna zaczyna się od <code>[02/Nov/2026:</code>. Tak wybieramy tylko jeden dzień. Dwukropek na końcu jest celowy, żeby <code>[02/Nov/2026</code> nie złapało przypadkiem czegoś dłuższego.</p><p>To jest ta sama trójka <code>sort | uniq -c | sort -rn</code> z lekcji o rurach, tylko w jednym przejściu i od razu dla kilku rankingów naraz. Plik czytamy raz, a liczymy IP, kody, godziny i błędy 404 jednocześnie. Przy logu na dwa gigabajty to różnica między „chwila” a „idę na obiad”.</p></section><section><h2 id="caly-skrypt">Cały skrypt</h2><p class="ekran">plik <code>raport_logow.sh</code> w edytorze, sekcje podświetlane po kolei</p><div class="kod"><pre><code>#!/usr/bin/env bash
+# raport_logow.sh — dzienny raport z logów serwera WWW (Apache) i SSH
+# Użycie: raport_logow.sh [-d RRRR-MM-DD] [-w LOG_WWW] [-s LOG_SSH] [-o FOLDER] [-m ADRES] [-h]
+set -euo pipefail
+export LC_ALL=C                      # angielskie nazwy miesięcy, jak w logach
+
+# --- ustawienia domyślne (różne dla rodzin dystrybucji) ---
+if [[ -f /etc/debian_version ]]; then
+    LOG_WWW=/var/log/apache2/access.log      # [Ubuntu]
+    LOG_SSH=/var/log/auth.log
+else
+    LOG_WWW=/var/log/httpd/access_log        # [RHEL]
+    LOG_SSH=/var/log/secure
+fi
+DZIEN=$(date -d yesterday +%F)
+FOLDER=/var/log/raporty
+MAIL_DO=&quot;&quot;
+PROG_5XX=20          # ile błędów 5xx na dobę to już alarm
+PROG_SSH=50          # ile nieudanych logowań SSH to już alarm
+
+pomoc() {
+    sed -n &#x27;2,3s/^# //p&#x27; &quot;$0&quot;
+}
+
+while getopts &quot;d:w:s:o:m:h&quot; opt; do
+    case $opt in
+        d) DZIEN=$OPTARG ;;
+        w) LOG_WWW=$OPTARG ;;
+        s) LOG_SSH=$OPTARG ;;
+        o) FOLDER=$OPTARG ;;
+        m) MAIL_DO=$OPTARG ;;
+        h) pomoc; exit 0 ;;
+        *) pomoc &gt;&amp;2; exit 1 ;;
+    esac
+done
+
+date -d &quot;$DZIEN&quot; +%F &gt;/dev/null 2&gt;&amp;1 || { echo &quot;Zła data: $DZIEN&quot; &gt;&amp;2; exit 1; }
+
+# Czyta log razem z obróconymi kopiami (access.log.1, access.log.2.gz, access_log-20261102...)
+# zcat -f czyta też pliki nieskompresowane
+czytaj() {
+    local plik=$1
+    compgen -G &quot;${plik}*&quot; &gt;/dev/null || { echo &quot;Brak pliku: $plik&quot; &gt;&amp;2; return 0; }
+    zcat -f -- &quot;${plik}&quot;*
+}
+
+# Daty w trzech formatach, w jakich spotkamy je w logach
+D_APACHE=$(date -d &quot;$DZIEN&quot; +%d/%b/%Y)        # 02/Nov/2026
+D_ISO=$(date -d &quot;$DZIEN&quot; +%F)                 # 2026-11-02 (rsyslog w Ubuntu 24.04)
+D_STARY=$(date -d &quot;$DZIEN&quot; &#x27;+%b %e&#x27;)          # &quot;Nov  2&quot;   (klasyczny format, np. RHEL)
+
+mkdir -p &quot;$FOLDER&quot;
+RAPORT=&quot;$FOLDER/raport-$D_ISO.txt&quot;
+TMP=$(mktemp)
+trap &#x27;rm -f &quot;$TMP&quot;&#x27; EXIT
+
+{
+echo &quot;=== Raport z logów: $D_ISO, serwer $(hostname) ===&quot;
+echo
+echo &quot;--- WWW ($LOG_WWW) ---&quot;
+czytaj &quot;$LOG_WWW&quot; | awk -v d=&quot;[$D_APACHE:&quot; &#x27;
+    index($4, d) == 1 {
+        n++; ip[$1]++; bajty += $10
+        kl = substr($9, 1, 1) &quot;xx&quot;; kody[kl]++
+        split($4, t, &quot;:&quot;); godz[t[2]]++
+        if ($9 == 404) nf[$7]++
+        if ($9 ~ /^5/) b5++
+    }
+    END {
+        if (n == 0) { print &quot;Brak żądań w tym dniu.&quot;; print &quot;#5XX 0&quot;; exit }
+        u = 0; for (i in ip) u++
+        printf &quot;Żądania: %d, unikalne IP: %d, wysłano: %.1f MB\n&quot;, n, u, bajty/1048576
+        printf &quot;Kody: 2xx=%d 3xx=%d 4xx=%d 5xx=%d\n&quot;, kody[&quot;2xx&quot;], kody[&quot;3xx&quot;], kody[&quot;4xx&quot;], kody[&quot;5xx&quot;]
+        max = 0; for (g in godz) if (godz[g] &gt; max) { max = godz[g]; gm = g }
+        printf &quot;Godzina szczytu: %s:00 (%d żądań)\n&quot;, gm, max
+        print &quot;Najaktywniejsze IP:&quot;
+        for (i in ip) printf &quot;  %6d  %s\n&quot;, ip[i], i | &quot;sort -rn | head -5&quot;
+        close(&quot;sort -rn | head -5&quot;)
+        print &quot;Najczęstsze 404:&quot;
+        for (u2 in nf) printf &quot;  %6d  %s\n&quot;, nf[u2], u2 | &quot;sort -rn | head -5&quot;
+        close(&quot;sort -rn | head -5&quot;)
+        printf &quot;#5XX %d\n&quot;, b5
+    }&#x27;
+echo
+echo &quot;--- SSH ($LOG_SSH) ---&quot;
+czytaj &quot;$LOG_SSH&quot; | awk -v iso=&quot;${D_ISO}T&quot; -v stary=&quot;${D_STARY} &quot; &#x27;
+    index($0, iso) != 1 &amp;&amp; index($0, stary) != 1 { next }    # nie ten dzień
+    !/sshd/ { next }                                         # nie SSH
+    /Failed password/   { f++; for (i = 1; i &lt;= NF; i++) if ($i == &quot;from&quot;) fip[$(i+1)]++ }
+    /[Ii]nvalid user/   { for (i = 1; i &lt;= NF; i++) if ($i == &quot;user&quot;) { iu[$(i+1)]++; break } }
+    /Accepted/          { for (i = 1; i &lt;= NF; i++) if ($i == &quot;for&quot;) ok[$(i+1) &quot; z &quot; $(i+3)]++ }
+    END {
+        printf &quot;Nieudane logowania: %d\n&quot;, f
+        print &quot;Skąd najwięcej prób:&quot;
+        for (i in fip) printf &quot;  %6d  %s\n&quot;, fip[i], i | &quot;sort -rn | head -5&quot;
+        close(&quot;sort -rn | head -5&quot;)
+        print &quot;Nieistniejący użytkownicy, na których próbowano:&quot;
+        for (i in iu) printf &quot;  %6d  %s\n&quot;, iu[i], i | &quot;sort -rn | head -5&quot;
+        close(&quot;sort -rn | head -5&quot;)
+        print &quot;Udane logowania:&quot;
+        for (i in ok) printf &quot;  %6d  %s\n&quot;, ok[i], i
+        printf &quot;#SSH %d\n&quot;, f
+    }&#x27;
+} &gt; &quot;$TMP&quot;
+
+# Wyciągamy liczniki do alarmów i usuwamy je z raportu
+b5=$(awk &#x27;$1 == &quot;#5XX&quot; {print $2}&#x27; &quot;$TMP&quot;)
+ssh_f=$(awk &#x27;$1 == &quot;#SSH&quot; {print $2}&#x27; &quot;$TMP&quot;)
+grep -v &#x27;^#&#x27; &quot;$TMP&quot; &gt; &quot;$RAPORT&quot;
+
+{
+    echo
+    echo &quot;--- Alarmy ---&quot;
+    alarm=0
+    if (( ${b5:-0} &gt; PROG_5XX )); then echo &quot;UWAGA: ${b5} błędów 5xx (próg ${PROG_5XX})&quot;; alarm=1; fi
+    if (( ${ssh_f:-0} &gt; PROG_SSH )); then echo &quot;UWAGA: ${ssh_f} nieudanych logowań SSH (próg ${PROG_SSH})&quot;; alarm=1; fi
+    (( alarm )) || echo &quot;Brak. Można spokojnie pić kawę.&quot;
+} &gt;&gt; &quot;$RAPORT&quot;
+
+cat &quot;$RAPORT&quot;
+
+if [[ -n &quot;$MAIL_DO&quot; ]] &amp;&amp; command -v mail &gt;/dev/null; then
+    temat=&quot;Raport logów $D_ISO z $(hostname)&quot;
+    grep -q &#x27;^UWAGA&#x27; &quot;$RAPORT&quot; &amp;&amp; temat=&quot;[ALARM] $temat&quot;
+    mail -s &quot;$temat&quot; &quot;$MAIL_DO&quot; &lt; &quot;$RAPORT&quot;
+fi</code></pre></div><p>Przejdźmy przez to po kawałku, bo każdy fragment to coś, co już znasz z kursu.</p><p><strong><code>export LC_ALL=C</code></strong><strong>.</strong> Logi Apache mają angielskie skróty miesięcy: <code>Nov</code>, nie <code>lis</code>. Jeśli Twój system mówi po polsku, <code>date +%b</code> zwróci <code>lis</code> i skrypt nie znajdzie ani jednej linijki. Wrócimy do tego w typowym błędzie, bo to klasyk.</p><p><strong>Ustawienia domyślne.</strong> Skrypt sam zgaduje rodzinę dystrybucji po pliku <code>/etc/debian_version</code> i ustawia ścieżki. Opcjami <code>-w</code> i <code>-s</code> możesz je nadpisać, co przyda się do testów na sztucznych logach.</p><p><strong><code>getopts</code></strong><strong>.</strong> Przyciski w windzie na każde piętro: <code>-d</code> data, <code>-o</code> folder na raporty, <code>-m</code> adres maila, <code>-h</code> pomoc. Pomoc czytamy z komentarza na górze pliku, żeby nie pisać tego samego dwa razy.</p><p><strong><code>czytaj</code></strong><strong>.</strong> Logi się obracają. W nocy logrotate odkłada wczorajszy <code>access.log</code> jako <code>access.log.1</code>, a starsze pakuje do <code>.gz</code>. [RHEL] tam kopie zwykle mają datę w nazwie, np. <code>access_log-20261102</code>. Jeśli raport startuje o 6:15, a obracanie było o północy, połowa wczorajszego dnia leży już w innym pliku. Dlatego czytamy wszystko, co zaczyna się od nazwy logu, a <code>zcat -f</code> łyka bez marudzenia i pliki spakowane, i zwykłe.</p><p><strong>Trzy formaty daty.</strong> Apache: <code>02/Nov/2026</code>. Nowy rsyslog: <code>2026-11-02T</code>. Stary rsyslog: <code>Nov  2 </code>. <code>%e</code> daje dzień wyrównany spacją, dokładnie tak jak w logu.</p><p><strong>Dwa bloki </strong><strong><code>awk</code></strong><strong>.</strong> Pierwszy liczy WWW, drugi SSH. Z wnętrza <code>awk</code> wysyłamy wiersze rurą do <code>sort -rn | head -5</code>, a <code>close()</code> mówi: koniec tego rankingu, wypisz go teraz, zanim zacznę następny. Bez <code>close</code> rankingi mogłyby wyjść na końcu, w złej kolejności.</p><p><strong>Liczniki ze znaczkiem </strong><strong><code>#</code></strong><strong>.</strong> Oba bloki na końcu wypisują linijkę typu <code>#5XX 59</code>. To liścik dla samego skryptu: wyciągamy z niego liczby do alarmów, a potem <code>grep -v &#x27;^#&#x27;</code> wyrzuca liściki z raportu, żeby szef ich nie zobaczył. Plik tymczasowy sprząta <code>trap</code>, nasza sprzątaczka na koniec imprezy.</p><p><strong>Alarmy i mail.</strong> Jeśli przekroczony jest próg, w temacie maila pojawia się <code>[ALARM]</code>. Dzięki temu w skrzynce od razu widać, który raport trzeba przeczytać, a który można zostawić na po kawie.</p></section><section><h2 id="uruchamiamy">Uruchamiamy</h2><div class="kod"><pre><code>chmod +x raport_logow.sh
+./raport_logow.sh -w logi/access.log -s logi/auth.log -o ./raporty</code></pre></div><div class="kod"><pre><code>=== Raport z logów: 2026-11-02, serwer vm ===
+
+--- WWW (logi/access.log) ---
+Żądania: 600, unikalne IP: 6, wysłano: 27.7 MB
+Kody: 2xx=289 3xx=119 4xx=133 5xx=59
+Godzina szczytu: 07:00 (32 żądań)
+Najaktywniejsze IP:
+     108  198.51.100.23
+     102  192.0.2.200
+     100  10.0.0.15
+      99  203.0.113.99
+      97  192.0.2.44
+Najczęstsze 404:
+      26  /
+      20  /wp-login.php
+      18  /.env
+      17  /blog/linux
+      15  /img/logo.png
+
+--- SSH (logi/auth.log) ---
+Nieudane logowania: 79
+Skąd najwięcej prób:
+      25  203.0.113.7
+      23  203.0.113.99
+      18  198.51.100.23
+      13  192.0.2.44
+Nieistniejący użytkownicy, na których próbowano:
+      24  test
+      23  admin
+Udane logowania:
+     17  eryk z 10.0.0.15
+
+--- Alarmy ---
+UWAGA: 59 błędów 5xx (próg 20)
+UWAGA: 79 nieudanych logowań SSH (próg 50)</code></pre></div><p>I to jest dokładnie ten mail z haka. <code>/wp-login.php</code> i <code>/.env</code> w rankingu 404 to klasyka: automaty z całego internetu pukają do każdego serwera i sprawdzają, czy ktoś nie zostawił na wierzchu WordPressa albo pliku z hasłami. Na prawdziwym serwerze zobaczysz to po kilku godzinach od wystawienia go do sieci. Witamy w internecie.</p><p>Sprawdziłem też trzy rzeczy, które w życiu się zdarzą. Dzień bez żadnych wpisów, <code>-d 2020-01-01</code>: raport mówi „Brak żądań w tym dniu” i „Brak. Można spokojnie pić kawę”. Log podzielony na <code>access.log</code> i spakowany <code>access.log.1.gz</code>: wynik identyczny jak z jednego pliku. Log SSH w starym formacie <code>Nov  2</code>: te same liczby.</p></section><section><h2 id="niech-wstaje-sam">Niech wstaje sam</h2><p>Budzik, czyli cron. Plik <code>/etc/cron.d/raport-logow</code>, wspólny dla obu rodzin:</p><div class="kod"><pre><code># min godz dzień mies dzień_tyg  użytkownik  komenda
+15 6 * * *  root  /usr/local/bin/raport_logow.sh -m admin@example.com &gt;/dev/null 2&gt;&amp;1
+0  7 * * *  root  find /var/log/raporty -name &#x27;raport-*.txt&#x27; -mtime +30 -delete</code></pre></div><p>Druga linijka to sprzątanie: raporty starsze niż 30 dni lecą do kosza. Inaczej za trzy lata ktoś zapyta, czemu <code>/var/log</code> zajmuje pół dysku, i odpowiedź będzie brzmiała „przez Ciebie”.</p><p>Pamiętaj, że w <code>/etc/cron.d</code> jest dodatkowa kolumna z użytkownikiem, a na Debianie i Ubuntu nazwa pliku nie może mieć kropki. <code>raport-logow.cron</code> cron po cichu zignoruje.</p><p>Druga droga to timer systemd. To Twoje zadanie na dziś, więc nie zdradzam.</p></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p><code>awk</code> czyta plik strumieniem, linijka po linijce, tak jak <code>grep</code>. Nie ładuje całego logu do pamięci. W pamięci trzyma tylko tablice, czyli szatnię: jeden wieszak na każdy unikalny adres IP, adres URL i godzinę. Sześć adresów IP to sześć wieszaków, nawet przy milionie linijek. Gorzej, jeśli atakuje Cię sto tysięcy różnych adresów, ale wtedy pamięć zużyta przez <code>awk</code> to najmniejszy z Twoich problemów.</p><p>Tablice w <code>awk</code> to tablice mieszające. Klucz, np. <code>198.51.100.23</code>, zamieniany jest na numer szuflady, więc znalezienie wieszaka trwa tyle samo przy dziesięciu i przy dziesięciu tysiącach gości. Ceną jest to, że <code>for (i in ip)</code> wypisuje je w przypadkowej kolejności. Dlatego zawsze kończymy <code>sort</code>.</p><p>Kiedy w <code>awk</code> piszesz <code>print ... | &quot;sort -rn | head -5&quot;</code>, <code>awk</code> uruchamia przez powłokę nowy proces i trzyma do niego otwartą rurę. Wszystkie wydruki z tym samym napisem trafiają do tego samego procesu. <code>close()</code> zamyka rurę, <code>sort</code> dostaje koniec danych, sortuje i wypisuje. Taki kucharz, który czeka, aż kelner powie „to wszystkie zamówienia z tego stolika”.</p><p>Obracanie logów: logrotate albo zmienia nazwę pliku, a Apache dostaje sygnał, żeby otworzył nowy, albo kopiuje i obcina oryginał. W obu przypadkach wczorajsze linijki mogą leżeć w dwóch plikach, i dlatego <code>czytaj</code> bierze wszystkie.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>na Ubuntu <code>awk</code> to zwykle <code>mawk</code>, na RHEL <code>gawk</code>. Skrypt nie używa żadnych rozszerzeń GNU. Uruchomiłem go z obydwoma i raporty wyszły bajt w bajt takie same. Jeśli kiedyś sięgniesz po <code>asort</code> albo <code>strftime</code>, to już jest tylko <code>gawk</code>.</p></aside></section><section><h2 id="sciaga">Ściąga</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga</th><th>Co robi</th></tr><tr><td><code>awk</code></td><td><code>-v nazwa=wartość</code></td><td>przekazuje zmienną z Basha do <code>awk</code></td></tr><tr><td><code>awk</code></td><td><code>index(s, t) == 1</code></td><td>sprawdza, czy napis <code>s</code> zaczyna się od <code>t</code></td></tr><tr><td><code>awk</code></td><td><code>tab[klucz]++</code></td><td>licznik w szatni z nazwiskami</td></tr><tr><td><code>awk</code></td><td><code>print ... | &quot;cmd&quot;</code> + <code>close(&quot;cmd&quot;)</code></td><td>wysyła wynik do innej komendy i zamyka ją</td></tr><tr><td><code>zcat</code></td><td><code>-f</code></td><td>czyta i <code>.gz</code>, i zwykłe pliki</td></tr><tr><td><code>date</code></td><td><code>-d yesterday +%F</code></td><td>wczorajsza data, np. <code>2026-11-02</code></td></tr><tr><td><code>date</code></td><td><code>+%d/%b/%Y</code>, <code>&#x27;+%b %e&#x27;</code></td><td>data w stylu Apache i starego syslogu</td></tr><tr><td><code>compgen</code></td><td><code>-G &#x27;wzorzec&#x27;</code></td><td>sprawdza, czy coś pasuje do wzorca plików</td></tr><tr><td><code>mail</code></td><td><code>-s &quot;temat&quot;</code></td><td>wysyła maila z treścią ze standardowego wejścia</td></tr><tr><td><code>openssl x509</code></td><td><code>-enddate</code>, <code>-checkend SEK</code></td><td>data ważności certyfikatu / czy wygaśnie w ciągu SEK sekund</td></tr><tr><td><code>find</code></td><td><code>-mtime +30 -delete</code></td><td>usuwa pliki starsze niż 30 dni</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>Polski system, wszystko wygląda dobrze, skrypt działa, a raport mówi:</p><div class="kod"><pre><code>Brak żądań w tym dniu.</code></pre></div><p>Popatrz:</p><div class="kod"><pre><code>LC_ALL=pl_PL.UTF-8 date -d 2026-11-02 +%d/%b/%Y
+grep -c &#x27;\[02/lis/2026&#x27; logi/access.log
+LC_ALL=C date -d 2026-11-02 +%d/%b/%Y
+grep -c &#x27;\[02/Nov/2026&#x27; logi/access.log</code></pre></div><div class="kod"><pre><code>02/lis/2026
+0
+02/Nov/2026
+600</code></pre></div><p><code>date</code> jest uprzejme i mówi po polsku: listopad to „lis”. Apache pisze log zawsze po angielsku. Szukasz w księdze gości słowa, którego tam nigdy nie było. Naprawa: <code>export LC_ALL=C</code> na początku skryptu. Ten błąd jest podstępny, bo na serwerze z angielskim systemem wszystko działa, a wybucha dopiero na maszynie kolegi.</p><p>Drugi błąd zrobiłem sam przy pisaniu tej lekcji, więc jest jak najbardziej prawdziwy. W pierwszej wersji filtrowałem log SSH przez <code>grep</code>. Na dniu bez żadnych wpisów skrypt kończył się po cichu, bez raportu i bez komunikatu. Dlaczego? <code>grep</code>, który nic nie znalazł, zwraca kod 1. Przy <code>set -o pipefail</code> cała rura dostaje kod 1, a <code>set -e</code> jak kierowca przy pierwszej kontrolce zatrzymuje cały skrypt. Dlatego w gotowej wersji dzień wybiera <code>awk</code>, który przy braku dopasowań zwraca kod 0. Druga możliwość to <code>grep ... || true</code>. Morał: zawsze testuj skrypt na danych, w których nic nie ma. Puste dni zdarzają się częściej, niż myślisz, na przykład kiedy serwer leżał całą noc. A wtedy raport jest najbardziej potrzebny.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><ol><li>Dopisz do raportu sekcję „Najcięższe adresy”: pięć adresów URL, które wysłały w sumie najwięcej danych, w megabajtach.</li><li>Zamiast crona ustaw uruchamianie raportu codziennie o 6:15 przez timer systemd. Jeśli serwer o tej porze był wyłączony, raport ma się zrobić zaraz po starcie. Sprawdź <code>systemctl list-timers</code>.</li></ol><p>Dla chętnych, na rozgrzewkę przed następną lekcją: postaw trzy maszyny wirtualne z tym samym systemem i nazwij je <code>web1</code>, <code>web2</code> i <code>db1</code>.</p><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><p>Część pierwsza: najcięższe adresy URL. W bloku <code>awk</code> od WWW dochodzą dwie rzeczy. W głównej części sumujemy bajty dla każdego adresu, a w <code>END</code> wypisujemy ranking:</p><div class="kod"><pre><code>        if ($10 ~ /^[0-9]+$/) bt[$7] += $10</code></pre></div><div class="kod"><pre><code>        print &quot;Najcięższe adresy (suma wysłanych danych):&quot;
+        for (u3 in bt) printf &quot;  %6.1f MB  %s\n&quot;, bt[u3]/1048576, u3 | &quot;sort -rn | head -5&quot;
+        close(&quot;sort -rn | head -5&quot;)</code></pre></div><p>Warunek <code>$10 ~ /^[0-9]+$/</code> jest po to, że Apache, kiedy nic nie wysłał, wpisuje w tej kolumnie myślnik zamiast zera. Myślnik dodany do sumy to dla <code>awk</code> zero, więc nic by się nie zepsuło, ale porządek musi być.</p><div class="kod"><pre><code>Najcięższe adresy (suma wysłanych danych):
+     5.9 MB  /
+     3.6 MB  /wp-login.php
+     3.4 MB  /blog/linux
+     3.3 MB  /index.php
+     3.2 MB  /img/logo.png</code></pre></div><p>Część druga: timer systemd zamiast crona. Dwa pliki w <code>/etc/systemd/system/</code>. Usługa mówi, co zrobić:</p><div class="kod"><pre><code># /etc/systemd/system/raport-logow.service
+[Unit]
+Description=Dzienny raport z logów WWW i SSH
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/raport_logow.sh -m admin@example.com</code></pre></div><p>A timer mówi kiedy:</p><div class="kod"><pre><code># /etc/systemd/system/raport-logow.timer
+[Unit]
+Description=Codziennie o 6:15 raport z logów
+
+[Timer]
+OnCalendar=*-*-* 06:15
+Persistent=true
+
+[Install]
+WantedBy=timers.target</code></pre></div><div class="kod"><pre><code>sudo systemd-analyze calendar &quot;*-*-* 06:15&quot;
+sudo systemctl daemon-reload
+sudo systemctl enable --now raport-logow.timer
+systemctl list-timers raport-logow.timer</code></pre></div><div class="kod"><pre><code>  Original form: *-*-* 06:15
+Normalized form: *-*-* 06:15:00
+    Next elapse: Wed 2026-11-04 06:15:00 CET</code></pre></div><p><code>Persistent=true</code> to odpowiedź na „a jeśli serwer był wyłączony”. systemd zapisuje na dysku, kiedy timer ostatnio odpalił. Jeśli po starcie widać, że 6:15 przeszło, kiedy maszyna spała, raport robi się od razu. Cron w takiej sytuacji wzrusza ramionami: budzik dzwonił w pustym pokoju, trudno. Włączamy <code>timer</code>, nie <code>service</code>. Kto włączył usługę, ten dostał raport raz, w chwili włączenia, i potem się dziwił.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>W następnej lekcji te trzy maszyny dostaną robotę: jednym poleceniem Ansible postawimy na nich cały stos LAMP, dwa serwery WWW i bazę danych, z rolami, inwentarzem i wszystkim w repozytorium Git. Bez klikania i bez logowania się na każdą maszynę osobno.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-113.html" rel="prev">← 113. Projekt 4: monitor, który krzyczy raz, a nie co pięć minut</a><a class="btn domyslny zolty" href="lekcja-115.html" rel="next">115. Projekt 6: LAMP na trzech maszynach z Ansible, wszystko w Git →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

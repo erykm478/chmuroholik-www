@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>102. Wiele serwerów naraz — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 102 kursu Linux i Bash od zera do admina: Wiele serwerów naraz. kursant uruchamia komendy i skrypty na wielu serwerach przez SSH: ma porządny ~/.ssh/config, pisze pętlę po serwerach, która nie gubi maszyn i zgłasza błędy, i odpala ją równolegle przez &amp;, xargs -P, GNU parallel albo parallel-ss">
+<meta property="og:title" content="102. Wiele serwerów naraz — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 102 kursu Linux i Bash od zera do admina: Wiele serwerów naraz. kursant uruchamia komendy i skrypty na wielu serwerach przez SSH: ma porządny ~/.ssh/config, pisze pętlę po serwerach, która nie gubi maszyn i zgłasza błędy, i odpala ją równolegle przez &amp;, xargs -P, GNU parallel albo parallel-ss">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 11</span></div>
+      <div class="boczny-tytul"><a href="index.html#m11">Automatyzacja: Git, Ansible i Bash w pracy admina</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-101.html" data-lekcja="101"><span class="znacznik"></span><span class="nr">101</span> Git dla admina</a></li><li><a href="lekcja-102.html" data-lekcja="102" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">102</span> Wiele serwerów naraz</a></li><li><a href="lekcja-103.html" data-lekcja="103"><span class="znacznik"></span><span class="nr">103</span> Ansible w praktyce</a></li><li><a href="lekcja-104.html" data-lekcja="104"><span class="znacznik"></span><span class="nr">104</span> Instalacja i konfiguracja ze skryptu</a></li><li><a href="lekcja-105.html" data-lekcja="105"><span class="znacznik"></span><span class="nr">105</span> Bezpieczne skrypty</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="102" data-modul="11" data-tematy="pętla po serwerach przez SSH, ~/.ssh/config, równoległe uruchamianie">
+    <div class="belka"><span>Lekcja 102 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m11">Moduł 11</a> › Lekcja 102</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Wiele serwerów naraz</h1>
+      <p class="meta"><span>⏱ ok. 10 min czytania</span><span>· moduł 11: Automatyzacja: Git, Ansible i Bash w pracy admina</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant uruchamia komendy i skrypty na wielu serwerach przez SSH: ma porządny <code>~/.ssh/config</code>, pisze pętlę po serwerach, która nie gubi maszyn i zgłasza błędy, i odpala ją równolegle przez <code>&amp;</code>, <code>xargs -P</code>, GNU parallel albo parallel-ssh.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#ssh-config-czyli-ksiazka-adresowa">~/.ssh/config, czyli książka adresowa</a></li><li><a href="#petla-po-serwerach">Pętla po serwerach</a></li><li><a href="#skrypt-ktory-nie-gubi-serwerow">Skrypt, który nie gubi serwerów</a></li><li><a href="#rownolegle-czyli-wiecej-kas-w-biedronce">Równolegle, czyli więcej kas w Biedronce</a></li><li><a href="#szybciej-jedno-polaczenie-na-wiele-komend">Szybciej: jedno połączenie na wiele komend</a></li><li><a href="#sudo-w-petli">sudo w pętli</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga-flag">Ściąga flag</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p>Wychodzi łatka bezpieczeństwa. Szef pyta: „Na których serwerach mamy starą wersję jądra?”. Trzydzieści serwerów. Możesz się zalogować na każdy po kolei, wpisać <code>uname -r</code>, przepisać do arkusza. Trzydzieści razy. Do trzeciego się nudzisz, przy piętnastym robisz literówkę, a dwudziesty się nie odzywa i nawet tego nie zauważasz.</p><p>Albo jedna linijka:</p><div class="kod"><pre><code>./na-wszystkich.sh -p &#x27;uname -r&#x27;</code></pre></div><p>I po dwóch sekundach masz odpowiedź ze wszystkich, z nazwą serwera przy każdej linijce i listą tych, które nie odpowiedziały. Dziś ten skrypt napiszemy.</p></section><section><h2 id="ssh-config-czyli-ksiazka-adresowa">~/.ssh/config, czyli książka adresowa</h2><p>Najpierw porządek w adresach. Zamiast pamiętać <code>ssh -p 2222 -i ~/.ssh/klucz_firma admin@192.168.122.11</code>, wpisujesz to raz do książki adresowej i dalej mówisz po prostu <code>ssh web1</code>. Jak w telefonie: nie wybierasz numeru, tylko klikasz „Mama”.</p><div class="kod"><pre><code># ~/.ssh/config
+Host web1
+    HostName 192.168.122.11
+Host web2
+    HostName 192.168.122.12
+Host db1
+    HostName 192.168.122.21
+    Port 2222
+Host bastion
+    HostName vpn.firma.example
+Host *.wew
+    ProxyJump bastion
+Host *
+    User admin
+    IdentityFile ~/.ssh/id_ed25519
+    ConnectTimeout 5
+    ServerAliveInterval 30</code></pre></div><p>SSH czyta ten plik od góry i dla każdej opcji bierze <strong>pierwszą</strong> pasującą wartość. Dlatego ogólne <code>Host *</code> stoi na końcu, jak „w pozostałych sprawach proszę do okienka 5”. <code>ProxyJump</code> to przejście przez bramkę: najpierw na bastion, z niego dalej. Plik musi należeć do Ciebie i nie może być zapisywalny dla innych, więc <code>chmod 600 ~/.ssh/config</code>.</p><p>Co SSH naprawdę zrobi dla danej nazwy, sprawdzisz bez łączenia się:</p><div class="kod"><pre><code>ssh -G web1 | grep -E &#x27;^(user|hostname|port|connecttimeout) &#x27;</code></pre></div><div class="kod"><pre><code>user admin
+hostname 192.168.122.11
+port 22
+connecttimeout 5</code></pre></div><p>Użytkownik i adres przyszły z bloku <code>web1</code> i z ogólnego <code>Host *</code>, a <code>port</code><code> 22</code> to wartość domyślna, bo dla <code>web1</code> żadnego portu nie podałeś. Dla pętli to bez różnicy, czy serwer stoi w szafie obok, czy w innym kraju.</p></section><section><h2 id="petla-po-serwerach">Pętla po serwerach</h2><p>Pamiętasz pętlę, czyli taśmę przy kasie? Tym razem na taśmie jadą nazwy serwerów.</p><div class="kod"><pre><code>for s in web1 web2 db1; do
+    echo &quot;== $s&quot;
+    ssh &quot;$s&quot; uptime
+done</code></pre></div><div class="kod"><pre><code>== web1
+ 22:36:42 up  6:18,  0 user,  load average: 0.53, 0.46, 0.30
+== web2
+ 22:36:42 up  6:18,  0 user,  load average: 0.48, 0.45, 0.30
+== db1
+ 22:36:42 up  6:18,  0 user,  load average: 0.48, 0.45, 0.30</code></pre></div><p>Działa. Ale nikt nie trzyma 30 nazw w pętli. Trzymasz je w pliku <code>serwery.txt</code>, jeden na linijkę. I tu czeka pierwsza pułapka, ta z sekcji „Typowy błąd”. Na razie zapamiętaj: w pętli <code>while read</code> zawsze <code>ssh -n</code>.</p><p>Uwaga na cudzysłowy, czyli koperty. Kto otwiera kopertę, Twój Bash czy zdalny?</p><div class="kod"><pre><code>ssh web1 &quot;echo Jestem na $HOSTNAME&quot;
+ssh web1 &#x27;echo Jestem na $HOSTNAME&#x27;</code></pre></div><div class="kod"><pre><code>Jestem na vm
+Jestem na web1</code></pre></div><p>Podwójne cudzysłowy: Twój Bash podstawia <code>$HOSTNAME</code> jeszcze u Ciebie, na laptopie o nazwie <code>vm</code>, i dopiero wysyła. Pojedyncze: koperta jedzie zaklejona i otwiera ją serwer. To jak wysłanie kumplowi listu „napisz, jaka jest u Ciebie pogoda”, tylko że zanim zakleiłeś kopertę, sam wpisałeś „słonecznie”.</p><p>Dłuższy skrypt? Nie kopiujesz go na każdy serwer. Wysyłasz go SSH-em na wejście zdalnego Basha:</p><div class="kod"><pre><code>ssh web2 &#x27;bash -s&#x27; -- prod &lt; zdalny.sh</code></pre></div><div class="kod"><pre><code>Serwer: web2, argument: prod
+               total        used        free      shared  buff/cache   available
+Mem:           7.8Gi       1.0Gi       4.7Gi        15Mi       2.5Gi       6.8Gi</code></pre></div><p><code>bash -s</code> czyta skrypt ze standardowego wejścia, a wszystko po <code>--</code> to argumenty dla skryptu: <code>$1</code> to <code>prod</code>.</p></section><section><h2 id="skrypt-ktory-nie-gubi-serwerow">Skrypt, który nie gubi serwerów</h2><p>Dobra pętla po serwerach musi umieć cztery rzeczy: nie zawiesić się na pytaniu o hasło, nie czekać wiecznie na martwy serwer, podpisywać każdą linijkę nazwą serwera i na końcu powiedzieć, które zawiodły.</p><div class="kod"><pre><code>#!/usr/bin/env bash
+# na-wszystkich.sh - uruchamia jedną komendę na wielu serwerach przez SSH
+# Użycie: na-wszystkich.sh [-p] [-f PLIK] KOMENDA...
+set -uo pipefail
+
+plik=serwery.txt
+rownolegle=0
+
+uzycie() { echo &quot;Użycie: $0 [-p] [-f PLIK_Z_SERWERAMI] KOMENDA...&quot; &gt;&amp;2; exit 2; }
+
+while getopts &#x27;pf:h&#x27; opcja; do
+    case $opcja in
+        p) rownolegle=1 ;;
+        f) plik=$OPTARG ;;
+        *) uzycie ;;
+    esac
+done
+shift $((OPTIND - 1))
+(( $# &gt; 0 )) || uzycie
+komenda=&quot;$*&quot;
+
+mapfile -t serwery &lt; &lt;(grep -Ev &#x27;^[[:space:]]*(#|$)&#x27; &quot;$plik&quot;)
+wyniki=$(mktemp -d)
+trap &#x27;rm -rf &quot;$wyniki&quot;&#x27; EXIT
+
+na_jednym() {
+    local s=$1
+    ssh -n -o BatchMode=yes -o ConnectTimeout=5 &quot;$s&quot; &quot;$komenda&quot; \
+        &gt; &quot;$wyniki/$s.out&quot; 2&gt;&amp;1
+    echo $? &gt; &quot;$wyniki/$s.kod&quot;
+}
+
+for s in &quot;${serwery[@]}&quot;; do
+    if (( rownolegle )); then
+        na_jednym &quot;$s&quot; &amp;
+    else
+        na_jednym &quot;$s&quot;
+    fi
+done
+wait
+
+nieudane=()
+for s in &quot;${serwery[@]}&quot;; do
+    sed &quot;s/^/[$s] /&quot; &quot;$wyniki/$s.out&quot;
+    [[ $(&lt; &quot;$wyniki/$s.kod&quot;) == 0 ]] || nieudane+=(&quot;$s&quot;)
+done
+
+if (( ${#nieudane[@]} &gt; 0 )); then
+    echo &quot;BŁĄD na: ${nieudane[*]}&quot; &gt;&amp;2
+    exit 1
+fi</code></pre></div><p>Co tu pracuje:</p><ul><li><code>BatchMode=yes</code> mówi SSH: niczego nie pytaj. Brak klucza? Błąd i dalej, zamiast pytania o hasło, które zawiesza całą pętlę o trzeciej w nocy.</li><li><code>ConnectTimeout=5</code>: na martwy serwer czekamy pięć sekund, nie dwie minuty.</li><li><code>grep -Ev</code> wyrzuca z listy puste linijki i komentarze, więc w <code>serwery.txt</code> możesz mieć <code># bazy</code>.</li><li>Każdy serwer pisze do własnego pliku w folderze tymczasowym, a <code>trap</code> z lekcji o sprzątaczce usuwa go na końcu.</li><li>Brak <code>set -e</code> jest celowy: jeden padnięty serwer nie może zatrzymać całej pętli.</li></ul><p>ShellCheck: czysto. Uruchamiam na czterech serwerach, z czego <code>web3</code> jest wyłączony:</p><div class="kod"><pre><code>./na-wszystkich.sh &#x27;uname -r; df -h / | tail -1&#x27;; echo &quot;kod: $?&quot;</code></pre></div><div class="kod"><pre><code>[web1] 6.8.0-48-generic
+[web1] /dev/vda1        25G  6.1G   18G  26% /
+[web2] 6.8.0-48-generic
+[web2] /dev/vda1        25G  5.8G   18G  25% /
+[db1] 6.8.0-45-generic
+[db1] /dev/vda1        50G   21G   27G  44% /
+[web3] ssh: connect to host 192.168.122.13 port 22: Connection refused
+BŁĄD na: web3
+kod: 1</code></pre></div><p>Kod wyjścia 1, czyli kciuk w dół, więc cron albo inny skrypt od razu wie, że coś poszło nie tak. Kod 255 od SSH znaczy błąd samego połączenia, a nie komendy.</p></section><section><h2 id="rownolegle-czyli-wiecej-kas-w-biedronce">Równolegle, czyli więcej kas w Biedronce</h2><p>Po kolei to jedna kasa i kolejka. Jeśli komenda trwa dwie sekundy, 30 serwerów to minuta. Otwierasz więcej kas: każdy serwer obsługiwany jednocześnie. W skrypcie robi to <code>&amp;</code> i <code>wait</code>:</p><div class="kod"><pre><code>time ./na-wszystkich.sh -f trzy.txt &#x27;sleep 2; hostname&#x27;
+time ./na-wszystkich.sh -p -f trzy.txt &#x27;sleep 2; hostname&#x27;</code></pre></div><div class="kod"><pre><code>[web1] web1
+[web2] web2
+[db1] db1
+real	0m6.769s
+[web1] web1
+[web2] web2
+[db1] db1
+real	0m2.349s</code></pre></div><p>Sześć sekund kontra dwie. Przy 200 serwerach to różnica między „zaraz” a „po kawie”. Ale <code>&amp;</code> odpala wszystko naraz. Dla 500 maszyn chcesz limit, ile kas naraz. Trzy gotowe narzędzia:</p><div class="kod"><pre><code># xargs: wbudowany, -P to liczba naraz
+xargs -P 3 -I{} ssh -n -o BatchMode=yes {} &#x27;echo &quot;$(hostname): $(nproc) rdzeni&quot;&#x27; &lt; trzy.txt
+
+# GNU parallel: --tag dopisuje nazwę serwera, -j to liczba naraz
+parallel --tag -j 10 ssh -n -o BatchMode=yes {} uptime -p :::: trzy.txt
+
+# parallel-ssh: zrobione specjalnie do tego
+parallel-ssh -h trzy.txt -i &#x27;uptime -p&#x27;</code></pre></div><div class="kod"><pre><code>db1: 2 rdzeni
+web2: 2 rdzeni
+web1: 2 rdzeni
+web2	up 6 hours, 19 minutes
+db1	up 6 hours, 19 minutes
+web1	up 6 hours, 19 minutes
+[1] 22:37:19 [SUCCESS] db1
+up 6 hours, 19 minutes</code></pre></div><p>Zauważ kolejność: kto pierwszy skończył, ten pierwszy mówi. Dlatego <code>--tag</code> i podpisy są obowiązkowe, inaczej nie wiesz, czyja to odpowiedź.</p><p>[Ubuntu] <code>sudo apt install parallel pssh</code>, a program nazywa się <code>parallel-ssh</code>. [RHEL] <code>parallel</code> i <code>pssh</code> są w EPEL, tam komenda to po prostu <code>pssh</code>. GNU parallel przy pierwszym uruchomieniu prosi o cytowanie w pracach naukowych. Raz wpisujesz <code>parallel --citation</code> i już nie marudzi.</p></section><section><h2 id="szybciej-jedno-polaczenie-na-wiele-komend">Szybciej: jedno połączenie na wiele komend</h2><p>Każde <code>ssh</code> to nowe połączenie: uzgadnianie szyfrowania, sprawdzanie klucza. Jak wejście do biurowca z okazaniem dowodu za każdym razem, gdy idziesz po kawę. <code>ControlMaster</code> zostawia otwarte drzwi i kolejne <code>ssh</code> przechodzi bez kontroli:</p><div class="kod"><pre><code>Host *
+    ControlMaster auto
+    ControlPath ~/.ssh/cm-%r@%h:%p
+    ControlPersist 10m</code></pre></div><p>U mnie dziesięć kolejnych <code>ssh web1 true</code>: 2,36 sekundy bez tego, 0,33 sekundy z tym. Stan sprawdzasz <code>ssh -O check web1</code>, zamykasz <code>ssh -O exit web1</code>.</p></section><section><h2 id="sudo-w-petli">sudo w pętli</h2><p>Na serwerze sudo pyta o hasło. A w pętli z <code>-n</code> i <code>BatchMode</code> nikt nie odpowie:</p><div class="kod"><pre><code>sudo: a terminal is required to read the password; either use the -S option to read from standard input or configure an askpass helper
+sudo: a password is required</code></pre></div><p>Do jednego serwera ręcznie: <code>ssh -t web1 sudo systemctl restart nginx</code>. <code>-t</code> daje terminal, więc możesz wpisać hasło. W pętli nie wklejaj hasła do skryptu ani do <code>sudo -S</code>. Daj kontu admina sudo bez hasła tylko na konkretne komendy, jak w lekcji o sudoers, albo użyj Ansible, który ma na to porządny mechanizm. O nim w następnej lekcji.</p></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p>Gdy piszesz <code>ssh web1 &#x27;uname -r&#x27;</code>, klient łączy się, loguje kluczem i prosi serwer o kanał typu „exec” z tekstem komendy. Serwer uruchamia Twoją powłokę logowania z <code>-c &#x27;uname -r&#x27;</code>. Wyjście i błędy wracają osobnymi kanałami, czyli dwa głośniki działają nawet przez sieć, a kod wyjścia zdalnej komendy staje się kodem wyjścia <code>ssh</code>.</p><p>I najważniejsze dla pętli: <strong>standardowe wejście</strong> Twojego <code>ssh</code> jest przekazywane na serwer. Wszystko, co leży na wejściu, SSH zabiera i wysyła zdalnej komendzie. Nawet jeśli ta komenda go wcale nie czyta. <code>-n</code> podpina wejście do <code>/dev/null</code>, czyli mówi: niczego mi nie zabieraj.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>argumenty po nazwie hosta SSH skleja spacjami w jeden napis i wysyła jako tekst. Dlatego <code>ssh web1 ls &quot;mój plik&quot;</code> na serwerze zobaczy dwa argumenty. Bezpieczne sklejanie zrobisz przez <code>printf &#x27;%q &#x27;</code>.</p></aside></section><section><h2 id="sciaga-flag">Ściąga flag</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga</th><th>Co robi</th></tr><tr><td><code>ssh</code></td><td><code>-n</code></td><td>nie zabieraj standardowego wejścia (obowiązkowe w <code>while read</code>)</td></tr><tr><td><code>ssh</code></td><td><code>-o BatchMode=yes</code></td><td>nigdy nie pytaj o hasło ani o nic innego</td></tr><tr><td><code>ssh</code></td><td><code>-o ConnectTimeout=5</code></td><td>czekaj na połączenie najwyżej 5 s</td></tr><tr><td><code>ssh</code></td><td><code>-o StrictHostKeyChecking=accept-new</code></td><td>nowy serwer dopisz sam, zmieniony klucz odrzuć</td></tr><tr><td><code>ssh</code></td><td><code>-t</code></td><td>daj terminal (sudo z hasłem, top)</td></tr><tr><td><code>ssh</code></td><td><code>-J bastion</code></td><td>połącz przez bramkę</td></tr><tr><td><code>ssh</code></td><td><code>-G HOST</code></td><td>pokaż ustawienia z config, bez łączenia</td></tr><tr><td><code>ssh</code></td><td><code>-O check</code> / <code>-O exit</code></td><td>stan / zamknięcie połączenia ControlMaster</td></tr><tr><td><code>bash</code></td><td><code>-s -- ARG</code></td><td>czytaj skrypt z wejścia, z argumentami</td></tr><tr><td><code>xargs</code></td><td><code>-P N -I{}</code></td><td>N naraz, <code>{}</code> zastępowane nazwą</td></tr><tr><td><code>parallel</code></td><td><code>--tag -j N</code></td><td>podpisy przy wynikach, N naraz</td></tr><tr><td><code>parallel-ssh</code></td><td><code>-h PLIK -i</code></td><td>lista hostów z pliku, wyniki od razu</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>Lista serwerów w pliku i pętla, która wygląda niewinnie:</p><div class="kod"><pre><code>while read -r s; do
+    echo &quot;== $s&quot;
+    ssh &quot;$s&quot; hostname
+done &lt; serwery.txt</code></pre></div><div class="kod"><pre><code>== web1
+web1</code></pre></div><p>I koniec. Trzy serwery w pliku, sprawdzony jeden. Bez żadnego błędu. Najgorszy rodzaj błędu, bo raport mówi „wszystko OK”.</p><p>Co się stało? <code>read</code> i <code>ssh</code> czytają z tego samego wejścia, czyli z pliku. <code>read</code> wziął pierwszą linijkę, a <code>ssh</code> połknął resztę i wysłał na serwer, gdzie <code>hostname</code> ją zignorował. Dla <code>read</code> nic nie zostało. Jak kolega, który w kolejce do kasy zgarnia całą taśmę zakupów do swojej siatki. Naprawa: <code>ssh -n</code> albo <code>ssh ... &lt; /dev/null</code>. Z <code>-n</code> pętla wypisuje wszystkie trzy serwery.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><p>Postaw dwie maszyny wirtualne (albo jedną i localhost). Zapisz je w <code>~/.ssh/config</code> pod nazwami <code>lab1</code> i <code>lab2</code>, z logowaniem kluczem. Zrób plik <code>serwery.txt</code> z tymi dwiema nazwami i jedną nieistniejącą, <code>lab9</code>. Uruchom <code>na-wszystkich.sh</code> z komendami <code>uptime</code> i <code>df -h /</code>, najpierw po kolei, potem z <code>-p</code>, i porównaj czas przez <code>time</code>. Sprawdź, czy skrypt zgłasza <code>lab9</code> jako błąd i kończy się kodem 1. Na koniec napisz pętlę <code>while read</code> bez <code>-n</code> i zobacz na własne oczy, jak gubi serwery.</p><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><p><code>~/.ssh/config</code> z dwiema maszynami:</p><div class="kod"><pre><code>Host lab1
+    HostName 192.168.122.11
+Host lab2
+    HostName 192.168.122.12
+Host lab*
+    User eryk
+    IdentityFile ~/.ssh/id_ed25519</code></pre></div><p>Plik <code>serwery.txt</code>: <code>lab1</code>, <code>lab2</code>, <code>lab9</code>. I porównanie:</p><div class="kod"><pre><code>time ./na-wszystkich.sh &#x27;uptime; df -h /&#x27;
+time ./na-wszystkich.sh -p &#x27;uptime; df -h /&#x27;
+echo &quot;kod: $?&quot;</code></pre></div><p>Na końcu każdego przebiegu powinno być <code>BŁĄD na: lab9</code> i kod 1. Ciekawostka: <code>lab9</code> nie istnieje w <code>~/.ssh/config</code>, więc SSH próbuje znaleźć komputer o takiej nazwie w DNS i dostaje <code>Could not resolve hostname</code>. Wersja równoległa trwa mniej więcej tyle, co najwolniejszy serwer, a nie suma wszystkich. A pętla <code>while read</code> bez <code>-n</code> sprawdziła tylko <code>lab1</code> i z czystym sumieniem poszła do domu.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Pętla przez SSH mówi serwerom, co mają <strong>zrobić</strong>. W następnej lekcji Ansible, który opisuje, jak serwery mają <strong>wyglądać</strong>: inwentarz, playbooki, moduły, handlery, sejf na hasła i suchy przebieg z <code>--check --diff</code>.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-101.html" rel="prev">← 101. Git dla admina</a><a class="btn domyslny zolty" href="lekcja-103.html" rel="next">103. Ansible w praktyce →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

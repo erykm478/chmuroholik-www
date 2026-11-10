@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>110. Projekt 1: nowy serwer w dziesięć minut — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 110 kursu Linux i Bash od zera do admina: Projekt 1: nowy serwer w dziesięć minut. kursant ma własny skrypt i własny playbook Ansible, które ze świeżego serwera robią serwer gotowy do pracy: konto administratora, SSH tylko na klucze, zapora, fail2ban i automatyczne poprawki bezpieczeństwa, na">
+<meta property="og:title" content="110. Projekt 1: nowy serwer w dziesięć minut — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 110 kursu Linux i Bash od zera do admina: Projekt 1: nowy serwer w dziesięć minut. kursant ma własny skrypt i własny playbook Ansible, które ze świeżego serwera robią serwer gotowy do pracy: konto administratora, SSH tylko na klucze, zapora, fail2ban i automatyczne poprawki bezpieczeństwa, na">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 13</span></div>
+      <div class="boczny-tytul"><a href="index.html#m13">Projekty końcowe</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-110.html" data-lekcja="110" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">110</span> Projekt 1: nowy serwer w dziesięć minut</a></li><li><a href="lekcja-111.html" data-lekcja="111"><span class="znacznik"></span><span class="nr">111</span> Projekt 2: dwie strony na Apache z HTTPS</a></li><li><a href="lekcja-112.html" data-lekcja="112"><span class="znacznik"></span><span class="nr">112</span> Projekt 3: kopie zapasowe, które naprawdę da się odtworzyć</a></li><li><a href="lekcja-113.html" data-lekcja="113"><span class="znacznik"></span><span class="nr">113</span> Projekt 4: monitor, który krzyczy raz, a nie co pięć minut</a></li><li><a href="lekcja-114.html" data-lekcja="114"><span class="znacznik"></span><span class="nr">114</span> Projekt 5: analizator logów z raportem dziennym</a></li><li><a href="lekcja-115.html" data-lekcja="115"><span class="znacznik"></span><span class="nr">115</span> Projekt 6: LAMP na trzech maszynach z Ansible, wszystko w Git</a></li><li><a href="lekcja-116.html" data-lekcja="116"><span class="znacznik"></span><span class="nr">116</span> Egzamin próbny: 20 zadań, dwie godziny, zero podpowiedzi</a></li><li><a href="lekcja-117.html" data-lekcja="117"><span class="znacznik"></span><span class="nr">117</span> Co dalej: certyfikaty, laboratorium domowe i pierwsza praca</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="110" data-modul="13" data-tematy="skrypt przygotowujący nowy serwer: użytkownik, SSH na klucze, zapora, aktualizacje, fail2ban">
+    <div class="belka"><span>Lekcja 110 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m13">Moduł 13</a> › Lekcja 110</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Projekt 1: nowy serwer w dziesięć minut</h1>
+      <p class="meta"><span>⏱ ok. 22 min czytania</span><span>· moduł 13: Projekty końcowe</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant ma własny skrypt i własny playbook Ansible, które ze świeżego serwera robią serwer gotowy do pracy: konto administratora, SSH tylko na klucze, zapora, fail2ban i automatyczne poprawki bezpieczeństwa, na Ubuntu i na RHEL.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#plan-czyli-lista-zadan-przed-przeprowadzka">Plan, czyli lista zadań przed przeprowadzką</a></li><li><a href="#skrypt-pelny-kod">Skrypt: pełny kod</a></li><li><a href="#co-tu-jest-ciekawego">Co tu jest ciekawego</a></li><li><a href="#pokaz-uruchomienie-naprawde">Pokaz: uruchomienie naprawdę</a></li><li><a href="#ta-sama-lista-jako-playbook-ansible">Ta sama lista jako playbook Ansible</a></li><li><a href="#pokaz-playbook">Pokaz: playbook</a></li><li><a href="#sciaga-skrypt-kontra-playbook">Ściąga: skrypt kontra playbook</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p>Klikasz „utwórz serwer”. Po minucie masz adres IP i hasło roota w mailu. Idziesz zrobić kawę. Wracasz po kwadransie, zaglądasz do logów:</p><div class="kod"><pre><code>sudo journalctl -u ssh --since &#x27;15 min ago&#x27; | grep -c &#x27;Failed password&#x27;</code></pre></div><p>I widzisz kilkadziesiąt, a czasem kilkaset nieudanych prób logowania. Na roota, na <code>admin</code>, na <code>test</code>, na <code>oracle</code>. Nikt Cię nie zna, nikt nie wie, że ten serwer istnieje. Ale automaty skanujące internet wiedzą o nim po kilku minutach. To jak wprowadzenie się do nowego mieszkania z kartką na drzwiach „klucz pod wycieraczką”, w dzielnicy, gdzie złodzieje sprawdzają wszystkie wycieraczki po kolei, przez całą dobę.</p><p>Dlatego pierwsze dziesięć minut życia serwera to zawsze ta sama lista. Dziś ją zautomatyzujemy dwa razy. Najpierw jako skrypt w Bashu, bo to umiesz. Potem jako playbook Ansible, bo tak się to robi, gdy serwerów jest więcej niż palców jednej ręki. I na koniec porównamy, co jest lepsze. Spoiler: oba, ale do czego innego.</p></section><section><h2 id="plan-czyli-lista-zadan-przed-przeprowadzka">Plan, czyli lista zadań przed przeprowadzką</h2><p>Zanim cokolwiek napiszesz, rozpisz kroki. Skrypt to przepis kulinarny, a przepisu nie pisze się w trakcie smażenia.</p><ol><li><strong>Aktualizacje i pakiety.</strong> Najpierw łaty, bo obraz systemu od dostawcy ma czasem kilka miesięcy.</li><li><strong>Konto administratora</strong> w grupie, która ma sudo: [Ubuntu] <code>sudo</code>, [RHEL] <code>wheel</code>.</li><li><strong>Klucz SSH</strong> dla tego konta, czyli kłódka na serwerze, do której kluczyk masz tylko Ty.</li><li><strong>SSH tylko na klucze</strong>, bez haseł i bez logowania roota.</li><li><strong>Zapora</strong>: wpuszczamy tylko SSH. [Ubuntu] <code>ufw</code>, [RHEL] <code>firewalld</code>.</li><li><strong>fail2ban</strong> i <strong>automatyczne poprawki bezpieczeństwa</strong>.</li></ol><p>Kolejność nie jest przypadkowa. Krok 3 musi być przed krokiem 4. Jeśli wyłączysz hasła, zanim położysz klucz, właśnie zamknąłeś się na zewnątrz, a klucze zostawiłeś w środku. To jak piłowanie gałęzi, na której siedzisz, tylko gałąź kosztuje 20 złotych miesięcznie, a dostęp do konsoli awaryjnej dostawcy znajdziesz o drugiej w nocy po pół godzinie szukania.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>zasada „najpierw dodaj nowe, potem wyłącz stare” obowiązuje wszędzie: przy zmianie portu SSH, przy migracji DNS, przy rotacji kluczy. Zawsze jest moment, w którym działają oba.</p></aside><p><strong>Ostrzeżenie, zanim zaczniemy.</strong> Ten skrypt zmienia konfigurację SSH i włącza zaporę. Testuj go na maszynie wirtualnej, a na prawdziwym serwerze zawsze miej otwartą <strong>drugą sesję SSH</strong>, której nie zamykasz, dopóki w trzeciej nie zalogujesz się nowym sposobem.</p></section><section><h2 id="skrypt-pelny-kod">Skrypt: pełny kod</h2><p>Na swoim komputerze, nie na serwerze, zrób parę kluczy, jeśli jeszcze jej nie masz, i wyślij na serwer klucz publiczny razem ze skryptem. Pamiętasz z lekcji 76:</p><div class="kod"><pre><code>ssh-keygen -t ed25519 -C &#x27;eryk@laptop&#x27;
+scp ~/.ssh/id_ed25519.pub nowy-serwer.sh root@ADRES_SERWERA:/root/</code></pre></div><p>A oto cały skrypt. Przeczytaj go raz od góry do dołu, a potem przejdziemy przez ciekawsze kawałki.</p><div class="kod"><pre><code>#!/usr/bin/env bash
+# nowy-serwer.sh — pierwsze 10 minut życia serwera
+# Ubuntu/Debian oraz RHEL/Rocky/Alma. Uruchamiać jako root.
+set -euo pipefail
+
+ADMIN=&quot;&quot;
+KLUCZ=&quot;&quot;
+PROBA=0
+BEZ_AKTUALIZACJI=0
+DROPIN=/etc/ssh/sshd_config.d/10-nowy-serwer.conf
+
+pomoc() {
+    cat &lt;&lt;EOF
+Użycie: sudo $0 -u UŻYTKOWNIK -k KLUCZ.pub [-n] [-s]
+  -u  konto administratora, które powstanie (albo już jest)
+  -k  plik z kluczem publicznym SSH tego administratora
+  -n  próba: pokaż, co byłoby zrobione, niczego nie zmieniaj
+  -s  pomiń aktualizację systemu (np. gdy robisz ją osobno)
+  -h  ta pomoc
+EOF
+}
+
+log()  { printf &#x27;[%s] %s\n&#x27; &quot;$(date +%T)&quot; &quot;$*&quot;; logger -t nowy-serwer -- &quot;$*&quot; 2&gt;/dev/null || true; }
+blad() { printf &#x27;BŁĄD: %s\n&#x27; &quot;$*&quot; &gt;&amp;2; exit 1; }
+
+# zrob KOMENDA... — wykonaj albo, w trybie próby, tylko wypisz
+zrob() {
+    if (( PROBA )); then printf &#x27;   [próba] %s\n&#x27; &quot;$*&quot;; else &quot;$@&quot;; fi
+}
+
+# zapisz PLIK — treść ze standardowego wejścia
+zapisz() {
+    if (( PROBA )); then
+        printf &#x27;   [próba] zapisałbym %s:\n&#x27; &quot;$1&quot;; sed &#x27;s/^/      | /&#x27;
+    else
+        cat &gt; &quot;$1&quot;
+    fi
+}
+
+# usluga AKCJA NAZWA — systemctl, ale z ostrzeżeniem, gdy nie ma systemd (np. kontener)
+usluga() {
+    if [[ &quot;$(cat /proc/1/comm)&quot; == systemd ]]; then
+        zrob systemctl &quot;$@&quot;
+    else
+        log &quot;UWAGA: brak systemd jako PID 1, pomijam: systemctl $*&quot;
+    fi
+}
+
+while getopts &#x27;:u:k:nsh&#x27; opt; do
+    case $opt in
+        u) ADMIN=$OPTARG ;;
+        k) KLUCZ=$OPTARG ;;
+        n) PROBA=1 ;;
+        s) BEZ_AKTUALIZACJI=1 ;;
+        h) pomoc; exit 0 ;;
+        :) blad &quot;opcja -$OPTARG wymaga wartości&quot; ;;
+        *) pomoc &gt;&amp;2; exit 1 ;;
+    esac
+done
+
+# ---------- 0. Kontrole przed startem ----------
+[[ $EUID -eq 0 ]]            || blad &quot;uruchom przez sudo albo jako root&quot;
+[[ -n $ADMIN &amp;&amp; -n $KLUCZ ]] || { pomoc &gt;&amp;2; exit 1; }
+[[ $ADMIN != root ]]         || blad &quot;administratorem ma być zwykłe konto, nie root&quot;
+[[ $ADMIN =~ ^[a-z_][a-z0-9_-]{0,31}$ ]] || blad &quot;niepoprawna nazwa konta: $ADMIN&quot;
+ssh-keygen -l -f &quot;$KLUCZ&quot; &gt;/dev/null 2&gt;&amp;1 || blad &quot;$KLUCZ nie wygląda na klucz publiczny SSH&quot;
+
+# shellcheck source=/dev/null
+. /etc/os-release
+case &quot; ${ID} ${ID_LIKE:-} &quot; in
+    *&quot; debian &quot;*|*&quot; ubuntu &quot;*)        RODZINA=debian; GRUPA_ADMIN=sudo;  SSH_USLUGA=ssh  ;;
+    *&quot; rhel &quot;*|*&quot; fedora &quot;*|*&quot; centos &quot;*) RODZINA=rhel; GRUPA_ADMIN=wheel; SSH_USLUGA=sshd ;;
+    *) blad &quot;nie znam dystrybucji: $PRETTY_NAME&quot; ;;
+esac
+log &quot;System: $PRETTY_NAME (rodzina: $RODZINA)&quot;
+(( PROBA )) &amp;&amp; log &quot;TRYB PRÓBY: nic nie zostanie zmienione&quot;
+
+# ---------- 1. Aktualizacje i pakiety ----------
+log &quot;Krok 1/6: aktualizacje i pakiety&quot;
+if [[ $RODZINA == debian ]]; then
+    export DEBIAN_FRONTEND=noninteractive
+    zrob apt-get update -q
+    (( BEZ_AKTUALIZACJI )) || zrob apt-get -y -q upgrade
+    zrob apt-get -y -q install openssh-server ufw fail2ban unattended-upgrades
+else
+    (( BEZ_AKTUALIZACJI )) || zrob dnf -y upgrade
+    # fail2ban jest w EPEL; na Rocky i Almie epel-release leży w repo extras
+    rpm -q epel-release &gt;/dev/null 2&gt;&amp;1 || zrob dnf -y install epel-release
+    zrob dnf -y install openssh-server firewalld fail2ban fail2ban-firewalld dnf-automatic
+fi
+
+# ---------- 2. Konto administratora ----------
+log &quot;Krok 2/6: konto $ADMIN w grupie $GRUPA_ADMIN&quot;
+if id &quot;$ADMIN&quot; &gt;/dev/null 2&gt;&amp;1; then
+    zrob usermod -aG &quot;$GRUPA_ADMIN&quot; &quot;$ADMIN&quot;
+else
+    zrob useradd -m -s /bin/bash -G &quot;$GRUPA_ADMIN&quot; &quot;$ADMIN&quot;
+fi
+# Hasło będzie potrzebne do sudo. Ustawiamy je, tylko gdy go jeszcze nie ma.
+if [[ $(passwd -S &quot;$ADMIN&quot; 2&gt;/dev/null | awk &#x27;{print $2}&#x27;) != P ]]; then
+    if [[ -t 0 ]]; then
+        log &quot;Ustaw hasło dla $ADMIN (do sudo, nie do logowania):&quot;
+        zrob passwd &quot;$ADMIN&quot;
+    else
+        log &quot;UWAGA: $ADMIN nie ma hasła; ustaw je później: passwd $ADMIN&quot;
+    fi
+fi
+
+# ---------- 3. Klucz SSH ----------
+log &quot;Krok 3/6: klucz SSH dla $ADMIN&quot;
+DOM=$(getent passwd &quot;$ADMIN&quot; | cut -d: -f6 || true)
+DOM=${DOM:-/home/$ADMIN}
+zrob install -d -m 700 -o &quot;$ADMIN&quot; -g &quot;$ADMIN&quot; &quot;$DOM/.ssh&quot;
+if [[ -f $DOM/.ssh/authorized_keys ]] &amp;&amp; grep -qxF -f &quot;$KLUCZ&quot; &quot;$DOM/.ssh/authorized_keys&quot;; then
+    log &quot;klucz już jest w authorized_keys&quot;
+else
+    if (( PROBA )); then
+        printf &#x27;   [próba] dopisałbym klucz do %s\n&#x27; &quot;$DOM/.ssh/authorized_keys&quot;
+    else
+        cat &quot;$KLUCZ&quot; &gt;&gt; &quot;$DOM/.ssh/authorized_keys&quot;
+    fi
+fi
+zrob chown &quot;$ADMIN:$ADMIN&quot; &quot;$DOM/.ssh/authorized_keys&quot;
+zrob chmod 600 &quot;$DOM/.ssh/authorized_keys&quot;
+# SELinux (RHEL): nadaj plikom w .ssh właściwe etykiety
+if command -v selinuxenabled &gt;/dev/null &amp;&amp; selinuxenabled; then
+    zrob restorecon -R &quot;$DOM/.ssh&quot;
+fi
+
+# ---------- 4. SSH tylko na klucze ----------
+log &quot;Krok 4/6: SSH tylko na klucze, bez roota&quot;
+zapisz &quot;$DROPIN&quot; &lt;&lt;&#x27;EOF&#x27;
+# nowy-serwer.sh: logowanie wyłącznie kluczem, root nie wchodzi przez SSH
+PermitRootLogin no
+PasswordAuthentication no
+KbdInteractiveAuthentication no
+PubkeyAuthentication yes
+MaxAuthTries 3
+EOF
+if (( ! PROBA )) &amp;&amp; ! sshd -t; then
+    rm -f &quot;$DROPIN&quot;
+    blad &quot;sshd -t odrzucił konfigurację; usunąłem $DROPIN, nic nie przeładowano&quot;
+fi
+usluga try-reload-or-restart &quot;$SSH_USLUGA&quot;
+
+# ---------- 5. Zapora ----------
+log &quot;Krok 5/6: zapora, wpuszczamy tylko SSH&quot;
+if [[ $RODZINA == debian ]]; then
+    zrob ufw default deny incoming
+    zrob ufw default allow outgoing
+    zrob ufw allow OpenSSH
+    zrob ufw --force enable
+else
+    usluga enable --now firewalld
+    zrob firewall-cmd --permanent --add-service=ssh
+    zrob firewall-cmd --reload
+fi
+
+# ---------- 6. fail2ban i automatyczne poprawki ----------
+log &quot;Krok 6/6: fail2ban i automatyczne aktualizacje bezpieczeństwa&quot;
+zapisz /etc/fail2ban/jail.local &lt;&lt;&#x27;EOF&#x27;
+[DEFAULT]
+bantime  = 1h
+findtime = 10m
+maxretry = 5
+ignoreip = 127.0.0.1/8 ::1
+
+[sshd]
+enabled = true
+backend = systemd
+EOF
+(( PROBA )) || fail2ban-client -t &gt;/dev/null || blad &quot;fail2ban-client -t: błąd w jail.local&quot;
+usluga enable fail2ban
+usluga restart fail2ban
+
+if [[ $RODZINA == debian ]]; then
+    zapisz /etc/apt/apt.conf.d/20auto-upgrades &lt;&lt;&#x27;EOF&#x27;
+APT::Periodic::Update-Package-Lists &quot;1&quot;;
+APT::Periodic::Unattended-Upgrade &quot;1&quot;;
+EOF
+else
+    zrob sed -i &#x27;s/^upgrade_type.*/upgrade_type = security/; s/^apply_updates.*/apply_updates = yes/&#x27; \
+        /etc/dnf/automatic.conf
+    usluga enable --now dnf-automatic.timer
+fi
+
+log &quot;GOTOWE. NIE zamykaj tej sesji. W drugim oknie sprawdź:&quot;
+log &quot;   ssh -i TWÓJ_KLUCZ $ADMIN@$(hostname -I 2&gt;/dev/null | awk &#x27;{print $1}&#x27;)&quot;
+log &quot;   sudo whoami    (ma odpowiedzieć: root)&quot;</code></pre></div><div class="kod"><pre><code>shellcheck nowy-serwer.sh &amp;&amp; echo czysto</code></pre></div><div class="kod"><pre><code>czysto</code></pre></div></section><section><h2 id="co-tu-jest-ciekawego">Co tu jest ciekawego</h2><p><strong>Tryb próby, czyli </strong><strong><code>-n</code></strong><strong>.</strong> Funkcja <code>zrob</code> to taki pilot z przyciskiem „na niby”. Normalnie wykonuje komendę. Z <code>-n</code> tylko mówi, co by zrobiła. Funkcja <code>zapisz</code> robi to samo z plikami: zamiast zapisać, pokazuje treść. Zawsze odpalaj nowy skrypt najpierw na niby. Chirurg też najpierw rysuje flamastrem, gdzie będzie ciąć.</p><div class="kod"><pre><code>sudo ./nowy-serwer.sh -u eryk -k id_ed25519.pub -n</code></pre></div><div class="kod"><pre><code>[22:34:02] System: Ubuntu 24.04.5 LTS (rodzina: debian)
+[22:34:02] TRYB PRÓBY: nic nie zostanie zmienione
+[22:34:02] Krok 1/6: aktualizacje i pakiety
+   [próba] apt-get update -q
+   [próba] apt-get -y -q upgrade
+   [próba] apt-get -y -q install openssh-server ufw fail2ban unattended-upgrades
+[22:34:02] Krok 2/6: konto eryk w grupie sudo
+   [próba] useradd -m -s /bin/bash -G sudo eryk
+...
+[22:34:07] Krok 4/6: SSH tylko na klucze, bez roota
+   [próba] zapisałbym /etc/ssh/sshd_config.d/10-nowy-serwer.conf:
+      | # nowy-serwer.sh: logowanie wyłącznie kluczem, root nie wchodzi przez SSH
+      | PermitRootLogin no
+      | PasswordAuthentication no
+...
+[22:34:07] Krok 5/6: zapora, wpuszczamy tylko SSH
+   [próba] ufw default deny incoming
+   [próba] ufw default allow outgoing
+   [próba] ufw allow OpenSSH
+   [próba] ufw --force enable</code></pre></div><p><strong>Rozpoznanie dystrybucji.</strong> Plik <code>/etc/os-release</code> ma zmienne <code>ID</code> i <code>ID_LIKE</code>. Na Rocky to na przykład <code>ID=&quot;rocky&quot;</code> i <code>ID_LIKE=&quot;rhel centos fedora&quot;</code>. Doklejamy spacje z obu stron i szukamy słowa w spacjach, żeby „rhel” nie złapało się przypadkiem w środku innego słowa. Skrypt nie musi znać każdej dystrybucji z nazwy, wystarczy, że wie, do której rodziny należy. Jak w szatni: nie pytasz, jak się kto nazywa, tylko z której jest klasy.</p><p><strong>Hasło do sudo, nie do logowania.</strong> Logujesz się kluczem, ale <code>sudo</code> dalej pyta o hasło. I dobrze: jak ktoś ukradnie Ci laptopa z kluczem, nadal nie jest rootem. <code>passwd -S</code> mówi, czy konto ma hasło: litera <code>P</code> znaczy „ma”, <code>L</code> „zablokowane”, <code>NP</code> „brak”. Skrypt pyta o hasło tylko wtedy, gdy siedzisz przy klawiaturze (<code>-t 0</code>), a jak leci z automatu, zostawia ostrzeżenie zamiast zawisnąć na zawsze, czekając na odpowiedź, której nikt nie da.</p><p><strong>Klucz dopisywany tylko raz.</strong> <code>grep -qxF -f KLUCZ</code> szuka w <code>authorized_keys</code> całej linijki identycznej z kluczem. Uruchomisz skrypt dziesięć razy, klucz będzie raz. Ta cecha ma swoją mądrą nazwę: <strong>idempotentność</strong>. Po ludzku: włącznik światła, a nie dzwonek. Wciśnięcie „włącz” na już włączonym świetle nic nie psuje. Zapamiętaj to słowo, za kwadrans wróci.</p><p><strong>Plik drop-in zamiast grzebania w </strong><strong><code>sshd_config</code></strong><strong>.</strong> Nie edytujemy głównego pliku, tylko kładziemy własny w <code>/etc/ssh/sshd_config.d/</code>. Główny plik ma na samej górze linijkę <code>Include /etc/ssh/sshd_config.d/*.conf</code>, a pliki z folderu czyta w kolejności alfabetycznej. I teraz smaczek z <code>man sshd_config</code>: dla każdego ustawienia wygrywa <strong>pierwsza</strong> znaleziona wartość. Nie ostatnia, jak w większości programów. Dlatego nasz plik nazywa się <code>10-...</code>: obrazy chmurowe często kładą tam własny <code>50-cloud-init.conf</code> z <code>PasswordAuthentication yes</code>. Sprawdziłem:</p><div class="kod"><pre><code>echo &#x27;PasswordAuthentication yes&#x27; | sudo tee /etc/ssh/sshd_config.d/50-cloud-init.conf
+sudo sshd -T | grep ^passwordauth</code></pre></div><div class="kod"><pre><code>passwordauthentication no</code></pre></div><p>Nasze <code>10-</code> było pierwsze, więc wygrało. Gdybyś nazwał plik <code>99-moje.conf</code>, przegrałby z chmurą i hasła dalej by działały, a Ty byłbyś przekonany, że nie. <code>sshd -T</code> wypisuje konfigurację, którą serwer naprawdę stosuje, po złożeniu wszystkich plików. Ufaj jemu, nie swoim oczom.</p><p><strong><code>sshd -t</code></strong><strong> przed przeładowaniem.</strong> Mała litera <code>t</code> to test składni. Jak test nie przejdzie, skrypt usuwa swój plik i kończy, zanim cokolwiek przeładuje. Bo <code>sshd</code> z zepsutą konfiguracją potrafi nie wstać, a wtedy jedyne drzwi do serwera są zamurowane.</p><p><strong><code>try-reload-or-restart</code></strong><strong>.</strong> [Ubuntu] Od Ubuntu 24.04 SSH budzi się przez gniazdo <code>ssh.socket</code>: usługa śpi, dopóki ktoś nie zapuka. <code>try-reload-or-restart</code> przeładuje ją, jeśli działa, a jeśli śpi, to nic nie robi, bo i tak obudzi się z nową konfiguracją. [RHEL] Usługa nazywa się <code>sshd</code>, nie <code>ssh</code>. Klasyczna pułapka przy przenoszeniu skryptów.</p><p><strong>Funkcja </strong><strong><code>usluga</code></strong><strong>.</strong> Skrypt może kiedyś trafić tam, gdzie nie ma systemd jako procesu numer 1, czyli nie ma kierownika zmiany: do kontenera Dockera albo do chroota z płyty ratunkowej. Tam <code>systemctl</code> nie ma z kim rozmawiać. Funkcja sprawdza, kto jest PID 1 (<code>/proc/1/comm</code>), i w takim miejscu zamiast się wywalić, wypisuje uczciwe ostrzeżenie. Na maszynie wirtualnej i na serwerze ta gałąź się nie odpali.</p></section><section><h2 id="pokaz-uruchomienie-naprawde">Pokaz: uruchomienie naprawdę</h2><div class="kod"><pre><code>sudo ./nowy-serwer.sh -u eryk -k id_ed25519.pub -s</code></pre></div><div class="kod"><pre><code>[22:34:30] System: Ubuntu 24.04.5 LTS (rodzina: debian)
+[22:34:30] Krok 1/6: aktualizacje i pakiety
+[22:34:30] Krok 2/6: konto eryk w grupie sudo
+[22:34:30] Krok 3/6: klucz SSH dla eryk
+[22:34:30] Krok 4/6: SSH tylko na klucze, bez roota
+[22:34:30] Krok 5/6: zapora, wpuszczamy tylko SSH
+Default incoming policy changed to &#x27;deny&#x27;
+Default outgoing policy changed to &#x27;allow&#x27;
+Rule added
+Firewall is active and enabled on system startup
+[22:34:33] Krok 6/6: fail2ban i automatyczne aktualizacje bezpieczeństwa
+[22:34:33] GOTOWE. NIE zamykaj tej sesji. W drugim oknie sprawdź:</code></pre></div><p>Teraz w drugim oknie test trzech drzwi. Kluczem jako nowy admin, hasłem jako nowy admin i kluczem jako root:</p><div class="kod"><pre><code>ssh -i ~/.ssh/id_ed25519 eryk@ADRES &#x27;whoami&#x27;
+ssh -o PubkeyAuthentication=no eryk@ADRES true
+ssh -i ~/.ssh/id_ed25519 root@ADRES true</code></pre></div><div class="kod"><pre><code>eryk
+eryk@ADRES: Permission denied (publickey).
+root@ADRES: Permission denied (publickey).</code></pre></div><p>Pierwsze drzwi otwarte, dwa pozostałe zamknięte. W komunikacie w nawiasie serwer mówi, jakie metody w ogóle przyjmuje: tylko <code>publickey</code>. Hasło nawet nie jest na liście. Ochroniarz nie mówi „złe hasło”, tylko „tu się wchodzi na kartę, proszę pana”.</p><p>I zapora:</p><div class="kod"><pre><code>sudo ufw status verbose</code></pre></div><div class="kod"><pre><code>Status: active
+Default: deny (incoming), allow (outgoing), deny (routed)
+
+To                         Action      From
+--                         ------      ----
+22/tcp (OpenSSH)           ALLOW IN    Anywhere</code></pre></div><p>[RHEL] To samo sprawdzasz przez <code>sudo firewall-cmd --list-all</code>, gdzie w linijce <code>services:</code> ma być <code>ssh</code>. A stan fail2ban na obu rodzinach: <code>sudo fail2ban-client status sshd</code>.</p><p>I drugie uruchomienie skryptu, żeby sprawdzić tę idempotentność:</p><div class="kod"><pre><code>[22:34:50] Krok 3/6: klucz SSH dla eryk
+[22:34:50] klucz już jest w authorized_keys</code></pre></div><p>Plik <code>authorized_keys</code> dalej ma jedną linijkę. Włącznik, nie dzwonek.</p></section><section><h2 id="ta-sama-lista-jako-playbook-ansible">Ta sama lista jako playbook Ansible</h2><p>Skrypt działa. Ale popatrz, ile w nim jest kodu, który nie robi nic pożytecznego, tylko pilnuje: „czy użytkownik już jest”, „czy klucz już jest”, „a może tryb próby”. Połowa skryptu to sprawdzanie, czy czegoś przypadkiem nie trzeba nie robić.</p><p>Pamiętasz z lekcji 103: Ansible to lista zadań opisująca <strong>stan docelowy</strong>. Nie mówisz „dodaj użytkownika”, tylko „użytkownik ma istnieć”. Jak lista dla ekipy remontowej: „ściany mają być białe”. Jeśli już są białe, ekipa nie maluje drugi raz, tylko odhacza. Idempotentność dostajesz w prezencie, a tryb próby to po prostu <code>--check</code>.</p><p>Struktura folderu:</p><div class="kod"><pre><code>nowy-serwer-ansible/
+├── ansible.cfg                    ([defaults] inventory = inventory.ini)
+├── inventory.ini
+├── klucze/eryk.pub
+├── group_vars/nowe/vault.yml      (zaszyfrowany ansible-vault)
+└── nowy-serwer.yml</code></pre></div><div class="kod"><pre><code># inventory.ini
+[nowe]
+web1 ansible_host=192.168.56.11
+db1  ansible_host=192.168.56.12</code></pre></div><p>Hasło administratora nie leży otwartym tekstem, tylko jako skrót, w pliku zaszyfrowanym przez <code>ansible-vault</code>:</p><div class="kod"><pre><code>mkdir -p group_vars/nowe
+printf &#x27;admin_haslo_hash: &quot;%s&quot;\n&#x27; &quot;$(openssl passwd -6)&quot; &gt; group_vars/nowe/vault.yml
+ansible-vault encrypt group_vars/nowe/vault.yml
+head -1 group_vars/nowe/vault.yml</code></pre></div><div class="kod"><pre><code>$ANSIBLE_VAULT;1.1;AES256</code></pre></div><p><code>openssl passwd -6</code> zapyta o hasło i zwróci jego skrót SHA-512 w formacie, który rozumie <code>/etc/shadow</code>. Do repozytorium Git trafia tylko zaszyfrowany plik.</p><p>I cały playbook:</p><div class="kod"><pre><code>---
+# nowy-serwer.yml — to samo co nowy-serwer.sh, ale jako opis stanu docelowego
+- name: Nowy serwer - stan docelowy
+  hosts: nowe
+  become: true
+  vars:
+    admin_nazwa: eryk
+    admin_klucz: &quot;{{ lookup(&#x27;ansible.builtin.file&#x27;, &#x27;klucze/eryk.pub&#x27;) }}&quot;
+    grupa_admin: &quot;{{ &#x27;sudo&#x27; if ansible_os_family == &#x27;Debian&#x27; else &#x27;wheel&#x27; }}&quot;
+    ssh_usluga: &quot;{{ &#x27;ssh&#x27; if ansible_os_family == &#x27;Debian&#x27; else &#x27;sshd&#x27; }}&quot;
+    # admin_haslo_hash leży zaszyfrowany w group_vars/nowe/vault.yml
+    ma_systemd: &quot;{{ ansible_service_mgr == &#x27;systemd&#x27; }}&quot;
+
+  tasks:
+    # ---------- 1. Aktualizacje i pakiety ----------
+    - name: Aktualizacje i pakiety (Debian/Ubuntu)
+      when: ansible_os_family == &#x27;Debian&#x27;
+      tags: pakiety
+      block:
+        - name: Aktualizacja systemu
+          ansible.builtin.apt:
+            update_cache: true
+            upgrade: safe
+        - name: Pakiety bazowe
+          ansible.builtin.apt:
+            name: [openssh-server, ufw, fail2ban, unattended-upgrades]
+            state: present
+
+    - name: Aktualizacje i pakiety (RHEL/Rocky/Alma)
+      when: ansible_os_family == &#x27;RedHat&#x27;
+      tags: pakiety
+      block:
+        - name: Repozytorium EPEL
+          ansible.builtin.dnf:
+            name: epel-release
+            state: present
+        - name: Aktualizacja systemu
+          ansible.builtin.dnf:
+            name: &quot;*&quot;
+            state: latest  # noqa package-latest
+        - name: Pakiety bazowe
+          ansible.builtin.dnf:
+            name: [openssh-server, firewalld, fail2ban, fail2ban-firewalld, dnf-automatic]
+            state: present
+
+    # ---------- 2. Konto administratora ----------
+    - name: Konto administratora
+      ansible.builtin.user:
+        name: &quot;{{ admin_nazwa }}&quot;
+        groups: &quot;{{ grupa_admin }}&quot;
+        append: true
+        shell: /bin/bash
+        password: &quot;{{ admin_haslo_hash }}&quot;
+        update_password: on_create
+
+    # ---------- 3. Klucz SSH ----------
+    - name: Klucz publiczny w authorized_keys
+      ansible.posix.authorized_key:
+        user: &quot;{{ admin_nazwa }}&quot;
+        key: &quot;{{ admin_klucz }}&quot;
+        state: present
+
+    # ---------- 4. SSH tylko na klucze ----------
+    - name: SSH bez haseł i bez roota
+      ansible.builtin.copy:
+        dest: /etc/ssh/sshd_config.d/10-nowy-serwer.conf
+        owner: root
+        group: root
+        mode: &quot;0644&quot;
+        content: |
+          # Ansible: logowanie wyłącznie kluczem, root nie wchodzi przez SSH
+          PermitRootLogin no
+          PasswordAuthentication no
+          KbdInteractiveAuthentication no
+          PubkeyAuthentication yes
+          MaxAuthTries 3
+        validate: /usr/sbin/sshd -t -f %s
+      notify: Przeładuj SSH
+
+    # ---------- 5. Zapora ----------
+    - name: Zapora ufw (Debian/Ubuntu)
+      when: ansible_os_family == &#x27;Debian&#x27;
+      tags: zapora
+      block:
+        - name: Wpuść SSH
+          community.general.ufw:
+            rule: allow
+            name: OpenSSH
+        - name: Włącz ufw, domyślnie odrzucaj ruch przychodzący
+          community.general.ufw:
+            state: enabled
+            policy: deny
+            direction: incoming
+
+    - name: Zapora firewalld (RHEL/Rocky/Alma)
+      when: ansible_os_family == &#x27;RedHat&#x27;
+      tags: zapora
+      block:
+        - name: Włącz firewalld
+          ansible.builtin.service:
+            name: firewalld
+            state: started
+            enabled: true
+          when: ma_systemd
+        - name: Wpuść SSH na stałe i od razu
+          ansible.posix.firewalld:
+            service: ssh
+            permanent: true
+            immediate: true
+            state: enabled
+
+    # ---------- 6. fail2ban i automatyczne poprawki ----------
+    - name: Konfiguracja fail2ban
+      ansible.builtin.copy:
+        dest: /etc/fail2ban/jail.local
+        mode: &quot;0644&quot;
+        content: |
+          [DEFAULT]
+          bantime  = 1h
+          findtime = 10m
+          maxretry = 5
+          ignoreip = 127.0.0.1/8 ::1
+
+          [sshd]
+          enabled = true
+          backend = systemd
+      notify: Restartuj fail2ban
+
+    - name: Automatyczne poprawki (Debian/Ubuntu)
+      ansible.builtin.copy:
+        dest: /etc/apt/apt.conf.d/20auto-upgrades
+        mode: &quot;0644&quot;
+        content: |
+          APT::Periodic::Update-Package-Lists &quot;1&quot;;
+          APT::Periodic::Unattended-Upgrade &quot;1&quot;;
+      when: ansible_os_family == &#x27;Debian&#x27;
+
+    - name: Automatyczne poprawki bezpieczeństwa (RHEL)
+      ansible.builtin.lineinfile:
+        path: /etc/dnf/automatic.conf
+        regexp: &quot;^{{ item.klucz }}&quot;
+        line: &quot;{{ item.klucz }} = {{ item.wartosc }}&quot;
+      loop:
+        - { klucz: upgrade_type, wartosc: security }
+        - { klucz: apply_updates, wartosc: &quot;yes&quot; }
+      when: ansible_os_family == &#x27;RedHat&#x27;
+
+    - name: Usługi włączone przy starcie
+      ansible.builtin.service:
+        name: &quot;{{ item }}&quot;
+        state: started
+        enabled: true
+      loop: &quot;{{ [&#x27;fail2ban&#x27;] + ([&#x27;dnf-automatic.timer&#x27;] if ansible_os_family == &#x27;RedHat&#x27; else []) }}&quot;
+      when: ma_systemd
+
+  handlers:
+    - name: Przeładuj SSH
+      ansible.builtin.service:
+        name: &quot;{{ ssh_usluga }}&quot;
+        state: reloaded
+      when: ma_systemd
+
+    - name: Restartuj fail2ban
+      ansible.builtin.service:
+        name: fail2ban
+        state: restarted
+      when: ma_systemd</code></pre></div><p>Na co warto popatrzeć.</p><p><code>validate: /usr/sbin/sshd -t -f %s</code> to ten sam bezpiecznik co <code>sshd -t</code> w skrypcie, tylko lepszy. Ansible zapisuje nowy plik obok, każe <code>sshd</code> go sprawdzić i dopiero gdy test przejdzie, podmienia oryginał. Zepsuty plik w ogóle nie trafia na miejsce.</p><p><strong>Handlery</strong>, czyli <code>notify: Przeładuj SSH</code>. SSH zostanie przeładowany tylko wtedy, gdy plik się naprawdę zmienił, i tylko raz, na końcu, nawet jak powiadomi go pięć zadań. Jak kelner, który nie biega do kuchni z każdym talerzem osobno, tylko zbiera zamówienia z całego stolika.</p><p><code>ma_systemd</code> to ta sama ostrożność co funkcja <code>usluga</code> w skrypcie: gdyby playbook trafił na maszynę bez systemd, na przykład do kontenera, zadania z usługami zostaną pominięte. Na maszynie wirtualnej ten warunek jest prawdziwy i niczego nie zmienia.</p><p>Moduły <code>ansible.posix.authorized_key</code>, <code>ansible.posix.firewalld</code> i <code>community.general.ufw</code> nie są w gołym <code>ansible-core</code>. Są w pełnym pakiecie <code>ansible</code>, a jak masz tylko rdzeń, doinstalujesz je jedną komendą:</p><div class="kod"><pre><code>ansible-galaxy collection install ansible.posix community.general</code></pre></div></section><section><h2 id="pokaz-playbook">Pokaz: playbook</h2><p>Najpierw składnia, potem na niby z różnicami, potem naprawdę:</p><div class="kod"><pre><code>ansible-playbook nowy-serwer.yml --syntax-check
+ansible-playbook nowy-serwer.yml --ask-vault-pass --check --diff
+ansible-playbook nowy-serwer.yml --ask-vault-pass</code></pre></div><div class="kod"><pre><code>playbook: nowy-serwer.yml
+...
+TASK [Konto administratora] ****************************************************
+changed: [web1]
+TASK [Klucz publiczny w authorized_keys] ***************************************
+changed: [web1]
+TASK [SSH bez haseł i bez roota] ***********************************************
+changed: [web1]
+TASK [Włącz ufw, domyślnie odrzucaj ruch przychodzący] *************************
+changed: [web1]
+TASK [Włącz firewalld] *********************************************************
+skipping: [web1]
+...
+PLAY RECAP *********************************************************************
+web1                       : ok=13   changed=11   unreachable=0    failed=0    skipped=6</code></pre></div><p>I najpiękniejsza linijka w całej lekcji. Drugie uruchomienie:</p><div class="kod"><pre><code>PLAY RECAP *********************************************************************
+web1                       : ok=11   changed=0    unreachable=0    failed=0    skipped=6</code></pre></div><p><code>changed=0</code>. Ekipa remontowa przyszła, obejrzała ściany, wszystko białe, poszła do domu. Zero zmian to nie nuda. Zero zmian to dowód, że serwer jest dokładnie w opisanym stanie. Możesz to puszczać co noc z crona i rano sprawdzać, czy ktoś przypadkiem czegoś nie „poprawił” ręcznie. To się nazywa wykrywanie dryfu konfiguracji.</p><p>[RHEL] Ten sam playbook na Rocky przeskoczy zadania z <code>ufw</code>, a wykona te z <code>firewalld</code>, EPEL i <code>dnf-automatic</code>. Jedna lista, dwie rodziny. Dlatego <code>when:</code> stoi przy blokach, a nie w każdym zadaniu osobno.</p></section><section><h2 id="sciaga-skrypt-kontra-playbook">Ściąga: skrypt kontra playbook</h2><div class="tabela"><table><tr><th>Cecha</th><th>Skrypt Bash</th><th>Playbook Ansible</th></tr><tr><td>Na ilu serwerach</td><td>jeden, ten, na którym go odpalisz</td><td>tyle, ile w inwentarzu, naraz</td></tr><tr><td>Czego potrzebuje na serwerze</td><td>Basha</td><td>SSH i Pythona</td></tr><tr><td>Tryb próby</td><td>piszesz sam (<code>zrob</code>, <code>zapisz</code>)</td><td><code>--check --diff</code> w prezencie</td></tr><tr><td>Idempotentność</td><td>piszesz sam (<code>grep -qxF</code>, <code>id</code>)</td><td>w modułach</td></tr><tr><td>Bezpiecznik konfiguracji</td><td><code>sshd -t</code> i ręczne sprzątanie</td><td><code>validate:</code></td></tr><tr><td>Przeładowanie usług</td><td>zawsze</td><td>tylko po zmianie (handlery)</td></tr><tr><td>Kiedy wygrywa</td><td>pierwszy serwer, brak Pythona, cloud-init</td><td>od drugiego serwera w górę</td></tr></table></div><p>Prawda, której nikt nie mówi na kursach Ansible: w prawdziwym życiu masz oba. Krótki skrypt w polu „user data” u dostawcy chmury, czyli w cloud-init, robi minimum, żeby Ansible mógł wejść: konto i klucz. Resztę robi playbook. Skrypt to klucz do drzwi wejściowych, playbook to ekipa, która urządza mieszkanie.</p></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p><strong>fail2ban</strong> to ochroniarz, który czyta dziennik wejść. Z naszym <code>backend = systemd</code> czyta dziennik systemd, a nie plik tekstowy. Szuka linijek pasujących do wzorców z <code>/etc/fail2ban/filter.d/sshd.conf</code>, na przykład nieudanych logowań z danego adresu. Jak z jednego adresu przyjdzie <code>maxretry = 5</code> porażek w ciągu <code>findtime = 10m</code>, dopisuje ten adres do zapory na <code>bantime = 1h</code>. [Ubuntu] W 24.04 pakiet sam kładzie <code>/etc/fail2ban/jail.d/defaults-debian.conf</code> z <code>backend = systemd</code> i <code>banaction = nftables</code>, czyli bany lądują w nftables. [RHEL] Pakiet <code>fail2ban-firewalld</code> ustawia akcję tak, żeby bany szły przez firewalld, a nie obok niego. Dwóch ochroniarzy na jednych drzwiach, którzy się nie dogadują, to przepis na awarię.</p><p>Dlaczego <code>jail.local</code>, a nie <code>jail.conf</code>? Bo <code>jail.conf</code> należy do pakietu i aktualizacja może go nadpisać. Pliki <code>.local</code> są czytane po <code>.conf</code> i nadpisują jego ustawienia, a pakiet ich nigdy nie dotyka. Ta sama zasada co drop-in w SSH: nie piszesz po cudzych kartkach, tylko przyklejasz swoją karteczkę. Test konfiguracji bez uruchamiania:</p><div class="kod"><pre><code>sudo fail2ban-client -t</code></pre></div><div class="kod"><pre><code>OK: configuration test is successful</code></pre></div><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>fail2ban nie zastępuje kluczy. Przy logowaniu tylko kluczem zgadywanie haseł i tak nie ma szans. fail2ban zmniejsza szum w logach i chroni, gdyby ktoś kiedyś przez pomyłkę włączył hasła. Pas i szelki.</p></aside><p><strong>Ansible</strong> pod spodem robi coś, co sam robiłeś w lekcji 102: łączy się po SSH, kopiuje na serwer mały program w Pythonie (moduł), uruchamia go z parametrami, odbiera wynik w JSON-ie i sprząta. Moduł <code>user</code> sprawdza <code>/etc/passwd</code>, porównuje ze stanem docelowym i zmienia tylko różnice. Stąd <code>changed</code> albo <code>ok</code>. Dlatego Ansible potrzebuje na serwerze Pythona, a na Twoim komputerze nic poza SSH i samym Ansiblem. Żadnego agenta, żadnej usługi w tle.</p></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>Pierwszy: puszczasz playbook na świeży serwer w trybie <code>--check</code> i dostajesz:</p><div class="kod"><pre><code>TASK [Klucz publiczny w authorized_keys] ***************************************
+fatal: [web1]: FAILED! =&gt; {&quot;changed&quot;: false, &quot;msg&quot;: &quot;Either user must exist or you must provide full path to key file in check mode&quot;}</code></pre></div><p>To nie błąd w playbooku. W trybie próby zadanie „utwórz użytkownika” tylko udaje, że utworzyło konto, więc w następnym zadaniu konta dalej nie ma i moduł nie wie, gdzie jest jego folder domowy. Tryb próby nie przewidzi skutków zadań, które się naprawdę nie wykonały. Na świeżym serwerze uruchom playbook naprawdę na maszynie wirtualnej. Na serwerze, gdzie konto już jest, <code>--check</code> przejdzie czysto.</p><p>Drugi, groźniejszy: literówka w pliku SSH.</p><div class="kod"><pre><code>echo &#x27;PermitRootLogn no&#x27; | sudo tee /etc/ssh/sshd_config.d/99-test.conf
+sudo sshd -t</code></pre></div><div class="kod"><pre><code>/etc/ssh/sshd_config.d/99-test.conf: line 1: Bad configuration option: PermitRootLogn
+/etc/ssh/sshd_config.d/99-test.conf: terminating, 1 bad configuration options</code></pre></div><p>Jeden brakujący znak i <code>sshd</code> przy następnym restarcie nie wstanie. Właśnie dlatego skrypt robi <code>sshd -t</code> przed przeładowaniem, a playbook ma <code>validate:</code>. I właśnie dlatego masz otwartą drugą sesję: działające połączenie SSH żyje dalej nawet wtedy, gdy nowy <code>sshd</code> się nie uruchomi. To Twoje koło ratunkowe. Naprawiasz plik, <code>sshd -t</code>, przeładowanie, test w trzecim oknie.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><p>Dopisz do playbooka dwa zadania: ustaw strefę czasową <code>Europe/Warsaw</code> i nazwę hosta równą nazwie z inwentarza (<code>web1</code>, <code>db1</code>). Uruchom playbook dwa razy i sprawdź, że za drugim razem jest <code>changed=0</code>. Podpowiedź: moduły <code>community.general.timezone</code> i <code>ansible.builtin.hostname</code>, a nazwa z inwentarza siedzi w zmiennej <code>inventory_hostname</code>.</p><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><p>Zadanie było takie: dopisać do playbooka z projektu 1 strefę czasową i nazwę hosta z inwentarza, a potem udowodnić, że drugi przebieg niczego nie zmienia. Dwa zadania na końcu listy <code>tasks</code>:</p><div class="kod"><pre><code>    # ---------- 7. Strefa czasowa i nazwa hosta ----------
+    - name: Strefa czasowa Europe/Warsaw
+      community.general.timezone:
+        name: Europe/Warsaw
+
+    - name: Nazwa hosta jak w inwentarzu
+      ansible.builtin.hostname:
+        name: &quot;{{ inventory_hostname }}&quot;</code></pre></div><p><code>inventory_hostname</code> to nazwa, pod którą maszyna stoi w inwentarzu, czyli <code>web1</code> albo <code>db1</code>, a nie jej adres IP. Pierwsze uruchomienie, potem drugie:</p><div class="kod"><pre><code>ansible-playbook nowy-serwer.yml --ask-vault-pass
+ansible-playbook nowy-serwer.yml --ask-vault-pass</code></pre></div><div class="kod"><pre><code>TASK [Strefa czasowa Europe/Warsaw] ********************************************
+changed: [web1]
+
+TASK [Nazwa hosta jak w inwentarzu] ********************************************
+changed: [web1]
+...
+web1                       : ok=3    changed=2    unreachable=0    failed=0 ...
+
+(drugi raz)
+web1                       : ok=3    changed=0    unreachable=0    failed=0 ...</code></pre></div><p>Jedna uwaga. Moduł <code>hostname</code> na Ubuntu i RHEL domyślnie woła <code>hostnamectl</code>, a ten rozmawia z systemd. Na maszynie bez działającego systemd, na przykład w kontenerze, dostaniesz uczciwe:</p><div class="kod"><pre><code>fatal: [web1]: FAILED! =&gt; {&quot;changed&quot;: false, &quot;msg&quot;: &quot;Command failed rc=1, out=, err=Failed to connect to bus: Connection refused\n&quot;}</code></pre></div><p>Na maszynie wirtualnej tego nie zobaczysz. W kontenerze pomaga parametr <code>use:</code>, który każe modułowi pisać prosto do <code>/etc/hostname</code> zamiast pytać systemd. Ja dodałem go przez zmienną z inwentarza, żeby na VM-kach dalej działała autodetekcja:</p><div class="kod"><pre><code>      ansible.builtin.hostname:
+        name: &quot;{{ inventory_hostname }}&quot;
+        use: &quot;{{ hostname_strategia | default(omit) }}&quot;</code></pre></div><p><code>default(omit)</code> znaczy: jak zmiennej nie ma, udawaj, że tej linijki w ogóle nie napisałem. Na VM jej nie ustawiasz, a na maszynie bez systemd piszesz w inwentarzu <code>hostname_strategia=alpine</code>. Wynik: pierwszy raz <code>changed=2</code>, drugi raz <code>changed=0</code>, w <code>/etc/timezone</code> siedzi <code>Europe/Warsaw</code>, w <code>/etc/hostname</code> siedzi <code>web1</code>. Ekipa remontowa przyszła drugi raz, wszystko na miejscu, poszła na kawę.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Mamy bezpieczny, pusty serwer. Pusty serwer jest bezpieczny, ale nudny. W następnym projekcie stawiamy na nim recepcję hotelu: Apache z dwiema stronami, obie na HTTPS, z własną firmową pieczątką do certyfikatów, przekierowaniem z HTTP i porządnymi testami na koniec.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-109.html" rel="prev">← 109. Pytania rekrutacyjne: scenariusze</a><a class="btn domyslny zolty" href="lekcja-111.html" rel="next">111. Projekt 2: dwie strony na Apache z HTTPS →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

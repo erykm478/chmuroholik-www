@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>85. Certyfikaty i szyfrowanie — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 85 kursu Linux i Bash od zera do admina: Certyfikaty i szyfrowanie. kursant rozumie, jak działa HTTPS i certyfikat, sprawdza certyfikat dowolnej strony przez openssl s_client i openssl x509 -noout -dates, robi klucz i CSR, wie, co robi certbot, szyfruje i podpisuje pliki gpg oraz sprawdza int">
+<meta property="og:title" content="85. Certyfikaty i szyfrowanie — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 85 kursu Linux i Bash od zera do admina: Certyfikaty i szyfrowanie. kursant rozumie, jak działa HTTPS i certyfikat, sprawdza certyfikat dowolnej strony przez openssl s_client i openssl x509 -noout -dates, robi klucz i CSR, wie, co robi certbot, szyfruje i podpisuje pliki gpg oraz sprawdza int">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 9</span></div>
+      <div class="boczny-tytul"><a href="index.html#m09">Użytkownicy i bezpieczeństwo</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-078.html" data-lekcja="78"><span class="znacznik"></span><span class="nr">78</span> Użytkownicy i grupy</a></li><li><a href="lekcja-079.html" data-lekcja="79"><span class="znacznik"></span><span class="nr">79</span> sudo i root</a></li><li><a href="lekcja-080.html" data-lekcja="80"><span class="znacznik"></span><span class="nr">80</span> Kto się logował</a></li><li><a href="lekcja-081.html" data-lekcja="81"><span class="znacznik"></span><span class="nr">81</span> Konta z jednego miejsca: LDAP i Active Directory</a></li><li><a href="lekcja-082.html" data-lekcja="82"><span class="znacznik"></span><span class="nr">82</span> SELinux bez strachu</a></li><li><a href="lekcja-083.html" data-lekcja="83"><span class="znacznik"></span><span class="nr">83</span> AppArmor</a></li><li><a href="lekcja-084.html" data-lekcja="84"><span class="znacznik"></span><span class="nr">84</span> Utwardzanie serwera</a></li><li><a href="lekcja-085.html" data-lekcja="85" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">85</span> Certyfikaty i szyfrowanie</a></li><li><a href="lekcja-086.html" data-lekcja="86"><span class="znacznik"></span><span class="nr">86</span> Czas i język systemu</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="85" data-modul="9" data-tematy="jak działa HTTPS, openssl s_client, openssl x509 -noout -dates, klucz i CSR, certbot, gpg, sha256sum -c">
+    <div class="belka"><span>Lekcja 85 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m09">Moduł 9</a> › Lekcja 85</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Certyfikaty i szyfrowanie</h1>
+      <p class="meta"><span>⏱ ok. 13 min czytania</span><span>· moduł 9: Użytkownicy i bezpieczeństwo</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant rozumie, jak działa HTTPS i certyfikat, sprawdza certyfikat dowolnej strony przez <code>openssl s_client</code> i <code>openssl x509 -noout -dates</code>, robi klucz i CSR, wie, co robi certbot, szyfruje i podpisuje pliki gpg oraz sprawdza integralność plików przez <code>sha256sum -c</code>.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#dwa-rodzaje-klodek">Dwa rodzaje kłódek</a></li><li><a href="#jak-dziala-https">Jak działa HTTPS</a></li><li><a href="#openssl-s-client-zajrzyj-w-klodke">openssl s_client: zajrzyj w kłódkę</a></li><li><a href="#klucz-i-csr-wniosek-o-dowod">Klucz i CSR: wniosek o dowód</a></li><li><a href="#certbot-darmowy-urzad-ktory-nie-zapomina">certbot: darmowy urząd, który nie zapomina</a></li><li><a href="#gpg-szyfrowanie-i-podpisy-plikow">gpg: szyfrowanie i podpisy plików</a></li><li><a href="#sha256sum-odcisk-palca-pliku">sha256sum: odcisk palca pliku</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga-flag">Ściąga flag</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p>Poniedziałek, 8:03. Telefon: „Strona sklepu pokazuje wielkie czerwone ostrzeżenie, że połączenie nie jest prywatne!”. Klienci uciekają, szef stoi za plecami. Przyczyna? Certyfikat wygasł w niedzielę o północy. Ktoś rok temu wgrał go ręcznie i zapomniał, a kalendarz się nie pomylił.</p><p>To jedna z najczęstszych awarii w internecie i jedna z najłatwiejszych do uniknięcia. Dziś zobaczysz, co jest w środku tej kłódki, sprawdzisz dowolną stronę jedną komendą i nauczysz się szyfrować pliki tak, żeby nawet admin, który je skopiuje, nic z nich nie miał.</p></section><section><h2 id="dwa-rodzaje-klodek">Dwa rodzaje kłódek</h2><p>Zanim certyfikat, potrzebujemy dwóch rodzajów szyfrowania.</p><p><strong>Szyfrowanie symetryczne</strong> to zwykła skrzynka na klucz. Ten sam klucz zamyka i otwiera. Szybkie jak błyskawica, ale jest problem: jak przekazać klucz komuś na drugim końcu świata, żeby nikt go po drodze nie skopiował?</p><p><strong>Szyfrowanie asymetryczne</strong> to genialny trik. Masz parę: kłódkę i kluczyk. Rozdajesz otwarte kłódki każdemu, kto chce, nawet wiesząc je na słupach ogłoszeniowych. Każdy może zatrzasnąć taką kłódkę na skrzynce. Otworzyć możesz ją tylko Ty swoim kluczykiem. Otwarta kłódka to <strong>klucz publiczny</strong>, kluczyk w kieszeni to <strong>klucz prywatny</strong>. Znasz ten układ z SSH. To dokładnie ta sama matematyka.</p><p>I działa też w drugą stronę: czymś, co zrobisz kluczem prywatnym, można sprawdzić kluczem publicznym, że to Ty. To jest <strong>podpis cyfrowy</strong>. Jak pieczątka, którą masz tylko Ty, ale odcisk każdy może porównać z wzorem.</p></section><section><h2 id="jak-dziala-https">Jak działa HTTPS</h2><p>Wchodzisz na stronę banku. Skąd wiesz, że rozmawiasz z bankiem, a nie z kimś, kto podszył się pod niego w kawiarnianym Wi-Fi?</p><p>Bank pokazuje <strong>certyfikat</strong>, czyli dowód osobisty strony. Jest w nim nazwa (<code>bank.pl</code>), klucz publiczny banku, daty ważności i pieczątka urzędu, który ten dowód wydał. Ten urząd to <strong>CA</strong>, Certificate Authority, urząd certyfikacji. Twoja przeglądarka i system mają wbudowaną listę urzędów, którym ufają. Na Linuksie leży w <code>/etc/ssl/certs</code> [Ubuntu] albo <code>/etc/pki/tls/certs</code> [RHEL].</p><p>Połączenie wygląda tak:</p><ol><li>Przeglądarka: „Cześć, chcę rozmawiać z <code>bank.pl</code>.”</li><li>Serwer wysyła certyfikat, a często też certyfikat urzędu pośredniego. To łańcuch: centrala, oddział wojewódzki, okienko.</li><li>Przeglądarka sprawdza: pieczątka prawdziwa? Urząd na mojej liście? Nazwa się zgadza? Data ważności nie minęła?</li><li>Strony wymieniają się sekretem tak, że podsłuchujący go nie pozna, a serwer udowadnia, że ma klucz prywatny pasujący do certyfikatu.</li><li>Z tego sekretu powstaje zwykły klucz symetryczny i dalej rozmowa idzie szybko.</li></ol><p>Asymetria do przedstawienia się, symetria do rozmowy. Wszystko w ułamku sekundy, zanim zdążysz mrugnąć. Ten protokół to <strong>TLS</strong>. Stara nazwa SSL wciąż krąży w nazwach programów i w języku handlowców, ale stare wersje SSL są od dawna wyłączone.</p></section><section><h2 id="openssl-s-client-zajrzyj-w-klodke">openssl s_client: zajrzyj w kłódkę</h2><p><code>openssl</code> to scyzoryk do kryptografii. <code>s_client</code> udaje przeglądarkę i pokazuje wszystko, co się dzieje:</p><div class="kod"><pre><code>openssl s_client -connect google.com:443 -servername google.com &lt;/dev/null</code></pre></div><p><code>-servername</code> mówi serwerowi, o którą nazwę pytasz. Na jednym adresie IP może siedzieć sto stron i każda ma swój certyfikat. <code>&lt;/dev/null</code> zamyka rozmowę od razu, inaczej openssl czeka, aż coś napiszesz.</p><p>Do pokazu postawiłem lokalnie własny mały „urząd” i serwer <code>sklep.lab</code>. Dla prawdziwej strony wygląda to tak samo, tylko nazwy są inne:</p><div class="kod"><pre><code>depth=1 CN = Urzad Certyfikacji Chmuroholika
+depth=0 CN = sklep.lab
+...
+subject=CN = sklep.lab
+issuer=CN = Urzad Certyfikacji Chmuroholika
+...
+New, TLSv1.3, Cipher is TLS_AES_256_GCM_SHA384
+Verify return code: 0 (ok)</code></pre></div><p><code>depth</code> to poziomy łańcucha, <code>subject</code> to „czyj to dowód”, <code>issuer</code> to „kto go wydał”. <code>TLSv1.3</code> to wersja protokołu. I najważniejsza linijka na końcu: <code>Verify return code: 0 (ok)</code>. Zero znaczy, że wszystko się zgadza. Kod wyjścia jak kciuk w górę.</p><p>A teraz sedno dla admina: do kiedy certyfikat jest ważny? Przepuszczamy go rurą do drugiej komendy:</p><div class="kod"><pre><code>openssl s_client -connect google.com:443 -servername google.com &lt;/dev/null 2&gt;/dev/null \
+  | openssl x509 -noout -dates -subject -issuer</code></pre></div><div class="kod"><pre><code>notBefore=Nov  3 21:08:58 2026 GMT
+notAfter=Feb  1 21:08:58 2027 GMT
+subject=CN = sklep.lab
+(wynik z mojego lokalnego sklep.lab; dla google.com zobaczysz jego daty i nazwę)</code></pre></div><p><code>x509</code> to nazwa formatu certyfikatów. <code>-noout</code> znaczy „nie wypisuj całego certyfikatu w kodowaniu, tylko to, o co pytam”. <code>notAfter</code> to data, którą wpisujesz do kalendarza. Albo lepiej, do skryptu:</p><div class="kod"><pre><code>openssl x509 -in sklep.crt -noout -checkend 1209600 &amp;&amp; echo OK || echo &#x27;Wygasa w ciągu 14 dni!&#x27;</code></pre></div><div class="kod"><pre><code>Certificate will not expire
+OK</code></pre></div><p><code>-checkend</code> dostaje liczbę sekund (14 dni to 1209600) i kończy się kodem 0, jeśli certyfikat do tego czasu nie wygaśnie, albo 1, jeśli wygaśnie. Idealne dla <code>if</code> w skrypcie. Wrócimy do tego w projekcie z monitorem.</p><p>Pełny certyfikat po ludzku: <code>openssl x509 -in plik.crt -noout -text</code>. Nazwy, dla których jest ważny, są w polu Subject Alternative Name:</p><div class="kod"><pre><code>openssl x509 -in sklep.crt -noout -ext subjectAltName</code></pre></div><div class="kod"><pre><code>X509v3 Subject Alternative Name: 
+    DNS:sklep.lab, DNS:www.sklep.lab</code></pre></div></section><section><h2 id="klucz-i-csr-wniosek-o-dowod">Klucz i CSR: wniosek o dowód</h2><p>Żeby dostać certyfikat, składasz wniosek. Robisz parę kluczy, a z klucza publicznego i nazwy strony robisz <strong>CSR</strong>, Certificate Signing Request, wniosek o podpisanie certyfikatu. Klucz prywatny zostaje u Ciebie. Zawsze. Do urzędu idzie tylko wniosek.</p><div class="kod"><pre><code>openssl req -new -newkey rsa:2048 -nodes -keyout sklep.key -out sklep.csr \
+  -subj &quot;/CN=sklep.lab&quot; -addext &quot;subjectAltName=DNS:sklep.lab,DNS:www.sklep.lab&quot;
+openssl req -in sklep.csr -noout -subject -verify
+ls -l sklep.*</code></pre></div><div class="kod"><pre><code>Certificate request self-signature verify OK
+subject=CN = sklep.lab
+-rw-r--r-- 1 root root  964 ... sklep.csr
+-rw------- 1 root root 1704 ... sklep.key</code></pre></div><p><code>-nodes</code> to „no DES”, czyli nie szyfruj klucza hasłem. Serwer WWW musi go przeczytać sam przy starcie, bez nikogo, kto wpisze hasło o trzeciej w nocy. Za to plik z kluczem ma uprawnienia <code>600</code>. Popatrz, openssl sam je ustawił.</p><p>Do testów możesz zrobić certyfikat samopodpisany, czyli dowód, który wystawiłeś sam sobie:</p><div class="kod"><pre><code>openssl req -x509 -newkey rsa:2048 -nodes -keyout test.key -out test.crt -days 30 \
+  -subj &quot;/CN=test.lab&quot; -addext &quot;subjectAltName=DNS:test.lab&quot;</code></pre></div><p>Działa, szyfruje, ale przeglądarka wyświetli ostrzeżenie. Słusznie. To jak legitymacja szkolna wydrukowana w domu: technicznie dokument, ale bramkarz w klubie się nie nabierze.</p><p>I sztuczka, która ratuje godziny: czy ten klucz pasuje do tego certyfikatu? Porównaj odciski klucza publicznego:</p><div class="kod"><pre><code>openssl x509 -in sklep.crt -noout -pubkey | sha256sum
+openssl pkey -in sklep.key -pubout | sha256sum</code></pre></div><div class="kod"><pre><code>afd3ae8d755860db696291e9f013f4720d33b4604235590b44f9d3bfae56f3da  -
+afd3ae8d755860db696291e9f013f4720d33b4604235590b44f9d3bfae56f3da  -</code></pre></div><p>Te same sumy, para pasuje. Różne, to Apache nie wstanie i będzie miał rację.</p></section><section><h2 id="certbot-darmowy-urzad-ktory-nie-zapomina">certbot: darmowy urząd, który nie zapomina</h2><p>Kiedyś certyfikat kosztował pieniądze i załatwiało się go mailami. Dziś jest Let&#x27;s Encrypt: darmowy urząd certyfikacji, który wydaje certyfikaty automatycznie. Haczyk: są krótkie. Teraz 90 dni. Let&#x27;s Encrypt zapowiedział skracanie: od 10 lutego 2027 domyślnie 64 dni, a od 16 lutego 2028 już 45 dni. To celowe. Krótki certyfikat wymusza automat, a automat nie zapomina jak człowiek z naszego haka.</p><p>Automatem jest <strong>certbot</strong>. Udowadnia urzędowi, że domena jest Twoja (kładzie plik na Twoim serwerze WWW, a urząd sprawdza, czy go widzi), odbiera certyfikat i sam go odnawia.</p><div class="kod"><pre><code>sudo apt install certbot python3-certbot-nginx                 # [Ubuntu]
+sudo dnf install epel-release &amp;&amp; sudo dnf install certbot      # [RHEL], z EPEL
+
+sudo certbot --nginx -d sklep.pl -d www.sklep.pl     # zdobądź i wpisz do konfiguracji nginx
+sudo certbot certonly --webroot -w /var/www/html -d sklep.pl   # tylko zdobądź
+sudo certbot certificates                            # co mam i do kiedy
+sudo certbot renew --dry-run                         # próba generalna odnowienia</code></pre></div><p>Certyfikaty lądują w <code>/etc/letsencrypt/live/sklep.pl/</code>: <code>fullchain.pem</code> to certyfikat z łańcuchem, <code>privkey.pem</code> to klucz prywatny. Odnawianie: [Ubuntu] pakiet zakłada timer systemd <code>certbot.timer</code>, który odpala się dwa razy dziennie i odnawia to, co jest blisko końca. Sprawdź <code>systemctl list-timers | grep certbot</code>. Pełną konfigurację z Apache zrobimy w lekcji 90. Certbot potrzebuje prawdziwej domeny i otwartego portu 80, więc na domowej maszynie wirtualnej zostaje Ci <code>--dry-run</code> i sucha teoria.</p></section><section><h2 id="gpg-szyfrowanie-i-podpisy-plikow">gpg: szyfrowanie i podpisy plików</h2><p>HTTPS chroni rozmowę. A plik, który leży na dysku albo jedzie mailem? Do tego jest <strong>gpg</strong>, GNU Privacy Guard.</p><p>Najprościej: szyfrowanie hasłem, czyli symetryczne.</p><div class="kod"><pre><code>gpg -c tajne.txt
+file tajne.txt.gpg
+gpg -d tajne.txt.gpg</code></pre></div><div class="kod"><pre><code>tajne.txt.gpg: PGP symmetric key encrypted data - AES with 256-bit key salted &amp; iterated - SHA512 .
+gpg: AES256.CFB encrypted data
+gpg: encrypted with 1 passphrase
+Hasło do Wi-Fi w biurze: Kotlet123</code></pre></div><p><code>-c</code> pyta o hasło i robi plik <code>.gpg</code>. <code>-d</code> odszyfrowuje na ekran (albo do pliku z <code>-o</code>). Oryginał zostaje, więc jak chcesz go się pozbyć, usuń go sam. Świetne do kopii zapasowych w chmurze: dostawca przechowuje Twoje pliki, ale ich nie przeczyta.</p><p>Wersja z parą kluczy, czyli asymetryczna:</p><div class="kod"><pre><code>gpg --quick-generate-key &#x27;Eryk Admin &lt;eryk@chmuroholik.lab&gt;&#x27; default default 1y
+gpg --list-keys
+gpg --armor --export eryk@chmuroholik.lab &gt; eryk.pub.asc</code></pre></div><div class="kod"><pre><code>pub   ed25519 2026-11-03 [SC] [expires: 2027-11-03]
+      614E77AB146ED65EC93E984686D7846DCE624371
+uid           [ultimate] Eryk Admin &lt;eryk@chmuroholik.lab&gt;
+sub   cv25519 2026-11-03 [E]</code></pre></div><p><code>eryk.pub.asc</code> to otwarta kłódka. Wysyłasz ją komu chcesz. Ktoś ją importuje (<code>gpg --import eryk.pub.asc</code>) i szyfruje plik dla Ciebie:</p><div class="kod"><pre><code>gpg -e -r eryk@chmuroholik.lab -o dla_eryka.gpg tajne.txt
+gpg -d dla_eryka.gpg</code></pre></div><div class="kod"><pre><code>gpg: encrypted with cv25519 key, ID 719AFB6C691DFEEF, created 2026-11-03
+      &quot;Eryk Admin &lt;eryk@chmuroholik.lab&gt;&quot;
+Hasło do Wi-Fi w biurze: Kotlet123</code></pre></div><p>I podpis. Skrypt, który rozsyłasz na serwery, podpisujesz, żeby nikt go po drodze nie podmienił:</p><div class="kod"><pre><code>gpg --armor --detach-sign skrypt.sh
+gpg --verify skrypt.sh.asc skrypt.sh
+echo &#x27;rm -rf /&#x27; &gt;&gt; skrypt.sh       # ktoś „poprawia” skrypt (tylko pokaz, nie uruchamiaj!)
+gpg --verify skrypt.sh.asc skrypt.sh</code></pre></div><div class="kod"><pre><code>gpg: Good signature from &quot;Eryk Admin &lt;eryk@chmuroholik.lab&gt;&quot; [ultimate]
+...
+gpg: BAD signature from &quot;Eryk Admin &lt;eryk@chmuroholik.lab&gt;&quot; [ultimate]</code></pre></div><p><code>BAD signature</code> i kod wyjścia 1. W skrypcie: nie uruchamiaj. To dokładnie ten mechanizm, którym apt i dnf sprawdzają pakiety z repozytorium, o czym było w module o pakietach.</p></section><section><h2 id="sha256sum-odcisk-palca-pliku">sha256sum: odcisk palca pliku</h2><p>Czasem nie chodzi o tajemnicę, tylko o pewność, że plik jest nienaruszony. Pobrałeś obraz ISO, skopiowałeś backup na inny serwer. Czy dojechał cały?</p><p>Funkcja skrótu, po angielsku hash, robi z pliku dowolnej wielkości krótki odcisk palca. Ten sam plik zawsze daje ten sam odcisk. Najmniejsza zmiana daje zupełnie inny:</p><div class="kod"><pre><code>echo &#x27;Ala ma kota&#x27; &gt; a.txt
+echo &#x27;Ala ma kota.&#x27; &gt; b.txt
+sha256sum a.txt b.txt</code></pre></div><div class="kod"><pre><code>c51bc001db0206126e1681ba88497ce583f077a92e427e4f62da96b691d28813  a.txt
+10abd7ad6526ff8c94fcf94ad0e5f4209274254a770deee2e1567139ddd28fac  b.txt</code></pre></div><p>Jedna kropka i ani jeden znak się nie zgadza. A z odcisku nie da się odtworzyć pliku, tak jak z odcisku palca nie odtworzysz człowieka.</p><p>Praktyczny sposób pracy: zapisujesz sumy do pliku, a potem sprawdzasz:</p><div class="kod"><pre><code>sha256sum backup.tar.gz konfig.conf &gt; SHA256SUMS
+sha256sum -c SHA256SUMS
+echo &#x27;zmiana&#x27; &gt;&gt; konfig.conf
+sha256sum -c SHA256SUMS; echo &quot;kod: $?&quot;</code></pre></div><div class="kod"><pre><code>backup.tar.gz: OK
+konfig.conf: OK
+...
+backup.tar.gz: OK
+konfig.conf: FAILED
+sha256sum: WARNING: 1 computed checksum did NOT match
+kod: 1</code></pre></div><p>Tak samo sprawdzasz pobrany obraz Ubuntu albo Rocky: obok obrazu leży plik <code>SHA256SUMS</code> (u Rocky <code>CHECKSUM</code>). Robisz <code>sha256sum -c SHA256SUMS --ignore-missing</code>, żeby nie narzekał na obrazy, których nie pobrałeś. A sam plik z sumami jest podpisany gpg. Suma mówi „plik jest taki jak na liście”, podpis mówi „listę napisał ten, kto trzeba”.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p><code>md5sum</code> i <code>sha1sum</code> dalej istnieją i do wykrywania przypadkowych uszkodzeń się nadają, ale dla obu znane są praktyczne kolizje. Do bezpieczeństwa używaj SHA-256 albo mocniejszych.</p></aside></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p>Certyfikat to plik w formacie X.509. Na dysku zwykle w kodowaniu PEM, czyli tekst między linijkami <code>-----BEGIN CERTIFICATE-----</code> i <code>-----END CERTIFICATE-----</code>. W środku: nazwa, klucz publiczny, daty, rozszerzenia i podpis wystawcy. Podpis to skrót całej treści zaszyfrowany kluczem prywatnym urzędu. Przeglądarka liczy skrót sama i sprawdza podpis kluczem publicznym urzędu. Zmień jedną literę w nazwie i podpis przestaje pasować.</p><p>Łańcuch działa schodkami: certyfikat strony podpisał urząd pośredni, pośredni podpisał główny, a główny jest na liście zaufanych w systemie. Dlatego serwer musi wysłać nie tylko swój certyfikat, ale i pośredni. Głównego nie wysyła, bo klient i tak ma go u siebie.</p><p>A klucz prywatny? Nie opuszcza serwera. Podczas połączenia TLS 1.3 serwer tylko podpisuje nim fragment rozmowy, a klient sprawdza podpis kluczem z certyfikatu. Sam sekret sesji powstaje z wymiany kluczy jednorazowych. Dzięki temu nawet ktoś, kto kiedyś ukradnie klucz prywatny, nie odszyfruje starych, nagranych rozmów.</p></section><section><h2 id="sciaga-flag">Ściąga flag</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga</th><th>Co robi</th></tr><tr><td><code>openssl s_client</code></td><td><code>-connect HOST:443 -servername HOST</code></td><td>łączy się jak przeglądarka, pokazuje łańcuch</td></tr><tr><td><code>openssl s_client</code></td><td><code>-CAfile PLIK</code></td><td>ufaj temu urzędowi (np. własnemu)</td></tr><tr><td><code>openssl x509</code></td><td><code>-noout -dates</code></td><td>daty ważności</td></tr><tr><td><code>openssl x509</code></td><td><code>-noout -subject -issuer</code></td><td>czyj i kto wydał</td></tr><tr><td><code>openssl x509</code></td><td><code>-noout -text</code></td><td>cały certyfikat po ludzku</td></tr><tr><td><code>openssl x509</code></td><td><code>-checkend SEKUNDY</code></td><td>kod 1, jeśli wygaśnie w tym czasie</td></tr><tr><td><code>openssl req</code></td><td><code>-new -newkey rsa:2048 -nodes -keyout -out</code></td><td>klucz i CSR</td></tr><tr><td><code>openssl req</code></td><td><code>-x509 -days N</code></td><td>certyfikat samopodpisany</td></tr><tr><td><code>openssl verify</code></td><td><code>-CAfile CA -untrusted POŚREDNI</code></td><td>sprawdza łańcuch pliku</td></tr><tr><td><code>certbot</code></td><td><code>--nginx</code> / <code>--apache</code> / <code>certonly --webroot</code></td><td>zdobywa certyfikat</td></tr><tr><td><code>certbot</code></td><td><code>renew --dry-run</code> / <code>certificates</code></td><td>test odnowienia / lista</td></tr><tr><td><code>gpg</code></td><td><code>-c</code> / <code>-d</code></td><td>szyfruj hasłem / odszyfruj</td></tr><tr><td><code>gpg</code></td><td><code>-e -r ODBIORCA</code></td><td>szyfruj kluczem publicznym</td></tr><tr><td><code>gpg</code></td><td><code>--detach-sign</code> / <code>--verify</code></td><td>podpisz / sprawdź podpis</td></tr><tr><td><code>gpg</code></td><td><code>--import</code> / <code>--armor --export</code></td><td>wczytaj / wypisz klucz publiczny</td></tr><tr><td><code>sha256sum</code></td><td><code>-c PLIK</code></td><td>sprawdza sumy z listy</td></tr><tr><td><code>sha256sum</code></td><td><code>--ignore-missing</code></td><td>pomija pliki, których nie masz</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>„W przeglądarce kłódka jest, a curl i skrypty krzyczą o błędzie certyfikatu.”</p><div class="kod"><pre><code>curl: (60) SSL certificate problem: unable to get local issuer certificate</code></pre></div><p>A <code>s_client</code> mówi:</p><div class="kod"><pre><code>verify error:num=20:unable to get local issuer certificate
+verify error:num=21:unable to verify the first certificate
+Verify return code: 21 (unable to verify the first certificate)</code></pre></div><p>Przyczyna: serwer wysyła tylko swój certyfikat, bez pośredniego. Ktoś wskazał w konfiguracji <code>cert.pem</code> zamiast <code>fullchain.pem</code>. Przeglądarki często mają pośredni w pamięci z innych stron albo same go dociągają, więc u Ciebie działa. Curl, skrypty, aplikacje mobilne nie. Odtworzyłem to lokalnie: ten sam certyfikat bez pośredniego daje kod 21, a z pośrednim:</p><div class="kod"><pre><code> 0 s:CN = sklep.lab
+   i:CN = Posrednik Chmuroholika
+ 1 s:CN = Posrednik Chmuroholika
+   i:CN = Urzad Certyfikacji Chmuroholika
+Verify return code: 0 (ok)</code></pre></div><p>Dwa certyfikaty w łańcuchu, kod zero. Naprawa: w konfiguracji serwera WWW zawsze <code>fullchain.pem</code>. Inne kody, które zobaczysz: <code>62 (hostname mismatch)</code>, czyli certyfikat na inną nazwę, i <code>10 (certificate has expired)</code>, czyli nasz poniedziałek o 8:03.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><ol><li>Zrób klucz i CSR dla nazwy <code>test.lab</code> z polem Subject Alternative Name i obejrzyj CSR komendą <code>openssl req -noout -text</code>.</li><li>Zrób certyfikat samopodpisany na 30 dni. Sprawdź jego daty i użyj <code>-checkend</code>, żeby sprawdzić, czy wygaśnie w ciągu 14 dni, a czy w ciągu 31.</li><li>Zaszyfruj dowolny plik gpg hasłem, usuń oryginał i odzyskaj go z wersji zaszyfrowanej.</li><li>Zrób plik <code>SHA256SUMS</code> dla trzech plików, zmień jeden z nich i pokaż, który wykrył <code>sha256sum -c</code>.</li></ol><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><p>Klucz i wniosek z polem SAN:</p><div class="kod"><pre><code>openssl req -new -newkey rsa:2048 -nodes -keyout test.key -out test.csr \
+  -subj &quot;/CN=test.lab&quot; -addext &quot;subjectAltName=DNS:test.lab&quot;
+openssl req -in test.csr -noout -text | grep -E &#x27;Subject:|DNS:|Public-Key&#x27;</code></pre></div><div class="kod"><pre><code>        Subject: CN = test.lab
+                Public-Key: (2048 bit)
+                    DNS:test.lab</code></pre></div><p>Certyfikat samopodpisany na 30 dni i test z <code>-checkend</code>:</p><div class="kod"><pre><code>openssl req -x509 -newkey rsa:2048 -nodes -keyout self.key -out self.crt -days 30 \
+  -subj &quot;/CN=test.lab&quot; -addext &quot;subjectAltName=DNS:test.lab&quot;
+openssl x509 -in self.crt -noout -subject -issuer -dates
+openssl x509 -in self.crt -noout -checkend $((14*86400))
+openssl x509 -in self.crt -noout -checkend $((31*86400)); echo &quot;kod: $?&quot;</code></pre></div><div class="kod"><pre><code>subject=CN = test.lab
+issuer=CN = test.lab
+notBefore=Nov  3 21:10:12 2026 GMT
+notAfter=Dec  3 21:10:12 2026 GMT
+Certificate will not expire
+Certificate will expire
+kod: 1</code></pre></div><p><code>subject</code> i <code>issuer</code> są takie same, czyli sam sobie wystawiłeś dowód. W ciągu 14 dni nie wygaśnie, w ciągu 31 tak, więc kod 1. Zauważ <code>$((14*86400))</code>: arytmetyka Basha z modułu o skryptach, żeby nie liczyć sekund na kalkulatorze.</p><p>gpg i sumy:</p><div class="kod"><pre><code>gpg -c notatki.txt &amp;&amp; rm notatki.txt
+gpg -o notatki.txt -d notatki.txt.gpg
+sha256sum a.txt b.txt c.txt &gt; SHA256SUMS
+echo zmiana &gt;&gt; b.txt
+sha256sum -c SHA256SUMS</code></pre></div><div class="kod"><pre><code>a.txt: OK
+b.txt: FAILED
+c.txt: OK
+sha256sum: WARNING: 1 computed checksum did NOT match</code></pre></div><p>Jeśli gpg nie zapytał o hasło przy odszyfrowaniu, to nie błąd. Agent gpg pamięta je przez kilka minut, jak kelner, który pamięta, że już pokazałeś dowód.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Certyfikat ma datę ważności. A skąd serwer wie, która jest godzina? Jak zegar się spieszy, certyfikaty wyglądają na nieważne, logi kłamią, a cron odpala zadania nie wtedy, kiedy trzeba. W następnej lekcji czas i język systemu: strefy czasowe, synchronizacja zegara przez chrony i ustawienia regionalne.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-084.html" rel="prev">← 84. Utwardzanie serwera</a><a class="btn domyslny zolty" href="lekcja-086.html" rel="next">86. Czas i język systemu →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

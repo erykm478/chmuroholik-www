@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>93. Stos LAMP od zera — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 93 kursu Linux i Bash od zera do admina: Stos LAMP od zera. kursant stawia od zera Apache, MariaDB i PHP przez PHP-FPM na jednym serwerze, uruchamia pierwszą aplikację, która czyta i zapisuje dane w bazie, i umie znaleźć, która z tych czterech warstw się zepsuła.">
+<meta property="og:title" content="93. Stos LAMP od zera — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 93 kursu Linux i Bash od zera do admina: Stos LAMP od zera. kursant stawia od zera Apache, MariaDB i PHP przez PHP-FPM na jednym serwerze, uruchamia pierwszą aplikację, która czyta i zapisuje dane w bazie, i umie znaleźć, która z tych czterech warstw się zepsuła.">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 10</span></div>
+      <div class="boczny-tytul"><a href="index.html#m10">Usługi i serwery</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-087.html" data-lekcja="87"><span class="znacznik"></span><span class="nr">87</span> Zadania o wyznaczonej godzinie i powiadomienia</a></li><li><a href="lekcja-088.html" data-lekcja="88"><span class="znacznik"></span><span class="nr">88</span> Apache: instalacja</a></li><li><a href="lekcja-089.html" data-lekcja="89"><span class="znacznik"></span><span class="nr">89</span> Apache: konfiguracja</a></li><li><a href="lekcja-090.html" data-lekcja="90"><span class="znacznik"></span><span class="nr">90</span> Apache z HTTPS</a></li><li><a href="lekcja-091.html" data-lekcja="91"><span class="znacznik"></span><span class="nr">91</span> Nginx, reverse proxy i rozkładanie ruchu</a></li><li><a href="lekcja-092.html" data-lekcja="92"><span class="znacznik"></span><span class="nr">92</span> Bazy danych dla admina</a></li><li><a href="lekcja-093.html" data-lekcja="93" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">93</span> Stos LAMP od zera</a></li><li><a href="lekcja-094.html" data-lekcja="94"><span class="znacznik"></span><span class="nr">94</span> Kontenery, część 1</a></li><li><a href="lekcja-095.html" data-lekcja="95"><span class="znacznik"></span><span class="nr">95</span> Kontenery, część 2</a></li><li><a href="lekcja-096.html" data-lekcja="96"><span class="znacznik"></span><span class="nr">96</span> Maszyny wirtualne: KVM i libvirt</a></li><li><a href="lekcja-097.html" data-lekcja="97"><span class="znacznik"></span><span class="nr">97</span> Monitorowanie</a></li><li><a href="lekcja-098.html" data-lekcja="98"><span class="znacznik"></span><span class="nr">98</span> Kopie zapasowe na serio</a></li><li><a href="lekcja-099.html" data-lekcja="99"><span class="znacznik"></span><span class="nr">99</span> Gdy serwer nie wstaje</a></li><li><a href="lekcja-100.html" data-lekcja="100"><span class="znacznik"></span><span class="nr">100</span> Metoda rozwiązywania problemów</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="93" data-modul="10" data-tematy="Apache, MariaDB i PHP razem, PHP-FPM, pierwsza aplikacja">
+    <div class="belka"><span>Lekcja 93 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m10">Moduł 10</a> › Lekcja 93</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Stos LAMP od zera</h1>
+      <p class="meta"><span>⏱ ok. 12 min czytania</span><span>· moduł 10: Usługi i serwery</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant stawia od zera Apache, MariaDB i PHP przez PHP-FPM na jednym serwerze, uruchamia pierwszą aplikację, która czyta i zapisuje dane w bazie, i umie znaleźć, która z tych czterech warstw się zepsuła.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#co-to-jest-lamp">Co to jest LAMP</a></li><li><a href="#php-fpm-czyli-kuchnia-za-sciana">PHP-FPM, czyli kuchnia za ścianą</a></li><li><a href="#instalacja">Instalacja</a></li><li><a href="#baza-dla-aplikacji">Baza dla aplikacji</a></li><li><a href="#pierwsza-aplikacja">Pierwsza aplikacja</a></li><li><a href="#virtualhost-i-pierwszy-test">VirtualHost i pierwszy test</a></li><li><a href="#psujemy-po-kolei">Psujemy po kolei</a></li><li><a href="#skrypt-kontrolny">Skrypt kontrolny</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga-flag">Ściąga flag</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p class="ekran">przeglądarka, adres <code>lamp.test</code>, lista kapci i formularz „Dodaj”</p><p>Wpisujesz w formularz „Kapcie z Wi-Fi”, cena 299, klikasz „Dodaj”. Strona się odświeża i kapcie są na liście. Nic wielkiego? To przez Twój serwer przeszło właśnie cztery warstwy: system, serwer WWW, język programowania i baza danych. Każda mogła się wywalić na swój sposób.</p><p>Dziś stawiamy to od zera. I zepsujemy po kolei, żebyś wiedział, jak wygląda awaria każdej warstwy. Bo kiedyś telefon zadzwoni z tekstem „strona nie działa”. I to będzie cały opis problemu.</p></section><section><h2 id="co-to-jest-lamp">Co to jest LAMP</h2><p>LAMP to skrót od czterech składników: <strong>L</strong>inux, <strong>A</strong>pache, <strong>M</strong>ySQL albo MariaDB i <strong>P</strong>HP. Na takim zestawie stoi mnóstwo stron w internecie, od bloga cioci po duże sklepy. WordPress, najpopularniejszy system do stron, jest napisany właśnie pod LAMP.</p><p>Znowu restauracja. Linux to budynek. Apache to kelner na sali, przyjmuje zamówienia i podaje talerze. PHP to kucharz, który dla każdego gościa przygotowuje danie od nowa. A MariaDB to spiżarnia, z której kucharz bierze składniki.</p><p>Czemu kucharz w ogóle jest potrzebny? Plik <code>index.html</code> to danie z lodówki. Kelner bierze gotowe i podaje. Ale lista kapci z bazy jest inna dla każdego klienta i zmienia się co minutę. Ktoś musi ją ugotować na życzenie. To robi PHP.</p><p>Zamiast Apache bywa Nginx, wtedy mówi się LEMP. Od Nginxa, wymawianego „engine-x”. Zamiast PHP bywa Python. Pomysł ten sam.</p></section><section><h2 id="php-fpm-czyli-kuchnia-za-sciana">PHP-FPM, czyli kuchnia za ścianą</h2><p>PHP można podłączyć do Apache na dwa sposoby.</p><p>Stary: moduł <code>mod_php</code>. Kucharz stoi na sali i jest jednocześnie kelnerem. Każdy kelner nosi w sobie całą kuchnię, nawet jak niesie tylko szklankę wody albo obrazek. Ciężko. I działa tylko z najstarszym trybem pracy Apache, <code>prefork</code>, w którym każdy klient ma osobny proces.</p><p>Nowy: <strong>PHP-FPM</strong>, FastCGI Process Manager. Kuchnia jest osobno, za ścianą. Kelner podaje sam wodę i obrazki, a zamówienie na danie przekazuje przez okienko do kuchni. W kuchni pracuje stała ekipa kucharzy, a kierownik kuchni pilnuje, ilu ich jest. Apache może wtedy pracować w szybszym trybie <code>event</code>, a PHP ma własne procesy, własnego użytkownika i własne limity.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>na RHEL 10 według dokumentacji Red Hata PHP domyślnie działa przez FPM, a usługa <code>php-fpm</code> startuje razem z <code>httpd</code> dzięki plikowi dodatkowemu systemd. Na Ubuntu sam wybierasz, instalując <code>php-fpm</code> albo <code>libapache2-mod-php</code>. Wybierz FPM.</p></aside></section><section><h2 id="instalacja">Instalacja</h2><div class="kod"><pre><code>sudo apt install apache2 mariadb-server php-fpm php-mysql
+sudo a2enmod proxy_fcgi setenvif
+sudo a2enconf php8.3-fpm
+sudo systemctl restart apache2</code></pre></div><p><code>php-mysql</code> to sterownik, dzięki któremu PHP w ogóle umie rozmawiać z MariaDB. <code>proxy_fcgi</code> to okienko między salą a kuchnią. A <code>a2enconf php8.3-fpm</code> włącza gotowy plik, który mówi Apache: „wszystko, co kończy się na <code>.php</code>, podaj do kuchni”. Zajrzyjmy do niego:</p><div class="kod"><pre><code>&lt;FilesMatch &quot;.+\.ph(?:ar|p|tml)$&quot;&gt;
+    SetHandler &quot;proxy:unix:/run/php/php8.3-fpm.sock|fcgi://localhost&quot;
+&lt;/FilesMatch&gt;</code></pre></div><p><code>proxy:unix:/run/php/php8.3-fpm.sock</code> to adres kuchni. Nie port sieciowy, tylko plik gniazda na dysku. Taki domofon między pokojami w tym samym budynku.</p><div class="kod"><pre><code>sudo dnf install httpd mariadb-server php php-fpm php-mysqlnd
+sudo systemctl enable --now httpd mariadb php-fpm
+sudo firewall-cmd --permanent --add-service=http
+sudo firewall-cmd --reload</code></pre></div><p>Na RHEL sterownik nazywa się <code>php-mysqlnd</code>. Konfiguracja dla Apache jest w <code>/etc/httpd/conf.d/php.conf</code>, a ustawienia kuchni w <code>/etc/php-fpm.d/www.conf</code>. Na Ubuntu ta sama kuchnia mieszka w <code>/etc/php/8.3/fpm/pool.d/www.conf</code>. Wersja PHP w obu rodzinach: 8.3.</p><p>Sprawdzamy kuchnię:</p><div class="kod"><pre><code>sudo php-fpm8.3 -t                 # [RHEL] php-fpm -t
+ps -o pid,user,rss,cmd -C php-fpm8.3</code></pre></div><div class="kod"><pre><code>NOTICE: configuration file /etc/php/8.3/fpm/php-fpm.conf test is successful
+  PID USER       RSS CMD
+30734 root     10400 php-fpm: master process (/etc/php/8.3/fpm/php-fpm.conf)
+30735 www-data 14604 php-fpm: pool www
+30736 www-data 14604 php-fpm: pool www</code></pre></div><p>Znajomy układ z Nginxa. Kierownik jako root, kucharze jako <code>www-data</code>. [RHEL] jako <code>apache</code>. Grupa kucharzy nazywa się <strong>pulą</strong>, po angielsku pool. Domyślna nazywa się <code>www</code>.</p></section><section><h2 id="baza-dla-aplikacji">Baza dla aplikacji</h2><p>Bazę <code>kapcie</code> i użytkownika <code>kapcie_app</code> zrobiliśmy w poprzedniej lekcji. Jeśli zaczynasz od zera, to po <code>sudo mariadb-secure-installation</code>:</p><div class="kod"><pre><code>CREATE DATABASE kapcie CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER &#x27;kapcie_app&#x27;@&#x27;localhost&#x27; IDENTIFIED BY &#x27;Tajne-Haslo-123&#x27;;
+GRANT ALL PRIVILEGES ON kapcie.* TO &#x27;kapcie_app&#x27;@&#x27;localhost&#x27;;</code></pre></div><p>I tabela <code>produkty</code> z dwiema parami kapci z poprzedniej lekcji.</p></section><section><h2 id="pierwsza-aplikacja">Pierwsza aplikacja</h2><p>Najpierw porządek w folderach. To ważne i wiele osób robi to źle:</p><div class="kod"><pre><code>/var/www/lamp/
+├── config.php        ← hasło do bazy, POZA folderem strony
+└── public/
+    └── index.php     ← tylko to widzi świat</code></pre></div><p><code>DocumentRoot</code> wskazuje na <code>public</code>. Plik z hasłem leży piętro wyżej, więc nikt nie wpisze go w przeglądarkę. To jak trzymanie sejfu na zapleczu, a nie na ladzie.</p><p><code>/var/www/lamp/config.php</code>:</p><div class="kod"><pre><code>&lt;?php
+return [
+    &#x27;dsn&#x27;   =&gt; &#x27;mysql:host=localhost;dbname=kapcie;charset=utf8mb4&#x27;,
+    &#x27;user&#x27;  =&gt; &#x27;kapcie_app&#x27;,
+    &#x27;haslo&#x27; =&gt; &#x27;Tajne-Haslo-123&#x27;,
+];</code></pre></div><p><code>/var/www/lamp/public/index.php</code>:</p><div class="kod"><pre><code>&lt;?php
+$cfg = require __DIR__ . &#x27;/../config.php&#x27;;
+
+try {
+    $db = new PDO($cfg[&#x27;dsn&#x27;], $cfg[&#x27;user&#x27;], $cfg[&#x27;haslo&#x27;], [
+        PDO::ATTR_ERRMODE =&gt; PDO::ERRMODE_EXCEPTION,
+    ]);
+} catch (PDOException $e) {
+    error_log(&#x27;Baza nie odpowiada: &#x27; . $e-&gt;getMessage());
+    http_response_code(500);
+    exit(&#x27;Sklep chwilowo nieczynny.&#x27;);
+}
+
+if ($_SERVER[&#x27;REQUEST_METHOD&#x27;] === &#x27;POST&#x27; &amp;&amp; !empty($_POST[&#x27;nazwa&#x27;])) {
+    $stmt = $db-&gt;prepare(&#x27;INSERT INTO produkty (nazwa, cena) VALUES (?, ?)&#x27;);
+    $stmt-&gt;execute([$_POST[&#x27;nazwa&#x27;], (float) ($_POST[&#x27;cena&#x27;] ?? 0)]);
+}
+
+$produkty = $db-&gt;query(&#x27;SELECT nazwa, cena FROM produkty ORDER BY id&#x27;)-&gt;fetchAll();
+?&gt;
+&lt;!doctype html&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt;
+&lt;title&gt;Sklep z kapciami&lt;/title&gt;
+&lt;h1&gt;Sklep z kapciami&lt;/h1&gt;
+&lt;ul&gt;
+&lt;?php foreach ($produkty as $p): ?&gt;
+  &lt;li&gt;&lt;?= htmlspecialchars($p[&#x27;nazwa&#x27;]) ?&gt; — &lt;?= number_format($p[&#x27;cena&#x27;], 2, &#x27;,&#x27;, &#x27; &#x27;) ?&gt; zł&lt;/li&gt;
+&lt;?php endforeach; ?&gt;
+&lt;/ul&gt;
+&lt;form method=&quot;post&quot;&gt;
+  &lt;input name=&quot;nazwa&quot; placeholder=&quot;Nazwa&quot;&gt; &lt;input name=&quot;cena&quot; placeholder=&quot;Cena&quot;&gt;
+  &lt;button&gt;Dodaj&lt;/button&gt;
+&lt;/form&gt;
+&lt;p&gt;&lt;small&gt;PHP &lt;?= PHP_VERSION ?&gt;, tryb: &lt;?= PHP_SAPI ?&gt;, proces: &lt;?= getmypid() ?&gt;&lt;/small&gt;&lt;/p&gt;</code></pre></div><p>Nie musisz umieć PHP. Ale admin powinien rozpoznać trzy rzeczy. <code>new PDO(...)</code> to połączenie z bazą, <code>host=localhost</code> znaczy „przez plik gniazda na tym samym serwerze”. <code>prepare</code> ze znakami zapytania to bezpieczne wkładanie danych od użytkownika do zapytania. Bez tego ktoś wpisze w nazwę kapci kawałek SQL i skasuje Ci tabelę. To się nazywa SQL injection i jest starsze niż większość kursantów tego kanału. A <code>htmlspecialchars</code> robi to samo przy wyświetlaniu.</p><p>Prawa do plików, jak w module o uprawnieniach:</p><div class="kod"><pre><code>sudo chown -R root:www-data /var/www/lamp     # [RHEL] root:apache
+sudo chmod 640 /var/www/lamp/config.php</code></pre></div><p>Kucharz czyta hasło, ale nie może go zmienić. Reszta świata nie widzi go wcale.</p><p>[RHEL] SELinux: pliki w <code>/var/www</code> dostają kontekst <code>httpd_sys_content_t</code> same. Jeśli baza stałaby na innym serwerze, potrzebny jest jeszcze <code>setsebool -P httpd_can_network_connect_db 1</code>.</p></section><section><h2 id="virtualhost-i-pierwszy-test">VirtualHost i pierwszy test</h2><p>[Ubuntu] <code>/etc/apache2/sites-available/lamp.conf</code>, [RHEL] <code>/etc/httpd/conf.d/lamp.conf</code>:</p><div class="kod"><pre><code>&lt;VirtualHost *:80&gt;
+    ServerName lamp.test
+    DocumentRoot /var/www/lamp/public
+    DirectoryIndex index.php index.html
+
+    &lt;Directory /var/www/lamp/public&gt;
+        Require all granted
+    &lt;/Directory&gt;
+
+    ErrorLog ${APACHE_LOG_DIR}/lamp_error.log
+    CustomLog ${APACHE_LOG_DIR}/lamp_access.log combined
+&lt;/VirtualHost&gt;</code></pre></div><p><code>DirectoryIndex index.php</code> mówi: jak ktoś wejdzie na sam adres, najpierw szukaj <code>index.php</code>.</p><div class="kod"><pre><code>echo &#x27;127.0.0.1 lamp.test&#x27; | sudo tee -a /etc/hosts
+sudo a2ensite lamp
+sudo apachectl configtest
+sudo systemctl reload apache2
+curl -s http://lamp.test/</code></pre></div><div class="kod"><pre><code>&lt;h1&gt;Sklep z kapciami&lt;/h1&gt;
+&lt;ul&gt;
+  &lt;li&gt;Kapcie z pomponem — 49,99 zł&lt;/li&gt;
+  &lt;li&gt;Kapcie z GPS — 199,00 zł&lt;/li&gt;
+&lt;/ul&gt;
+...
+&lt;p&gt;&lt;small&gt;PHP 8.3.6, tryb: fpm-fcgi, proces: 28994&lt;/small&gt;&lt;/p&gt;</code></pre></div><p>Widzisz <code>fpm-fcgi</code>? To dowód, że strona przeszła przez kuchnię za ścianą. A numer procesu to jeden z kucharzy z listy <code>ps</code> sprzed chwili.</p><p>Teraz formularz, ale z terminala. <code>curl -d</code> wysyła dane tak, jak przeglądarka po kliknięciu „Dodaj”:</p><div class="kod"><pre><code>curl -s -d &#x27;nazwa=Kapcie z Wi-Fi&amp;cena=299&#x27; http://lamp.test/ | grep &#x27;&lt;li&gt;&#x27;</code></pre></div><div class="kod"><pre><code>  &lt;li&gt;Kapcie z pomponem — 49,99 zł&lt;/li&gt;
+  &lt;li&gt;Kapcie z GPS — 199,00 zł&lt;/li&gt;
+  &lt;li&gt;Kapcie z Wi-Fi — 299,00 zł&lt;/li&gt;</code></pre></div><p>Cztery warstwy, jeden <code>curl</code>. Kapcie z Wi-Fi są w bazie. Po co kapciom Wi-Fi? Nie wiem. Ale się sprzedają.</p></section><section><h2 id="psujemy-po-kolei">Psujemy po kolei</h2><p>Ta część jest ważniejsza niż instalacja. Każda warstwa psuje się inaczej i zostawia inny ślad. <strong>Rób to na maszynie wirtualnej, nie na serwerze, na którym ktoś kupuje kapcie.</strong></p><p><strong>Kuchnia nie działa.</strong> Zatrzymuję PHP-FPM:</p><div class="kod"><pre><code>sudo systemctl stop php8.3-fpm      # [RHEL] php-fpm
+curl -si http://lamp.test/ | head -1
+sudo tail -1 /var/log/apache2/lamp_error.log</code></pre></div><div class="kod"><pre><code>HTTP/1.1 503 Service Unavailable
+[proxy_fcgi:error] ... AH01079: failed to make connection to backend: httpd-UDS</code></pre></div><p>503 i „nie mogę się połączyć z zapleczem”. Kelner puka w okienko kuchni, a tam nikogo. <code>httpd-UDS</code> to Unix Domain Socket, czyli nasz domofon. Kiedy widzisz 503 przy stronie w PHP, pierwsze pytanie: czy FPM żyje?</p><p><strong>Spiżarnia zamknięta.</strong> Zmieniam hasło w <code>config.php</code> na złe:</p><div class="kod"><pre><code>HTTP/1.1 500 Internal Server Error
+Sklep chwilowo nieczynny.</code></pre></div><p>Klient widzi grzeczny komunikat, bo tak napisaliśmy aplikację. A admin w logu Apache widzi prawdę:</p><div class="kod"><pre><code>[proxy_fcgi:error] ... AH01071: Got error &#x27;PHP message: Baza nie odpowiada: SQLSTATE[HY000] [1045] Access denied for user &#x27;kapcie_app&#x27;@&#x27;localhost&#x27; (using password: YES)&#x27;</code></pre></div><p>To nasza linijka z <code>error_log</code>. Kuchnia krzyknęła przez okienko, kelner zapisał to w zeszycie. Kod <code>1045</code> znasz z poprzedniej lekcji: złe hasło albo zły użytkownik.</p><p><strong>Kelner nie wie, że jest kuchnia.</strong> To jest typowy błąd, więc o nim za chwilę.</p></section><section><h2 id="skrypt-kontrolny">Skrypt kontrolny</h2><p>Cztery warstwy to cztery rzeczy do sprawdzenia. Zamiast pamiętać, zróbmy z tego skrypt. Wszystko, co tu jest, znasz z modułu o skryptach:</p><div class="kod"><pre><code>#!/bin/bash
+# Szybki test stosu LAMP: Apache, PHP-FPM, MariaDB i strona.
+set -uo pipefail
+
+URL=&quot;${1:-http://localhost/}&quot;
+GNIAZDO=&quot;${GNIAZDO:-/run/php/php8.3-fpm.sock}&quot;
+bledy=0
+
+ok()   { printf &#x27;  [OK]   %s\n&#x27; &quot;$1&quot;; }
+zle()  { printf &#x27;  [BŁĄD] %s\n&#x27; &quot;$1&quot; &gt;&amp;2; bledy=$((bledy + 1)); }
+
+echo &quot;Sprawdzam stos LAMP:&quot;
+
+if apachectl configtest &gt;/dev/null 2&gt;&amp;1; then
+    ok &quot;konfiguracja Apache&quot;
+else
+    zle &quot;konfiguracja Apache (uruchom: apachectl configtest)&quot;
+fi
+
+if [[ -S &quot;$GNIAZDO&quot; ]]; then
+    ok &quot;gniazdo PHP-FPM $GNIAZDO&quot;
+else
+    zle &quot;brak gniazda PHP-FPM $GNIAZDO&quot;
+fi
+
+if mariadb-admin ping &gt;/dev/null 2&gt;&amp;1; then
+    ok &quot;MariaDB odpowiada&quot;
+else
+    zle &quot;MariaDB nie odpowiada&quot;
+fi
+
+kod=$(curl -s -o /dev/null -w &#x27;%{http_code}&#x27; &quot;$URL&quot;)
+if [[ &quot;$kod&quot; == &quot;200&quot; ]]; then
+    ok &quot;strona $URL zwraca 200&quot;
+else
+    zle &quot;strona $URL zwraca $kod&quot;
+fi
+
+if (( bledy &gt; 0 )); then
+    echo &quot;Problemów: $bledy&quot;
+    exit 1
+fi
+echo &quot;Wszystko działa.&quot;</code></pre></div><p><code>[[ -S ... ]]</code> to test „czy to plik gniazda”, kuzyn <code>-f</code> i <code>-d</code> z lekcji o warunkach. Uruchamiamy z <code>sudo</code>, bo <code>mariadb-admin ping</code> wchodzi jako root przez <code>unix_socket</code>. [RHEL] podajesz swoje gniazdo w zmiennej <code>GNIAZDO</code>, ścieżkę znajdziesz w linijce <code>listen</code> pliku <code>/etc/php-fpm.d/www.conf</code>.</p><div class="kod"><pre><code>sudo ./sprawdz-lamp.sh http://lamp.test/</code></pre></div><div class="kod"><pre><code>Sprawdzam stos LAMP:
+  [OK]   konfiguracja Apache
+  [OK]   gniazdo PHP-FPM /run/php/php8.3-fpm.sock
+  [OK]   MariaDB odpowiada
+  [OK]   strona http://lamp.test/ zwraca 200
+Wszystko działa.</code></pre></div><p>I po zatrzymaniu FPM:</p><div class="kod"><pre><code>  [OK]   konfiguracja Apache
+  [BŁĄD] brak gniazda PHP-FPM /run/php/php8.3-fpm.sock
+  [OK]   MariaDB odpowiada
+  [BŁĄD] strona http://lamp.test/ zwraca 503
+Problemów: 2</code></pre></div><p>Od razu widać, który klocek wypadł. ShellCheck nie ma uwag. A kod wyjścia <code>1</code> przy błędzie znaczy, że za kilka lekcji podepniemy ten skrypt pod monitoring.</p></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p>Przeglądarka łączy się z Apache na porcie 80. Apache patrzy na nagłówek <code>Host</code>, wybiera VirtualHost <code>lamp.test</code> i szuka pliku w <code>DocumentRoot</code>. Plik kończy się na <code>.php</code>, więc <code>SetHandler</code> mówi: nie wysyłaj go, przekaż dalej.</p><p>Moduł <code>proxy_fcgi</code> otwiera plik gniazda <code>/run/php/php8.3-fpm.sock</code> i rozmawia z FPM protokołem FastCGI. Przekazuje ścieżkę do skryptu, nagłówki i dane z formularza. Wolny kucharz z puli bierze zamówienie, wykonuje <code>index.php</code>, łączy się z MariaDB przez jej plik gniazda <code>/run/mysqld/mysqld.sock</code>, pobiera wiersze, składa HTML i oddaje go Apache. Apache dokleja swoje nagłówki i odsyła do przeglądarki.</p><p>Wszystko, co PHP napisze na swoje wyjście błędów, wraca przez FastCGI do Apache. Dlatego nasz <code>error_log</code> wylądował w <code>lamp_error.log</code> z dopiskiem <code>PHP message</code>.</p><p>Ilu kucharzy pracuje, ustala pula w <code>www.conf</code>:</p><div class="kod"><pre><code>pm = dynamic
+pm.max_children = 5
+pm.start_servers = 2
+pm.min_spare_servers = 1
+pm.max_spare_servers = 3</code></pre></div><p><code>max_children = 5</code> znaczy: najwyżej pięciu kucharzy naraz. Szósty klient czeka w kolejce. Kucharz na naszej liście <code>ps</code> zajmował około 14 MB, ale w prawdziwej aplikacji bywa to kilkadziesiąt, a nawet kilkaset MB. Zatrudnisz za dużo kucharzy, zabraknie RAM-u. Za mało, klienci będą czekać. Liczysz: ile pamięci masz dla PHP, podzielone przez średnią wagę kucharza.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>dla każdej aplikacji możesz zrobić osobną pulę z własnym użytkownikiem Linuksa i własnym gniazdem. Wtedy włamanie do sklepu z kapciami nie daje dostępu do plików bloga obok. Z <code>mod_php</code> wszystko działa jako jeden użytkownik Apache.</p></aside></section><section><h2 id="sciaga-flag">Ściąga flag</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga</th><th>Co robi</th></tr><tr><td><code>a2enmod</code></td><td><code>proxy_fcgi setenvif</code></td><td>[Ubuntu] włącza okienko do FPM</td></tr><tr><td><code>a2enconf</code></td><td><code>php8.3-fpm</code></td><td>[Ubuntu] kieruje pliki <code>.php</code> do FPM</td></tr><tr><td><code>php-fpm8.3</code> / <code>php-fpm</code></td><td><code>-t</code></td><td>sprawdza konfigurację FPM</td></tr><tr><td><code>php</code></td><td><code>-v</code> / <code>-m</code></td><td>wersja / lista modułów (czy jest <code>pdo_mysql</code>)</td></tr><tr><td><code>curl</code></td><td><code>-d &#x27;a=1&amp;b=2&#x27;</code></td><td>wysyła formularz metodą POST</td></tr><tr><td><code>curl</code></td><td><code>-si</code> / <code>-o /dev/null -w &#x27;%{http_code}&#x27;</code></td><td>nagłówki / sam kod odpowiedzi</td></tr><tr><td><code>mariadb-admin</code></td><td><code>ping</code></td><td>czy baza żyje</td></tr><tr><td><code>apachectl</code></td><td><code>-M</code></td><td>lista załadowanych modułów (czy jest <code>proxy_fcgi</code>)</td></tr><tr><td><code>www.conf</code></td><td><code>pm.max_children</code></td><td>maksymalna liczba procesów PHP</td></tr><tr><td><code>setsebool -P</code></td><td><code>httpd_can_network_connect_db 1</code></td><td>[RHEL] PHP może łączyć się z bazą po sieci</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>Instalujesz wszystko, wchodzisz na stronę, a zamiast kapci widzisz:</p><div class="kod"><pre><code>&lt;?php
+$cfg = require __DIR__ . &#x27;/../config.php&#x27;;
+
+try {</code></pre></div><p>Kod źródłowy PHP. W przeglądarce. Dla każdego.</p><p>Apache nie wie, że pliki <code>.php</code> trzeba wysłać do kuchni, więc podaje je jak zwykły tekst. Kelner zaniósł gościowi przepis zamiast dania. Dostałem to, wyłączając <code>a2disconf php8.3-fpm</code>. Na żywo zdarza się po instalacji <code>php-fpm</code> bez <code>a2enconf</code>, po aktualizacji PHP, kiedy nazwa pliku konfiguracji zmienia wersję, albo po skopiowaniu VirtualHosta z innego serwera.</p><p>I teraz zobacz, czemu <code>config.php</code> leży poza <code>public</code>. Gdyby był w środku, każdy mógłby w tej chwili przeczytać hasło do Twojej bazy.</p><p>Naprawa:</p><div class="kod"><pre><code>sudo a2enmod proxy_fcgi setenvif
+sudo a2enconf php8.3-fpm
+sudo apachectl configtest &amp;&amp; sudo systemctl reload apache2
+sudo apachectl -M | grep proxy_fcgi</code></pre></div><p>A potem i tak zmień hasło do bazy. Nie wiesz, kto zdążył je zobaczyć.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><p>W MariaDB utwórz bazę <code>sklep</code> i użytkownika, który ma dostęp tylko do niej, z hasłem. Zrób zrzut tej bazy do pliku z dzisiejszą datą w nazwie i sprawdź, że plik nie jest pusty.</p><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><p>Baza <code>sklep</code>, użytkownik, który widzi tylko ją, i zrzut z datą. Logujemy się jako administrator bazy. Na świeżej instalacji MariaDB root bazy loguje się przez gniazdo, więc wystarczy <code>sudo</code>:</p><div class="kod"><pre><code>sudo mariadb</code></pre></div><div class="kod"><pre><code>CREATE DATABASE sklep;
+CREATE USER &#x27;sklep&#x27;@&#x27;localhost&#x27; IDENTIFIED BY &#x27;Tajne-Haslo-123&#x27;;
+GRANT ALL PRIVILEGES ON sklep.* TO &#x27;sklep&#x27;@&#x27;localhost&#x27;;
+FLUSH PRIVILEGES;
+SHOW GRANTS FOR &#x27;sklep&#x27;@&#x27;localhost&#x27;;</code></pre></div><div class="kod"><pre><code>GRANT USAGE ON *.* TO `sklep`@`localhost` IDENTIFIED BY PASSWORD &#x27;*6494...&#x27;
+GRANT ALL PRIVILEGES ON `sklep`.* TO `sklep`@`localhost`</code></pre></div><p><code>sklep.*</code> to klucz tylko do jednego pokoju: wszystkie tabele w bazie <code>sklep</code> i nic więcej. Sprawdzamy, czy klucz nie pasuje do innych drzwi:</p><div class="kod"><pre><code>mariadb -u sklep -p -e &#x27;CREATE DATABASE inna;&#x27;</code></pre></div><div class="kod"><pre><code>ERROR 1044 (42000) at line 1: Access denied for user &#x27;sklep&#x27;@&#x27;localhost&#x27; to database &#x27;inna&#x27;</code></pre></div><p>O to chodziło. Teraz zrzut. Hasła nie wpisujemy w komendę, bo trafiłoby do historii i do listy procesów. Kładziemy je do pliku, który czyta tylko właściciel:</p><div class="kod"><pre><code>printf &#x27;[client]\nuser=sklep\npassword=Tajne-Haslo-123\n&#x27; &gt; ~/.sklep.cnf
+chmod 600 ~/.sklep.cnf
+mariadb-dump --defaults-extra-file=~/.sklep.cnf --single-transaction sklep &gt; sklep-$(date +%F).sql
+[ -s sklep-$(date +%F).sql ] &amp;&amp; echo &quot;Plik ma treść&quot;
+ls -lh sklep-*.sql</code></pre></div><div class="kod"><pre><code>Plik ma treść
+-rw-r--r-- 1 root root 2.0K Nov  3 16:35 sklep-2026-11-03.sql</code></pre></div><p><code>-s</code> w nawiasach to pytanie „czy plik istnieje i nie jest pusty”. <code>--defaults-extra-file</code> musi być pierwszą opcją, inaczej MariaDB go nie przyjmie.</p><p>[RHEL] Komendy są identyczne, a starsza nazwa <code>mysqldump</code> działa na obu rodzinach jako drogowskaz do <code>mariadb-dump</code>.</p><p>Plik z kopią bazy, który ma zero bajtów, to jak sejf, który przy otwarciu okazuje się szafką na buty. Dlatego zawsze sprawdzamy rozmiar.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Postawiliśmy cztery warstwy jedna na drugiej, każdą ręcznie. A gdyby całą aplikację razem ze wszystkim, czego potrzebuje, zapakować w jedno pudełko i postawić jedną komendą na dowolnym serwerze? W następnej lekcji kontenery: Docker i Podman, obraz, kontener, porty, wolumeny i sieci.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-092.html" rel="prev">← 92. Bazy danych dla admina</a><a class="btn domyslny zolty" href="lekcja-094.html" rel="next">94. Kontenery, część 1 →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

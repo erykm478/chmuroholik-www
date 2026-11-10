@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>84. Utwardzanie serwera — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 84 kursu Linux i Bash od zera do admina: Utwardzanie serwera. kursant umie przejść serwer po liście utwardzania: aktualizacje, zbędne usługi, SSH tylko na klucze, fail2ban, auditd, a potem wystawić serwerowi ocenę narzędziami lynis, OpenSCAP i AIDE.">
+<meta property="og:title" content="84. Utwardzanie serwera — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 84 kursu Linux i Bash od zera do admina: Utwardzanie serwera. kursant umie przejść serwer po liście utwardzania: aktualizacje, zbędne usługi, SSH tylko na klucze, fail2ban, auditd, a potem wystawić serwerowi ocenę narzędziami lynis, OpenSCAP i AIDE.">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 9</span></div>
+      <div class="boczny-tytul"><a href="index.html#m09">Użytkownicy i bezpieczeństwo</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-078.html" data-lekcja="78"><span class="znacznik"></span><span class="nr">78</span> Użytkownicy i grupy</a></li><li><a href="lekcja-079.html" data-lekcja="79"><span class="znacznik"></span><span class="nr">79</span> sudo i root</a></li><li><a href="lekcja-080.html" data-lekcja="80"><span class="znacznik"></span><span class="nr">80</span> Kto się logował</a></li><li><a href="lekcja-081.html" data-lekcja="81"><span class="znacznik"></span><span class="nr">81</span> Konta z jednego miejsca: LDAP i Active Directory</a></li><li><a href="lekcja-082.html" data-lekcja="82"><span class="znacznik"></span><span class="nr">82</span> SELinux bez strachu</a></li><li><a href="lekcja-083.html" data-lekcja="83"><span class="znacznik"></span><span class="nr">83</span> AppArmor</a></li><li><a href="lekcja-084.html" data-lekcja="84" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">84</span> Utwardzanie serwera</a></li><li><a href="lekcja-085.html" data-lekcja="85"><span class="znacznik"></span><span class="nr">85</span> Certyfikaty i szyfrowanie</a></li><li><a href="lekcja-086.html" data-lekcja="86"><span class="znacznik"></span><span class="nr">86</span> Czas i język systemu</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="84" data-modul="9" data-tematy="aktualizacje, wyłączanie usług, fail2ban, SSH na klucze, auditd, audyt: lynis, OpenSCAP (oscap), AIDE">
+    <div class="belka"><span>Lekcja 84 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m09">Moduł 9</a> › Lekcja 84</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Utwardzanie serwera</h1>
+      <p class="meta"><span>⏱ ok. 11 min czytania</span><span>· moduł 9: Użytkownicy i bezpieczeństwo</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant umie przejść serwer po liście utwardzania: aktualizacje, zbędne usługi, SSH tylko na klucze, fail2ban, auditd, a potem wystawić serwerowi ocenę narzędziami lynis, OpenSCAP i AIDE.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#zamykanie-domu-przed-wyjazdem">Zamykanie domu przed wyjazdem</a></li><li><a href="#krok-1-aktualizacje">Krok 1: aktualizacje</a></li><li><a href="#krok-2-wylacz-to-czego-nie-uzywasz">Krok 2: wyłącz to, czego nie używasz</a></li><li><a href="#krok-3-ssh-tylko-na-klucze">Krok 3: SSH tylko na klucze</a></li><li><a href="#krok-4-fail2ban-bramkarz-z-pamiecia">Krok 4: fail2ban, bramkarz z pamięcią</a></li><li><a href="#krok-5-auditd-czarna-skrzynka">Krok 5: auditd, czarna skrzynka</a></li><li><a href="#krok-6-audytorzy">Krok 6: audytorzy</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga-flag">Ściąga flag</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p class="ekran">świeży serwer w chmurze, <code>journalctl -u ssh</code> przewija się bez końca: <code>Invalid user admin</code>, <code>Invalid user oracle</code>, <code>Failed password for root</code></p><p>Stawiasz nowy serwer z publicznym adresem. Idziesz zrobić kawę. Wracasz, zaglądasz do dziennika SSH, a tam już ktoś próbuje: <code>admin</code>, <code>oracle</code>, <code>root</code>, <code>test</code>, <code>ubuntu</code>. Nikt jeszcze nie zna adresu Twojej strony, ale boty znają. One nie szukają Ciebie. One pukają do każdych drzwi w internecie, cały czas, od lat.</p><p>Na to jest jedna odpowiedź: zamknąć wszystko, co niepotrzebne, a to, co potrzebne, zamknąć porządnie. To się nazywa utwardzanie, po angielsku hardening. Dziś przejdziemy całą listę, a na końcu zawołamy automatycznych audytorów, którzy wystawią serwerowi świadectwo.</p></section><section><h2 id="zamykanie-domu-przed-wyjazdem">Zamykanie domu przed wyjazdem</h2><p>Wyjeżdżasz na urlop. Zamykasz drzwi, okna, wyłączasz żelazko, zakręcasz wodę, prosisz sąsiada, żeby zerkał. Utwardzanie serwera to dokładnie to samo, tylko żelazek jest więcej i niektóre są niewidoczne.</p><p>Fachowo: zmniejszasz powierzchnię ataku. Każdy program, który działa, każdy otwarty port, każde konto z hasłem to kolejne okno, przez które da się wejść. Nie da się zrobić serwera, w który nie da się włamać. Da się zrobić taki, przy którym bot pukający do milionów drzwi wzruszy ramionami i pójdzie do sąsiada.</p></section><section><h2 id="krok-1-aktualizacje">Krok 1: aktualizacje</h2><p>Większość włamań nie wymaga geniusza. Wymaga dziury, która ma łatkę od miesiąca, tylko nikt jej nie zainstalował. Z lekcji 65 znasz już <code>unattended-upgrades</code>:</p><div class="kod"><pre><code># [Ubuntu]
+sudo apt install unattended-upgrades
+sudo dpkg-reconfigure -plow unattended-upgrades</code></pre></div><p>[RHEL] Na Red Hacie to samo robi <code>dnf-automatic</code>:</p><div class="kod"><pre><code>sudo dnf install dnf-automatic
+sudo systemctl enable --now dnf-automatic-install.timer</code></pre></div><p>Timer <code>dnf-automatic-install</code> pobiera i od razu instaluje. Są też delikatniejsze wersje: <code>dnf-automatic-download.timer</code> tylko pobiera, <code>dnf-automatic-notifyonly.timer</code> tylko powiadamia. Ustawienia leżą w <code>/etc/dnf/automatic.conf</code>.</p><p>Pamiętaj: zaktualizowana biblioteka w pamięci starego procesu to dalej stara biblioteka. Po aktualizacji sprawdź, co trzeba zrestartować: <code>needrestart</code> na Ubuntu, <code>dnf needs-restarting</code> na RHEL.</p></section><section><h2 id="krok-2-wylacz-to-czego-nie-uzywasz">Krok 2: wyłącz to, czego nie używasz</h2><p>Czego nie ma, tego nie da się zhakować. Lista działających usług i otwartych portów:</p><div class="kod"><pre><code>systemctl list-units --type=service --state=running
+sudo ss -tulpn</code></pre></div><p>Serwer WWW z drukarką CUPS, serwerem pocztowym i Avahi, które rozgłasza w sieci „hej, jestem tu!”? To jak trzymanie w biurze rachunkowym automatu do waty cukrowej. Może i miłe, ale po co.</p><div class="kod"><pre><code>sudo systemctl disable --now cups.service
+sudo systemctl mask cups.service</code></pre></div><p><code>disable --now</code> zatrzymuje i wyłącza autostart. <code>mask</code> idzie dalej: zakleja usługę tak, że nie uruchomi jej nawet inna usługa, która by jej potrzebowała. Zanim coś wyłączysz, sprawdź, czy nikt tego nie używa. Wyłączenie <code>sshd</code> na zdalnym serwerze to bardzo skuteczne utwardzenie. Także przed Tobą.</p></section><section><h2 id="krok-3-ssh-tylko-na-klucze">Krok 3: SSH tylko na klucze</h2><p>Klucze SSH znasz z lekcji 76: kłódka na serwerze, kluczyk w kieszeni. Teraz wyłączamy hasła. Bot może zgadywać hasła do końca świata, ale klucza nie zgadnie.</p><p>⚠️ Zanim zaczniesz: <strong>miej otwartą drugą sesję SSH</strong> i sprawdź, że logowanie kluczem działa. Jedna pomyłka w <code>sshd_config</code> i odcinasz sobie drogę. Na pierwszy raz rób to na maszynie wirtualnej, gdzie masz konsolę.</p><p>Nie edytujemy głównego pliku. Robimy dopisek w folderze <code>sshd_config.d</code>:</p><div class="kod"><pre><code>sudo tee /etc/ssh/sshd_config.d/01-utwardzanie.conf &lt;&lt;&#x27;EOF&#x27;
+PasswordAuthentication no
+KbdInteractiveAuthentication no
+PermitRootLogin no
+EOF
+sudo sshd -t &amp;&amp; echo OK
+sudo sshd -T | grep -E &#x27;^(passwordauthentication|permitrootlogin)&#x27;</code></pre></div><div class="kod"><pre><code>OK
+permitrootlogin no
+passwordauthentication no</code></pre></div><p><code>sshd -t</code> sprawdza składnię. <code>sshd -T</code> to jeszcze lepsza rzecz: pokazuje ustawienia, które serwer naprawdę zastosuje po przeczytaniu wszystkich plików. Dopiero gdy obie są w porządku:</p><div class="kod"><pre><code>sudo systemctl reload ssh      # [Ubuntu]
+sudo systemctl reload sshd     # [RHEL]</code></pre></div><p>I z drugiego okna próbujesz się zalogować, zanim zamkniesz pierwsze. Dlaczego plik zaczyna się od <code>01</code>? To nie przypadek. Wyjaśnię w typowym błędzie.</p></section><section><h2 id="krok-4-fail2ban-bramkarz-z-pamiecia">Krok 4: fail2ban, bramkarz z pamięcią</h2><p>Nawet z kluczami boty będą pukać i zaśmiecać dziennik. fail2ban to bramkarz, który czyta dziennik i zapamiętuje twarze. Kto pomyli się pięć razy w dziesięć minut, dostaje zakaz wstępu na godzinę. Zakaz wpisuje do zapory, o której było w lekcji 73.</p><div class="kod"><pre><code>sudo apt install fail2ban      # [Ubuntu]
+sudo dnf install epel-release &amp;&amp; sudo dnf install fail2ban   # [RHEL], pakiet jest w EPEL</code></pre></div><p>Nie edytuj <code>jail.conf</code>, bo nadpisze go aktualizacja. Twój plik to <code>jail.local</code>:</p><div class="kod"><pre><code>[DEFAULT]
+bantime  = 1h
+findtime = 10m
+maxretry = 5
+ignoreip = 127.0.0.1/8 ::1 192.0.2.10
+
+[sshd]
+enabled = true</code></pre></div><p><code>ignoreip</code> to lista gości VIP. Wpisz tam adres, z którego sam się łączysz. Inaczej pierwszego dnia zbanujesz sam siebie, a to najbardziej upokarzający sposób na utratę dostępu.</p><div class="kod"><pre><code>sudo fail2ban-client -t
+sudo systemctl enable --now fail2ban
+sudo fail2ban-client status sshd</code></pre></div><p>Po kilku nieudanych próbach z adresu testowego:</p><div class="kod"><pre><code>Status for the jail: sshd
+|- Filter
+|  |- Currently failed:	1
+|  |- Total failed:	4
+`- Actions
+   |- Currently banned:	1
+   |- Total banned:	1
+   `- Banned IP list:	203.0.113.50</code></pre></div><p>Zdjęcie bana:</p><div class="kod"><pre><code>sudo fail2ban-client set sshd unbanip 203.0.113.50</code></pre></div><p>A jak sprawdzić, czy bramkarz w ogóle rozpoznaje twarze w Twoim dzienniku? Jest do tego tester:</p><div class="kod"><pre><code>sudo fail2ban-regex /var/log/auth.log sshd</code></pre></div><div class="kod"><pre><code>Lines: 5 lines, 1 ignored, 4 matched, 0 missed</code></pre></div><p>Cztery linijki z nieudanym logowaniem złapane, jedna (udane logowanie kluczem) zignorowana. Tak ma być.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>na Ubuntu 24.04 pakiet ustawia w <code>jail.d/defaults-debian.conf</code> czytanie z dziennika systemd (<code>backend = systemd</code>) i blokowanie przez nftables. Na RHEL do współpracy z firewalld jest dodatkowy pakiet <code>fail2ban-firewalld</code>.</p></aside></section><section><h2 id="krok-5-auditd-czarna-skrzynka">Krok 5: auditd, czarna skrzynka</h2><p>Dziennik mówi, co robiły usługi. A kto w nocy zmienił <code>/etc/passwd</code>? Od tego jest auditd: czarna skrzynka samolotu. Jądro samo zapisuje wybrane zdarzenia, a demon auditd zrzuca je do <code>/var/log/audit/audit.log</code>. Ten sam plik, z którego SELinux czyta odmowy.</p><div class="kod"><pre><code>sudo apt install auditd        # [Ubuntu]; na RHEL jest od instalacji
+sudo auditctl -w /etc/passwd -p wa -k zmiany_kont
+sudo auditctl -l</code></pre></div><p><code>-w</code> to obserwowany plik, <code>-p wa</code> to rodzaje dostępu: <code>w</code> zapis, <code>a</code> zmiana atrybutów (są jeszcze <code>r</code> odczyt i <code>x</code> uruchomienie), <code>-k</code> to etykieta, po której potem szukasz. Ktoś zmienia plik, a Ty:</p><div class="kod"><pre><code>sudo ausearch -k zmiany_kont -i
+sudo aureport -k --summary</code></pre></div><div class="kod"><pre><code>type=SYSCALL msg=audit(11/03/26 16:41:11.354:4) : arch=x86_64 syscall=openat success=yes ... uid=root ... comm=zsh exe=/usr/bin/zsh ... key=zmiany_kont
+
+Key Summary Report
+===========================
+total  key
+===========================
+2  zmiany_kont</code></pre></div><p>W pełnym wpisie są też <code>auid</code>, czyli kto się pierwotnie zalogował, nawet jeśli potem zrobił <code>sudo</code>, i <code>exe</code>, czyli jakim programem. <code>-i</code> zamienia numery na nazwy.</p><p>Reguła z <code>auditctl</code> znika po restarcie. Na stałe wpisujesz ją do pliku w <code>/etc/audit/rules.d/</code>:</p><div class="kod"><pre><code>echo &#x27;-w /etc/passwd -p wa -k zmiany_kont&#x27; | sudo tee /etc/audit/rules.d/konta.rules
+sudo augenrules --load</code></pre></div><p>[RHEL] Ciekawostka: Red Hat w dokumentacji pisze, że z demonem auditd należy rozmawiać komendą <code>service</code> (<code>service auditd restart</code>), a nie <code>systemctl</code>. Wtedy w dzienniku zapisze się właściwy <code>auid</code>. Jeden z niewielu przypadków, kiedy stara komenda jest tą poprawną.</p></section><section><h2 id="krok-6-audytorzy">Krok 6: audytorzy</h2><p>Zrobiłeś listę. Ale skąd wiesz, czego nie zrobiłeś? Pora zawołać inspektorów.</p><p><strong>lynis</strong> to inspektor budowlany, który obchodzi budynek z latarką i notesem. Nic nie zmienia, tylko ocenia.</p><div class="kod"><pre><code>sudo apt install lynis         # [Ubuntu]; [RHEL] z EPEL
+sudo lynis audit system --quick</code></pre></div><p>Na końcu dostajesz świadectwo:</p><div class="kod"><pre><code>  Warnings (2):
+  ----------------------------
+  ! No AIDE database was found, needed for AIDE functionality [FINT-4316]
+
+  Suggestions (58):
+  ----------------------------
+  * Consider hardening SSH configuration [SSH-7408]
+    - Details  : MaxAuthTries (set 6 to 3)
+  * Default umask in /etc/login.defs could be more strict like 027 [AUTH-9328]
+  ...
+  Hardening index : 63 [############        ]
+  Tests performed : 285</code></pre></div><p>Indeks utwardzenia 63 na 100. Jak świadectwo z czwórką: nie wstyd, ale jest nad czym pracować. Każda sugestia ma kod w nawiasie. <code>sudo lynis show details SSH-7408</code> mówi, co sprawdził. Szczegóły leżą w <code>/var/log/lynis.log</code>. Nie goniń setki. Część sugestii nie pasuje do Twojego serwera i to jest normalne.</p><p><strong>OpenSCAP</strong> to audytor z urzędu. Nie ocenia „na oko”, tylko porównuje serwer z oficjalną normą: CIS, PCI-DSS dla płatności kartami, STIG amerykańskiej armii. W firmach, które przechodzą audyty, to nie hobby, tylko obowiązek.</p><div class="kod"><pre><code># [RHEL]
+sudo dnf install openscap-scanner scap-security-guide
+oscap info /usr/share/xml/scap/ssg/content/ssg-rhel10-ds.xml
+sudo oscap xccdf eval --profile xccdf_org.ssgproject.content_profile_cis \
+  --report raport.html /usr/share/xml/scap/ssg/content/ssg-rhel10-ds.xml</code></pre></div><p>Na RHEL 9 plik nazywa się <code>ssg-rhel9-ds.xml</code>. Wynik to strona HTML z listą reguł: zielone pass, czerwone fail, z opisem, dlaczego i jak naprawić. Jest też flaga <code>--remediate</code>, która naprawia sama. Na produkcji nie używaj jej bez czytania, bo profil STIG potrafi przykręcić serwer tak, że przestanie robić cokolwiek, w tym to, za co mu płacą.</p><p>[Ubuntu] Na Ubuntu 24.04 pakiet <code>openscap-scanner</code> jest, ale treści w paczce <code>ssg-debderived</code> kończą się na Ubuntu 22.04:</p><div class="kod"><pre><code>$ oscap info /usr/share/xml/scap/ssg/content/ssg-ubuntu2204-ds.xml
+		Profiles:
+			Title: CIS Ubuntu 22.04 Level 1 Server Benchmark
+				Id: xccdf_org.ssgproject.content_profile_cis_level1_server
+			...</code></pre></div><p>Dla nowszych wersji Canonical ma własne narzędzie USG, Ubuntu Security Guide, dostępne dla subskrybentów Ubuntu Pro.</p><p><strong>AIDE</strong> to fotograf. Robi zdjęcie ważnych plików systemu: rozmiary, uprawnienia, właściciele, sumy kontrolne. Później robi drugie zdjęcie i pokazuje różnice. Jeśli ktoś podmienił <code>/usr/bin/ls</code> na wersję z niespodzianką, AIDE to zobaczy.</p><div class="kod"><pre><code># [RHEL]
+sudo dnf install aide
+sudo aide --init
+sudo mv /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
+sudo aide --check
+
+# [Ubuntu]
+sudo apt install aide
+sudo aideinit -y -f
+sudo aide -c /etc/aide/aide.conf --check</code></pre></div><p>Pierwsze zdjęcie zapisuje się jako <code>.new</code> i trzeba je przemianować. To celowe: masz zatwierdzić, że ten stan jest tym dobrym. Na Ubuntu <code>aideinit</code> robi to za Ciebie. Po zmianie pliku:</p><div class="kod"><pre><code>AIDE found differences between database and filesystem!!
+
+Summary:
+  Total number of entries:	3
+  Added entries:		1
+  Removed entries:		0
+  Changed entries:		1
+...
+File: /srv/test/konfig.conf
+ Size      : 16                               | 31
+ SHA256    : PkyPwmGrrsmC/U+q9Vc7iEb/v/BgbeaN | b7dRrpaiBtDPuzrneSxjeWQG1b+UhLuz</code></pre></div><p>Po planowanej zmianie, na przykład aktualizacji, robisz <code>aide --update</code> i znowu przemianowujesz bazę. A samą bazę najlepiej trzymaj poza serwerem. Fotograf, który trzyma zdjęcia w domu włamywacza, jest mało przydatny.</p></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p>fail2ban to program w Pythonie, który czyta dziennik linijka po linijce i przykłada do każdej wyrażenia regularne z <code>filter.d/</code>. Wyciąga z dopasowania adres IP i liczy trafienia w oknie <code>findtime</code>. Po przekroczeniu <code>maxretry</code> uruchamia akcję z <code>action.d/</code>. Na Ubuntu 24.04 to nftables. W zaporze pojawia się tabela <code>f2b-table</code> z zestawem zbanowanych adresów:</p><div class="kod"><pre><code>table inet f2b-table {
+	set addr-set-sshd {
+		type ipv4_addr
+		elements = { 203.0.113.50 }</code></pre></div><p>auditd działa niżej. To jądro ma podsystem audytu, który przy wywołaniach systemowych sprawdza reguły i generuje zdarzenia. Demon tylko je odbiera i zapisuje. Dlatego audytu nie oszukasz, zmieniając plik innym programem: jądro widzi każde <code>openat</code> na obserwowanym pliku.</p><p>AIDE liczy dla każdego pliku wybrane atrybuty i skróty kryptograficzne i zapisuje je w skompresowanej bazie. Przy sprawdzaniu liczy wszystko od nowa i porównuje. Czym jest taki skrót i czemu zmiana jednej litery zmienia go całkowicie, zobaczysz w następnej lekcji.</p></section><section><h2 id="sciaga-flag">Ściąga flag</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga</th><th>Co robi</th></tr><tr><td><code>systemctl</code></td><td><code>disable --now</code> / <code>mask</code></td><td>wyłącza usługę / zakleja ją całkiem</td></tr><tr><td><code>sshd</code></td><td><code>-t</code></td><td>sprawdza składnię konfiguracji</td></tr><tr><td><code>sshd</code></td><td><code>-T</code></td><td>pokazuje ustawienia, które naprawdę obowiązują</td></tr><tr><td><code>fail2ban-client</code></td><td><code>status sshd</code></td><td>stan więzienia, lista banów</td></tr><tr><td><code>fail2ban-client</code></td><td><code>set sshd unbanip IP</code></td><td>zdejmuje bana</td></tr><tr><td><code>fail2ban-client</code></td><td><code>-t</code></td><td>test konfiguracji</td></tr><tr><td><code>fail2ban-regex</code></td><td><code>PLIK FILTR</code></td><td>sprawdza, czy filtr łapie linijki dziennika</td></tr><tr><td><code>auditctl</code></td><td><code>-w PLIK -p wa -k KLUCZ</code></td><td>obserwuj plik</td></tr><tr><td><code>auditctl</code></td><td><code>-l</code> / <code>-W</code></td><td>lista reguł / usuń obserwację</td></tr><tr><td><code>augenrules</code></td><td><code>--load</code></td><td>wczytuje reguły z <code>/etc/audit/rules.d/</code></td></tr><tr><td><code>ausearch</code></td><td><code>-k KLUCZ -i</code></td><td>zdarzenia z etykietą, po ludzku</td></tr><tr><td><code>aureport</code></td><td><code>-k --summary</code></td><td>podsumowanie wg etykiet</td></tr><tr><td><code>lynis</code></td><td><code>audit system --quick</code></td><td>audyt bez pauz</td></tr><tr><td><code>oscap xccdf eval</code></td><td><code>--profile ID --report PLIK</code></td><td>audyt wg normy z raportem HTML</td></tr><tr><td><code>aide</code></td><td><code>--init</code> / <code>--check</code> / <code>--update</code></td><td>zdjęcie / porównanie / nowe zdjęcie</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>„Wpisałem <code>PasswordAuthentication no</code>, zrestartowałem SSH, a serwer dalej pyta o hasło.”</p><p>SSH ma nietypową zasadę: <strong>wygrywa pierwsza znaleziona wartość</strong>, a nie ostatnia. Pliki z <code>sshd_config.d</code> są czytane alfabetycznie, a na Ubuntu Server 24.04, zarówno z instalatora ISO, jak i w chmurze, często leży tam już wygenerowany przez cloud-init plik <code>50-cloud-init.conf</code> z <code>PasswordAuthentication yes</code>. Jeśli swój plik nazwiesz <code>99-utwardzanie.conf</code>, przegra. Sprawdziłem:</p><div class="kod"><pre><code># pliki: 50-cloud-init.conf (yes) i 99-utwardzanie.conf (no)
+$ sudo sshd -T | grep passwordauthentication
+passwordauthentication yes
+
+# po zmianie nazwy na 01-utwardzanie.conf
+$ sudo sshd -T | grep passwordauthentication
+passwordauthentication no</code></pre></div><p>Dlatego nazwa zaczyna się od <code>01</code>, a po każdej zmianie patrzysz w <code>sshd -T</code>, nie w plik. I drugi klasyk: literówka w opcji.</p><div class="kod"><pre><code>/etc/ssh/sshd_config.d/01-utwardzanie.conf line 4: unsupported option &quot;nie&quot;.</code></pre></div><p>Napisane po polsku <code>PermitRootLogin nie</code>. SSH po polsku nie mówi. <code>sshd -t</code> złapie to przed restartem. Restart bez testu może zostawić Cię przed zamkniętymi drzwiami.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><p>Na maszynie wirtualnej (miej konsolę albo drugą sesję SSH):</p><ol><li>Wyłącz logowanie hasłem i roota przez plik w <code>sshd_config.d</code>. Udowodnij komendą <code>sshd -T</code>, że działa.</li><li>Zainstaluj fail2ban z <code>jail.local</code>. Z drugiej maszyny spróbuj pięć razy zalogować się jako nieistniejący użytkownik. Pokaż <code>fail2ban-client status sshd</code> z banem, a potem zdejmij bana.</li><li>Załóż obserwację auditd na <code>/etc/passwd</code> na stałe, dodaj użytkownika i znajdź to zdarzenie przez <code>ausearch -k</code>.</li><li>Uruchom <code>lynis audit system --quick</code>, zapisz indeks utwardzenia, popraw dwie sugestie i sprawdź, czy indeks wzrósł.</li></ol><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><p>Cztery części, jedziemy po kolei. SSH:</p><div class="kod"><pre><code>sudo tee /etc/ssh/sshd_config.d/01-utwardzanie.conf &lt;&lt;&#x27;EOF&#x27;
+PasswordAuthentication no
+KbdInteractiveAuthentication no
+PermitRootLogin no
+EOF
+sudo sshd -t &amp;&amp; sudo systemctl reload ssh
+sudo sshd -T | grep -E &#x27;^(passwordauthentication|permitrootlogin)&#x27;</code></pre></div><div class="kod"><pre><code>permitrootlogin no
+passwordauthentication no</code></pre></div><p>fail2ban: <code>jail.local</code> z lekcji, a z drugiej maszyny pięć razy <code>ssh nieistnieje@serwer</code>. Nawet przy wyłączonych hasłach w dzienniku lądują linijki <code>Invalid user nieistnieje from ...</code>, a filtr <code>sshd</code> je łapie. Potem:</p><div class="kod"><pre><code>sudo fail2ban-client status sshd
+sudo fail2ban-client set sshd unbanip 192.168.122.20</code></pre></div><p>Jeśli nie dostałeś bana, sprawdź, czy adres drugiej maszyny nie siedzi w <code>ignoreip</code>. Zabezpieczyłeś się przed sobą tak skutecznie, że teraz nie możesz się zaatakować.</p><p>auditd na stałe:</p><div class="kod"><pre><code>echo &#x27;-w /etc/passwd -p wa -k zmiany_kont&#x27; | sudo tee /etc/audit/rules.d/konta.rules
+sudo augenrules --load
+sudo useradd testowy
+sudo ausearch -k zmiany_kont -i | tail -5</code></pre></div><p>W wyniku <code>comm=useradd</code>, <code>exe=/usr/sbin/useradd</code> i <code>auid</code> z Twoim loginem, nawet jeśli robiłeś to przez <code>sudo</code>. I lynis: przed poprawkami na mojej maszynie testowej indeks wyszedł 63. Dwie najprostsze sugestie to zwykle instalacja pakietu (np. <code>needrestart</code> albo <code>apt-show-versions</code>) i ostrzejszy <code>UMASK 027</code> w <code>/etc/login.defs</code>. Po nich indeks rośnie o kilka punktów. Nie licz na skok do setki. To świadectwo, nie loteria.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Zamknęliśmy drzwi. Ale przez internet i tak trzeba rozmawiać, a każdy po drodze może podsłuchiwać. W następnej lekcji: jak działa kłódka w przeglądarce, certyfikaty, openssl, certbot, szyfrowanie plików gpg i sumy kontrolne, które powiedzą, czy ktoś grzebał w pliku.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-083.html" rel="prev">← 83. AppArmor</a><a class="btn domyslny zolty" href="lekcja-085.html" rel="next">85. Certyfikaty i szyfrowanie →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>111. Projekt 2: dwie strony na Apache z HTTPS — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 111 kursu Linux i Bash od zera do admina: Projekt 2: dwie strony na Apache z HTTPS. kursant jednym skryptem stawia na jednym Apache dwie (albo dziesięć) stron, każdą z własnym certyfikatem i przekierowaniem z HTTP na HTTPS, a drugim skryptem automatycznie sprawdza, że wszystko działa, na Ubun">
+<meta property="og:title" content="111. Projekt 2: dwie strony na Apache z HTTPS — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 111 kursu Linux i Bash od zera do admina: Projekt 2: dwie strony na Apache z HTTPS. kursant jednym skryptem stawia na jednym Apache dwie (albo dziesięć) stron, każdą z własnym certyfikatem i przekierowaniem z HTTP na HTTPS, a drugim skryptem automatycznie sprawdza, że wszystko działa, na Ubun">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 13</span></div>
+      <div class="boczny-tytul"><a href="index.html#m13">Projekty końcowe</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-110.html" data-lekcja="110"><span class="znacznik"></span><span class="nr">110</span> Projekt 1: nowy serwer w dziesięć minut</a></li><li><a href="lekcja-111.html" data-lekcja="111" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">111</span> Projekt 2: dwie strony na Apache z HTTPS</a></li><li><a href="lekcja-112.html" data-lekcja="112"><span class="znacznik"></span><span class="nr">112</span> Projekt 3: kopie zapasowe, które naprawdę da się odtworzyć</a></li><li><a href="lekcja-113.html" data-lekcja="113"><span class="znacznik"></span><span class="nr">113</span> Projekt 4: monitor, który krzyczy raz, a nie co pięć minut</a></li><li><a href="lekcja-114.html" data-lekcja="114"><span class="znacznik"></span><span class="nr">114</span> Projekt 5: analizator logów z raportem dziennym</a></li><li><a href="lekcja-115.html" data-lekcja="115"><span class="znacznik"></span><span class="nr">115</span> Projekt 6: LAMP na trzech maszynach z Ansible, wszystko w Git</a></li><li><a href="lekcja-116.html" data-lekcja="116"><span class="znacznik"></span><span class="nr">116</span> Egzamin próbny: 20 zadań, dwie godziny, zero podpowiedzi</a></li><li><a href="lekcja-117.html" data-lekcja="117"><span class="znacznik"></span><span class="nr">117</span> Co dalej: certyfikaty, laboratorium domowe i pierwsza praca</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="111" data-modul="13" data-tematy="serwer WWW z dwiema stronami na Apache i HTTPS">
+    <div class="belka"><span>Lekcja 111 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m13">Moduł 13</a> › Lekcja 111</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Projekt 2: dwie strony na Apache z HTTPS</h1>
+      <p class="meta"><span>⏱ ok. 19 min czytania</span><span>· moduł 13: Projekty końcowe</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant jednym skryptem stawia na jednym Apache dwie (albo dziesięć) stron, każdą z własnym certyfikatem i przekierowaniem z HTTP na HTTPS, a drugim skryptem automatycznie sprawdza, że wszystko działa, na Ubuntu i na RHEL.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#jeden-hotel-dwa-szyldy">Jeden hotel, dwa szyldy</a></li><li><a href="#skad-wziac-certyfikat-notariusz-publiczny-albo-fir">Skąd wziąć certyfikat: notariusz publiczny albo firmowy</a></li><li><a href="#plan">Plan</a></li><li><a href="#skrypt-pelny-kod">Skrypt: pełny kod</a></li><li><a href="#co-tu-jest-ciekawego">Co tu jest ciekawego</a></li><li><a href="#uruchomienie">Uruchomienie</a></li><li><a href="#skrypt-testujacy-sprawdz-jak-klient">Skrypt testujący: sprawdź jak klient</a></li><li><a href="#wersja-na-prawdziwy-serwer-let-s-encrypt">Wersja na prawdziwy serwer: Let&#x27;s Encrypt</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga">Ściąga</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p>Poniedziałek, dziewiąta rano. Dzwoni szef: „Klient mówi, że sklep straszy jakimś czerwonym ostrzeżeniem”. Wchodzisz. Certyfikat wygasł w sobotę o trzeciej w nocy. Ktoś kiedyś wygenerował go ręcznie, wkleił do konfiguracji i od tamtej pory nikt nie pamiętał, że on w ogóle istnieje. Jak gaśnica w biurze: wisi, nikt nie patrzy na datę, aż do pożaru. Dziś stawiamy serwer WWW tak, żeby ten telefon się nie zdarzył. Jeden Apache, dwie strony: <code>sklep.test</code> i <code>blog.test</code>. Każda na HTTPS, każda z własnym certyfikatem, wejście po zwykłym HTTP grzecznie przekierowane na HTTPS. Wszystko jednym skryptem, który można odpalić drugi raz bez szkody. A na koniec drugi skrypt, który sprawdza strony tak, jak sprawdziłby je klient, i krzyczy, zanim certyfikat wygaśnie. W lekcji 90 robiliśmy to ręcznie. Dziś robimy to tak, żeby ręce mogły zostać w kieszeni.</p></section><section><h2 id="jeden-hotel-dwa-szyldy">Jeden hotel, dwa szyldy</h2><p>Pamiętasz: serwer WWW to recepcja hotelu. Dziś mamy jeden budynek, jedną recepcję, ale dwa szyldy nad wejściem: „Sklep” i „Blog”. Gość podchodzi i mówi, do którego hotelu przyszedł. Recepcjonistka wyciąga właściwy klucz. W Apache gość mówi to nagłówkiem <code>Host:</code> w żądaniu HTTP, a każdy szyld to jeden <strong>VirtualHost</strong>. To się nazywa hosting po nazwie: jeden adres IP, wiele stron. Z HTTPS jest jeden haczyk. Zanim zaczniemy rozmowę po szyfrowanemu, serwer musi pokazać dowód tożsamości, czyli certyfikat. A skąd ma wiedzieć, który dowód pokazać, skoro gość jeszcze nic nie powiedział? Dlatego klient na samym początku powitania TLS mówi jawnie, do kogo przyszedł. To się nazywa <strong>SNI</strong>, Server Name Indication. Gość mówi przy drzwiach „ja do Sklepu”, a recepcjonistka pokazuje legitymację Sklepu, nie Bloga. [dla zaawansowanych: SNI leci otwartym tekstem, więc ktoś podsłuchujący sieć widzi nazwę strony, choć nie widzi treści. Rozwiązuje to ECH, Encrypted Client Hello, ale to temat na zupełnie inna lekcja.]</p></section><section><h2 id="skad-wziac-certyfikat-notariusz-publiczny-albo-fir">Skąd wziąć certyfikat: notariusz publiczny albo firmowy</h2><p>Certyfikat to legitymacja z pieczątką. Ważne jest nie to, co na niej napisano, tylko kto ją podstemplował. Pieczątki ufamy, jeśli znamy urząd, który ją przybił. Urząd to <strong>CA</strong>, urząd certyfikacji. Masz dwie drogi. Droga pierwsza: publiczny notariusz, czyli <strong>Let&#x27;s Encrypt</strong> i narzędzie <code>certbot</code>. Darmowe, automatyczne, przeglądarki na całym świecie mu ufają. Warunek: domena musi naprawdę istnieć i wskazywać na Twój serwer, bo Let&#x27;s Encrypt sprawdza, czy ta domena należy do Ciebie. Droga druga: własny, firmowy urząd. Robisz pieczątkę raz, a potem podstemplowujesz nią certyfikaty dla stron wewnętrznych: intranet, panel, laboratorium. Ufają mu tylko komputery, na których tę pieczątkę zainstalujesz. W firmie robi to dział IT jednym ruchem na wszystkich laptopach. Nasz skrypt umie obie drogi. Domyślnie robi własny urząd, bo w laboratorium nie masz prawdziwej domeny. Z opcją <code>-l EMAIL</code> idzie do Let&#x27;s Encrypt. I uwaga na końcówkę <code>.test</code>: ta końcówka jest zarezerwowana do testów, nigdy nie będzie prawdziwą domeną, więc nie ukradniesz nikomu ruchu.</p></section><section><h2 id="plan">Plan</h2><ol><li>Pakiety: [Ubuntu] <code>apache2</code>, moduły <code>ssl</code>, <code>headers</code>, <code>rewrite</code> przez <code>a2enmod</code>. [RHEL] <code>httpd</code> i <code>mod_ssl</code>.</li><li>Firmowy urząd certyfikacji, tylko raz, i dodanie go do zaufanych w systemie.</li><li>Dla każdej strony: folder, certyfikat, plik VirtualHosta. [Ubuntu] <code>/etc/apache2/sites-available</code> plus <code>a2ensite</code>. [RHEL] <code>/etc/httpd/conf.d</code>, bez żadnego włączania.</li><li>Zapora: porty 80 i 443.</li><li><code>apachectl configtest</code>, a dopiero potem przeładowanie. Z projektu 1 bierzemy te same nawyki: wykrywanie rodziny dystrybucji z <code>/etc/os-release</code>, funkcje <code>log</code> i <code>blad</code>, sprawdzenie, czy jest systemd. Skrypty to też klocki.</li></ol></section><section><h2 id="skrypt-pelny-kod">Skrypt: pełny kod</h2><p>Plik <code>dwie-strony.sh</code>. Nazwa skromna, bo przyjmuje dowolnie dużo domen.</p><div class="kod"><pre><code>#!/usr/bin/env bash
+# dwie-strony.sh — kilka stron na jednym Apache, każda na HTTPS
+# Tryb domyślny: własny urząd certyfikacji (laboratorium, sieć firmowa).
+# Tryb -l EMAIL: prawdziwe domeny i certyfikaty Let&#x27;s Encrypt (certbot).
+set -euo pipefail
+
+CA_DIR=/etc/ssl/firmowe-ca
+LE_EMAIL=&quot;&quot;
+DO_HOSTS=0
+
+pomoc() {
+    cat &lt;&lt;EOF
+Użycie: sudo $0 [-l EMAIL] [-H] DOMENA [DOMENA...]
+  -l EMAIL  certyfikaty Let&#x27;s Encrypt (domeny muszą wskazywać na ten serwer)
+  -H        dopisz domeny do /etc/hosts jako 127.0.0.1 (laboratorium)
+  -h        ta pomoc
+Przykład: sudo $0 -H sklep.test blog.test
+EOF
+}
+
+log()  { printf &#x27;[%s] %s\n&#x27; &quot;$(date +%T)&quot; &quot;$*&quot;; }
+blad() { printf &#x27;BŁĄD: %s\n&#x27; &quot;$*&quot; &gt;&amp;2; exit 1; }
+
+usluga() {
+    if [[ &quot;$(cat /proc/1/comm)&quot; == systemd ]]; then
+        systemctl &quot;$@&quot;
+    else
+        log &quot;UWAGA: brak systemd jako PID 1, pomijam: systemctl $*&quot;
+    fi
+}
+
+while getopts &#x27;:l:Hh&#x27; opt; do
+    case $opt in
+        l) LE_EMAIL=$OPTARG ;;
+        H) DO_HOSTS=1 ;;
+        h) pomoc; exit 0 ;;
+        :) blad &quot;opcja -$OPTARG wymaga wartości&quot; ;;
+        *) pomoc &gt;&amp;2; exit 1 ;;
+    esac
+done
+shift $((OPTIND - 1))
+
+[[ $EUID -eq 0 ]] || blad &quot;uruchom przez sudo&quot;
+(( $# &gt;= 1 ))     || { pomoc &gt;&amp;2; exit 1; }
+for d in &quot;$@&quot;; do
+    [[ $d =~ ^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)+$ ]] \
+        || blad &quot;to nie wygląda na domenę: $d&quot;
+done
+
+# ---------- Rodzina dystrybucji: nazwy i ścieżki ----------
+# shellcheck source=/dev/null
+. /etc/os-release
+case &quot; ${ID} ${ID_LIKE:-} &quot; in
+    *&quot; debian &quot;*|*&quot; ubuntu &quot;*)
+        RODZINA=debian; USLUGA=apache2; LOGI=/var/log/apache2
+        KONF_DIR=/etc/apache2/sites-available; CERTY=/etc/ssl/strony ;;
+    *&quot; rhel &quot;*|*&quot; fedora &quot;*|*&quot; centos &quot;*)
+        RODZINA=rhel; USLUGA=httpd; LOGI=/var/log/httpd
+        KONF_DIR=/etc/httpd/conf.d; CERTY=/etc/pki/tls/strony ;;
+    *) blad &quot;nie znam dystrybucji: $PRETTY_NAME&quot; ;;
+esac
+
+# ---------- 1. Pakiety i moduły ----------
+log &quot;Krok 1/5: Apache i moduły&quot;
+if [[ $RODZINA == debian ]]; then
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get -y -q install apache2 openssl ${LE_EMAIL:+certbot python3-certbot-apache}
+    a2enmod -q ssl headers rewrite
+    a2dissite -q 000-default || true
+else
+    dnf -y -q install httpd mod_ssl openssl ${LE_EMAIL:+certbot python3-certbot-apache}
+fi
+
+# ---------- 2. Własny urząd certyfikacji (tylko tryb lokalny) ----------
+if [[ -z $LE_EMAIL &amp;&amp; ! -f $CA_DIR/ca.crt ]]; then
+    log &quot;Krok 2/5: zakładam firmowy urząd certyfikacji w $CA_DIR&quot;
+    install -d -m 700 &quot;$CA_DIR&quot;
+    openssl req -x509 -new -newkey rsa:4096 -nodes -sha256 -days 3650 \
+        -keyout &quot;$CA_DIR/ca.key&quot; -out &quot;$CA_DIR/ca.crt&quot; \
+        -subj &quot;/O=Moja Firma/CN=Moja Firma - lokalny CA&quot; 2&gt;/dev/null
+    chmod 600 &quot;$CA_DIR/ca.key&quot;
+    if [[ $RODZINA == debian ]]; then
+        cp &quot;$CA_DIR/ca.crt&quot; /usr/local/share/ca-certificates/firmowe-ca.crt
+        update-ca-certificates &gt;/dev/null
+    else
+        cp &quot;$CA_DIR/ca.crt&quot; /etc/pki/ca-trust/source/anchors/firmowe-ca.crt
+        update-ca-trust
+    fi
+else
+    log &quot;Krok 2/5: urząd certyfikacji już jest albo używamy Let&#x27;s Encrypt&quot;
+fi
+
+# certyfikat_dla DOMENA — klucz, wniosek (CSR) i certyfikat podpisany przez nasz CA
+certyfikat_dla() {
+    local d=$1 kat=$CERTY/$1
+    install -d -m 700 &quot;$kat&quot;
+    [[ -f $kat/cert.pem ]] &amp;&amp; openssl x509 -checkend $((30*86400)) -noout -in &quot;$kat/cert.pem&quot; \
+        &amp;&amp; { log &quot;   $d: certyfikat ważny jeszcze ponad 30 dni, zostawiam&quot;; return 0; }
+    openssl req -new -newkey rsa:2048 -nodes -keyout &quot;$kat/klucz.pem&quot; -out &quot;$kat/wniosek.csr&quot; \
+        -subj &quot;/CN=$d&quot; 2&gt;/dev/null
+    openssl x509 -req -in &quot;$kat/wniosek.csr&quot; -CA &quot;$CA_DIR/ca.crt&quot; -CAkey &quot;$CA_DIR/ca.key&quot; \
+        -CAcreateserial -days 365 -sha256 -out &quot;$kat/cert.pem&quot; \
+        -extfile &lt;(printf &#x27;subjectAltName=DNS:%s,DNS:www.%s\nbasicConstraints=CA:FALSE\nextendedKeyUsage=serverAuth\n&#x27; &quot;$d&quot; &quot;$d&quot;) \
+        2&gt;/dev/null
+    chmod 600 &quot;$kat/klucz.pem&quot;
+    log &quot;   $d: nowy certyfikat do $(openssl x509 -enddate -noout -in &quot;$kat/cert.pem&quot; | cut -d= -f2)&quot;
+}
+
+# ---------- 3. Strony: katalogi, certyfikaty, VirtualHosty ----------
+log &quot;Krok 3/5: strony&quot;
+for d in &quot;$@&quot;; do
+    kat=/var/www/$d/public
+    install -d -m 755 &quot;$kat&quot;
+    [[ -f $kat/index.html ]] || printf &#x27;&lt;!doctype html&gt;\n&lt;title&gt;%s&lt;/title&gt;\n&lt;h1&gt;To jest %s&lt;/h1&gt;\n&#x27; &quot;$d&quot; &quot;$d&quot; &gt; &quot;$kat/index.html&quot;
+    (( DO_HOSTS )) &amp;&amp; ! grep -qw &quot;$d&quot; /etc/hosts &amp;&amp; printf &#x27;127.0.0.1 %s www.%s\n&#x27; &quot;$d&quot; &quot;$d&quot; &gt;&gt; /etc/hosts
+
+    if [[ -n $LE_EMAIL ]]; then
+        # certbot sam dopisze VirtualHosta na 443 i przekierowanie
+        cat &gt; &quot;$KONF_DIR/$d.conf&quot; &lt;&lt;EOF
+&lt;VirtualHost *:80&gt;
+    ServerName $d
+    ServerAlias www.$d
+    DocumentRoot $kat
+    ErrorLog $LOGI/${d}_error.log
+    CustomLog $LOGI/${d}_access.log combined
+&lt;/VirtualHost&gt;
+EOF
+    else
+        certyfikat_dla &quot;$d&quot;
+        cat &gt; &quot;$KONF_DIR/$d.conf&quot; &lt;&lt;EOF
+&lt;VirtualHost *:80&gt;
+    ServerName $d
+    ServerAlias www.$d
+    Redirect permanent / https://$d/
+&lt;/VirtualHost&gt;
+
+&lt;VirtualHost *:443&gt;
+    ServerName $d
+    ServerAlias www.$d
+    DocumentRoot $kat
+
+    SSLEngine on
+    SSLCertificateFile    $CERTY/$d/cert.pem
+    SSLCertificateKeyFile $CERTY/$d/klucz.pem
+
+    Header always set Strict-Transport-Security &quot;max-age=300&quot;
+    Header always set X-Content-Type-Options &quot;nosniff&quot;
+
+    &lt;Directory $kat&gt;
+        Require all granted
+        Options -Indexes
+    &lt;/Directory&gt;
+
+    ErrorLog $LOGI/${d}_error.log
+    CustomLog $LOGI/${d}_access.log combined
+&lt;/VirtualHost&gt;
+EOF
+    fi
+    [[ $RODZINA == debian ]] &amp;&amp; a2ensite -q &quot;$d&quot;
+    log &quot;   $d: gotowe ($KONF_DIR/$d.conf)&quot;
+done
+if [[ $RODZINA == rhel ]] &amp;&amp; command -v restorecon &gt;/dev/null; then
+    restorecon -R /var/www &quot;$CERTY&quot;
+fi
+
+# ---------- 4. Zapora ----------
+log &quot;Krok 4/5: zapora, porty 80 i 443&quot;
+if [[ $RODZINA == debian ]]; then
+    if ufw status | grep -q &#x27;^Status: active&#x27;; then ufw allow &#x27;Apache Full&#x27;; fi
+else
+    firewall-cmd --permanent --add-service=http --add-service=https
+    firewall-cmd --reload
+fi
+
+# ---------- 5. Test konfiguracji i przeładowanie ----------
+log &quot;Krok 5/5: apachectl configtest i przeładowanie&quot;
+apachectl configtest || blad &quot;konfiguracja Apache ma błąd, NIE przeładowuję&quot;
+usluga enable &quot;$USLUGA&quot;
+usluga reload-or-restart &quot;$USLUGA&quot;
+
+if [[ -n $LE_EMAIL ]]; then
+    for d in &quot;$@&quot;; do
+        certbot --apache --non-interactive --agree-tos -m &quot;$LE_EMAIL&quot; --redirect -d &quot;$d&quot; -d &quot;www.$d&quot;
+    done
+fi
+log &quot;GOTOWE. Sprawdź: ./sprawdz-strony.sh $*&quot;</code></pre></div></section><section><h2 id="co-tu-jest-ciekawego">Co tu jest ciekawego</h2><p><strong>Pieczątka robiona raz.</strong> Krok 2 ma warunek: urząd zakładamy tylko wtedy, gdy nie ma pliku <code>ca.crt</code>. Gdyby skrypt przy każdym uruchomieniu robił nowy urząd, wszystkie wcześniejsze certyfikaty nagle byłyby podbite pieczątką, której nikt już nie zna. Klucz urzędu, <code>ca.key</code>, ma prawa 600 i jest najcenniejszym plikiem na tym serwerze. Kto go ma, ten może podrobić legitymację dowolnej strony dla wszystkich komputerów, które temu urzędowi ufają. [dla zaawansowanych: w prawdziwej firmie klucz głównego urzędu leży offline, a certyfikaty podpisuje urząd pośredni. W laboratorium upraszczamy do jednego poziomu.]</p><p><strong>Zaufanie w systemie.</strong> Sam certyfikat urzędu to za mało, system musi go wpisać na listę zaufanych. [Ubuntu] plik ląduje w <code>/usr/local/share/ca-certificates/</code> z końcówką <code>.crt</code> i <code>update-ca-certificates</code>. [RHEL] <code>/etc/pki/ca-trust/source/anchors/</code> i <code>update-ca-trust</code>. Przeglądarki na Twoim laptopie mają często własną listę, więc tam dodajesz go osobno.</p><p><strong>Funkcja </strong><strong><code>certyfikat_dla</code></strong><strong>.</strong> Najpierw pyta <code>openssl x509 -checkend</code>, czy certyfikat przeżyje jeszcze 30 dni. Jeśli tak, nic nie robi. Jeśli nie ma certyfikatu albo kończy się termin, robi nowy klucz, wniosek (CSR) i podbija go pieczątką. Czyli ten sam skrypt wpięty w crona raz w tygodniu jest od razu automatem do odnawiania. Gaśnica sama się wymienia przed datą.</p><p><strong>SAN, a nie CN.</strong> Nazwy strony w certyfikacie szukaj w rozszerzeniu <code>subjectAltName</code>, czyli SAN. Przeglądarki od lat sprawdzają nazwę właśnie tam, a stare pole CN traktują jak napis dla ozdoby. Dlatego do każdego certyfikatu dopisujemy przez <code>-extfile</code> dwie nazwy: <code>sklep.test</code> i <code>www.sklep.test</code>. Zapis <code>&lt;(printf ...)</code> to podstawianie procesu: Bash udaje, że wynik <code>printf</code> jest plikiem. Żadnego pliku tymczasowego do sprzątania.</p><p><strong>Dwa VirtualHosty na stronę.</strong> Na porcie 80 tylko jedna linijka: <code>Redirect permanent / https://$d/</code>. Recepcjonista przy bocznym wejściu nikogo nie obsługuje, tylko pokazuje palcem drzwi frontowe. Kod 301 mówi przeglądarce: „przenieśliśmy się na stałe, zapamiętaj”.</p><p><strong>HSTS z małą liczbą.</strong> Nagłówek <code>Strict-Transport-Security</code> każe przeglądarce przez podany czas w ogóle nie próbować zwykłego HTTP dla tej strony. Mamy <code>max-age=300</code>, czyli 5 minut. Celowo. Jak się pomylisz, przeglądarki zapomną po 5 minutach. Jak wszystko działa od tygodnia, podnosisz do roku, czyli <code>31536000</code>. Zacząć od roku to jak wylać beton, zanim sprawdzisz, czy szalunek stoi prosto.</p><p><strong><code>apachectl configtest</code></strong><strong> przed przeładowaniem.</strong> Ta sama zasada co <code>sshd -t</code> w projekcie 1: najpierw sprawdź kartkę, potem ją przyklej. Jeśli test nie przejdzie, skrypt kończy się błędem, a stara konfiguracja dalej działa. Strony nie lecą w dół przez literówkę.</p><p><strong>Różnice RHEL.</strong> Nie ma <code>a2ensite</code>: każdy plik <code>*.conf</code> w <code>/etc/httpd/conf.d</code> jest włączony, bo tak każe linijka <code>IncludeOptional conf.d/*.conf</code> w głównej konfiguracji. Moduł SSL to osobny pakiet <code>mod_ssl</code>, a <code>headers</code> i <code>rewrite</code> są włączone od razu. No i SELinux: <code>restorecon -R</code> nadaje plikom stron etykietę <code>httpd_sys_content_t</code>, a certyfikatom etykietę certyfikatów, żeby Apache w ogóle mógł je przeczytać. Pamiętasz z lekcji 82: pliki skopiowane <code>mv</code> z domowego folderu potrafią przynieść złą etykietę i wtedy jest 403 mimo poprawnych uprawnień.</p></section><section><h2 id="uruchomienie">Uruchomienie</h2><p>Ostrzeżenie standardowe: skrypt wyłącza domyślną stronę Apache i zmienia zaporę. Odpalaj na maszynie wirtualnej albo na serwerze, na którym nic jeszcze nie stoi.</p><div class="kod"><pre><code>chmod +x dwie-strony.sh sprawdz-strony.sh
+sudo ./dwie-strony.sh -H sklep.test blog.test</code></pre></div><div class="kod"><pre><code>[02:41:09] Krok 1/5: Apache i moduły
+[02:41:09] Krok 2/5: zakładam firmowy urząd certyfikacji w /etc/ssl/firmowe-ca
+[02:41:11] Krok 3/5: strony
+[02:41:11]    sklep.test: nowy certyfikat do Nov  4 01:41:11 2027 GMT
+[02:41:11]    sklep.test: gotowe (/etc/apache2/sites-available/sklep.test.conf)
+[02:41:12]    blog.test: nowy certyfikat do Nov  4 01:41:12 2027 GMT
+[02:41:12]    blog.test: gotowe (/etc/apache2/sites-available/blog.test.conf)
+[02:41:12] Krok 4/5: zapora, porty 80 i 443
+[02:41:12] Krok 5/5: apachectl configtest i przeładowanie
+Syntax OK
+[02:41:12] GOTOWE. Sprawdź: ./sprawdz-strony.sh sklep.test blog.test</code></pre></div><p>Opcja <code>-H</code> dopisuje nazwy do <code>/etc/hosts</code>, bo <code>.test</code> nie istnieje w żadnym DNS-ie. To nasza prywatna książka telefoniczna. [na ekranie: tail /etc/hosts z dwiema nowymi linijkami] A teraz moment prawdy. Apache, pokaż, co masz na recepcji:</p><div class="kod"><pre><code>sudo apachectl -S</code></pre></div><div class="kod"><pre><code>*:80                   is a NameVirtualHost
+         default server blog.test (/etc/apache2/sites-enabled/blog.test.conf:1)
+         port 80 namevhost blog.test (/etc/apache2/sites-enabled/blog.test.conf:1)
+                 alias www.blog.test
+         port 80 namevhost sklep.test (/etc/apache2/sites-enabled/sklep.test.conf:1)
+                 alias www.sklep.test
+*:443                  is a NameVirtualHost
+         default server blog.test (/etc/apache2/sites-enabled/blog.test.conf:7)
+         port 443 namevhost blog.test (/etc/apache2/sites-enabled/blog.test.conf:7)
+         port 443 namevhost sklep.test (/etc/apache2/sites-enabled/sklep.test.conf:7)</code></pre></div><p>Dwa szyldy na porcie 80, dwa na 443. Zwróć uwagę na <code>default server blog.test</code>. Do tego wrócimy pod spodem.</p></section><section><h2 id="skrypt-testujacy-sprawdz-jak-klient">Skrypt testujący: sprawdź jak klient</h2><p>Ręczne klikanie w przeglądarce to nie test, to wycieczka. Test to coś, co da się odpalić z crona o trzeciej w nocy. Plik <code>sprawdz-strony.sh</code> dla każdej domeny sprawdza trzy rzeczy: czy HTTP przekierowuje dokładnie tam, gdzie trzeba, czy HTTPS odpowiada z poprawnym certyfikatem i ile dni zostało do końca jego ważności.</p><div class="kod"><pre><code>#!/usr/bin/env bash
+# sprawdz-strony.sh — czy każda strona odpowiada, przekierowuje i ma ważny certyfikat
+set -uo pipefail
+
+(( $# &gt;= 1 )) || { echo &quot;Użycie: $0 DOMENA [DOMENA...]&quot; &gt;&amp;2; exit 2; }
+bledy=0
+ok()   { printf &#x27;  [ OK ] %s\n&#x27; &quot;$*&quot;; }
+zle()  { printf &#x27;  [BŁĄD] %s\n&#x27; &quot;$*&quot;; bledy=$((bledy + 1)); }
+
+for d in &quot;$@&quot;; do
+    echo &quot;== $d&quot;
+    read -r kod dokad &lt; &lt;(curl -s -o /dev/null -w &#x27;%{http_code} %{redirect_url}\n&#x27; &quot;http://$d/&quot;)
+    if [[ $kod == 301 &amp;&amp; $dokad == &quot;https://$d/&quot; ]]; then
+        ok &quot;http -&gt; $kod -&gt; $dokad&quot;
+    else
+        zle &quot;http zwraca $kod ${dokad:-bez przekierowania}&quot;
+    fi
+
+    # bez -k: curl sprawdza certyfikat tak jak przeglądarka
+    if tytul=$(curl -sS --fail &quot;https://$d/&quot; 2&gt;&amp;1); then
+        ok &quot;https: $(grep -o &#x27;&lt;title&gt;.*&lt;/title&gt;&#x27; &lt;&lt;&lt;&quot;$tytul&quot;)&quot;
+    else
+        zle &quot;https: $tytul&quot;
+    fi
+
+    koniec=$(openssl s_client -connect &quot;$d:443&quot; -servername &quot;$d&quot; &lt;/dev/null 2&gt;/dev/null \
+             | openssl x509 -noout -enddate 2&gt;/dev/null | cut -d= -f2)
+    if [[ -n $koniec ]]; then
+        dni=$(( ($(date -d &quot;$koniec&quot; +%s) - $(date +%s)) / 86400 ))
+        if (( dni &gt;= 14 )); then ok &quot;certyfikat ważny jeszcze $dni dni&quot;; else zle &quot;certyfikat wygasa za $dni dni&quot;; fi
+    else
+        zle &quot;nie udało się pobrać certyfikatu&quot;
+    fi
+done
+echo &quot;Błędów: $bledy&quot;
+exit $(( bledy &gt; 0 ))</code></pre></div><p>Najważniejszy szczegół: <code>curl</code> bez <code>-k</code>. Opcja <code>-k</code> znaczy „nie sprawdzaj certyfikatu”, czyli dokładnie to, czego klient nie zrobi. Test z <code>-k</code> to jak sprawdzanie, czy drzwi są zamknięte, przez otwarte okno. Wynik:</p><div class="kod"><pre><code>./sprawdz-strony.sh sklep.test blog.test; echo &quot;kod=$?&quot;</code></pre></div><div class="kod"><pre><code>== sklep.test
+  [ OK ] http -&gt; 301 -&gt; https://sklep.test/
+  [ OK ] https: &lt;title&gt;sklep.test&lt;/title&gt;
+  [ OK ] certyfikat ważny jeszcze 364 dni
+== blog.test
+  [ OK ] http -&gt; 301 -&gt; https://blog.test/
+  [ OK ] https: &lt;title&gt;blog.test&lt;/title&gt;
+  [ OK ] certyfikat ważny jeszcze 364 dni
+Błędów: 0
+kod=0</code></pre></div><p>Kod wyjścia 0 przy sukcesie, 1 przy błędach, 2 przy złym użyciu. Kciuk w górę albo w dół, który zrozumie cron, Ansible i projekt 4, w którym będziemy wysyłać maile. A drugie uruchomienie <code>dwie-strony.sh</code>? Spokój:</p><div class="kod"><pre><code>[02:41:13]    sklep.test: certyfikat ważny jeszcze ponad 30 dni, zostawiam
+[02:41:13]    blog.test: certyfikat ważny jeszcze ponad 30 dni, zostawiam</code></pre></div></section><section><h2 id="wersja-na-prawdziwy-serwer-let-s-encrypt">Wersja na prawdziwy serwer: Let&#x27;s Encrypt</h2><p>Masz domenę, na przykład <code>mojsklep.pl</code>, i rekord A w DNS wskazuje na serwer. Port 80 musi być otwarty z internetu, bo tam Let&#x27;s Encrypt zagląda po dowód, że serwer jest Twój. Wtedy:</p><div class="kod"><pre><code>sudo ./dwie-strony.sh -l admin@mojsklep.pl mojsklep.pl mojblog.pl</code></pre></div><p>Skrypt stawia VirtualHosty na porcie 80, a resztę robi <code>certbot --apache</code>: pobiera certyfikat, dopisuje VirtualHosta na 443 i przekierowanie, bo dostał <code>--redirect</code>. Pakiety: [Ubuntu] <code>certbot</code> i <code>python3-certbot-apache</code> z repozytorium. [RHEL] te same nazwy, ale z EPEL, które włączaliśmy w projekcie 1. Odnawianie robi się samo. [Ubuntu] pakiet <code>certbot</code> przynosi timer <code>certbot.timer</code>, który odpala się dwa razy na dobę, i zapasowy plik w <code>/etc/cron.d/certbot</code>. [RHEL] sprawdź <code>systemctl list-timers | grep certbot</code>, czy timer odnawiania jest włączony, i jeśli nie, włącz go. I zawsze zrób próbę generalną:</p><div class="kod"><pre><code>sudo certbot renew --dry-run</code></pre></div><p>Czemu to takie ważne? Bo certyfikaty robią się coraz krótsze. Let&#x27;s Encrypt wydaje dziś certyfikaty na 90 dni i zapowiedział, że domyślny profil zejdzie do 64 dni w lutym 2027 i do 45 dni w lutym 2028. A wszystkie publiczne certyfikaty, od 15 marca 2026, mogą żyć najwyżej 200 dni i ten limit ma dalej spadać, aż do 47 dni w 2029 roku. Era „wygeneruję ręcznie raz na rok” właśnie się kończy. Jeśli coś robisz ręcznie co 45 dni, to w końcu raz zapomnisz. Automat nie zapomina, najwyżej się psuje, i dlatego mamy skrypt testujący.</p></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p>Co się dzieje, gdy wpisujesz <code>https://sklep.test</code>?</p><ol><li>DNS, a u nas <code>/etc/hosts</code>, zamienia nazwę na adres. Oba szyldy mają ten sam adres 127.0.0.1.</li><li>Klient łączy się z portem 443 i zaczyna powitanie TLS. W pierwszej wiadomości, ClientHello, mówi przez SNI: „sklep.test”.</li><li>Apache patrzy na listę VirtualHostów na <code>*:443</code>, znajduje ten z <code>ServerName sklep.test</code> albo <code>ServerAlias</code>, i pokazuje jego certyfikat.</li><li>Klient sprawdza legitymację: czy nazwa jest w SAN, czy termin nie minął, czy pieczątka jest od urzędu z listy zaufanych. To możesz zrobić sam, krok po kroku:</li></ol><div class="kod"><pre><code>openssl s_client -connect 127.0.0.1:443 -servername blog.test &lt;/dev/null 2&gt;/dev/null | grep -E &#x27;subject=|issuer=|Verify return&#x27;
+openssl s_client -connect 127.0.0.1:443 -servername sklep.test &lt;/dev/null 2&gt;/dev/null | openssl x509 -noout -subject -ext subjectAltName -dates</code></pre></div><div class="kod"><pre><code>subject=CN = blog.test
+issuer=O = Moja Firma, CN = Moja Firma - lokalny CA
+Verify return code: 0 (ok)
+subject=CN = sklep.test
+X509v3 Subject Alternative Name: 
+    DNS:sklep.test, DNS:www.sklep.test
+notBefore=Nov  4 01:41:11 2026 GMT
+notAfter=Nov  4 01:41:11 2027 GMT</code></pre></div><p>To samo IP, inny <code>-servername</code>, inny certyfikat. To jest SNI na żywo. 5. Dopiero po ustaleniu szyfrowania leci właściwe żądanie HTTP z nagłówkiem <code>Host:</code> i Apache wybiera DocumentRoot. A co, jeśli gość poda nazwę, której nie ma na żadnym szyldzie? Apache bierze pierwszego VirtualHosta na danym porcie, tego, którego <code>apachectl -S</code> nazwał <code>default server</code>. Pliki czyta alfabetycznie, a <code>blog</code> jest przed <code>sklep</code>:</p><div class="kod"><pre><code>curl -sI -H &#x27;Host: nieznana.test&#x27; http://127.0.0.1/ | grep -E &#x27;HTTP|Location&#x27;</code></pre></div><div class="kod"><pre><code>HTTP/1.1 301 Moved Permanently
+Location: https://blog.test/</code></pre></div><p>Czyli ktoś, kto skieruje swoją domenę na Twój adres IP, wyświetli Twojego bloga pod swoją nazwą. Dlatego w produkcji dobrze mieć pierwszy, „łapiący wszystko” VirtualHost o nazwie zaczynającej się od <code>000-</code>, który zwraca błąd. Odźwierny, który na nieznane nazwisko odpowiada „pomyłka”, zamiast prowadzić do pierwszego lepszego pokoju. [dla zaawansowanych: zamiast grzebać w <code>/etc/hosts</code> na kliencie możesz w <code>curl</code> podać <code>--resolve sklep.test:443:10.0.0.5</code>. Curl wtedy wysyła dobre SNI i dobry nagłówek Host, ale łączy się pod podany adres. Idealne do testów przed przełączeniem DNS.]</p></section><section><h2 id="sciaga">Ściąga</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga</th><th>Co robi</th></tr><tr><td><code>apachectl</code></td><td><code>configtest</code></td><td>sprawdza składnię konfiguracji bez restartu</td></tr><tr><td><code>apachectl</code></td><td><code>-S</code></td><td>pokazuje VirtualHosty i serwer domyślny dla portu</td></tr><tr><td><code>a2ensite</code> / <code>a2dissite</code></td><td><code>-q</code></td><td>[Ubuntu] włącza / wyłącza stronę, bez gadania</td></tr><tr><td><code>openssl req</code></td><td><code>-x509 -new -days</code></td><td>robi certyfikat urzędu podpisany samym sobą</td></tr><tr><td><code>openssl x509</code></td><td><code>-req -CA -CAkey -extfile</code></td><td>podpisuje wniosek pieczątką urzędu, z dodatkami jak SAN</td></tr><tr><td><code>openssl x509</code></td><td><code>-checkend SEKUNDY</code></td><td>kod 0, jeśli certyfikat przeżyje podany czas</td></tr><tr><td><code>openssl s_client</code></td><td><code>-servername</code></td><td>łączy się z TLS i wysyła SNI</td></tr><tr><td><code>curl</code></td><td><code>-w &#x27;%{http_code}&#x27;</code></td><td>wypisuje kod odpowiedzi do skryptu</td></tr><tr><td><code>curl</code></td><td><code>--resolve NAZWA:PORT:IP</code></td><td>łączy pod wskazany adres bez zmiany DNS</td></tr><tr><td><code>certbot</code></td><td><code>--apache --redirect -d</code></td><td>certyfikat Let&#x27;s Encrypt plus przekierowanie</td></tr><tr><td><code>certbot renew</code></td><td><code>--dry-run</code></td><td>próba odnowienia, nic nie zmienia</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>Pierwszy, najczęstszy: certyfikat jest, strona działa, a klient i tak krzyczy:</p><div class="kod"><pre><code>curl: (60) SSL certificate problem: unable to get local issuer certificate
+More details here: https://curl.se/docs/sslcerts.html</code></pre></div><p>Po polsku: „nie znam urzędu, który to podstemplował”. Serwer jest w porządku. Problem jest u klienta, który nie ma Twojego firmowego urzędu na liście zaufanych. Ja wywołałem go specjalnie, podając curlowi listę urzędów bez naszej firmowej pieczątki. Rozwiązanie: zainstaluj <code>ca.crt</code> na kliencie, tak jak skrypt robi to na serwerze. Rozwiązanie złe: <code>curl -k</code> albo w przeglądarce „akceptuję ryzyko” na zawsze. Wtedy nie odróżnisz własnego serwera od kogoś, kto się pod niego podszywa. Drugi: zapomniany moduł. Na Ubuntu wystarczy, że ktoś wyłączy <code>ssl</code>, i dostajesz:</p><div class="kod"><pre><code>AH00526: Syntax error on line 12 of /etc/apache2/sites-enabled/blog.test.conf:
+Invalid command &#x27;SSLEngine&#x27;, perhaps misspelled or defined by a module not included in the server configuration</code></pre></div><p>Apache nie zna słowa <code>SSLEngine</code>, bo zna je dopiero moduł. <code>sudo a2enmod ssl</code>. [RHEL] <code>sudo dnf install mod_ssl</code>. Ten sam komunikat z <code>Header</code> znaczy brak modułu <code>headers</code>. Trzeci: ścieżka do certyfikatu z literówką albo plik skasowany:</p><div class="kod"><pre><code>AH00526: Syntax error on line 13 of /etc/apache2/sites-enabled/blog.test.conf:
+SSLCertificateFile: file &#x27;/etc/ssl/strony/blog.test/cert.pem&#x27; does not exist or is empty</code></pre></div><p>I tu widać, po co jest <code>configtest</code> przed przeładowaniem: z tym błędem restart położyłby obie strony, a nie tylko bloga. Jeden zepsuty szyld i cały hotel zamknięty.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><p>Dodaj skryptem trzecią stronę <code>intranet.test</code>. Potem w jej VirtualHoście na porcie 443 zabezpiecz folder <code>/admin</code> hasłem: plik z hasłami zrób przez <code>htpasswd</code>, a w konfiguracji użyj bloku <code>&lt;Location /admin&gt;</code> z <code>AuthType Basic</code> i <code>Require valid-user</code>. Sprawdź <code>curl</code>-em: bez hasła ma być kod 401, ze złym hasłem 401, z dobrym 200, a strona główna dalej 200. Na koniec przepuść wszystkie trzy strony przez <code>sprawdz-strony.sh</code>.</p><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><p>Trzecia strona z panelem na hasło. Najpierw strona, tym samym skryptem co ostatnio, i folder panelu:</p><div class="kod"><pre><code>sudo ./dwie-strony.sh -H intranet.test
+sudo mkdir -p /var/www/intranet.test/public/admin
+echo &#x27;&lt;h1&gt;Panel&lt;/h1&gt;&#x27; | sudo tee /var/www/intranet.test/public/admin/index.html</code></pre></div><p>Teraz lista gości z hasłami. <code>htpasswd</code> jest w pakiecie [Ubuntu] <code>apache2-utils</code>, [RHEL] <code>httpd-tools</code>. Flaga <code>-c</code> tworzy nowy plik, <code>-B</code> używa algorytmu bcrypt, a <code>-b</code> bierze hasło z linii komend. To ostatnie jest wygodne na nagraniu, ale hasło zostaje w historii powłoki, więc na serwerze pomiń <code>-b</code> i wpisz hasło, gdy zapyta.</p><div class="kod"><pre><code>sudo htpasswd -cbB /etc/apache2/.htpasswd-intranet szef &#x27;Tajne.Haslo1&#x27;
+sudo chown root:www-data /etc/apache2/.htpasswd-intranet
+sudo chmod 640 /etc/apache2/.htpasswd-intranet</code></pre></div><div class="kod"><pre><code>Adding password for user szef</code></pre></div><p>Domyślnie plik wychodzi z prawami 644, czyli czyta go każdy użytkownik systemu. Hasze bcrypt trudno złamać, ale po co ułatwiać? Dlatego <code>chown</code> i <code>chmod 640</code>: czyta root i grupa Apache. [RHEL] plik w <code>/etc/httpd/</code>, grupa <code>apache</code>. Do VirtualHosta na porcie 443, przed <code>ErrorLog</code>, dopisujesz ochroniarza z listą:</p><div class="kod"><pre><code>    &lt;Location /admin&gt;
+        AuthType Basic
+        AuthName &quot;Panel intranetu&quot;
+        AuthUserFile /etc/apache2/.htpasswd-intranet
+        Require valid-user
+    &lt;/Location&gt;</code></pre></div><p>I sprawdzenie, w kolejności: bez hasła, ze złym hasłem, z dobrym, strona główna.</p><div class="kod"><pre><code>sudo apachectl configtest &amp;&amp; sudo systemctl reload apache2
+curl -s -o /dev/null -w &#x27;%{http_code}\n&#x27; https://intranet.test/admin/
+curl -s -o /dev/null -w &#x27;%{http_code}\n&#x27; -u szef:zle https://intranet.test/admin/
+curl -s -u &#x27;szef:Tajne.Haslo1&#x27; https://intranet.test/admin/
+curl -s -o /dev/null -w &#x27;%{http_code}\n&#x27; https://intranet.test/</code></pre></div><div class="kod"><pre><code>401
+401
+&lt;h1&gt;Panel&lt;/h1&gt;
+200</code></pre></div><p>A w dzienniku błędów strony został ślad po próbie ze złym hasłem, który kiedyś przeczyta fail2ban:</p><div class="kod"><pre><code>[auth_basic:error] [client 127.0.0.1:36182] AH01617: user szef: authentication failure for &quot;/admin/&quot;: Password Mismatch</code></pre></div><p>Na koniec <code>./sprawdz-strony.sh sklep.test blog.test intranet.test</code> i trzy razy po trzy zielone <code>[ OK ]</code>. Hasło leci zakodowane, ale niezaszyfrowane, więc Basic Auth ma sens tylko na HTTPS. Na zwykłym HTTP to jak szeptanie hasła do ochroniarza przez megafon.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Mamy serwer, mamy strony, mamy certyfikaty. Czyli mamy coś, co szkoda stracić. W następnym projekcie budujemy system kopii zapasowych: archiwa z rotacją, raport po każdym przebiegu i, co najważniejsze, automatyczny test, czy z tej kopii da się cokolwiek odtworzyć.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-110.html" rel="prev">← 110. Projekt 1: nowy serwer w dziesięć minut</a><a class="btn domyslny zolty" href="lekcja-112.html" rel="next">112. Projekt 3: kopie zapasowe, które naprawdę da się odtworzyć →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

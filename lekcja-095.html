@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>95. Kontenery, część 2 — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 95 kursu Linux i Bash od zera do admina: Kontenery, część 2. kursant buduje własny obraz z pliku Containerfile, stawia aplikację z kilku kontenerów jednym plikiem compose, uruchamia kontenery bez roota, robi z kontenera usługę systemd przez Quadlet i wie, kiedy przy SELinux dopisać :Z.">
+<meta property="og:title" content="95. Kontenery, część 2 — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 95 kursu Linux i Bash od zera do admina: Kontenery, część 2. kursant buduje własny obraz z pliku Containerfile, stawia aplikację z kilku kontenerów jednym plikiem compose, uruchamia kontenery bez roota, robi z kontenera usługę systemd przez Quadlet i wie, kiedy przy SELinux dopisać :Z.">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 10</span></div>
+      <div class="boczny-tytul"><a href="index.html#m10">Usługi i serwery</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-087.html" data-lekcja="87"><span class="znacznik"></span><span class="nr">87</span> Zadania o wyznaczonej godzinie i powiadomienia</a></li><li><a href="lekcja-088.html" data-lekcja="88"><span class="znacznik"></span><span class="nr">88</span> Apache: instalacja</a></li><li><a href="lekcja-089.html" data-lekcja="89"><span class="znacznik"></span><span class="nr">89</span> Apache: konfiguracja</a></li><li><a href="lekcja-090.html" data-lekcja="90"><span class="znacznik"></span><span class="nr">90</span> Apache z HTTPS</a></li><li><a href="lekcja-091.html" data-lekcja="91"><span class="znacznik"></span><span class="nr">91</span> Nginx, reverse proxy i rozkładanie ruchu</a></li><li><a href="lekcja-092.html" data-lekcja="92"><span class="znacznik"></span><span class="nr">92</span> Bazy danych dla admina</a></li><li><a href="lekcja-093.html" data-lekcja="93"><span class="znacznik"></span><span class="nr">93</span> Stos LAMP od zera</a></li><li><a href="lekcja-094.html" data-lekcja="94"><span class="znacznik"></span><span class="nr">94</span> Kontenery, część 1</a></li><li><a href="lekcja-095.html" data-lekcja="95" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">95</span> Kontenery, część 2</a></li><li><a href="lekcja-096.html" data-lekcja="96"><span class="znacznik"></span><span class="nr">96</span> Maszyny wirtualne: KVM i libvirt</a></li><li><a href="lekcja-097.html" data-lekcja="97"><span class="znacznik"></span><span class="nr">97</span> Monitorowanie</a></li><li><a href="lekcja-098.html" data-lekcja="98"><span class="znacznik"></span><span class="nr">98</span> Kopie zapasowe na serio</a></li><li><a href="lekcja-099.html" data-lekcja="99"><span class="znacznik"></span><span class="nr">99</span> Gdy serwer nie wstaje</a></li><li><a href="lekcja-100.html" data-lekcja="100"><span class="znacznik"></span><span class="nr">100</span> Metoda rozwiązywania problemów</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="95" data-modul="10" data-tematy="Containerfile, build, compose, Podman bez roota, kontener jako usługa systemd (Quadlet), :Z przy SELinux">
+    <div class="belka"><span>Lekcja 95 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m10">Moduł 10</a> › Lekcja 95</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Kontenery, część 2</h1>
+      <p class="meta"><span>⏱ ok. 12 min czytania</span><span>· moduł 10: Usługi i serwery</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant buduje własny obraz z pliku <code>Containerfile</code>, stawia aplikację z kilku kontenerów jednym plikiem compose, uruchamia kontenery bez roota, robi z kontenera usługę systemd przez Quadlet i wie, kiedy przy SELinux dopisać <code>:Z</code>.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#containerfile-czyli-przepis-na-obraz">Containerfile, czyli przepis na obraz</a></li><li><a href="#compose-czyli-cala-aplikacja-w-jednym-pliku">Compose, czyli cała aplikacja w jednym pliku</a></li><li><a href="#podman-bez-roota">Podman bez roota</a></li><li><a href="#quadlet-czyli-kontener-jako-usluga">Quadlet, czyli kontener jako usługa</a></li><li><a href="#z-czyli-etykieta-dla-selinux">:Z, czyli etykieta dla SELinux</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga-flag">Ściąga flag</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p class="ekran">kartka z odręcznym przepisem na pierogi, obok plik <code>Containerfile</code></p><p>Do tej pory jedliśmy w restauracji: gotowe obrazy z hurtowni. Ale co, jeśli żaden obraz nie ma dokładnie tego, czego potrzebujesz? Twoja strona, Twoja konfiguracja, Twoje pliki. Możesz wejść do kontenera, doinstalować ręcznie i… stracić wszystko przy pierwszym <code>rm</code>.</p><p>Admin robi inaczej. Pisze przepis. Przepis, z którego każdy, na każdym serwerze, ugotuje dokładnie to samo danie. Dziś napiszemy taki przepis, zbudujemy z niego obraz, postawimy całą aplikację jednym plikiem, uruchomimy kontenery bez roota, a na koniec sprawimy, że kontener wstaje sam po restarcie serwera, jak porządna usługa.</p></section><section><h2 id="containerfile-czyli-przepis-na-obraz">Containerfile, czyli przepis na obraz</h2><p>Pamiętasz: skrypt to przepis kulinarny. <code>Containerfile</code> też jest przepisem, tylko jego wynikiem nie jest zupa, ale obraz. W Dockerze ten sam plik nazywa się <code>Dockerfile</code>. Format jest identyczny.</p><p>Zróbmy własny obraz ze stroną sklepu. Folder projektu:</p><div class="kod"><pre><code>mkdir -p ~/projekt/strona &amp;&amp; cd ~/projekt
+echo &#x27;&lt;h1&gt;Sklep z kontenera&lt;/h1&gt;&#x27; &gt; strona/index.html</code></pre></div><p>Konfiguracja nginx dla naszej strony, plik <code>strona.conf</code>:</p><div class="kod"><pre><code>server {
+    listen 80 default_server;
+    root /var/www/html;
+    index index.html;
+}</code></pre></div><p>I sam przepis, plik <code>Containerfile</code>:</p><div class="kod"><pre><code>FROM docker.io/library/ubuntu:24.04
+LABEL opis=&quot;Strona firmowa&quot;
+RUN apt-get update \
+ &amp;&amp; apt-get install -y --no-install-recommends nginx \
+ &amp;&amp; rm -rf /var/lib/apt/lists/*
+COPY strona.conf /etc/nginx/sites-available/default
+COPY strona/ /var/www/html/
+EXPOSE 80
+CMD [&quot;nginx&quot;, &quot;-g&quot;, &quot;daemon off;&quot;]</code></pre></div><p>Czytamy jak przepis:</p><ul><li><code>FROM</code> — weź gotowe ciasto. Zaczynamy od czystego Ubuntu, nie od zera.</li><li><code>LABEL</code> — karteczka na słoiku, opis dla ludzi.</li><li><code>RUN</code> — zrób to w kuchni. Tu: zainstaluj nginx i wyrzuć listę paczek, żeby obraz był lżejszy.</li><li><code>COPY</code> — włóż do środka moje pliki z folderu projektu.</li><li><code>EXPOSE</code> — informacja, że program słucha na porcie 80. Tylko informacja. Portu nie otwiera, to dalej robi <code>-p</code>.</li><li><code>CMD</code> — co uruchomić, kiedy ktoś postawi kontener. <code>daemon off</code> mówi nginxowi, żeby nie uciekał w tło, bo pamiętasz: jak główny proces zniknie, kontener się kończy.</li></ul><p>Budujemy:</p><div class="kod"><pre><code>podman build -t strona:1.0 .</code></pre></div><div class="kod"><pre><code>STEP 1/7: FROM docker.io/library/ubuntu:24.04
+STEP 2/7: LABEL opis=&quot;Strona firmowa&quot;
+--&gt; 508283a1dcc4
+STEP 3/7: RUN apt-get update  &amp;&amp; apt-get install -y --no-install-recommends nginx  &amp;&amp; rm -rf /var/lib/apt/lists/*
+--&gt; 54a1acc54be2
+STEP 4/7: COPY strona.conf /etc/nginx/sites-available/default
+--&gt; d848dc584599
+STEP 5/7: COPY strona/ /var/www/html/
+--&gt; 4a9eb917d81d
+STEP 6/7: EXPOSE 80
+--&gt; 85ac03960b13
+STEP 7/7: CMD [&quot;nginx&quot;, &quot;-g&quot;, &quot;daemon off;&quot;]
+COMMIT strona:1.0
+--&gt; 8bc0c4265cc1
+Successfully tagged localhost/strona:1.0</code></pre></div><p><code>-t strona:1.0</code> to nazwa i wersja, czyli tag. Kropka na końcu to folder z przepisem i plikami, tak zwany kontekst budowania. Bez kropki Podman nie wie, skąd wziąć składniki.</p><p>Teraz zmień stronę i zbuduj wersję 1.1:</p><div class="kod"><pre><code>echo &#x27;&lt;h1&gt;Sklep z kontenera, wersja 2&lt;/h1&gt;&#x27; &gt; strona/index.html
+podman build -t strona:1.1 .</code></pre></div><div class="kod"><pre><code>STEP 3/7: RUN apt-get update  &amp;&amp; apt-get install -y --no-install-recommends nginx  &amp;&amp; rm -rf /var/lib/apt/lists/*
+--&gt; Using cache 54a1acc54be2a40d2922ff51e457db14bedbd153dded3619c9a42ad5d9e154b6
+STEP 4/7: COPY strona.conf /etc/nginx/sites-available/default
+--&gt; Using cache d848dc584599c22f7993e4f48909eba935e056d5cb64a85dfa793e64c76e3826
+STEP 5/7: COPY strona/ /var/www/html/
+--&gt; 0c8ed6efaee0</code></pre></div><p><code>Using cache</code>. Pierwsze budowanie trwało u mnie prawie 30 sekund, drugie mniej niż 10. Podman pamięta wyniki kroków i robi od nowa tylko to, co się zmieniło, oraz wszystko po tym. Jak przepis na lasagne: zmieniłeś ser na wierzchu, więc nie gotujesz od nowa sosu. Dlatego w przepisie rzeczy, które zmieniają się rzadko (instalacja paczek), daje się na górę, a te, które zmieniają się ciągle (Twoje pliki), na dół.</p><div class="kod"><pre><code>podman images localhost/strona
+podman run -d --name sklep -p 8080:80 strona:1.1
+curl -s localhost:8080</code></pre></div><div class="kod"><pre><code>REPOSITORY        TAG         IMAGE ID      CREATED         SIZE
+localhost/strona  1.1         d23abad2373d  3 seconds ago   124 MB
+localhost/strona  1.0         8bc0c4265cc1  17 seconds ago  124 MB
+&lt;h1&gt;Sklep z kontenera, wersja 2&lt;/h1&gt;</code></pre></div><p>Obraz zbudowany lokalnie dostaje przedrostek <code>localhost/</code>. Wersja 1.0 dalej leży obok, więc jak 1.1 się nie uda, wracasz w sekundę.</p><p>[Ubuntu] [Docker] Docker domyślnie szuka pliku <code>Dockerfile</code>. Podman najpierw <code>Containerfile</code>, a jak go nie ma, to <code>Dockerfile</code>. W Dockerze wskaż plik wprost: <code>docker build -f Containerfile -t strona:1.0 .</code></p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p><code>CMD [&quot;nginx&quot;, ...]</code> w nawiasach to forma exec, bez powłoki pośrodku. Proces dostaje PID 1 i sam odbiera sygnały, więc <code>podman stop</code> działa od razu. Forma <code>CMD nginx -g ...</code> bez nawiasów odpala najpierw <code>/bin/sh -c</code>, który potrafi połknąć SIGTERM, i stop czeka wtedy pełne 10 sekund na SIGKILL.</p></aside></section><section><h2 id="compose-czyli-cala-aplikacja-w-jednym-pliku">Compose, czyli cała aplikacja w jednym pliku</h2><p>Sklep potrzebuje bazy. Możesz pisać dwie długie komendy <code>podman run</code>, pamiętać o sieci, woluminie, zmiennych i kolejności. Albo spisać to raz w pliku. Compose to plan osiedla: które kontenery, z jakich obrazów, z jakimi portami i woluminami. Jedna komenda stawia całe osiedle, druga je rozbiera.</p><p>Plik <code>compose.yaml</code> w folderze projektu:</p><div class="kod"><pre><code>services:
+  web:
+    build:
+      context: .
+      dockerfile: Containerfile
+    image: localhost/strona:1.1
+    ports:
+      - &quot;8080:80&quot;
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  db:
+    image: docker.io/library/mariadb:11
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASS}
+      MARIADB_DATABASE: sklep
+      MARIADB_USER: sklep
+      MARIADB_PASSWORD: ${DB_PASS}
+    volumes:
+      - dbdane:/var/lib/mysql
+    restart: unless-stopped
+
+volumes:
+  dbdane:</code></pre></div><p>Wcięcia są tu święte. YAML to format, w którym dwie spacje w złym miejscu zmieniają sens całego pliku. Hasła nie są wpisane na sztywno, tylko jako <code>${DB_PASS}</code>. Ich wartości leżą obok, w pliku <code>.env</code>, który nie trafia do repozytorium:</p><div class="kod"><pre><code>printf &#x27;DB_ROOT_PASS=zmien-mnie-1\nDB_PASS=zmien-mnie-2\n&#x27; &gt; .env
+chmod 600 .env</code></pre></div><p>Zanim coś postawisz, sprawdź, jak narzędzie rozumie Twój plik:</p><div class="kod"><pre><code>docker compose config</code></pre></div><p>Zobaczysz plik z podstawionymi hasłami i dopisanymi domyślnymi wartościami. Jak zapomnisz o <code>.env</code>, dostaniesz ostrzeżenie:</p><div class="kod"><pre><code>level=warning msg=&quot;The \&quot;DB_PASS\&quot; variable is not set. Defaulting to a blank string.&quot;</code></pre></div><p>Stawiamy osiedle:</p><div class="kod"><pre><code>podman compose up -d
+podman compose ps
+podman compose logs web
+podman exec projekt_web_1 getent hosts db</code></pre></div><div class="kod"><pre><code>CONTAINER ID  IMAGE                         COMMAND               CREATED        STATUS        PORTS                 NAMES
+59f02e0e5b60  docker.io/library/mariadb:11  mariadbd              5 seconds ago  Up 4 seconds                        projekt_db_1
+04e97cf15e67  localhost/strona:1.1          nginx -g daemon o...  3 seconds ago  Up 3 seconds  0.0.0.0:8080-&gt;80/tcp  projekt_web_1
+10.89.1.2       db.dns.podman</code></pre></div><p>Compose sam założył sieć dla projektu i kontener <code>web</code> znajduje bazę pod nazwą <code>db</code>. W konfiguracji PHP wpisujesz więc jako serwer bazy po prostu <code>db</code>. Rozbiórka:</p><div class="kod"><pre><code>podman compose down
+podman volume ls</code></pre></div><p><code>down</code> usuwa kontenery i sieć, ale wolumin z bazą zostaje. To celowe: rozbierasz osiedle, ale nie wyrzucasz mebli z magazynu. <code>down -v</code> wyrzuca też woluminy. Tego na produkcji nie wpisuje się przed kawą.</p><p>Skąd wziąć compose? <code>podman compose</code> to tylko pośrednik, który woła zewnętrzne narzędzie: <code>podman-compose</code> albo <code>docker-compose</code>.</p><p>[Ubuntu] <code>sudo apt install podman-compose</code> albo dla Dockera <code>sudo apt install docker-compose-v2</code>, wtedy piszesz <code>docker compose</code>.</p><p>[RHEL] <code>podman-compose</code> jest zwykle w repozytorium EPEL. Red Hat sam zamiast compose promuje Quadlet, o którym za chwilę.</p></section><section><h2 id="podman-bez-roota">Podman bez roota</h2><p>Do tej pory wszystko robiliśmy jako root. A kontener uruchomiony przez roota, z którego ktoś się wydostanie, to ktoś z kluczem do całego budynku. Podman potrafi uruchamiać kontenery jako zwykły użytkownik. Bez <code>sudo</code>, bez grupy <code>docker</code>.</p><p>Jak to możliwe, że w środku jest root? Wyobraź sobie hotel. W pokoju 312 gość może się ogłosić królem. Ma klucz do minibaru, przestawia meble, rządzi pilotem. Ale królem jest tylko w swoim pokoju. Na korytarzu jest zwykłym gościem z pokoju 312.</p><div class="kod"><pre><code>su - ania
+podman run -d --name spioch docker.io/library/ubuntu sleep 300
+podman exec spioch id
+podman top spioch user huser pid args</code></pre></div><div class="kod"><pre><code>uid=0(root) gid=0(root) groups=0(root)
+USER        HUSER       PID         COMMAND
+root        1001        1           sleep 300</code></pre></div><p>W kontenerze <code>root</code>. Na serwerze (<code>HUSER</code>) to zwykły numer użytkownika <code>ania</code>. A jeśli proces w kontenerze działa jako inny użytkownik, na serwerze dostaje numer z puli wydzielonej dla Ani:</p><div class="kod"><pre><code>grep ania /etc/subuid
+podman unshare cat /proc/self/uid_map</code></pre></div><div class="kod"><pre><code>ania:165536:65536
+         0       1001          1
+         1     165536      65536</code></pre></div><p>Czytamy: numer 0 w kontenerze to 1001 na serwerze, czyli sama Ania. Numery od 1 w górę to pula 65536 numerów zaczynająca się od 165536. Taką pulę <code>useradd</code> przydziela automatycznie, każdemu nowemu użytkownikowi inną.</p><p>Obrazy i kontenery Ani leżą w jej domu, w <code>~/.local/share/containers</code>, nie w <code>/var/lib/containers</code>. Każdy użytkownik ma własny plac budowy.</p></section><section><h2 id="quadlet-czyli-kontener-jako-usluga">Quadlet, czyli kontener jako usługa</h2><p>Kontener uruchomiony ręcznie nie wstanie sam po restarcie serwera. A przecież mamy kierownika zmiany, systemd, który od tego jest. Quadlet to tłumacz: piszesz krótki plik w stylu systemd, a Quadlet przy przeładowaniu systemd zamienia go na pełną usługę. Red Hat poleca go do nowych konfiguracji zamiast starszego <code>podman generate systemd</code>. Quadlet pojawił się w Podmanie 4.4.</p><p>Plik <code>/etc/containers/systemd/strona.container</code>:</p><div class="kod"><pre><code>[Unit]
+Description=Strona firmowa w kontenerze
+
+[Container]
+Image=localhost/strona:1.1
+ContainerName=strona
+PublishPort=8080:80
+Volume=/srv/strona/logi:/var/log/nginx:Z
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=multi-user.target default.target</code></pre></div><p>Sekcja <code>[Container]</code> to po prostu flagi <code>podman run</code> zapisane w słupku: <code>PublishPort</code> to <code>-p</code>, <code>Volume</code> to <code>-v</code>. Uruchomienie:</p><div class="kod"><pre><code>sudo systemctl daemon-reload
+sudo systemctl start strona
+systemctl status strona</code></pre></div><p>Nazwa usługi to nazwa pliku bez <code>.container</code>. Uwaga, pułapka: <code>systemctl enable strona</code> nie zadziała. Usługa jest generowana, a za start przy uruchomieniu systemu odpowiada sekcja <code>[Install]</code> w Twoim pliku.</p><p>Co Quadlet z tego robi? Można podejrzeć bez uruchamiania:</p><div class="kod"><pre><code>/usr/libexec/podman/quadlet -dryrun</code></pre></div><div class="kod"><pre><code>---strona.service---
+...
+ExecStart=/usr/bin/podman run --name=strona --cidfile=%t/%N.cid --replace --rm --cgroups=split --sdnotify=conmon -d -v /srv/strona/logi:/var/log/nginx:Z --publish 8080:80 localhost/strona:1.1</code></pre></div><p>Cała długa komenda, której nie musisz pamiętać.</p><p>Wersja bez roota: plik kładziesz w <code>~/.config/containers/systemd/</code>, a komendy dostają <code>--user</code>:</p><div class="kod"><pre><code>systemctl --user daemon-reload
+systemctl --user start strona
+sudo loginctl enable-linger ania</code></pre></div><p>Ostatnia linijka jest ważna. Bez niej usługi Ani startują dopiero, gdy Ania się zaloguje, i giną, gdy się wyloguje. <code>enable-linger</code> mówi: niech jej usługi żyją od startu serwera, nawet gdy jej nie ma. Jak stałe zlecenie w banku.</p></section><section><h2 id="z-czyli-etykieta-dla-selinux">:Z, czyli etykieta dla SELinux</h2><p>[RHEL] Na Red Hacie pilnuje SELinux. Pamiętasz: każdy plik ma etykietę, a procesy wchodzą tylko tam, gdzie etykieta się zgadza. Kontener ma etykietę „kontener”. Folder <code>/srv/strona/logi</code> ma etykietę „zwykły folder na serwerze”. Ochroniarz nie wpuści, nawet jeśli klasyczne uprawnienia <code>rwx</code> są w porządku. W środku kontenera widzisz wtedy <code>Permission denied</code>, a w dzienniku audytu odmowę:</p><div class="kod"><pre><code>sudo ausearch -m avc -ts recent</code></pre></div><p>Rozwiązanie to literka na końcu <code>-v</code>:</p><ul><li><code>:z</code> (małe) — etykieta wspólna: z tego folderu może korzystać kilka kontenerów,</li><li><code>:Z</code> (duże) — etykieta prywatna: tylko ten jeden kontener.</li></ul><div class="kod"><pre><code>sudo mkdir -p /srv/strona/logi
+ls -Zd /srv/strona/logi
+podman run -d --name test -v /srv/strona/logi:/var/log/nginx:Z localhost/strona:1.1
+ls -Zd /srv/strona/logi</code></pre></div><p>Po drugim <code>ls -Z</code> typ etykiety zmieni się na <code>container_file_t</code>, z dopisanymi kategoriami, które odróżniają ten kontener od innych. Podman przekleja etykietę za Ciebie.</p><p>I teraz najważniejsze ostrzeżenie lekcji. <strong>Nigdy nie dawaj </strong><strong><code>:Z</code></strong><strong> na foldery systemowe</strong>: <code>/home</code>, <code>/etc</code>, <code>/var</code>, <code>/usr</code>. Podman przeklei etykiety wszystkich plików w środku i inne usługi, na przykład SSH czy logowanie, mogą przestać działać, bo nagle ich pliki mają etykietę kontenera. Dokumentacja Podmana mówi wprost: nie przeklejaj etykiet treści systemowej. Podpinaj własne, dedykowane foldery, na przykład w <code>/srv</code>. Ćwicz na maszynie wirtualnej.</p><p>[Ubuntu] Ubuntu używa AppArmor zamiast SELinux, więc <code>:Z</code> nic tam nie psuje, ale też nic nie zmienia. Warto go pisać i tak, żeby ten sam plik działał na obu rodzinach.</p></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p><code>podman build</code> to nic magicznego. Dla każdej linijki <code>RUN</code> Podman stawia tymczasowy kontener z dotychczasowego obrazu, wykonuje w nim komendę i zapisuje różnicę jako nową warstwę. Widzisz to w historii obrazu:</p><div class="kod"><pre><code>podman history localhost/strona:1.1</code></pre></div><div class="kod"><pre><code>ID            CREATED         CREATED BY                                     SIZE        COMMENT
+0c8ed6efaee0  2 seconds ago   /bin/sh -c #(nop) CMD [&quot;nginx&quot;, &quot;-g&quot;, &quot;dae...  0B          FROM a753a53c537c
+&lt;missing&gt;     3 seconds ago   /bin/sh -c #(nop) EXPOSE 80                    0B          FROM 0c8ed6efaee0
+&lt;missing&gt;     5 seconds ago   /bin/sh -c #(nop) COPY dir:23ddc88e7c18830...  3.58kB      FROM d848dc584599
+d848dc584599  23 seconds ago  /bin/sh -c #(nop) COPY file:e3bc967d99aedc...  3.58kB      FROM 54a1acc54be2
+54a1acc54be2  27 seconds ago  /bin/sh -c apt-get update  &amp;&amp; apt-get inst...  24.9MB      FROM 508283a1dcc4</code></pre></div><p>Instalacja nginx to 24.9 MB, nasze pliki to kilka kilobajtów. Dwie wersje obrazu dzielą wszystkie warstwy poza ostatnimi, więc na dysku nie zajmują podwójnie.</p><p>Rootless działa dzięki przestrzeni nazw użytkowników (user namespace). Jądro trzyma tabelkę przeliczania numerów, którą widziałeś w <code>uid_map</code>. Programy <code>newuidmap</code> i <code>newgidmap</code> z paczki <code>uidmap</code> [Ubuntu] albo <code>shadow-utils</code> [RHEL] wpisują do niej pule z <code>/etc/subuid</code> i <code>/etc/subgid</code>.</p><p>A Quadlet to tak zwany generator systemd. Przy każdym <code>daemon-reload</code> i przy starcie systemu systemd uruchamia generatory, a one w locie produkują pliki usług. Dlatego nie ma czego „włączać”: usługa istnieje tylko dlatego, że istnieje Twój plik <code>.container</code>.</p></section><section><h2 id="sciaga-flag">Ściąga flag</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga</th><th>Co robi</th></tr><tr><td><code>podman build</code></td><td><code>-t NAZWA:TAG</code></td><td>nazwa i wersja obrazu</td></tr><tr><td><code>podman build</code></td><td><code>-f PLIK</code></td><td>wskazuje plik z przepisem</td></tr><tr><td><code>podman build</code></td><td><code>--no-cache</code></td><td>buduje od zera, bez pamięci kroków</td></tr><tr><td><code>podman history</code></td><td></td><td>warstwy obrazu</td></tr><tr><td><code>podman compose</code></td><td><code>up -d</code></td><td>stawia wszystkie usługi w tle</td></tr><tr><td><code>podman compose</code></td><td><code>down</code>, <code>down -v</code></td><td>rozbiera, z <code>-v</code> także woluminy</td></tr><tr><td><code>podman compose</code></td><td><code>ps</code>, <code>logs</code></td><td>stan i logi usług</td></tr><tr><td><code>docker compose</code></td><td><code>config</code></td><td>pokazuje plik po podstawieniu zmiennych</td></tr><tr><td><code>podman run</code></td><td><code>-v SKĄD:DOKĄD:Z</code></td><td>prywatna etykieta SELinux</td></tr><tr><td><code>podman run</code></td><td><code>-v SKĄD:DOKĄD:z</code></td><td>wspólna etykieta SELinux</td></tr><tr><td><code>podman unshare</code></td><td></td><td>komenda w przestrzeni nazw użytkownika</td></tr><tr><td><code>systemctl</code></td><td><code>--user</code></td><td>usługi zwykłego użytkownika</td></tr><tr><td><code>loginctl</code></td><td><code>enable-linger UŻYTKOWNIK</code></td><td>usługi użytkownika żyją bez logowania</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>Ania uruchamia kontener bez roota i chce porządnie, na porcie 80:</p><div class="kod"><pre><code>podman run -d -p 80:80 localhost/strona:1.1</code></pre></div><p>Dostaje mniej więcej taki komunikat:</p><div class="kod"><pre><code>rootlessport cannot expose privileged port 80, you can add &#x27;net.ipv4.ip_unprivileged_port_start=80&#x27; to /etc/sysctl.conf (currently 1024), or choose a larger port number (&gt;= 1024): listen tcp 0.0.0.0:80: bind: permission denied</code></pre></div><p>Porty poniżej 1024 to w Linuksie okienka zarezerwowane dla kierownictwa. Zwykły użytkownik ich nie otworzy, nawet przez kontener. Masz trzy wyjścia. Najprostsze: wysoki port, <code>-p 8080:80</code>, a przed tym reverse proxy z lekcji o Nginx. Drugie: obniżyć granicę, tak jak radzi sam komunikat, wpisem w <code>/etc/sysctl.d/</code> i <code>sysctl --system</code>. Trzecie: na RHEL-u przekierowanie portu w <code>firewalld</code>. Czego nie robimy? Nie uruchamiamy wszystkiego z powrotem jako root, bo „tak szybciej”.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><ol><li>Napisz <code>Containerfile</code> z własną stroną i zbuduj obraz <code>moja-strona:1.0</code>. Zmień stronę, zbuduj <code>1.1</code> i znajdź w wyniku linijki <code>Using cache</code>.</li><li>Jako zwykły użytkownik uruchom ten obraz na porcie 8080 i sprawdź <code>podman top</code> z kolumnami <code>user</code> i <code>huser</code>.</li><li>Napisz plik Quadlet w <code>~/.config/containers/systemd/</code>, uruchom kontener jako usługę użytkownika, włącz linger i sprawdź po restarcie maszyny, że strona odpowiada.</li></ol><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><p>Przepis, ten sam co w lekcji, tylko z Twoją stroną:</p><div class="kod"><pre><code>mkdir -p ~/moja &amp;&amp; cd ~/moja
+mkdir strona &amp;&amp; echo &#x27;&lt;h1&gt;Moja strona 1.0&lt;/h1&gt;&#x27; &gt; strona/index.html
+# Containerfile i strona.conf jak w odcinku
+podman build -t moja-strona:1.0 .
+echo &#x27;&lt;h1&gt;Moja strona 1.1&lt;/h1&gt;&#x27; &gt; strona/index.html
+podman build -t moja-strona:1.1 . | grep &#x27;Using cache&#x27;</code></pre></div><div class="kod"><pre><code>--&gt; Using cache 508283a1dcc4191b2c732d52e9f8f1923e31ba95b523e4b43f71a53defa015f5
+--&gt; Using cache 54a1acc54be2a40d2922ff51e457db14bedbd153dded3619c9a42ad5d9e154b6
+--&gt; Using cache d848dc584599c22f7993e4f48909eba935e056d5cb64a85dfa793e64c76e3826</code></pre></div><p>Trzy kroki z pamięci, czyli wszystko przed kopiowaniem strony. Zadanie zrobione tak, jak było trzeba: jako zwykły użytkownik, bez <code>sudo</code>. Obraz zbudowany przez Anię leży u Ani. Root go nie widzi, i odwrotnie.</p><div class="kod"><pre><code>podman run -d --name moja -p 8080:80 localhost/moja-strona:1.1
+podman top moja user huser args</code></pre></div><div class="kod"><pre><code>USER        HUSER       COMMAND
+root        1001        nginx: master process nginx -g daemon off;
+www-data    165568      nginx: worker process</code></pre></div><p>Root w kontenerze to Ania na serwerze. <code>www-data</code> w kontenerze to numer z puli Ani. Teraz Quadlet, plik <code>~/.config/containers/systemd/moja.container</code>:</p><div class="kod"><pre><code>[Unit]
+Description=Moja strona w kontenerze
+
+[Container]
+Image=localhost/moja-strona:1.1
+ContainerName=moja
+PublishPort=8080:80
+
+[Service]
+Restart=always
+
+[Install]
+WantedBy=default.target</code></pre></div><div class="kod"><pre><code>podman rm -f moja
+/usr/libexec/podman/quadlet -dryrun -user | grep -E &#x27;ExecStart|WantedBy&#x27;
+systemctl --user daemon-reload
+systemctl --user start moja
+sudo loginctl enable-linger ania</code></pre></div><div class="kod"><pre><code>ExecStart=/usr/bin/podman run --name=moja --cidfile=%t/%N.cid --replace --rm --cgroups=split --sdnotify=conmon -d --publish 8080:80 localhost/moja-strona:1.1
+WantedBy=default.target</code></pre></div><p>Najpierw usuwamy ręcznie postawiony kontener, bo dwa kontenery nie zmieszczą się na jednym porcie. Po restarcie maszyny <code>curl localhost:8080</code> odpowiada, a Ania nawet się nie zalogowała. Kontener pracuje, kiedy właścicielka śpi. Marzenie każdego pracodawcy.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Kontener korzysta z jądra serwera. A co, jeśli potrzebujesz zupełnie innego systemu, własnego jądra albo Windowsa obok Linuksa? W następnej lekcji stawiamy prawdziwe maszyny wirtualne na KVM: <code>virt-install</code>, <code>virsh</code>, dyski <code>qemu-img</code> i automatyczna konfiguracja przez cloud-init.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-094.html" rel="prev">← 94. Kontenery, część 1</a><a class="btn domyslny zolty" href="lekcja-096.html" rel="next">96. Maszyny wirtualne: KVM i libvirt →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

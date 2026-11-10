@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>96. Maszyny wirtualne: KVM i libvirt — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 96 kursu Linux i Bash od zera do admina: Maszyny wirtualne: KVM i libvirt. kursant sprawdza, czy serwer nadaje się do wirtualizacji, zakłada dyski qemu-img, stawia maszynę virt-install, zarządza nią przez virsh (start, wyłączanie, konsola, migawki), rozumie różnicę między siecią NAT a mostkie">
+<meta property="og:title" content="96. Maszyny wirtualne: KVM i libvirt — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 96 kursu Linux i Bash od zera do admina: Maszyny wirtualne: KVM i libvirt. kursant sprawdza, czy serwer nadaje się do wirtualizacji, zakłada dyski qemu-img, stawia maszynę virt-install, zarządza nią przez virsh (start, wyłączanie, konsola, migawki), rozumie różnicę między siecią NAT a mostkie">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 10</span></div>
+      <div class="boczny-tytul"><a href="index.html#m10">Usługi i serwery</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-087.html" data-lekcja="87"><span class="znacznik"></span><span class="nr">87</span> Zadania o wyznaczonej godzinie i powiadomienia</a></li><li><a href="lekcja-088.html" data-lekcja="88"><span class="znacznik"></span><span class="nr">88</span> Apache: instalacja</a></li><li><a href="lekcja-089.html" data-lekcja="89"><span class="znacznik"></span><span class="nr">89</span> Apache: konfiguracja</a></li><li><a href="lekcja-090.html" data-lekcja="90"><span class="znacznik"></span><span class="nr">90</span> Apache z HTTPS</a></li><li><a href="lekcja-091.html" data-lekcja="91"><span class="znacznik"></span><span class="nr">91</span> Nginx, reverse proxy i rozkładanie ruchu</a></li><li><a href="lekcja-092.html" data-lekcja="92"><span class="znacznik"></span><span class="nr">92</span> Bazy danych dla admina</a></li><li><a href="lekcja-093.html" data-lekcja="93"><span class="znacznik"></span><span class="nr">93</span> Stos LAMP od zera</a></li><li><a href="lekcja-094.html" data-lekcja="94"><span class="znacznik"></span><span class="nr">94</span> Kontenery, część 1</a></li><li><a href="lekcja-095.html" data-lekcja="95"><span class="znacznik"></span><span class="nr">95</span> Kontenery, część 2</a></li><li><a href="lekcja-096.html" data-lekcja="96" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">96</span> Maszyny wirtualne: KVM i libvirt</a></li><li><a href="lekcja-097.html" data-lekcja="97"><span class="znacznik"></span><span class="nr">97</span> Monitorowanie</a></li><li><a href="lekcja-098.html" data-lekcja="98"><span class="znacznik"></span><span class="nr">98</span> Kopie zapasowe na serio</a></li><li><a href="lekcja-099.html" data-lekcja="99"><span class="znacznik"></span><span class="nr">99</span> Gdy serwer nie wstaje</a></li><li><a href="lekcja-100.html" data-lekcja="100"><span class="znacznik"></span><span class="nr">100</span> Metoda rozwiązywania problemów</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="96" data-modul="10" data-tematy="virt-install, virsh (list, start, shutdown, console, snapshot-create-as), qemu-img, sieć NAT kontra mostek, cloud-init">
+    <div class="belka"><span>Lekcja 96 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m10">Moduł 10</a> › Lekcja 96</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Maszyny wirtualne: KVM i libvirt</h1>
+      <p class="meta"><span>⏱ ok. 12 min czytania</span><span>· moduł 10: Usługi i serwery</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant sprawdza, czy serwer nadaje się do wirtualizacji, zakłada dyski <code>qemu-img</code>, stawia maszynę <code>virt-install</code>, zarządza nią przez <code>virsh</code> (start, wyłączanie, konsola, migawki), rozumie różnicę między siecią NAT a mostkiem i konfiguruje nową maszynę automatycznie przez cloud-init.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#dom-z-wlasna-elektrownia">Dom z własną elektrownią</a></li><li><a href="#instalacja">Instalacja</a></li><li><a href="#dyski-qemu-img">Dyski: qemu-img</a></li><li><a href="#virt-install-nowa-maszyna-jedna-komenda">virt-install: nowa maszyna jedną komendą</a></li><li><a href="#virsh-pilot-do-maszyn">virsh: pilot do maszyn</a></li><li><a href="#migawki-czyli-zapisz-gre">Migawki, czyli zapisz grę</a></li><li><a href="#siec-nat-kontra-mostek">Sieć: NAT kontra mostek</a></li><li><a href="#cloud-init-maszyna-ktora-sama-sie-urzadza">cloud-init: maszyna, która sama się urządza</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga-flag">Ściąga flag</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p>Kontener jest świetny, dopóki wystarcza Ci jądro serwera. Ale chcesz przetestować aktualizację jądra. Albo uczysz się do RHCSA i potrzebujesz maszyny, którą można bezkarnie zepsuć, a potem w trzy sekundy cofnąć do stanu sprzed katastrofy. Albo szef chce Windowsa obok Linuksa. Kontener tu nie pomoże.</p><p>Potrzebny jest cały komputer udawany w komputerze. Maszyna wirtualna. Dziś postawimy ją bez klikania, z linii komend, tak jak na prawdziwym serwerze bez monitora. A na końcu sprawimy, że nowa maszyna przy pierwszym starcie sama ustawi sobie nazwę, użytkownika i klucz SSH.</p></section><section><h2 id="dom-z-wlasna-elektrownia">Dom z własną elektrownią</h2><p>Kontener to kontener mieszkalny na budowie, który bierze prąd z placu. Maszyna wirtualna to osobny dom z własną elektrownią, własną kuchnią i własnym zarządcą. Ma własne jądro, własny system, własny wirtualny dysk i kartę sieciową. Myśli, że jest prawdziwym komputerem.</p><p>Kto udaje dla niej sprzęt? Trzech pomocników:</p><ul><li><strong>KVM</strong> — moduł jądra Linuksa, który zamienia cały system w hiperwizor, czyli zarządcę osiedla domów. Daje maszynom prawdziwy procesor na wyłączność na krótkie chwile, dzięki czemu działają prawie tak szybko jak sprzęt.</li><li><strong>QEMU</strong> — program, który udaje resztę sprzętu: dysk, kartę sieciową, ekran.</li><li><strong>libvirt</strong> — biuro zarządcy. Pamięta, jakie masz maszyny, jak są skonfigurowane, i daje jedno narzędzie do wszystkiego: <code>virsh</code>.</li></ul><p>Najpierw sprawdzamy, czy procesor w ogóle to potrafi:</p><div class="kod"><pre><code>grep -cE &#x27;vmx|svm&#x27; /proc/cpuinfo
+lsmod | grep kvm</code></pre></div><p><code>vmx</code> to wsparcie wirtualizacji w procesorach Intela, <code>svm</code> w AMD. Wynik 0 znaczy, że wirtualizacja jest wyłączona w BIOS-ie albo jesteś już w maszynie wirtualnej, która nie przekazuje jej dalej. Pełną diagnozę robi:</p><div class="kod"><pre><code>sudo virt-host-validate qemu</code></pre></div><div class="kod"><pre><code>  QEMU: Checking for hardware virtualization                                 : FAIL (Host not compatible with KVM; HW virtualization CPU features not found. Only emulated CPUs are available; performance will be significantly limited)
+  QEMU: Checking if device /dev/net/tun exists                               : PASS
+  QEMU: Checking for cgroup &#x27;cpu&#x27; controller support                         : PASS</code></pre></div><p>Tak wygląda, kiedy się nie da. Maszyna wciąż ruszy, ale QEMU będzie emulować procesor programowo, jak symulator lotu na kalkulatorze. Na dobrze przygotowanym serwerze w każdej linijce chcesz widzieć <code>PASS</code>.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>ucząc się w maszynie wirtualnej, włącz w hiperwizorze zagnieżdżoną wirtualizację (nested virtualization). Wtedy <code>vmx</code>/<code>svm</code> będzie widoczne także w środku i możesz ćwiczyć KVM w KVM.</p></aside></section><section><h2 id="instalacja">Instalacja</h2><p>[RHEL] Według dokumentacji Red Hata:</p><div class="kod"><pre><code>sudo dnf install qemu-kvm libvirt virt-install virt-viewer
+for drv in qemu network nodedev nwfilter secret storage interface; do sudo systemctl start virt${drv}d{,-ro,-admin}.socket; done</code></pre></div><p>Nowsze RHEL-e nie mają jednego wielkiego <code>libvirtd</code>, tylko osobne małe usługi do maszyn, sieci, dysków. Pętla z lekcji o pętlach uruchamia je wszystkie naraz.</p><div class="kod"><pre><code>sudo apt install qemu-system-x86 libvirt-daemon-system virtinst
+sudo usermod -aG libvirt $USER</code></pre></div><p>Grupa <code>libvirt</code> pozwala zarządzać maszynami systemowymi bez <code>sudo</code>. Po dopisaniu do grupy wyloguj się i zaloguj ponownie.</p><p>Uwaga na jedną rzecz: libvirt ma dwa osobne biura. <code>qemu:///system</code> to biuro systemowe, z uprawnieniami roota, do maszyn serwerowych. <code>qemu:///session</code> to prywatne biurko zwykłego użytkownika. To osobne instancje z osobnymi listami maszyn. Jak „maszyna zniknęła”, sprawdź najpierw, do którego biura dzwonisz:</p><div class="kod"><pre><code>virsh uri</code></pre></div><div class="kod"><pre><code>qemu:///system</code></pre></div></section><section><h2 id="dyski-qemu-img">Dyski: qemu-img</h2><p>Wirtualny dysk to zwykły plik. Najpopularniejszy format to <strong>qcow2</strong>, „QEMU copy on write”. To jak nadmuchiwany materac: mówisz, że ma 10 GB, ale zajmuje tyle, ile w niego naprawdę włożysz.</p><div class="kod"><pre><code>qemu-img create -f qcow2 dysk.qcow2 5G
+ls -lh dysk.qcow2
+qemu-img resize dysk.qcow2 +5G
+qemu-img info dysk.qcow2</code></pre></div><div class="kod"><pre><code>Formatting &#x27;dysk.qcow2&#x27;, fmt=qcow2 cluster_size=65536 extended_l2=off compression_type=zlib size=5368709120 lazy_refcounts=off refcount_bits=16
+-rw-r--r-- 1 root root 193K Nov  3 16:37 dysk.qcow2
+Image resized.
+image: dysk.qcow2
+file format: qcow2
+virtual size: 10 GiB (10737418240 bytes)
+disk size: 200 KiB</code></pre></div><p>Dysk na 10 GB, a na serwerze zajmuje 200 KB. <code>virtual size</code> to obietnica, <code>disk size</code> to rzeczywistość. Uwaga: dysk można powiększyć także w drugim kierunku, ale <code>qemu-img</code> zażąda wtedy <code>--shrink</code> i ostrzeże, że wszystko za nową granicą przepadnie. Zmniejszanie dysku z danymi to jak skracanie spodni na człowieku, który w nich stoi.</p><p>Konwersja między formatami, na przykład gdy przenosisz maszynę z VMware albo do niego:</p><div class="kod"><pre><code>qemu-img convert -p -f qcow2 -O raw dysk.qcow2 dysk.raw
+qemu-img convert -f raw -O vmdk dysk.raw dysk.vmdk</code></pre></div><p>I najlepsza sztuczka: <strong>dysk z podkładem</strong> (backing file). Masz jeden czysty obraz systemu i chcesz z niego dziesięć maszyn. Zamiast kopiować go dziesięć razy, robisz cienkie nakładki. Jak kalka na rysunku: oryginał pod spodem zostaje nietknięty, a każda maszyna rysuje tylko na swojej kalce.</p><div class="kod"><pre><code>cd /var/lib/libvirt/images
+sudo qemu-img create -f qcow2 -F qcow2 -b /var/lib/libvirt/images/noble-server-cloudimg-amd64.img web01.qcow2 20G
+sudo qemu-img info --backing-chain web01.qcow2 | grep -E &#x27;image:|backing file|virtual size&#x27;</code></pre></div><div class="kod"><pre><code>image: web01.qcow2
+virtual size: 20 GiB (21474836480 bytes)
+backing file: /var/lib/libvirt/images/noble-server-cloudimg-amd64.img
+backing file format: qcow2
+image: /var/lib/libvirt/images/noble-server-cloudimg-amd64.img</code></pre></div><p><code>-b</code> to podkład, <code>-F</code> jego format. Ważne: podkładu nie wolno potem zmieniać ani przesuwać, bo wszystkie kalki się rozjadą.</p></section><section><h2 id="virt-install-nowa-maszyna-jedna-komenda">virt-install: nowa maszyna jedną komendą</h2><p>Klasyczna instalacja z płyty ISO, z instalatorem w konsoli tekstowej:</p><div class="kod"><pre><code>sudo virt-install \\
+  --name rocky01 \\
+  --memory 2048 --vcpus 2 \\
+  --disk size=20 \\
+  --location /var/lib/libvirt/images/Rocky-10-x86_64-dvd.iso \\
+  --osinfo rocky10 \\
+  --network network=default \\
+  --graphics none \\
+  --extra-args &#x27;console=ttyS0&#x27;</code></pre></div><p>Czytamy od góry: nazwa, pamięć w megabajtach, liczba procesorów, nowy dysk 20 GB, skąd instalator, jaki to system, do jakiej sieci, bez okienka graficznego, a instalator ma mówić przez port szeregowy, żebyś go widział w terminalu. Nazwę systemu dla <code>--osinfo</code> znajdziesz tak:</p><div class="kod"><pre><code>virt-install --osinfo list | grep -E &#x27;rocky|rhel10|ubuntu24&#x27;</code></pre></div><p>Nazwa ma znaczenie: dla znanego systemu <code>virt-install</code> dobiera szybkie wirtualne urządzenia virtio. Dla nieznanego daje stare, wolne, za to bezpieczne. Ja na pierwszej próbie dałem <code>generic</code> i dysk dostał nazwę <code>hda</code>, jak w komputerze z poprzedniej epoki.</p></section><section><h2 id="virsh-pilot-do-maszyn">virsh: pilot do maszyn</h2><div class="kod"><pre><code>virsh list --all
+virsh dominfo test94</code></pre></div><div class="kod"><pre><code> Id   Name     State
+------------------------
+ 1    test94   running
+
+Id:             1
+Name:           test94
+State:          running
+CPU(s):         1
+Max memory:     524288 KiB
+Persistent:     yes
+Autostart:      disable</code></pre></div><p><code>list</code> bez <code>--all</code> pokazuje tylko włączone. Reszta pilota:</p><div class="kod"><pre><code>virsh shutdown test94
+virsh destroy test94
+virsh start test94
+virsh autostart test94
+virsh console test94</code></pre></div><div class="kod"><pre><code>Domain &#x27;test94&#x27; destroyed
+Domain &#x27;test94&#x27; started
+Domain &#x27;test94&#x27; marked as autostarted
+Connected to domain &#x27;test94&#x27;
+Escape character is ^] (Ctrl + ])</code></pre></div><p>Pamiętasz sygnały? <code>shutdown</code> to grzeczna prośba o zamknięcie lokalu: wirtualne naciśnięcie przycisku zasilania, system sam się zamyka. <code>destroy</code> to wyłączenie prądu. Nazwa jest straszna, ale nic nie kasuje: maszyna i jej dysk zostają, tylko gwałtownie gasną, z ryzykiem uszkodzenia otwartych plików. <code>autostart</code> włącza maszynę razem z serwerem. <code>console</code> to wejście przez kabel szeregowy, kiedy SSH nie działa. Wyjście z konsoli to <strong>Ctrl+]</strong>. Zapisz to sobie, bo <code>exit</code> wyloguje Cię z systemu w maszynie, ale z konsoli nie wyjdziesz.</p><p>A co z usuwaniem maszyny na dobre?</p><div class="kod"><pre><code>virsh undefine rocky01 --remove-all-storage</code></pre></div><p>To już kasuje naprawdę, razem z dyskiem. Dwa razy sprawdź nazwę.</p></section><section><h2 id="migawki-czyli-zapisz-gre">Migawki, czyli zapisz grę</h2><p>Największa zaleta maszyny do nauki. Przed ryzykowną zmianą robisz migawkę, jak zapis stanu gry przed walką z bossem:</p><div class="kod"><pre><code>virsh snapshot-create-as test94 --name przed-aktualizacja --description &quot;czysta instalacja&quot;
+virsh snapshot-list test94</code></pre></div><div class="kod"><pre><code>Domain snapshot przed-aktualizacja created
+ Name                 Creation Time               State
+-----------------------------------------------------------
+ po-starcie           2026-11-03 16:36:24 +0100   running
+ przed-aktualizacja   2026-11-03 16:36:23 +0100   shutoff</code></pre></div><p>Kolumna <code>State</code> mówi, w jakim stanie była maszyna: migawka włączonej maszyny zapisuje też pamięć, więc po powrocie programy działają dalej, jakby nic się nie stało. Zepsułeś? Wracasz:</p><div class="kod"><pre><code>virsh snapshot-revert test94 przed-aktualizacja
+virsh snapshot-delete test94 po-starcie</code></pre></div><p>Te migawki żyją wewnątrz pliku qcow2, widać je też w <code>qemu-img info</code>. Ważne: migawka to nie kopia zapasowa. Leży w tym samym pliku co maszyna. Padł dysk, padły migawki. O prawdziwych kopiach jest osobna lekcja.</p></section><section><h2 id="siec-nat-kontra-mostek">Sieć: NAT kontra mostek</h2><p>Maszyna potrzebuje sieci. Są dwie główne drogi.</p><p><strong>NAT</strong> to osiedle zamknięte z jedną bramą. Maszyny mają swoje wewnętrzne adresy, wychodzą do internetu przez serwer, ale z zewnątrz nikt do nich nie zapuka. Sieć <code>default</code> w libvirt działa właśnie tak:</p><div class="kod"><pre><code>sudo virsh net-list --all
+sudo virsh net-dumpxml default | grep -E &#x27;forward|ip address|range&#x27;</code></pre></div><div class="kod"><pre><code>  &lt;forward mode=&#x27;nat&#x27;/&gt;
+  &lt;ip address=&#x27;192.168.122.1&#x27; netmask=&#x27;255.255.255.0&#x27;&gt;
+      &lt;range start=&#x27;192.168.122.2&#x27; end=&#x27;192.168.122.254&#x27;/&gt;</code></pre></div><p>Serwer to brama 192.168.122.1, maszyny dostają adresy z DHCP z puli. Świetne do nauki i testów.</p><p><strong>Mostek</strong> (bridge) to wpuszczenie maszyn prosto na ulicę. Maszyna dostaje adres z tej samej sieci co serwer, jak kolejny komputer podłączony kablem do switcha. Tego chcesz, gdy maszyna ma być normalnym serwerem w firmie.</p><p>Mostek tworzysz w systemie serwera. [Ubuntu] przez netplan, plik <code>/etc/netplan/01-most.yaml</code>:</p><div class="kod"><pre><code>network:
+  version: 2
+  ethernets:
+    enp1s0:
+      dhcp4: false
+  bridges:
+    br0:
+      interfaces: [enp1s0]
+      dhcp4: true</code></pre></div><div class="kod"><pre><code>sudo netplan try</code></pre></div><p>[RHEL] przez nmcli:</p><div class="kod"><pre><code>sudo nmcli connection add type bridge con-name br0 ifname br0
+sudo nmcli connection add type ethernet port-type bridge con-name br0-port1 ifname enp1s0 controller br0
+sudo nmcli connection up br0</code></pre></div><p>Ostrzeżenie: robisz to na karcie sieciowej, przez którą jesteś zalogowany. Adres przenosi się z karty na mostek i przez SSH możesz stracić połączenie w połowie operacji. Miej dostęp do konsoli serwera albo ćwicz na maszynie wirtualnej. <code>netplan try</code> po to właśnie istnieje: jak nie potwierdzisz zmian w 120 sekund, wraca do starej konfiguracji.</p><p>Potem w <code>virt-install</code> zamiast <code>--network network=default</code> piszesz <code>--network bridge=br0</code>.</p></section><section><h2 id="cloud-init-maszyna-ktora-sama-sie-urzadza">cloud-init: maszyna, która sama się urządza</h2><p>Instalacja z ISO to klikanie przez instalator. W chmurze nikt tego nie robi. Bierze się gotowy obraz systemu, tak zwany cloud image, i przy pierwszym starcie podaje mu kartkę z instrukcjami: jak się nazywasz, kto ma konto, jaki klucz SSH, co zainstalować. Program w maszynie, który czyta tę kartkę, to <strong>cloud-init</strong>. Jak nowy pracownik, który pierwszego dnia znajduje na biurku list powitalny z loginem, hasłem do Wi-Fi i listą zadań.</p><p>Gotowe obrazy pobierasz od dystrybucji: Ubuntu z <code>cloud-images.ubuntu.com</code>, Rocky i Red Hat też udostępniają obrazy dla chmury (format sprawdź przez <code>qemu-img info</code>). Kartka składa się z dwóch plików. <code>user-data</code>:</p><div class="kod"><pre><code>#cloud-config
+hostname: web01
+users:
+  - name: eryk
+    groups: sudo
+    shell: /bin/bash
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    ssh_authorized_keys:
+      - ssh-ed25519 AAAA... eryk@laptop
+package_update: true
+packages:
+  - htop
+runcmd:
+  - echo &quot;Postawione przez cloud-init&quot; &gt; /etc/motd</code></pre></div><p>Pierwsza linijka <code>#cloud-config</code> jest obowiązkowa. Bez niej cloud-init uzna plik za coś innego. Na RHEL-u grupa adminów to <code>wheel</code>, nie <code>sudo</code>. Drugi plik, <code>meta-data</code>:</p><div class="kod"><pre><code>instance-id: web01
+local-hostname: web01</code></pre></div><p>Zanim użyjesz, sprawdź składnię. Literówka w YAML to maszyna bez Twojego konta:</p><div class="kod"><pre><code>cloud-init schema -c user-data</code></pre></div><div class="kod"><pre><code>Valid schema user-data</code></pre></div><p>Teraz dwie drogi. Nowszy <code>virt-install</code> sam spakuje te pliki:</p><div class="kod"><pre><code>sudo virt-install --name web01 --memory 2048 --vcpus 2 \\
+  --disk path=/var/lib/libvirt/images/web01.qcow2 --import \\
+  --osinfo ubuntu24.04 --network network=default \\
+  --cloud-init user-data=user-data,meta-data=meta-data \\
+  --graphics none --noautoconsole</code></pre></div><p><code>--import</code> znaczy: nie instaluj, dysk już ma system, po prostu uruchom. A dysk <code>web01.qcow2</code> to nasza kalka na obrazie Ubuntu z poprzedniej części. Druga droga, działająca wszędzie: sam robisz małą płytę z kartką.</p><div class="kod"><pre><code>cloud-localds seed.iso user-data meta-data
+file seed.iso</code></pre></div><div class="kod"><pre><code>seed.iso: ISO 9660 CD-ROM filesystem data &#x27;cidata&#x27;</code></pre></div><p>Etykieta płyty <code>cidata</code> to sygnał dla cloud-init: „tu jest Twoja kartka”. Wkładasz ją jako drugi napęd: <code>--disk path=seed.iso,device=cdrom</code>. [Ubuntu] <code>cloud-localds</code> jest w paczce <code>cloud-image-utils</code>.</p><p>Po starcie wchodzisz <code>ssh eryk@ADRES</code>, bez hasła, z kluczem. W środku <code>cloud-init status --wait</code> czeka, aż skończy, a jak coś nie wyszło, zaglądasz do <code>/var/log/cloud-init.log</code> i <code>/var/log/cloud-init-output.log</code>.</p></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p>Maszyna wirtualna z punktu widzenia serwera to… jeden proces <code>qemu-system-x86_64</code>. Każdy wirtualny procesor to wątek tego procesu. Kucharz udający całą restaurację. Kiedy maszyna wykonuje zwykłe instrukcje, KVM pozwala jej działać prosto na procesorze. Gdy maszyna chce dotknąć sprzętu, na przykład zapisać na dysk, procesor zatrzymuje ją i oddaje głos QEMU, które zapisuje dane do pliku qcow2.</p><p>libvirt przechowuje opis każdej maszyny jako XML. Systemowe maszyny leżą w <code>/etc/libvirt/qemu/</code>:</p><div class="kod"><pre><code>sudo ls /etc/libvirt/qemu/
+virsh domblklist test94</code></pre></div><div class="kod"><pre><code>autostart  networks  test94.xml
+ Target   Source
+------------------------------------------------
+ hda      /var/lib/libvirt/images/test94.qcow2</code></pre></div><p>Tego XML-a nie edytujesz ręcznie w edytorze. Używasz <code>virsh edit test94</code>, który sprawdzi poprawność przed zapisem, tak jak <code>visudo</code> dla sudoers. Podgląd to <code>virsh dumpxml test94</code>.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>urządzenia virtio to sterowniki „parawirtualne”: system w maszynie wie, że jest wirtualny, i rozmawia z QEMU krótszą drogą zamiast udawać rozmowę z prawdziwym kontrolerem dysku. Stąd <code>vda</code> zamiast <code>sda</code> w środku maszyny.</p></aside></section><section><h2 id="sciaga-flag">Ściąga flag</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga</th><th>Co robi</th></tr><tr><td><code>qemu-img create</code></td><td><code>-f qcow2 PLIK ROZMIAR</code></td><td>nowy dysk</td></tr><tr><td><code>qemu-img create</code></td><td><code>-b PODKŁAD -F FORMAT</code></td><td>dysk z podkładem (kalka)</td></tr><tr><td><code>qemu-img info</code></td><td><code>--backing-chain</code></td><td>cały łańcuch dysków</td></tr><tr><td><code>qemu-img resize</code></td><td><code>+5G</code>, <code>--shrink</code></td><td>powiększa, zmniejsza</td></tr><tr><td><code>qemu-img convert</code></td><td><code>-f Z -O NA -p</code></td><td>zmiana formatu z paskiem postępu</td></tr><tr><td><code>virt-install</code></td><td><code>--name --memory --vcpus</code></td><td>nazwa, RAM w MB, procesory</td></tr><tr><td><code>virt-install</code></td><td><code>--disk size=20</code> / <code>path=...</code></td><td>nowy dysk albo istniejący</td></tr><tr><td><code>virt-install</code></td><td><code>--location</code>, <code>--cdrom</code>, <code>--import</code></td><td>skąd system</td></tr><tr><td><code>virt-install</code></td><td><code>--osinfo NAZWA</code></td><td>typ systemu, dobór urządzeń</td></tr><tr><td><code>virt-install</code></td><td><code>--network network=default</code> / <code>bridge=br0</code></td><td>NAT albo mostek</td></tr><tr><td><code>virt-install</code></td><td><code>--cloud-init user-data=...</code></td><td>kartka dla cloud-init</td></tr><tr><td><code>virt-install</code></td><td><code>--graphics none --noautoconsole</code></td><td>bez okna, bez łączenia z konsolą</td></tr><tr><td><code>virsh</code></td><td><code>list --all</code></td><td>wszystkie maszyny</td></tr><tr><td><code>virsh</code></td><td><code>start</code>, <code>shutdown</code>, <code>destroy</code></td><td>włącz, grzecznie wyłącz, wyłącz prąd</td></tr><tr><td><code>virsh</code></td><td><code>console</code></td><td>konsola szeregowa, wyjście Ctrl+]</td></tr><tr><td><code>virsh</code></td><td><code>autostart</code></td><td>start razem z serwerem</td></tr><tr><td><code>virsh</code></td><td><code>snapshot-create-as</code>, <code>snapshot-list</code>, <code>snapshot-revert</code></td><td>migawki</td></tr><tr><td><code>virsh</code></td><td><code>undefine --remove-all-storage</code></td><td>usuwa maszynę i jej dyski</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>Wpisujesz <code>virsh shutdown</code>, a maszyna… dalej działa:</p><div class="kod"><pre><code>virsh shutdown test94
+sleep 5
+virsh list --all</code></pre></div><div class="kod"><pre><code>Domain &#x27;test94&#x27; is being shutdown
+
+ Id   Name     State
+------------------------
+ 1    test94   running</code></pre></div><p>„Is being shutdown”, a stan <code>running</code>. Dlaczego? <code>shutdown</code> tylko naciska wirtualny przycisk zasilania. Jeśli system w środku jeszcze się uruchamia, wisi albo nie ma usługi, która ten przycisk obsługuje, to nikt go nie usłyszy. U mnie maszyna miała pusty dysk, więc nie było w niej nikogo, kto mógłby usłyszeć. Jak dzwonek do pustego mieszkania.</p><p>Co robić: poczekaj chwilę i sprawdź <code>virsh console</code>, co się dzieje w środku. W nowoczesnych obrazach chmurowych włączony jest też agent QEMU (<code>qemu-guest-agent</code>), z którym zadziała <code>virsh shutdown --mode agent</code>. Dopiero na końcu <code>virsh destroy</code>, świadomie, ze świadomością, że to wyjęcie wtyczki z gniazdka.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><ol><li>Utwórz dysk <code>baza.qcow2</code> o rozmiarze 10 GB, a na nim dysk z podkładem <code>klon.qcow2</code> o rozmiarze 20 GB. Sprawdź <code>qemu-img info --backing-chain</code>, ile każdy zajmuje naprawdę.</li><li>Postaw maszynę z obrazu chmurowego przez <code>virt-install --import</code> z własnym <code>user-data</code>, które zakłada Twoje konto z kluczem SSH. Zaloguj się po SSH.</li><li>Zrób migawkę <code>czysta</code>, usuń w maszynie plik <code>/etc/motd</code>, a potem przywróć migawkę i sprawdź, że plik wrócił.</li></ol><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><p>Część pierwsza: dysk z podkładem.</p><div class="kod"><pre><code>qemu-img create -f qcow2 baza.qcow2 10G
+qemu-img create -f qcow2 -F qcow2 -b baza.qcow2 klon.qcow2 20G
+qemu-img info --backing-chain klon.qcow2 | grep -E &#x27;^image:|virtual size|^disk size|backing file:&#x27;</code></pre></div><div class="kod"><pre><code>image: klon.qcow2
+virtual size: 20 GiB (21474836480 bytes)
+disk size: 196 KiB
+backing file: baza.qcow2
+image: baza.qcow2
+virtual size: 10 GiB (10737418240 bytes)
+disk size: 196 KiB</code></pre></div><p>Dwa dyski, razem 30 GB obietnic, a zajmują mniej niż zdjęcie kota z telefonu. Zwróć uwagę: kalka może być większa niż podkład.</p><p>Część druga: maszyna z cloud-init. Plik <code>user-data</code> z Twoim kontem i kluczem jak w lekcji, sprawdzony przez <code>cloud-init schema -c user-data</code>, i:</p><div class="kod"><pre><code>sudo virt-install --name lab01 --memory 2048 --vcpus 2 \\
+  --disk path=/var/lib/libvirt/images/klon.qcow2 --import \\
+  --osinfo ubuntu24.04 --network network=default \\
+  --cloud-init user-data=user-data,meta-data=meta-data \\
+  --graphics none --noautoconsole
+sudo virsh domifaddr lab01
+ssh eryk@192.168.122.X</code></pre></div><p><code>domifaddr</code> poda adres, który maszyna dostała z DHCP sieci <code>default</code>. Jak SSH pyta o hasło, to znaczy, że klucz nie dotarł: zajrzyj przez <code>virsh console</code> do <code>/var/log/cloud-init.log</code>. Najczęstszy powód to brak <code>#cloud-config</code> w pierwszej linijce.</p><p>Część trzecia: migawka.</p><div class="kod"><pre><code>sudo virsh snapshot-create-as lab01 czysta
+ssh eryk@192.168.122.X &#x27;sudo rm /etc/motd&#x27;
+sudo virsh snapshot-revert lab01 czysta
+ssh eryk@192.168.122.X &#x27;cat /etc/motd&#x27;</code></pre></div><p>Plik wrócił, razem z napisem „Postawione przez cloud-init”. Wehikuł czasu, który działa tylko w jedną stronę: do tyłu. Do przodu musisz iść sam.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Masz już kontenery, maszyny i usługi. Kto ich pilnuje w nocy? W następnej lekcji monitorowanie: historia obciążenia w <code>sar</code>, progi i alarmy, Zabbix z agentem, Netdata i Prometheus z node_exporter.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-095.html" rel="prev">← 95. Kontenery, część 2</a><a class="btn domyslny zolty" href="lekcja-097.html" rel="next">97. Monitorowanie →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

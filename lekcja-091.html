@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>91. Nginx, reverse proxy i rozkładanie ruchu — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 91 kursu Linux i Bash od zera do admina: Nginx, reverse proxy i rozkładanie ruchu. kursant stawia stronę na Nginxie, sprawdza konfigurację nginx -t, ustawia Nginxa jako reverse proxy przed aplikacją, rozkłada ruch na kilka serwerów przez upstream i robi to samo w HAProxy z kontrolą zdrowia se">
+<meta property="og:title" content="91. Nginx, reverse proxy i rozkładanie ruchu — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 91 kursu Linux i Bash od zera do admina: Nginx, reverse proxy i rozkładanie ruchu. kursant stawia stronę na Nginxie, sprawdza konfigurację nginx -t, ustawia Nginxa jako reverse proxy przed aplikacją, rozkłada ruch na kilka serwerów przez upstream i robi to samo w HAProxy z kontrolą zdrowia se">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 10</span></div>
+      <div class="boczny-tytul"><a href="index.html#m10">Usługi i serwery</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-087.html" data-lekcja="87"><span class="znacznik"></span><span class="nr">87</span> Zadania o wyznaczonej godzinie i powiadomienia</a></li><li><a href="lekcja-088.html" data-lekcja="88"><span class="znacznik"></span><span class="nr">88</span> Apache: instalacja</a></li><li><a href="lekcja-089.html" data-lekcja="89"><span class="znacznik"></span><span class="nr">89</span> Apache: konfiguracja</a></li><li><a href="lekcja-090.html" data-lekcja="90"><span class="znacznik"></span><span class="nr">90</span> Apache z HTTPS</a></li><li><a href="lekcja-091.html" data-lekcja="91" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">91</span> Nginx, reverse proxy i rozkładanie ruchu</a></li><li><a href="lekcja-092.html" data-lekcja="92"><span class="znacznik"></span><span class="nr">92</span> Bazy danych dla admina</a></li><li><a href="lekcja-093.html" data-lekcja="93"><span class="znacznik"></span><span class="nr">93</span> Stos LAMP od zera</a></li><li><a href="lekcja-094.html" data-lekcja="94"><span class="znacznik"></span><span class="nr">94</span> Kontenery, część 1</a></li><li><a href="lekcja-095.html" data-lekcja="95"><span class="znacznik"></span><span class="nr">95</span> Kontenery, część 2</a></li><li><a href="lekcja-096.html" data-lekcja="96"><span class="znacznik"></span><span class="nr">96</span> Maszyny wirtualne: KVM i libvirt</a></li><li><a href="lekcja-097.html" data-lekcja="97"><span class="znacznik"></span><span class="nr">97</span> Monitorowanie</a></li><li><a href="lekcja-098.html" data-lekcja="98"><span class="znacznik"></span><span class="nr">98</span> Kopie zapasowe na serio</a></li><li><a href="lekcja-099.html" data-lekcja="99"><span class="znacznik"></span><span class="nr">99</span> Gdy serwer nie wstaje</a></li><li><a href="lekcja-100.html" data-lekcja="100"><span class="znacznik"></span><span class="nr">100</span> Metoda rozwiązywania problemów</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="91" data-modul="10" data-tematy="bloki server, nginx -t, proxy_pass, upstream, metody rozkładania, HAProxy (frontend, backend, haproxy -c)">
+    <div class="belka"><span>Lekcja 91 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m10">Moduł 10</a> › Lekcja 91</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Nginx, reverse proxy i rozkładanie ruchu</h1>
+      <p class="meta"><span>⏱ ok. 12 min czytania</span><span>· moduł 10: Usługi i serwery</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant stawia stronę na Nginxie, sprawdza konfigurację <code>nginx -t</code>, ustawia Nginxa jako reverse proxy przed aplikacją, rozkłada ruch na kilka serwerów przez <code>upstream</code> i robi to samo w HAProxy z kontrolą zdrowia serwerów.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#nginx-czyli-druga-recepcja">Nginx, czyli druga recepcja</a></li><li><a href="#gdzie-nginx-trzyma-konfiguracje">Gdzie Nginx trzyma konfigurację</a></li><li><a href="#reverse-proxy-czyli-recepcjonista-ktory-nic-nie-go">Reverse proxy, czyli recepcjonista, który nic nie gotuje</a></li><li><a href="#upstream-czyli-kolejka-do-kilku-okienek">Upstream, czyli kolejka do kilku okienek</a></li><li><a href="#metody-rozkladania">Metody rozkładania</a></li><li><a href="#haproxy-czyli-zawodowy-ochroniarz">HAProxy, czyli zawodowy ochroniarz</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga-flag">Ściąga flag</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p>Piątek, wieczór, sklep z kapciami ma promocję. Ruch rośnie pięć razy. Jeden serwer dyszy, procesor na stu procentach, klienci widzą kręcące się kółko. Szef pyta: „Nie da się dostawić drugiego serwera?”</p><p>Da się. Tylko klient wpisuje jeden adres. Ktoś musi stać w drzwiach i mówić: „pan do okienka pierwszego, pani do drugiego”. Dziś postawimy takiego kogoś. Dwa razy. Raz w Nginxie, raz w HAProxy.</p></section><section><h2 id="nginx-czyli-druga-recepcja">Nginx, czyli druga recepcja</h2><p>Pamiętasz, że serwer WWW to recepcja hotelu? Apache to recepcja w starym, porządnym hotelu. Dla każdego gościa osobny boy hotelowy. Nginx to recepcja na lotnisku. Kilku pracowników obsługuje tysiące ludzi naraz, bo nikt nie stoi i nie czeka, aż gość skończy mówić. Pracownik przyjmuje sprawę, odchodzi do następnego, wraca, jak coś jest gotowe.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>Apache z modułem prefork trzyma proces na połączenie. Nginx ma kilka procesów roboczych i każdy obsługuje tysiące połączeń w pętli zdarzeń, przez <code>epoll</code>. Apache z modułem <code>event</code> jest dziś bliżej tego modelu, ale łatka „Nginx szybszy przy wielu połączeniach” wzięła się właśnie stąd.</p></aside><p>Instalacja:</p><div class="kod"><pre><code>sudo apt install nginx          # [Ubuntu], startuje sam
+sudo dnf install nginx          # [RHEL]
+sudo systemctl enable --now nginx   # [RHEL] trzeba włączyć ręcznie
+sudo ufw allow &#x27;Nginx Full&#x27;     # [Ubuntu] 80 i 443
+sudo firewall-cmd --permanent --add-service={http,https}   # [RHEL]
+sudo firewall-cmd --reload</code></pre></div><p>Sprawdźmy, kto pracuje:</p><div class="kod"><pre><code>ps -o pid,user,cmd -C nginx</code></pre></div><div class="kod"><pre><code>  PID USER     CMD
+20202 root     nginx: master process nginx
+20203 www-data nginx: worker process
+20204 www-data nginx: worker process</code></pre></div><p>Jeden kierownik jako root, bo tylko root może otworzyć port 80. I pracownicy jako zwykły użytkownik, którzy robią całą robotę. [RHEL] użytkownik nazywa się <code>nginx</code>, nie <code>www-data</code>.</p></section><section><h2 id="gdzie-nginx-trzyma-konfiguracje">Gdzie Nginx trzyma konfigurację</h2><p>Główny plik to zawsze <code>/etc/nginx/nginx.conf</code>. Dalej rodziny się rozjeżdżają.</p><p>[Ubuntu] Ten sam układ, co w Apache: <code>sites-available</code> to szafa ze wszystkimi stronami, <code>sites-enabled</code> to dowiązania do tych, które działają. Tylko nie ma <code>a2ensite</code>. Dowiązanie robisz sam przez <code>ln -s</code>.</p><p>[RHEL] Nie ma <code>sites-available</code>. Wrzucasz plik z końcówką <code>.conf</code> do <code>/etc/nginx/conf.d/</code> i tyle. Nie chcesz strony? Zmieniasz końcówkę na <code>.conf.off</code>.</p><p>W konfiguracji Nginxa strona to <strong>blok </strong><strong><code>server</code></strong>. To odpowiednik VirtualHosta z Apache. Zróbmy pierwszy:</p><div class="kod"><pre><code>sudo mkdir -p /var/www/kapcie
+echo &#x27;&lt;h1&gt;Kapcie z Nginxa&lt;/h1&gt;&#x27; | sudo tee /var/www/kapcie/index.html
+sudo nano /etc/nginx/sites-available/kapcie</code></pre></div><div class="kod"><pre><code>server {
+    listen 80;
+    server_name kapcie.test;
+    root /var/www/kapcie;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}</code></pre></div><p>Czytamy po ludzku. <code>listen</code> to numer okienka. <code>server_name</code> to nazwa, na którą ta recepcja reaguje. <code>root</code> to folder z plikami. <code>location /</code> mówi, co robić z adresami zaczynającymi się od ukośnika, czyli ze wszystkimi. <code>try_files</code> to instrukcja dla recepcjonisty: „poszukaj takiego pliku, potem takiego folderu, a jak nie ma, powiedz 404”.</p><p>Zwróć uwagę na średniki. Każda linijka ze słowem kluczowym kończy się średnikiem. Zapamiętaj to. Za trzy minuty średnik nas ugryzie.</p><div class="kod"><pre><code>sudo ln -s /etc/nginx/sites-available/kapcie /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl reload nginx
+curl -i http://kapcie.test</code></pre></div><div class="kod"><pre><code>nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+HTTP/1.1 200 OK
+Server: nginx/1.24.0 (Ubuntu)</code></pre></div><p><code>nginx -t</code> to odpowiednik <code>apachectl configtest</code>. Sprawdza konfigurację bez dotykania działającego serwera. Zasada jak w samolocie: najpierw lista kontrolna, potem start. Zawsze <code>nginx -t</code> przed <code>reload</code>.</p><p>A <code>nginx -T</code> z wielką literą wypisuje całą konfigurację sklejoną ze wszystkich plików. Bezcenne, kiedy nie wiesz, który plik co ustawia.</p></section><section><h2 id="reverse-proxy-czyli-recepcjonista-ktory-nic-nie-go">Reverse proxy, czyli recepcjonista, który nic nie gotuje</h2><p>Wyobraź sobie restaurację, w której kelner nie gotuje. Przyjmuje zamówienie, zanosi do kuchni, przynosi talerz. Gość nigdy nie widzi kuchni. Nie wie, czy kucharz jest jeden, czy pięciu, i czy kuchnia jest w tym budynku.</p><p>To jest <strong>reverse proxy</strong>. Klient rozmawia z Nginxem. Nginx przekazuje prośbę do prawdziwej aplikacji, która siedzi gdzieś z tyłu, i oddaje odpowiedź. Po co? Bo aplikacje w Node, Pythonie czy Javie zwykle słuchają na porcie typu 3000 albo 8080, nie znają się na HTTPS i nie powinny wystawiać się prosto do internetu. Nginx bierze na siebie certyfikat, kompresję i pliki statyczne. Aplikacja robi tylko swoje.</p><p>Zróbmy dwie udawane aplikacje. Python ma wbudowany malutki serwer WWW, w sam raz do testów:</p><div class="kod"><pre><code>mkdir app1 app2
+echo &#x27;Odpowiada serwer 1&#x27; &gt; app1/index.html
+echo &#x27;Odpowiada serwer 2&#x27; &gt; app2/index.html
+python3 -m http.server 9001 --bind 127.0.0.1 --directory app1 &amp;
+python3 -m http.server 9002 --bind 127.0.0.1 --directory app2 &amp;</code></pre></div><p>Słuchają tylko na <code>127.0.0.1</code>, czyli z zewnątrz nikt się do nich nie dobije. Jedyne drzwi to Nginx. Teraz kluczowe słówko, <strong><code>proxy_pass</code></strong>:</p><div class="kod"><pre><code>server {
+    listen 80;
+    server_name app.test;
+
+    location / {
+        proxy_pass http://127.0.0.1:9001;
+        include proxy_params;
+    }
+}</code></pre></div><p><code>include proxy_params</code> dokleja gotowy zestaw nagłówków z pliku <code>/etc/nginx/proxy_params</code>. [RHEL] tego pliku nie ma, więc wpisujesz linijki sam:</p><div class="kod"><pre><code>proxy_set_header Host $host;
+proxy_set_header X-Real-IP $remote_addr;
+proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+proxy_set_header X-Forwarded-Proto $scheme;</code></pre></div><p>Po co? Bez nich aplikacja myśli, że każdy klient to <code>127.0.0.1</code>. Bo z jej punktu widzenia przychodzi do niej tylko Nginx. Kelner musi przekazać kuchni nie tylko zamówienie, ale i numer stolika. Podsłuchałem, co dokładnie dostaje aplikacja:</p><div class="kod"><pre><code>GET /koszyk HTTP/1.0
+Host: app.test
+X-Real-IP: 127.0.0.1
+X-Forwarded-For: 127.0.0.1
+X-Forwarded-Proto: http
+Connection: close</code></pre></div><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>widzisz <code>HTTP/1.0</code>? Domyślnie Nginx gada z zapleczem po starym HTTP/1.0 i zamyka połączenie po każdym zapytaniu. Do websocketów i połączeń trzymanych dłużej dopisujesz <code>proxy_http_version 1.1;</code> i ustawiasz nagłówki <code>Upgrade</code> i <code>Connection</code>.</p></aside><p>[RHEL] Tu SELinux zatrzyma Cię pierwszy raz. Domyślnie serwer WWW nie może sam łączyć się z innymi portami. Dostaniesz 502, a w logu <code>Permission denied</code>. Lekarstwo z dokumentacji Red Hata:</p><div class="kod"><pre><code>sudo setsebool -P httpd_can_network_connect 1</code></pre></div><p>To samo pole, co dla Apache, bo dla SELinuksa oba to „serwer WWW”.</p></section><section><h2 id="upstream-czyli-kolejka-do-kilku-okienek">Upstream, czyli kolejka do kilku okienek</h2><p>Wracamy do piątkowej promocji. Mamy dwie aplikacje. Chcemy, żeby Nginx dzielił ruch między obie. Zamiast jednego adresu w <code>proxy_pass</code> dajemy nazwę grupy. Grupę definiuje blok <strong><code>upstream</code></strong>:</p><div class="kod"><pre><code>upstream aplikacja {
+    server 127.0.0.1:9001;
+    server 127.0.0.1:9002;
+}
+
+server {
+    listen 80;
+    server_name app.test;
+
+    location / {
+        proxy_pass http://aplikacja;
+        include proxy_params;
+    }
+}</code></pre></div><div class="kod"><pre><code>sudo nginx -t &amp;&amp; sudo systemctl reload nginx
+for i in $(seq 1 10); do curl -s http://app.test; done | sort | uniq -c</code></pre></div><div class="kod"><pre><code>      5 Odpowiada serwer 1
+      5 Odpowiada serwer 2</code></pre></div><p>Pół na pół. Rura i <code>uniq -c</code> z modułu pierwszego właśnie policzyły nam rozkład ruchu. Mówiłem, że się przyda.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>jak puścisz cztery zapytania i spojrzysz bez liczenia, może wyjść 1, 1, 2, 1, a nie równo na zmianę. Każdy proces roboczy Nginxa ma własny licznik kolejki. Wspólny licznik dla wszystkich daje linijka <code>zone aplikacja 64k;</code> w bloku <code>upstream</code>. Dokumentacja Nginxa mówi o tym przy dyrektywie <code>zone</code>.</p></aside></section><section><h2 id="metody-rozkladania">Metody rozkładania</h2><p>Ochroniarz w Biedronce może kierować ludzi na kilka sposobów.</p><p><strong>Po kolei</strong> (round robin). Ty do pierwszej, ty do drugiej, ty do pierwszej. To domyślne. Nic nie wpisujesz.</p><p><strong>Z wagami.</strong> Kasa pierwsza ma doświadczoną kasjerkę, druga stażystę. Pierwsza dostaje trzy razy więcej klientów:</p><div class="kod"><pre><code>    server 127.0.0.1:9001 weight=3;
+    server 127.0.0.1:9002;</code></pre></div><div class="kod"><pre><code>      9 Odpowiada serwer 1
+      3 Odpowiada serwer 2</code></pre></div><p>Dwanaście zapytań, dziewięć do trzy. Matematyka się zgadza, stażysta odetchnął.</p><p><strong>Do najmniej zajętego</strong>, <code>least_conn;</code>. Ochroniarz patrzy, przy której kasie stoi najkrótsza kolejka. Dobre, kiedy zapytania trwają bardzo różnie długo.</p><p><strong>Zawsze do tego samego</strong>, <code>ip_hash;</code>. Stały klient zawsze idzie do tej samej kasjerki, bo ona go zna. Ten sam adres IP trafia do tego samego serwera. Przydaje się, kiedy aplikacja trzyma koszyk w pamięci jednego serwera.</p><div class="kod"><pre><code>upstream aplikacja {
+    ip_hash;
+    server 127.0.0.1:9001;
+    server 127.0.0.1:9002;
+}</code></pre></div><p>Cztery zapytania z mojego komputera, cztery razy „serwer 1”. Działa.</p><p><strong>Zapasowy</strong>, <code>backup</code>. Kasa otwierana tylko wtedy, kiedy wszystkie inne padły:</p><div class="kod"><pre><code>    server 127.0.0.1:9001;
+    server 127.0.0.1:9002 backup;</code></pre></div><p>I jeszcze jedno: co, jak serwer padnie? Wyłączyłem serwer 2 i puściłem sześć zapytań:</p><div class="kod"><pre><code>200 200 200 200 200 200</code></pre></div><p>Klient nic nie zauważył. Nginx spróbował drugiego, dostał odmowę, po cichu przerzucił zapytanie na pierwszy i zapisał w logu:</p><div class="kod"><pre><code>[error] connect() failed (111: Connection refused) while connecting to upstream, ... upstream: &quot;http://127.0.0.1:9002/&quot;</code></pre></div><p>Potem przez 10 sekund nie zawraca sobie nim głowy. Tak działają domyślne <code>max_fails=1</code> i <code>fail_timeout=10s</code>. Nginx w wersji darmowej sprawdza zdrowie serwerów biernie: dowiaduje się, że kasa zamknięta, dopiero jak wyśle do niej klienta. Wyłączyłem oba serwery:</p><div class="kod"><pre><code>HTTP/1.1 502 Bad Gateway</code></pre></div><p>502 to „kelner wrócił z kuchni, a kuchni nie ma”. Nginx działa, zaplecze nie. Kiedy zobaczysz 502, nie grzeb w Nginxie. Sprawdź aplikację za nim.</p></section><section><h2 id="haproxy-czyli-zawodowy-ochroniarz">HAProxy, czyli zawodowy ochroniarz</h2><p>Nginx to recepcja, która przy okazji umie kierować ruchem. <strong>HAProxy</strong> to człowiek, który robi tylko to. Za to robi to świetnie. Sam chodzi i co dwie sekundy zagląda do każdej kasy, czy jest otwarta. To aktywne sprawdzanie zdrowia.</p><div class="kod"><pre><code>sudo apt install haproxy    # [Ubuntu]
+sudo dnf install haproxy    # [RHEL]</code></pre></div><p>Konfiguracja w obu rodzinach to jeden plik, <code>/etc/haproxy/haproxy.cfg</code>. Na górze jest <code>global</code> i <code>defaults</code>, to zostawiamy. Dopisujemy na końcu:</p><div class="kod"><pre><code>frontend wejscie
+    bind *:8085
+    default_backend aplikacja
+
+backend aplikacja
+    balance roundrobin
+    option httpchk GET /
+    server app1 127.0.0.1:9001 check
+    server app2 127.0.0.1:9002 check
+
+listen statystyki
+    bind 127.0.0.1:8086
+    stats enable
+    stats uri /stats</code></pre></div><p>Dwa nowe słowa. <strong><code>frontend</code></strong> to drzwi wejściowe, gdzie przychodzą klienci. <strong><code>backend</code></strong> to zaplecze, czyli lista serwerów i sposób dzielenia. <code>check</code> przy serwerze włącza zaglądanie do kasy. <code>option httpchk</code> mówi, żeby zaglądać zapytaniem HTTP, a nie tylko pukaniem w port.</p><p>Sprawdzenie konfiguracji, tym razem flagą <code>-c</code>:</p><div class="kod"><pre><code>sudo haproxy -c -f /etc/haproxy/haproxy.cfg
+sudo systemctl restart haproxy
+for i in 1 2 3 4; do curl -s http://localhost:8085; done</code></pre></div><div class="kod"><pre><code>Configuration file is valid
+Odpowiada serwer 1
+Odpowiada serwer 2
+Odpowiada serwer 1
+Odpowiada serwer 2</code></pre></div><p>Teraz wyłączam serwer 2 i patrzę w statystyki. Strona <code>/stats</code> jest w przeglądarce, ale ma też wersję CSV dla skryptów:</p><div class="kod"><pre><code>curl -s &#x27;http://127.0.0.1:8086/stats;csv&#x27; | cut -d, -f1,2,18</code></pre></div><div class="kod"><pre><code># pxname,svname,status
+wejscie,FRONTEND,OPEN
+aplikacja,app1,UP
+aplikacja,app2,DOWN</code></pre></div><p>HAProxy sam zauważył, że serwer 2 padł, zanim wysłał tam jakiegokolwiek klienta. Wszystkie zapytania idą teraz do pierwszego. Jak serwer 2 wstanie, wróci do gry sam.</p><p>Metody w HAProxy nazywają się trochę inaczej: <code>roundrobin</code>, <code>leastconn</code> i <code>source</code>, czyli ten sam pomysł, co <code>ip_hash</code> w Nginxie.</p><p>[RHEL] Znowu SELinux. HAProxy domyślnie nie może łączyć się z dowolnym portem. Jeśli zaplecze słucha na niestandardowym porcie, włączasz <code>setsebool -P haproxy_connect_any 1</code>. Według strony man <code>haproxy_selinux</code> ta opcja jest domyślnie wyłączona.</p></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p>Reverse proxy to tak naprawdę dwa osobne połączenia TCP. Klient łączy się z Nginxem albo HAProxy. Proxy otwiera drugie, własne połączenie do aplikacji. Aplikacja nigdy nie widzi klienta. Dlatego potrzebne są nagłówki <code>X-Forwarded-For</code>: to jedyny ślad, kto naprawdę pukał.</p><p>Nginx ma jeden proces główny jako root. Ten proces czyta konfigurację i otwiera porty, a potem odpala procesy robocze jako zwykły użytkownik. Przy <code>reload</code> kierownik czyta nową konfigurację, uruchamia nowych pracowników, a starzy dokańczają obsługę swoich klientów i dopiero wtedy wychodzą. Dlatego <code>reload</code> nie zrywa połączeń. A jak nowa konfiguracja jest zła, kierownik zostaje przy starej.</p><p>HAProxy pracuje na dwóch poziomach. W <code>mode http</code> czyta zapytania HTTP i może kierować według adresu czy nagłówka. W <code>mode tcp</code> przekazuje surowe bajty, nie wiedząc, co w nich jest. Tak można rozkładać ruch do baz danych czy serwerów pocztowych.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>na Ubuntu HAProxy startuje w <code>chroot /var/lib/haproxy</code>, czyli zamknięty we własnym folderze. Nawet jak ktoś go przejmie, nie zobaczy reszty systemu. Dlatego ścieżki do plików w konfiguracji czasem działają inaczej, niż się spodziewasz.</p></aside></section><section><h2 id="sciaga-flag">Ściąga flag</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga</th><th>Co robi</th></tr><tr><td><code>nginx</code></td><td><code>-t</code></td><td>sprawdza konfigurację</td></tr><tr><td><code>nginx</code></td><td><code>-T</code></td><td>sprawdza i wypisuje całą sklejoną konfigurację</td></tr><tr><td><code>nginx</code></td><td><code>-s reload</code></td><td>przeładowuje konfigurację bez systemd</td></tr><tr><td><code>nginx</code></td><td><code>-v</code> / <code>-V</code></td><td>wersja / wersja z opcjami kompilacji</td></tr><tr><td><code>haproxy</code></td><td><code>-c -f plik</code></td><td>sprawdza plik konfiguracji</td></tr><tr><td><code>haproxy</code></td><td><code>-v</code></td><td>wersja</td></tr><tr><td><code>upstream</code></td><td><code>weight=N</code></td><td>waga serwera</td></tr><tr><td><code>upstream</code></td><td><code>least_conn;</code> / <code>ip_hash;</code></td><td>do najmniej zajętego / zawsze ten sam dla danego IP</td></tr><tr><td><code>upstream</code></td><td><code>backup</code> / <code>down</code></td><td>serwer zapasowy / chwilowo wyłączony</td></tr><tr><td>HAProxy <code>backend</code></td><td><code>balance roundrobin</code> / <code>leastconn</code> / <code>source</code></td><td>metoda rozkładania</td></tr><tr><td>HAProxy <code>server</code></td><td><code>check</code></td><td>aktywne sprawdzanie zdrowia</td></tr><tr><td><code>setsebool -P</code></td><td><code>httpd_can_network_connect 1</code></td><td>[RHEL] pozwala Nginxowi łączyć się z aplikacją</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>Masz już Apache na tym serwerze. Instalujesz Nginxa, startujesz i:</p><div class="kod"><pre><code>nginx: [emerg] bind() to 0.0.0.0:80 failed (98: Address already in use)</code></pre></div><p><code>nginx -t</code> nic nie wykrył, bo konfiguracja jest poprawna. Problem w tym, że okienko numer 80 jest już zajęte przez Apache. Dwóch recepcjonistów nie usiądzie na jednym krześle. Sprawdzasz, kto siedzi:</p><div class="kod"><pre><code>sudo ss -ltnp &#x27;sport = :80&#x27;</code></pre></div><p>I decydujesz: albo Nginx słucha na innym porcie, albo Apache przechodzi na 8080 i Nginx staje przed nim jako reverse proxy. To drugie to zresztą bardzo częsty układ.</p><p>Drugi klasyk: zapomniany średnik.</p><div class="kod"><pre><code>nginx: [emerg] invalid number of arguments in &quot;proxy_pass&quot; directive in /etc/nginx/sites-enabled/proxy:12
+nginx: configuration file /etc/nginx/nginx.conf test failed</code></pre></div><p>Zgubiłeś średnik po <code>proxy_pass</code>, więc Nginx skleił tę linijkę z następną i wyszło mu za dużo słów. Komunikat wskazuje linijkę 12, a błąd jest na jej końcu. Zawsze patrz też linijkę wyżej.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><ol><li>Postaw dwie aplikacje testowe <code>python3 -m http.server</code> na portach 9001 i 9002, każda z innym <code>index.html</code>.</li><li>Ustaw przed nimi Nginxa z blokiem <code>upstream</code>, sprawdź <code>nginx -t</code> i policz rozkład dziesięciu zapytań przez <code>sort | uniq -c</code>.</li><li>Daj pierwszemu serwerowi <code>weight=4</code> i policz jeszcze raz.</li><li>Wyłącz jedną aplikację i sprawdź, co widzi klient, a co jest w <code>/var/log/nginx/error.log</code>.</li></ol><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><p>Dwie aplikacje na 9001 i 9002, Nginx z <code>upstream</code> przed nimi. Najciekawsza część to waga:</p><div class="kod"><pre><code>upstream aplikacja {
+    server 127.0.0.1:9001 weight=4;
+    server 127.0.0.1:9002;
+}</code></pre></div><div class="kod"><pre><code>sudo nginx -t &amp;&amp; sudo systemctl reload nginx
+for i in $(seq 1 10); do curl -s http://app.test; done | sort | uniq -c</code></pre></div><div class="kod"><pre><code>      8 Odpowiada serwer 1
+      2 Odpowiada serwer 2</code></pre></div><p>Waga 4 do 1, czyli na pięć zapytań cztery idą do pierwszego. Na dziesięć osiem. Matematyka z podstawówki działa nawet w Nginxie.</p><p>Potem wyłączasz serwer 2. Klient dostaje same <code>200</code>, a w <code>/var/log/nginx/error.log</code> ląduje <code>connect() failed (111: Connection refused) while connecting to upstream</code>. Czyli: klient zadowolony, admin ma ślad w logu. Tak powinno być. Gorzej, jakby było odwrotnie.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Aplikacja, która tylko wyświetla „Odpowiada serwer 1”, to żadna aplikacja. Prawdziwe gdzieś trzymają dane. W następnej lekcji bazy danych od strony admina: MariaDB i PostgreSQL, instalacja, zabezpieczenie, użytkownicy i kopie zapasowe, które ratują posadę.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-090.html" rel="prev">← 90. Apache z HTTPS</a><a class="btn domyslny zolty" href="lekcja-092.html" rel="next">92. Bazy danych dla admina →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>
