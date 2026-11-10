@@ -286,3 +286,12 @@ footer{border-top:4px solid var(--tusz);background:var(--papier);padding:22px 0 
   .analogia-ram{padding:8px 4px}
   .analogia-ram canvas{max-width:72px;height:auto}
 }
+/* plansza lekcji na telefonie: dymek i postacie w kadrze */
+@media (max-width:640px){
+  .plansza .sc-glowny{left:auto;right:auto;left:38%;bottom:42px}
+  .plansza .sc-glowny canvas{width:72px;height:auto}
+  .plansza .sc-pomocnik{left:6%}
+  .plansza .sc-maskotka{left:auto;right:14px;animation:sc-bujaj 2.2s steps(4) infinite}
+  .plansza .sc-dymek{left:auto;right:0;translate:none;white-space:normal;width:max-content;max-width:150px;text-align:center}
+  .plansza .sc-dymek::after{left:auto;right:22px;translate:none}
+}
