@@ -414,8 +414,8 @@ footer a{color:inherit}
           <p>Chmura, AWS, bezpieczeństwo, agenci AI i historia informatyki. Każda plansza w odcinkach to ręcznie robiony pixel art w stylu Macintosha z 1984 roku, a każdy fakt ma źródło w opisie.</p>
           <p>Bo chmura to nie magia. To po prostu cudzy komputer.</p>
           <div class="fakty">
-            <div class="fakt"><b id="licz-filmy">10</b><small>odcinków na YouTube</small></div>
-            <div class="fakt"><b id="licz-shorty">32</b><small>shortów na YouTube</small></div>
+            <div class="fakt"><b id="licz-filmy">10</b><small><span id="licz-filmy-opis">odcinków</span> na YouTube</small></div>
+            <div class="fakt"><b id="licz-shorty">32</b><small><span id="licz-shorty-opis">shorty</span> na YouTube</small></div>
             <div class="fakt"><b data-licz="1984">0</b><small>rocznik stylu graficznego</small></div>
           </div>
         </div>
@@ -796,6 +796,8 @@ fetch('dane/filmy.json',{cache:'no-cache'}).then(r=>{ if(!r.ok) throw 0; return 
   const filmy=dane.filmy.filter(f=>f.typ==='film'), shorty=dane.filmy.filter(f=>f.typ==='short');
   document.getElementById('licz-filmy').textContent=filmy.length;
   document.getElementById('licz-shorty').textContent=shorty.length;
+  document.getElementById('licz-filmy-opis').textContent=odm(filmy.length,'odcinek','odcinki','odcinków');
+  document.getElementById('licz-shorty-opis').textContent=odm(shorty.length,'short','shorty','shortów');
   // najnowszy film w oknie powitalnym
   const nowy=dane.filmy[0];
   if(nowy){ const a=document.getElementById('nowosc'); a.hidden=false; a.href=urlFilmu(nowy); document.getElementById('nowosc-tytul').textContent=nowy.tytul_krotki; }
