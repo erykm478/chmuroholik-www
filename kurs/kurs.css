@@ -277,3 +277,12 @@ footer{border-top:4px solid var(--tusz);background:var(--papier);padding:22px 0 
 @media (max-width:760px){.modul .modul-glowa{grid-template-columns:56px minmax(0,1fr)}.modul h3{overflow-wrap:anywhere}}
 .uklad-lekcji{grid-template-columns:300px minmax(0,1fr)}
 @media (max-width:980px){.uklad-lekcji{grid-template-columns:minmax(0,1fr)}}
+/* ilustracja analogii na telefonie: nic nie wychodzi poza ramkę */
+.analogia{max-width:100%;overflow:hidden}
+.analogia figcaption{min-width:0;overflow-wrap:anywhere}
+.analogia figcaption b{width:auto;max-width:100%;white-space:normal}
+@media (max-width:700px){
+  .analogia,.analogia.lewa{grid-template-columns:96px minmax(0,1fr)}
+  .analogia-ram{padding:8px 4px}
+  .analogia-ram canvas{max-width:72px;height:auto}
+}
