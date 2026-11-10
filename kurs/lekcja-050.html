@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>50. Tryb „zatrzymaj się przy błędzie” — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 50 kursu Linux i Bash od zera do admina: Tryb „zatrzymaj się przy błędzie”. kursant włącza w skryptach set -e, set -u i set -o pipefail, rozumie, co każde z nich robi, i zna pułapki, w których set -e po cichu nie działa albo zabija skrypt bez słowa.">
+<meta property="og:title" content="50. Tryb „zatrzymaj się przy błędzie” — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 50 kursu Linux i Bash od zera do admina: Tryb „zatrzymaj się przy błędzie”. kursant włącza w skryptach set -e, set -u i set -o pipefail, rozumie, co każde z nich robi, i zna pułapki, w których set -e po cichu nie działa albo zabija skrypt bez słowa.">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 5</span></div>
+      <div class="boczny-tytul"><a href="index.html#m05">Skrypty, które się nie sypią</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-049.html" data-lekcja="49"><span class="znacznik"></span><span class="nr">49</span> Spacje w nazwach plików</a></li><li><a href="lekcja-050.html" data-lekcja="50" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">50</span> Tryb „zatrzymaj się przy błędzie”</a></li><li><a href="lekcja-051.html" data-lekcja="51"><span class="znacznik"></span><span class="nr">51</span> Sprzątanie po sobie</a></li><li><a href="lekcja-052.html" data-lekcja="52"><span class="znacznik"></span><span class="nr">52</span> Opcje jak w prawdziwych programach</a></li><li><a href="lekcja-053.html" data-lekcja="53"><span class="znacznik"></span><span class="nr">53</span> Szukanie błędów</a></li><li><a href="lekcja-054.html" data-lekcja="54"><span class="znacznik"></span><span class="nr">54</span> Komunikaty, logi i kolory</a></li><li><a href="lekcja-055.html" data-lekcja="55"><span class="znacznik"></span><span class="nr">55</span> Duży skrypt w porządku</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="50" data-modul="5" data-tematy="set -e, set -u, set -o pipefail i ich pułapki">
+    <div class="belka"><span>Lekcja 50 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m05">Moduł 5</a> › Lekcja 50</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Tryb „zatrzymaj się przy błędzie”</h1>
+      <p class="meta"><span>⏱ ok. 14 min czytania</span><span>· moduł 5: Skrypty, które się nie sypią</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant włącza w skryptach <code>set -e</code>, <code>set -u</code> i <code>set -o pipefail</code>, rozumie, co każde z nich robi, i zna pułapki, w których <code>set -e</code> po cichu nie działa albo zabija skrypt bez słowa.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#kierowca-ktory-jedzie-z-zapalona-kontrolka">Kierowca, który jedzie z zapaloną kontrolką</a></li><li><a href="#set-e-stan-przy-pierwszej-kontrolce">set -e: stań przy pierwszej kontrolce</a></li><li><a href="#set-u-puste-pudelko-to-blad">set -u: puste pudełko to błąd</a></li><li><a href="#pipefail-cala-tasma-nie-tylko-ostatni-pracownik">pipefail: cała taśma, nie tylko ostatni pracownik</a></li><li><a href="#pulapka-1-if-i-wylaczaja-hamulec">Pułapka 1: if, &amp;&amp; i || wyłączają hamulec</a></li><li><a href="#pulapka-2-na-koncu-funkcji">Pułapka 2: &amp;&amp; na końcu funkcji</a></li><li><a href="#pulapka-3-local-i">Pułapka 3: local i $( )</a></li><li><a href="#pulapka-4-nie-dziedziczy-hamulca">Pułapka 4: $( ) nie dziedziczy hamulca</a></li><li><a href="#pulapka-5-licznik-zabija-przy-zerze">Pułapka 5: ((licznik++)) zabija przy zerze</a></li><li><a href="#pulapka-6-pipefail-i-cichy-kod-141">Pułapka 6: pipefail i cichy kod 141</a></li><li><a href="#jak-to-wyglada-porzadnie">Jak to wygląda porządnie</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga-flag">Ściąga flag</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p>Styczeń 2015 roku. Użytkownicy Steama na Linuksie zgłaszają, że po uruchomieniu programu zniknęły im wszystkie ich pliki. Dokumenty. Zdjęcia. Nawet zawartość dysków podpiętych przez USB.</p><p>Winowajcą okazała się jedna linijka w skrypcie startowym Steama, <code>steam.sh</code>:</p><div class="kod"><pre><code>rm -rf &quot;$STEAMROOT/&quot;*</code></pre></div><p>Wygląda niewinnie. Usuń wszystko w folderze Steama. Ale jeśli zmienna <code>STEAMROOT</code> jest pusta, a była pusta u ludzi, którzy przenieśli folder Steama w inne miejsce, to Bash czyta to jako:</p><div class="kod"><pre><code>rm -rf &quot;/&quot;*</code></pre></div><p>Usuń wszystko od korzenia systemu. Systemu jako takiego nie ruszyło, bo zwykły użytkownik nie ma kluczy do systemowych pokojów. Ale do swoich plików miał klucze. I <code>rm</code> z tych kluczy skorzystał.</p><p>Ten skrypt robił dokładnie to, co mu kazano. Skrypty w Bashu domyślnie jadą dalej, cokolwiek się dzieje: komenda się wysypała, zmienna jest pusta, folder nie istnieje. Dziś nauczymy Basha mówić „stop”. I zobaczymy, gdzie to „stop” potrafi cię okłamać.</p></section><section><h2 id="kierowca-ktory-jedzie-z-zapalona-kontrolka">Kierowca, który jedzie z zapaloną kontrolką</h2><p>Zacznijmy od prostego skryptu sprzątającego:</p><div class="kod"><pre><code>#!/bin/bash
+cd /nie/ma/takiego/folderu
+echo &quot;Jestem w: $PWD, sprzątam...&quot;</code></pre></div><div class="kod"><pre><code>bez_e.sh: line 2: cd: /nie/ma/takiego/folderu: No such file or directory
+Jestem w: /home/eryk/kurs, sprzątam...
+kod: 0</code></pre></div><p><code>cd</code> się nie udało, ale skrypt poszedł dalej i zaczął „sprzątać” w zupełnie innym folderze, tam, gdzie akurat stał. Na koniec kciuk w górę, kod 0, wszystko świetnie. Jak kierowca, któremu zapaliła się czerwona kontrolka oleju, a on dalej jedzie na wakacje, bo przecież samochód jeszcze jedzie.</p><p>ShellCheck od razu to widzi:</p><div class="kod"><pre><code>SC2164 (warning): Use &#x27;cd ... || exit&#x27; or &#x27;cd ... || return&#x27; in case cd fails.</code></pre></div></section><section><h2 id="set-e-stan-przy-pierwszej-kontrolce">set -e: stań przy pierwszej kontrolce</h2><p><code>set -e</code> to kierowca, który zatrzymuje się przy pierwszej zapalonej kontrolce. Jeśli jakakolwiek komenda zwróci kciuk w dół, czyli kod inny niż zero, skrypt kończy się od razu z tym kodem.</p><div class="kod"><pre><code>#!/bin/bash
+set -e
+cd /nie/ma/takiego/folderu
+echo &quot;Jestem w: $PWD, sprzątam...&quot;</code></pre></div><div class="kod"><pre><code>z_e.sh: line 3: cd: /nie/ma/takiego/folderu: No such file or directory
+kod: 1</code></pre></div><p>Żadnego sprzątania. Skrypt stanął, zanim narobił szkód. Pełna nazwa to <code>set -o errexit</code>, od „exit on error”, wyjdź przy błędzie.</p></section><section><h2 id="set-u-puste-pudelko-to-blad">set -u: puste pudełko to błąd</h2><p>Wróćmy do Steama. Tam problemem nie była nieudana komenda, tylko pusta zmienna. Zobacz, jak łatwo o taką sytuację. Zamiast <code>rm</code> daję <code>echo</code>, żeby tylko zobaczyć, co by się wykonało:</p><div class="kod"><pre><code>#!/bin/bash
+# UWAGA: zamiast rm jest echo, nie zmieniaj tego!
+FOLDER_GRY=$(cd &quot;$1&quot; 2&gt;/dev/null &amp;&amp; pwd)
+echo rm -rf &quot;$FOLDER_GRY/&quot;*</code></pre></div><div class="kod"><pre><code>rm -rf /bin /bin.usr-is-merged /boot /cdrom /dev /etc /home /lib ...</code></pre></div><p>Podałem folder, który nie istnieje. <code>cd</code> się nie udało, zmienna jest pusta i <code>&quot;$FOLDER_GRY/&quot;*</code> zamieniło się w <code>/*</code>. Cały system na liście do skasowania.</p><p class="ekran">wielkie ostrzeżenie: „NIE uruchamiaj tego z <code>rm</code> zamiast <code>echo</code>. Nawet na maszynie wirtualnej, chyba że masz migawkę.”</p><p><code>set -u</code> mówi: użycie zmiennej, której nikt nie ustawił, to błąd. Pudełko bez napisu nie jest pustym pudełkiem, tylko alarmem. Pełna nazwa: <code>set -o nounset</code>.</p><div class="kod"><pre><code>#!/bin/bash
+set -u
+echo &quot;Sprzątam w: $FOLDR_GRY&quot;
+echo &quot;tu już nie dojdę&quot;</code></pre></div><div class="kod"><pre><code>u2.sh: line 3: FOLDR_GRY: unbound variable
+kod: 1</code></pre></div><p>Zauważ literówkę: <code>FOLDR</code> zamiast <code>FOLDER</code>. Bez <code>set -u</code> Bash po cichu wstawiłby pusty napis. Z <code>set -u</code> od razu wiesz, gdzie się pomyliłeś.</p><p>Ważne: <code>set -u</code> łapie zmienne <strong>nieustawione</strong>, nie <strong>puste</strong>. Zmienna ustawiona na pusty napis przejdzie. W przykładzie ze Steamem zmienna była ustawiona, tylko na pusto, więc tam ratuje <code>set -e</code> po nieudanym <code>cd</code> albo jawne sprawdzenie. Najkrótsza forma takiego sprawdzenia to <code>${zmienna:?komunikat}</code>:</p><div class="kod"><pre><code>#!/bin/bash
+: &quot;${BACKUP_DIR:?ustaw BACKUP_DIR, np. BACKUP_DIR=/backup $0}&quot;
+echo &quot;Backup do $BACKUP_DIR&quot;</code></pre></div><div class="kod"><pre><code>q.sh: line 2: BACKUP_DIR: ustaw BACKUP_DIR, np. BACKUP_DIR=/backup q.sh
+kod: 1</code></pre></div><p><code>:?</code> znaczy „jeśli puste albo nieustawione, wypisz komunikat i zakończ”. A dwukropek na początku linii to komenda, która nic nie robi. Jest tylko po to, żeby Bash rozwinął zmienną i przy okazji ją sprawdził.</p><p>Z <code>set -u</code> jest jeden kłopot: argumenty. <code>$1</code>, którego nie podano, też jest nieustawione:</p><div class="kod"><pre><code>bash: line 1: $1: unbound variable</code></pre></div><p>Dlatego w skryptach z <code>set -u</code> piszesz <code>${1:-}</code>, czyli „pierwszy argument albo pusty napis”, a potem sam sprawdzasz:</p><div class="kod"><pre><code>folder=${1:-}
+if [[ -z $folder ]]; then
+    echo &quot;Użycie: $0 FOLDER&quot; &gt;&amp;2
+    exit 1
+fi</code></pre></div><div class="kod"><pre><code>Użycie: u3.sh FOLDER
+kod: 1</code></pre></div><p class="ekran">macOS: systemowy Bash 3.2 z <code>set -u</code> uznaje pustą tablicę <code>&quot;${a[@]}&quot;</code> za błąd „unbound variable”. Bash 5.2 na serwerze już nie. Kolejny powód, żeby na Macu zainstalować nowego Basha.</p></section><section><h2 id="pipefail-cala-tasma-nie-tylko-ostatni-pracownik">pipefail: cała taśma, nie tylko ostatni pracownik</h2><p>Rura to taśma w fabryce. Ale kod wyjścia rury to domyślnie kod <strong>ostatniego</strong> pracownika na taśmie. Jeśli pierwszy upuścił paczkę, a ostatni zapakował pusty karton, kontrola jakości widzi ładny karton i kciuk w górę.</p><p>Klasyczny przykład: kopia zapasowa bazy danych. W prawdziwym życiu byłby tu <code>mysqldump</code>, u nas w jego roli występuje <code>cat</code>:</p><div class="kod"><pre><code>#!/bin/bash
+set -e
+cat /var/lib/baza/dane.sql | gzip &gt; kopia.sql.gz
+echo &quot;Kopia gotowa, kod: $?&quot;</code></pre></div><div class="kod"><pre><code>cat: /var/lib/baza/dane.sql: No such file or directory
+Kopia gotowa, kod: 0
+-rw-r--r-- 1 root root 20 Nov  3 22:12 kopia.sql.gz</code></pre></div><p>Pliku z bazą nie ma, a mimo to „Kopia gotowa”. I jest plik kopii. 20 bajtów. Spakowane nic. <code>gzip</code> dostał pustą taśmę, uczciwie ją spakował i zgłosił sukces. A <code>set -e</code> patrzył tylko na <code>gzip</code>. Taki backup odkrywasz w dniu, w którym jest ci potrzebny. Czyli w najgorszym możliwym dniu.</p><p><code>set -o pipefail</code> zmienia zasadę: rura dostaje kod ostatniego pracownika, któremu coś nie wyszło. Jeśli wszyscy zrobili swoje, dopiero wtedy zero.</p><div class="kod"><pre><code>#!/bin/bash
+set -eo pipefail
+cat /var/lib/baza/dane.sql | gzip &gt; kopia.sql.gz
+echo &quot;Kopia gotowa&quot;</code></pre></div><div class="kod"><pre><code>cat: /var/lib/baza/dane.sql: No such file or directory
+kod: 1</code></pre></div><p>Zostaje jeszcze zepsuty plik <code>kopia.sql.gz</code>, ale przynajmniej skrypt nie kłamie. A sprzątaniem takich resztek zajmiemy się w następnej lekcji.</p><p>Wszystko razem to słynna linijka, którą zobaczysz na górze połowy porządnych skryptów w internecie:</p><div class="kod"><pre><code>set -euo pipefail</code></pre></div><p>Sprawdzisz, co jest włączone, przez <code>set -o</code>:</p><div class="kod"><pre><code>errexit        	on
+nounset        	on
+pipefail       	on</code></pre></div><p>A teraz najważniejsza część lekcji. Bo ta linijka to nie jest pas bezpieczeństwa. To pas bezpieczeństwa z kilkoma dziurami, o których nikt ci nie mówi.</p></section><section><h2 id="pulapka-1-if-i-wylaczaja-hamulec">Pułapka 1: if, &amp;&amp; i || wyłączają hamulec</h2><p><code>set -e</code> nie działa w miejscach, gdzie Bash spodziewa się, że komenda może się nie udać. Czyli w warunku <code>if</code>, <code>while</code>, <code>until</code>, po lewej stronie <code>&amp;&amp;</code> i <code>||</code> i po <code>!</code>. To ma sens: <code>if [[ -f plik ]]</code> ma prawo dać „nie”. Ale zobacz, co z tego wynika dla funkcji:</p><div class="kod"><pre><code>#!/bin/bash
+set -e
+przygotuj() {
+    cp /nie/ma/pliku /tmp/
+    echo &quot;przygotuj: kopiuję dalej, jakby nigdy nic&quot;
+}
+if przygotuj; then
+    echo &quot;if: przygotowanie się udało&quot;
+fi
+przygotuj
+echo &quot;tu już nie dojdę&quot;</code></pre></div><div class="kod"><pre><code>cp: cannot stat &#x27;/nie/ma/pliku&#x27;: No such file or directory
+przygotuj: kopiuję dalej, jakby nigdy nic
+if: przygotowanie się udało
+cp: cannot stat &#x27;/nie/ma/pliku&#x27;: No such file or directory
+kod: 1</code></pre></div><p>Ta sama funkcja zachowuje się zupełnie inaczej w zależności od tego, <strong>skąd</strong> ją wywołasz. Wywołana normalnie: staje na <code>cp</code>. Wywołana w <code>if</code>: <code>set -e</code> wyłącza się dla całego jej wnętrza, <code>cp</code> się wysypuje, funkcja jedzie dalej, kończy się udanym <code>echo</code>, więc zwraca zero i <code>if</code> ogłasza sukces. Kierowca stanął przy kontrolce na parkingu, ale na autostradzie już nie.</p><p>Wniosek: funkcji, które mogą się nie udać, nie wkładaj w <code>if</code>, licząc na <code>set -e</code>. Sprawdzaj błędy w środku jawnie: <code>cp … || return 1</code>.</p></section><section><h2 id="pulapka-2-na-koncu-funkcji">Pułapka 2: &amp;&amp; na końcu funkcji</h2><p>Teraz odwrotnie: skrypt umiera, choć nic złego się nie stało.</p><div class="kod"><pre><code>#!/bin/bash
+set -e
+DEBUG=&quot;&quot;
+loguj() {
+    [[ -n $DEBUG ]] &amp;&amp; echo &quot;debug: $1&quot;
+}
+false &amp;&amp; echo &quot;nie wypisze się&quot;
+echo &quot;po false &amp;&amp;: żyję&quot;
+loguj &quot;start&quot;
+echo &quot;po loguj: tu już nie dojdę&quot;</code></pre></div><div class="kod"><pre><code>po false &amp;&amp;: żyję
+kod: 1</code></pre></div><p>Bez żadnego komunikatu. Co tu się stało? <code>false &amp;&amp; echo</code> w głównym skrypcie przeszło, bo lewa strona <code>&amp;&amp;</code> jest zwolniona z <code>set -e</code>. Ale funkcja <code>loguj</code> kończy się linijką <code>[[ -n $DEBUG ]] &amp;&amp; …</code>. <code>DEBUG</code> jest puste, więc test daje kciuk w dół, a to jest ostatnia komenda funkcji, więc funkcja zwraca 1. A wywołanie <code>loguj &quot;start&quot;</code> nie jest już w żadnym <code>if</code> ani <code>&amp;&amp;</code>. Kontrolka. Stop. Skrypt nie żyje, bo wyłączyłeś debugowanie.</p><p>Lekarstwo: w funkcjach pisz <code>if [[ -n $DEBUG ]]; then echo …; fi</code> zamiast skrótu z <code>&amp;&amp;</code>. Albo dopisz na końcu funkcji <code>return 0</code>.</p></section><section><h2 id="pulapka-3-local-i">Pułapka 3: local i $( )</h2><div class="kod"><pre><code>#!/bin/bash
+set -e
+policz() {
+    # celowo zły przykład:
+    # shellcheck disable=SC2155
+    local wynik=$(grep -c &quot;CRITICAL&quot; app.log)
+    echo &quot;local: wynik=$wynik, jadę dalej&quot;
+    local wynik2
+    wynik2=$(grep -c &quot;CRITICAL&quot; app.log)
+    echo &quot;osobno: wynik2=$wynik2, tu już nie dojdę&quot;
+}
+policz</code></pre></div><div class="kod"><pre><code>local: wynik=0, jadę dalej
+kod: 1</code></pre></div><p><code>grep -c</code> nic nie znalazł, więc zwraca 1. W pierwszej wersji ten kod ginie, bo <code>local</code> też jest komendą, i to ona zwraca wynik całej linijki. A <code>local</code> zawsze się udaje. Kciuk w górę. W drugiej wersji, z deklaracją i przypisaniem osobno, liczy się kod <code>grep</code>. I tu z kolei skrypt umiera, bo „nie znalazłem” to dla <code>grep</code> kod 1, a dla <code>set -e</code> kod 1 to kod 1.</p><p>ShellCheck ostrzega przed pierwszą wersją:</p><div class="kod"><pre><code>SC2155 (warning): Declare and assign separately to avoid masking return values.</code></pre></div><p>To samo dotyczy <code>export zmienna=$(…)</code>, <code>declare</code> i <code>readonly</code>.</p></section><section><h2 id="pulapka-4-nie-dziedziczy-hamulca">Pułapka 4: $( ) nie dziedziczy hamulca</h2><div class="kod"><pre><code>#!/bin/bash
+set -e
+wynik=$(cp /nie/ma/pliku /tmp/; echo &quot;w środku \$( ) jadę dalej&quot;)
+echo &quot;wynik: $wynik&quot;
+shopt -s inherit_errexit
+wynik=$(cp /nie/ma/pliku /tmp/; echo &quot;tego już nie będzie&quot;)
+echo &quot;tu już nie dojdę&quot;</code></pre></div><div class="kod"><pre><code>cp: cannot stat &#x27;/nie/ma/pliku&#x27;: No such file or directory
+wynik: w środku $( ) jadę dalej
+cp: cannot stat &#x27;/nie/ma/pliku&#x27;: No such file or directory
+kod: 1</code></pre></div><p>Wnętrze <code>$( )</code> to podpowłoka i Bash domyślnie nie przekazuje jej <code>set -e</code>. Pierwsze <code>cp</code> się wysypało, ale <code>echo</code> w środku poszło, i ono dało kod całego <code>$( )</code>. Opcja <code>inherit_errexit</code> (od Basha 4.4) przekazuje hamulec do środka. Dlatego warto ją dopisać pod <code>set -euo pipefail</code>.</p></section><section><h2 id="pulapka-5-licznik-zabija-przy-zerze">Pułapka 5: ((licznik++)) zabija przy zerze</h2><div class="kod"><pre><code>#!/bin/bash
+set -e
+licznik=0
+for plik in a b c; do
+    ((licznik++))
+    echo &quot;przetworzono $plik, licznik=$licznik&quot;
+done
+echo &quot;razem: $licznik&quot;</code></pre></div><div class="kod"><pre><code>kod: 1</code></pre></div><p>Nic. Ani jednej linijki. Skrypt umarł na pierwszym obrocie pętli. Dlaczego? <code>(( ))</code> zwraca kciuk w dół, gdy wyrażenie wynosi zero. A <code>licznik++</code> to „podaj starą wartość, potem dodaj”. Stara wartość to zero. Zero to fałsz. Fałsz to kod 1. Kod 1 przy <code>set -e</code> to koniec. Najbardziej absurdalny sposób na śmierć w całym Bashu: skrypt zginął, bo zaczął liczyć od zera, jak każdy porządny informatyk.</p><p>Lekarstwo: <code>licznik=$((licznik + 1))</code> albo <code>((licznik += 1))</code>, bo tu wynikiem jest już nowa wartość, czyli co najmniej 1.</p></section><section><h2 id="pulapka-6-pipefail-i-cichy-kod-141">Pułapka 6: pipefail i cichy kod 141</h2><div class="kod"><pre><code>#!/bin/bash
+set -euo pipefail
+seq 1 1000000 | head -n 1
+echo &quot;kod rury: $?&quot;</code></pre></div><div class="kod"><pre><code>1
+kod: 141</code></pre></div><p><code>head</code> wziął pierwszą linijkę i wyszedł, a <code>seq</code> dalej próbował kłaść liczby na taśmę, której już nikt nie odbiera. Jądro wysłało mu sygnał SIGPIPE, „nikt nie słucha”, i <code>seq</code> zakończył się kodem 141, czyli 128 plus numer sygnału 13. Z <code>pipefail</code> to już porażka całej rury, a z <code>set -e</code> koniec skryptu. Bez żadnego komunikatu. Przy dużej ilości danych dzieje się to za każdym razem, przy małej czasem tak, czasem nie, bo zależy, czy wszystko zmieściło się w rurze, zanim <code>head</code> wyszedł. Najgorszy rodzaj błędu: taki, który pojawia się w piątek o 17:00.</p><p>Lekarstwo, gdy świadomie ucinasz wynik: <code>… | head -n 1 || true</code>, albo pobierz dane inaczej, na przykład <code>sort plik | head -n 1</code> zamień na <code>sort plik | sed -n 1p</code>, które czyta wszystko do końca.</p></section><section><h2 id="jak-to-wyglada-porzadnie">Jak to wygląda porządnie</h2><p>Zbierzmy to w jeden skrypt, który liczy błędy w logu i omija wszystkie dzisiejsze pułapki:</p><div class="kod"><pre><code>#!/bin/bash
+set -euo pipefail
+shopt -s inherit_errexit
+
+log=${1:?Użycie: $0 PLIK_LOGU}
+
+policz() {
+    local wzorzec=$1
+    local wynik
+    # grep: 0 = znalazł, 1 = nie znalazł (to OK), 2 = prawdziwy błąd
+    wynik=$(grep -c -- &quot;$wzorzec&quot; &quot;$log&quot;) || [[ $? -eq 1 ]]
+    echo &quot;$wynik&quot;
+}
+
+licznik=0
+for poziom in ERROR CRITICAL; do
+    ile=$(policz &quot;$poziom&quot;)
+    echo &quot;$poziom: $ile&quot;
+    licznik=$((licznik + ile))
+done
+echo &quot;Razem problemów: $licznik&quot;</code></pre></div><div class="kod"><pre><code>$ ./licz_bledy.sh app.log
+ERROR: 1
+CRITICAL: 0
+Razem problemów: 1
+$ ./licz_bledy.sh /nie/ma
+grep: /nie/ma: No such file or directory
+kod: 1</code></pre></div><p>Najciekawsza linijka to <code>|| [[ $? -eq 1 ]]</code>. Zamiast tępego <code>|| true</code>, które połknęłoby też brak pliku, mówimy dokładnie: „kod 1 od grep jest w porządku, każdy inny nie”. I widać to w drugim uruchomieniu: brak pliku to kod 2, więc skrypt staje.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>wiele osób, w tym autorzy znanego Bash FAQ na wiki Grega Wooledge&#x27;a (BashFAQ/105), radzi w ogóle nie polegać na <code>set -e</code> i sprawdzać błędy jawnie przy każdej ważnej komendzie. Moje zdanie: włączaj <code>set -euo pipefail</code>, ale traktuj je jak siatkę pod linoskoczkiem, a nie jak powód, żeby chodzić po linie z zamkniętymi oczami.</p></aside></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p>Każda komenda po zakończeniu oddaje Bashowi liczbę od 0 do 255. Z <code>set -e</code> Bash po każdej komendzie sprawdza tę liczbę i jeśli jest różna od zera, a komenda nie stoi w „miejscu chronionym”, czyli w warunku <code>if</code>, <code>while</code>, <code>until</code>, po lewej stronie <code>&amp;&amp;</code> lub <code>||</code>, po <code>!</code> albo w środku rury bez <code>pipefail</code>, wychodzi z tym samym kodem.</p><p>To „miejsce chronione” działa jak zaraźliwa etykieta: wszystko, co zostanie wywołane z takiego miejsca, łącznie z całym wnętrzem funkcji, też jest chronione. Stąd pułapka numer 1.</p><p><code>$( )</code> i rury tworzą podpowłoki, czyli kopie procesu Basha. Kopia dostaje zmienne, ale <code>set -e</code> dostaje dopiero z <code>inherit_errexit</code>. Z kolei <code>set -u</code> działa podczas rozwijania zmiennych: zanim komenda w ogóle się uruchomi, Bash zauważa, że pudełko nie istnieje, i przerywa.</p><p>A kod 141 przy <code>pipefail</code>? Kiedy program pisze do rury, z której nikt już nie czyta, jądro wysyła mu SIGPIPE. Domyślna reakcja to natychmiastowe zakończenie. Bash raportuje śmierć od sygnału jako 128 plus numer sygnału. Ten wzór przyda się w następnej lekcji, kiedy będziemy łapać sygnały.</p></section><section><h2 id="sciaga-flag">Ściąga flag</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga</th><th>Co robi</th></tr><tr><td><code>set</code></td><td><code>-e</code> / <code>-o errexit</code></td><td>kończy skrypt przy pierwszej komendzie z kodem różnym od 0</td></tr><tr><td><code>set</code></td><td><code>-u</code> / <code>-o nounset</code></td><td>nieustawiona zmienna to błąd</td></tr><tr><td><code>set</code></td><td><code>-o pipefail</code></td><td>rura zwraca kod ostatniej komendy, która zawiodła</td></tr><tr><td><code>set</code></td><td><code>+e</code></td><td>wyłącza <code>-e</code> (plus wyłącza, minus włącza)</td></tr><tr><td><code>set</code></td><td><code>-o</code></td><td>pokazuje, co jest włączone</td></tr><tr><td><code>shopt</code></td><td><code>-s inherit_errexit</code></td><td><code>set -e</code> działa też w <code>$( )</code> (Bash 4.4+)</td></tr><tr><td><code>${x:-}</code></td><td>—</td><td>pusty napis, gdy <code>x</code> nieustawione (ratunek przy <code>-u</code>)</td></tr><tr><td><code>${x:?tekst}</code></td><td>—</td><td>błąd z komunikatem, gdy <code>x</code> puste lub nieustawione</td></tr><tr><td><code>cmd</code></td><td><code>|| true</code></td><td>świadomie ignoruje błąd jednej komendy</td></tr><tr><td><code>cmd</code></td><td><code>|| [[ $? -eq 1 ]]</code></td><td>akceptuje tylko konkretny kod</td></tr><tr><td><code>((x += 1))</code></td><td>—</td><td>bezpieczne zwiększanie licznika pod <code>set -e</code></td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>Skrypt z <code>set -e</code> kończy się po cichu, w połowie, bez żadnego komunikatu. Kod 1 albo 141, a w logu pusto.</p><div class="kod"><pre><code>$ ./raport.sh
+$ echo $?
+1</code></pre></div><p>Dlaczego: któraś komenda zwróciła kod różny od zera, nie wypisując niczego. Najczęściej <code>grep</code>, który nic nie znalazł, <code>((licznik++))</code> przy zerze, test <code>[[ … ]] &amp;&amp; …</code> na końcu funkcji albo <code>head</code> w rurze z <code>pipefail</code>.</p><p>Jak znaleźć: uruchom skrypt przez <code>bash -x ./raport.sh</code>. Ostatnia linijka z plusem na początku to komenda, która zabiła skrypt. Narzędziom do szukania błędów poświęcimy cała lekcja 53, ale to jedno warto znać już teraz.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><p>Weź skrypt <code>policz_jpg.sh</code> z dzisiejszego rozwiązania i dopisz na górze <code>set -euo pipefail</code> oraz <code>shopt -s inherit_errexit</code>. Uruchom go trzy razy: na folderze <code>zdjecia</code>, na pustym folderze i na folderze, który nie istnieje. Sprawdź <code>echo $?</code> po każdym. Jeśli coś się wysypuje tam, gdzie nie powinno, albo nie wysypuje tam, gdzie powinno, napraw to. Na koniec dorzuć w pętli <code>((licznik++))</code> zamiast obecnego dodawania i zobacz, kiedy skrypt umiera, a kiedy nie.</p><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><p>Dopisujemy pod nagłówkiem <code>set -euo pipefail</code> i <code>shopt -s inherit_errexit</code>, i trzy próby:</p><div class="kod"><pre><code>$ ./policz_jpg.sh zdjecia
+...
+Plików: 4, razem: 1500 B
+kod 0
+$ ./policz_jpg.sh pusty
+Plików: 0, razem: 0 B
+kod 0
+$ ./policz_jpg.sh /nie/ma
+find: &#x27;/nie/ma&#x27;: No such file or directory
+Plików: 0, razem: 0 B
+kod 0</code></pre></div><p>Pierwsze dwa są w porządku. Pusty folder to zero zdjęć, a nie błąd. Ale trzecie? <code>find</code> krzyczy, że folderu nie ma, a skrypt i tak melduje „zero plików” i kciuk w górę. Mimo <code>set -e</code> i <code>pipefail</code>.</p><p>To kolejna dziura w siatce: kod wyjścia programu w <code>&lt; &lt;( )</code> po prostu ginie. Podstawianie procesu to osobny pracownik w osobnym pokoju i nikt nie sprawdza, jak skończył. Najprostsza naprawa: zanim zaczniesz, sprawdź sam.</p><div class="kod"><pre><code>folder=${1:-.}
+if [[ ! -d $folder ]]; then
+    echo &quot;Nie ma takiego folderu: $folder&quot; &gt;&amp;2
+    exit 1
+fi</code></pre></div><p>A <code>((licznik++))</code>?</p><div class="kod"><pre><code>$ ./policz_jpg.sh zdjecia
+[zdjecia/zwykle.jpg] 1200 B
+kod 1</code></pre></div><p>Jeden plik i koniec. Pierwszy obrót: licznik równy zero, <code>((0))</code> to fałsz, <code>set -e</code> zabija. Z pustym folderem by przeżył, bo pętla nie zrobiłaby ani jednego obrotu. Skrypt, który działa tylko wtedy, kiedy nie ma nic do roboty. Jak niektóre urzędy.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Skrypt już umie się zatrzymać. Ale kiedy staje w połowie, zostawia po sobie bałagan: pliki tymczasowe, niedokończone kopie, zablokowane rzeczy. W następnej lekcji zatrudnimy sprzątaczkę: <code>trap</code>, który posprząta po skrypcie zawsze, nawet po Ctrl+C, i <code>mktemp</code>, który da nam bezpieczne pliki tymczasowe.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-049.html" rel="prev">← 49. Spacje w nazwach plików</a><a class="btn domyslny zolty" href="lekcja-051.html" rel="next">51. Sprzątanie po sobie →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

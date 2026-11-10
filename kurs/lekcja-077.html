@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>77. Archiwa i kopiowanie przez sieć — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 77 kursu Linux i Bash od zera do admina: Archiwa i kopiowanie przez sieć. kursant pakuje i rozpakowuje archiwa tar z kompresją gzip, bzip2 i xz, zagląda do nich bez rozpakowywania, obsługuje zip, a foldery synchronizuje przez sieć rsync-iem, najpierw na próbę, potem naprawdę.">
+<meta property="og:title" content="77. Archiwa i kopiowanie przez sieć — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 77 kursu Linux i Bash od zera do admina: Archiwa i kopiowanie przez sieć. kursant pakuje i rozpakowuje archiwa tar z kompresją gzip, bzip2 i xz, zagląda do nich bez rozpakowywania, obsługuje zip, a foldery synchronizuje przez sieć rsync-iem, najpierw na próbę, potem naprawdę.">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 8</span></div>
+      <div class="boczny-tytul"><a href="index.html#m08">Sieć</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-068.html" data-lekcja="68"><span class="znacznik"></span><span class="nr">68</span> Sieć w piętnaście minut</a></li><li><a href="lekcja-069.html" data-lekcja="69"><span class="znacznik"></span><span class="nr">69</span> ip: adresy, trasy, interfejsy</a></li><li><a href="lekcja-070.html" data-lekcja="70"><span class="znacznik"></span><span class="nr">70</span> Konfiguracja sieci na stałe</a></li><li><a href="lekcja-071.html" data-lekcja="71"><span class="znacznik"></span><span class="nr">71</span> Diagnostyka sieci i DNS</a></li><li><a href="lekcja-072.html" data-lekcja="72"><span class="znacznik"></span><span class="nr">72</span> Porty: kto słucha i dlaczego</a></li><li><a href="lekcja-073.html" data-lekcja="73"><span class="znacznik"></span><span class="nr">73</span> Otwieranie i zamykanie portów</a></li><li><a href="lekcja-074.html" data-lekcja="74"><span class="znacznik"></span><span class="nr">74</span> Routing, NAT, przekierowanie portów, bonding i mostki</a></li><li><a href="lekcja-075.html" data-lekcja="75"><span class="znacznik"></span><span class="nr">75</span> Podglądanie ruchu</a></li><li><a href="lekcja-076.html" data-lekcja="76"><span class="znacznik"></span><span class="nr">76</span> SSH od środka</a></li><li><a href="lekcja-077.html" data-lekcja="77" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">77</span> Archiwa i kopiowanie przez sieć</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="77" data-modul="8" data-tematy="tar (-czf, -xzf, -tzf, -j, -J, -C), gzip, bzip2, xz, zip, rsync (-a, -v, -z, --delete, -n)">
+    <div class="belka"><span>Lekcja 77 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m08">Moduł 8</a> › Lekcja 77</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Archiwa i kopiowanie przez sieć</h1>
+      <p class="meta"><span>⏱ ok. 9 min czytania</span><span>· moduł 8: Sieć</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant pakuje i rozpakowuje archiwa <code>tar</code> z kompresją gzip, bzip2 i xz, zagląda do nich bez rozpakowywania, obsługuje <code>zip</code>, a foldery synchronizuje przez sieć <code>rsync</code>-iem, najpierw na próbę, potem naprawdę.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#tar-karton-na-przeprowadzke">tar: karton na przeprowadzkę</a></li><li><a href="#trzy-worki-prozniowe-gzip-bzip2-xz">Trzy worki próżniowe: gzip, bzip2, xz</a></li><li><a href="#zip-dla-kolegi-z-windowsem">zip: dla kolegi z Windowsem</a></li><li><a href="#rsync-kopiowanie-ktore-mysli">rsync: kopiowanie, które myśli</a></li><li><a href="#ukosnik-ktory-zmienia-wszystko">Ukośnik, który zmienia wszystko</a></li><li><a href="#delete-i-n-czyli-lustro-i-proba-generalna">--delete i -n, czyli lustro i próba generalna</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga-flag">Ściąga flag</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p class="ekran">folder <code>zdjecia_wakacje_FINAL_v2_naprawde_final</code>, 4000 plików, pasek kopiowania „pozostało: 3 godziny”</p><p>Dwa scenariusze z życia. Pierwszy: musisz wysłać koledze cały folder projektu. Cztery tysiące plików. Wysyłasz je pojedynczo i po godzinie kolega pyta, czemu ma tylko połowę. Drugi: co noc robisz kopię serwera na drugi serwer. Pięćdziesiąt gigabajtów. Kopiujesz wszystko od nowa, choć zmieniło się dziesięć plików.</p><p>Na pierwszy problem jest pudło: archiwum, czyli wszystko w jednym pliku, a do tego ściśnięte. Na drugi jest <code>rsync</code>, który kopiuje tylko to, co się zmieniło. Dziś poznasz oba, a w zadaniu zrobisz swoją pierwszą prawdziwą kopię zapasową z maszyny na maszynę.</p></section><section><h2 id="tar-karton-na-przeprowadzke">tar: karton na przeprowadzkę</h2><p>Przeprowadzka. Nie nosisz każdej łyżeczki osobno do samochodu. Pakujesz kuchnię do kartonu, podpisujesz „kuchnia” i nosisz jeden karton. <strong>tar</strong> to właśnie taki karton: skleja wiele plików i folderów w jeden plik, razem z uprawnieniami, właścicielami i datami. Nazwa pochodzi od „tape archive”, archiwum na taśmę, bo kiedyś pakowało się tak dane na taśmy magnetyczne.</p><p>Sam <code>tar</code> nie zmniejsza danych. Karton z książkami waży tyle, co książki. Dlatego zwykle pakujemy i od razu <strong>kompresujemy</strong>, czyli wyciskamy powietrze. Jak worek próżniowy na kołdrę.</p><p>Pakowanie:</p><div class="kod"><pre><code>tar -czf projekt.tar.gz projekt</code></pre></div><p>Litery czytasz jak zdanie: <code>c</code> jak create, utwórz. <code>z</code> jak gzip, ściśnij. <code>f</code> jak file, do pliku o nazwie… i zaraz po <code>f</code> musi stać nazwa archiwum. Potem to, co pakujesz.</p><p>Zajrzenie do kartonu bez rozpakowania:</p><div class="kod"><pre><code>tar -tzf projekt.tar.gz</code></pre></div><div class="kod"><pre><code>projekt/
+projekt/src/
+projekt/src/start.sh
+projekt/docs/
+projekt/docs/liczby.txt
+projekt/docs/services</code></pre></div><p><code>t</code> jak „table of contents”, spis treści. Z <code>v</code> dostaniesz szczegóły jak w <code>ls -l</code>:</p><div class="kod"><pre><code>tar -tvzf projekt.tar.gz</code></pre></div><div class="kod"><pre><code>drwxr-xr-x root/root         0 2026-11-03 16:32 projekt/
+drwxr-xr-x root/root         0 2026-11-03 16:32 projekt/src/
+-rw-r--r-- root/root        21 2026-11-03 16:32 projekt/src/start.sh</code></pre></div><p>Rozpakowanie, <code>x</code> jak extract, wyciągnij. <code>-C</code> mówi, gdzie:</p><div class="kod"><pre><code>tar -xzf projekt.tar.gz -C /tmp/rozpakowane
+tar -xzf projekt.tar.gz -C /tmp/rozpakowane projekt/src/start.sh   # tylko jeden plik</code></pre></div><p>Bez <code>-C</code> tar wysypuje zawartość tam, gdzie stoisz. Dlatego zanim rozpakujesz cudze archiwum, najpierw <code>-t</code>. Bywają archiwa, które zamiast jednego porządnego folderu wysypują trzysta plików prosto na Twoje biurko.</p><p>Pakowanie bez śmieci, przez <code>--exclude</code>:</p><div class="kod"><pre><code>tar -czf bez-txt.tar.gz --exclude=&#x27;*.txt&#x27; projekt</code></pre></div><p class="ekran">Ubuntu] [RHEL] <code>tar</code> jest wszędzie taki sam, to GNU tar. Na Macu jest bsdtar, który rozumie te same podstawowe litery. [macOS</p></section><section><h2 id="trzy-worki-prozniowe-gzip-bzip2-xz">Trzy worki próżniowe: gzip, bzip2, xz</h2><p>Do tara możesz dobrać jeden z trzech kompresorów. Zmierzyłem je na tym samym archiwum 380 MB z bibliotekami Pythona:</p><div class="kod"><pre><code>kompresor  litera  plik             rozmiar   czas
+gzip       -z      duzy.tar.gz      115 MB    16,5 s
+bzip2      -j      duzy.tar.bz2      95 MB    29,9 s
+xz         -J      duzy.tar.xz       75 MB   173,5 s</code></pre></div><p><code>gzip</code> to szybki kucharz od kanapek: nie najlepiej, ale od razu. <code>xz</code> to szef kuchni od risotto: wynik najlepszy, ale poczekasz. <code>bzip2</code> siedzi pośrodku. Na co dzień <code>gzip</code>, do archiwów, które leżą latami, <code>xz</code>. Na ćwiczenie dobrze zapamiętać: <code>z</code> to gzip, <code>j</code> to bzip2, duże <code>J</code> to xz.</p><div class="kod"><pre><code>tar -cjf projekt.tar.bz2 projekt
+tar -cJf projekt.tar.xz projekt
+tar -xf projekt.tar.xz -C /tmp/rozpakowane</code></pre></div><p>Przy rozpakowywaniu GNU tar sam rozpozna kompresję, więc <code>-xf</code> wystarczy. Przy pakowaniu literę musisz podać.</p><p>Kompresory działają też same, na pojedynczych plikach:</p><div class="kod"><pre><code>gzip l.txt          # robi l.txt.gz, oryginał znika
+gzip -l l.txt.gz    # ile zaoszczędzono
+zcat l.txt.gz | tail -1
+gunzip l.txt.gz     # z powrotem
+gzip -k l.txt       # -k: keep, zostaw oryginał
+bzip2 -k l.txt; xz -k l.txt
+ls -l l.txt*</code></pre></div><div class="kod"><pre><code>         compressed        uncompressed  ratio uncompressed_name
+              45010              108894  58.7% l.txt
+20000
+-rw-r--r-- 1 root root 108894 Nov  3 16:32 l.txt
+-rw-r--r-- 1 root root  25147 Nov  3 16:32 l.txt.bz2
+-rw-r--r-- 1 root root  45010 Nov  3 16:32 l.txt.gz
+-rw-r--r-- 1 root root   4948 Nov  3 16:32 l.txt.xz</code></pre></div><p>Uwaga na pułapkę: <code>gzip plik</code> bez <code>-k</code> kasuje oryginał. To nie błąd, to taka filozofia. Do rozpakowania: <code>gunzip</code>, <code>bunzip2</code>, <code>unxz</code>. Do czytania bez rozpakowania: <code>zcat</code>, <code>zless</code>, <code>zgrep</code>, a dla xz <code>xzcat</code>. Logi w <code>/var/log</code> są często spakowane gzipem, więc <code>zgrep</code> przyda Ci się szybciej, niż myślisz.</p></section><section><h2 id="zip-dla-kolegi-z-windowsem">zip: dla kolegi z Windowsem</h2><p>Kolega z działu sprzedaży nie ma pojęcia, co to <code>.tar.gz</code>, i otworzy to najwyżej Notatnikiem. Dla niego jest <code>zip</code>, który rozumie każdy system:</p><div class="kod"><pre><code>zip -r projekt.zip projekt
+unzip -l projekt.zip
+unzip projekt.zip -d /tmp/z</code></pre></div><div class="kod"><pre><code>  adding: projekt/ (stored 0%)
+  adding: projekt/src/start.sh (stored 0%)
+  adding: projekt/docs/liczby.txt (deflated 59%)
+Archive:  projekt.zip
+  Length      Date    Time    Name
+---------  ---------- -----   ----
+       21  2026-11-03 16:32   projekt/src/start.sh
+   108894  2026-11-03 16:32   projekt/docs/liczby.txt</code></pre></div><p><code>-r</code> jak rekurencja, razem z podfolderami. <code>unzip -l</code> to spis treści, <code>-d</code> to folder docelowy. Na serwerze trzymaj się <code>tar</code>, bo <code>zip</code> nie zawsze wiernie odtwarza linuksowe uprawnienia, właścicieli i dowiązania.</p><p>[Ubuntu] <code>sudo apt install zip unzip</code>, [RHEL] <code>sudo dnf install zip unzip</code>, jeśli ich brakuje.</p></section><section><h2 id="rsync-kopiowanie-ktore-mysli">rsync: kopiowanie, które myśli</h2><p><code>cp</code> i <code>scp</code> to tragarze: każą przenieść, przenoszą wszystko. <code>rsync</code> to tragarz z listą. Najpierw sprawdza, co już stoi w nowym mieszkaniu, i nosi tylko to, czego brakuje albo co się zmieniło.</p><div class="kod"><pre><code>rsync -av projekt/ kopia/</code></pre></div><p><code>-a</code> to archive, „zachowaj wszystko”: uprawnienia, właścicieli, daty, dowiązania, podfoldery. <code>-v</code> to verbose, gadaj, co robisz. Przez sieć wygląda to tak samo, tylko cel ma dwukropek, jak w <code>scp</code>:</p><div class="kod"><pre><code>rsync -avz ~/zdjecia web:backup/</code></pre></div><div class="kod"><pre><code>sending incremental file list
+created directory backup
+zdjecia/
+zdjecia/album.txt
+
+sent 44,133 bytes  received 68 bytes  29,467.33 bytes/sec
+total size is 288,894  speedup is 6.54</code></pre></div><p><code>-z</code> ściska dane w czasie przesyłu, przydatne przez wolne łącze. <code>rsync</code> sam używa SSH, więc działa Twój klucz i wpisy z <code>~/.ssh/config</code>. Dopisuję jedną linijkę do pliku i puszczam drugi raz:</p><div class="kod"><pre><code>echo &quot;dopisek&quot; &gt;&gt; ~/zdjecia/album.txt
+rsync -avz ~/zdjecia web:backup/</code></pre></div><div class="kod"><pre><code>sent 255 bytes  received 2,514 bytes  5,538.00 bytes/sec
+total size is 288,902  speedup is 104.33</code></pre></div><p>Wysłane 255 bajtów zamiast 44 tysięcy. Zmieniony plik nie poleciał cały, tylko zmienione kawałki. Przy pięćdziesięciu gigabajtach kopii nocnej to różnica między „trwa całą noc” a „skończyło się, zanim zdążyłeś zrobić herbatę”.</p><p>Inny port SSH albo konkretny klucz: <code>-e &quot;ssh -p 2222&quot;</code> albo <code>-e &quot;ssh -i ~/.ssh/klucz&quot;</code>. Do dużych plików <code>-P</code>, czyli pasek postępu i dokończenie przerwanego przesyłu od miejsca, w którym stanął.</p></section><section><h2 id="ukosnik-ktory-zmienia-wszystko">Ukośnik, który zmienia wszystko</h2><p>Teraz najważniejsza rzecz o <code>rsync</code>, którą każdy admin poznaje na własnej skórze.</p><div class="kod"><pre><code>rsync -a projekt  kopia1/
+rsync -a projekt/ kopia2/
+ls kopia1 kopia2</code></pre></div><div class="kod"><pre><code>kopia1:
+projekt
+
+kopia2:
+docs
+src</code></pre></div><p>Bez ukośnika na końcu źródła: „skopiuj folder <code>projekt</code>”, więc w środku <code>kopia1</code> jest folder <code>projekt</code>. Z ukośnikiem: „skopiuj <strong>zawartość</strong> folderu <code>projekt</code>”. Jedna kreska, inny wynik. Zapamiętaj: ukośnik to „to, co w środku”.</p></section><section><h2 id="delete-i-n-czyli-lustro-i-proba-generalna">--delete i -n, czyli lustro i próba generalna</h2><p>Zwykły <code>rsync</code> tylko dodaje i aktualizuje. Jak usuniesz plik u siebie, w kopii zostanie. Żeby kopia była lustrem, dodajesz <code>--delete</code>. I tu robi się groźnie, bo <code>--delete</code> z pomylonym ukośnikiem albo zamienionymi stronami potrafi wyczyścić cel do zera. Dlatego zawsze najpierw <strong>próba generalna</strong>, <code>-n</code>, czyli dry run:</p><div class="kod"><pre><code>rsync -av --delete -n projekt/ kopia2/</code></pre></div><div class="kod"><pre><code>sending incremental file list
+deleting docs/services
+docs/
+src/
+src/nowy.sh
+
+total size is 108,920  speedup is 455.73 (DRY RUN)</code></pre></div><p><code>(DRY RUN)</code> znaczy: nic nie zostało zrobione, tylko pokazane. Widzisz, że usunie <code>docs/services</code> i doda <code>src/nowy.sh</code>. Zgadza się z tym, czego chcesz? Dopiero wtedy ta sama komenda bez <code>-n</code>. Jak przymiarka w przebieralni, zanim przytniesz spodnie.</p></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p><code>tar</code> zapisuje pliki jeden za drugim: nagłówek z nazwą, uprawnieniami, właścicielem i datą, potem zawartość, potem następny. Kompresja jest osobnym programem, przez który ten strumień przepływa. <code>tar -czf</code> to w praktyce <code>tar</code> i <code>gzip</code> połączone rurą. Można to zrobić dosłownie i przy okazji przenieść karton przez SSH bez pliku pośredniego:</p><div class="kod"><pre><code>tar -czf - projekt2 | ssh web &quot;tar -xzf - -C /tmp &amp;&amp; ls /tmp/projekt2&quot;</code></pre></div><div class="kod"><pre><code>docs
+src</code></pre></div><p>Minus zamiast nazwy pliku znaczy „pisz na standardowe wyjście” albo „czytaj ze standardowego wejścia”. Taśma w fabryce w najczystszej postaci.</p><p>Przy pakowaniu ścieżek bezwzględnych tar ostrzega:</p><div class="kod"><pre><code>tar: Removing leading `/&#x27; from member names</code></pre></div><p>To dla Twojego bezpieczeństwa. Archiwum <code>/etc</code> zapisuje się jako <code>etc/...</code>, a nie <code>/etc/...</code>, więc rozpakowanie nie nadpisze Ci prawdziwego <code>/etc</code>, tylko utworzy folder <code>etc</code> tam, gdzie stoisz.</p><p><code>rsync</code> po obu stronach uruchamia swój program. Dla każdego pliku najpierw porównuje rozmiar i datę modyfikacji. Jeśli są takie same, pomija plik. Jeśli różne, dzieli plik po stronie odbiorcy na bloki, liczy ich sumy kontrolne, a nadawca wysyła tylko bloki, których sumy się nie zgadzają. Stąd te 255 bajtów zamiast 44 tysięcy.</p></section><section><h2 id="sciaga-flag">Ściąga flag</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga</th><th>Co robi</th></tr><tr><td><code>tar</code></td><td><code>-c</code> / <code>-x</code> / <code>-t</code></td><td>utwórz / rozpakuj / pokaż spis</td></tr><tr><td><code>tar</code></td><td><code>-f plik</code></td><td>nazwa archiwum, zawsze zaraz po <code>f</code></td></tr><tr><td><code>tar</code></td><td><code>-z</code> / <code>-j</code> / <code>-J</code></td><td>gzip / bzip2 / xz</td></tr><tr><td><code>tar</code></td><td><code>-v</code></td><td>wypisuj pliki</td></tr><tr><td><code>tar</code></td><td><code>-C folder</code></td><td>rozpakuj do folderu (albo pakuj z folderu)</td></tr><tr><td><code>tar</code></td><td><code>--exclude=&#x27;wzór&#x27;</code></td><td>pomiń pasujące pliki</td></tr><tr><td><code>gzip</code> / <code>bzip2</code> / <code>xz</code></td><td><code>-k</code></td><td>zostaw oryginał</td></tr><tr><td><code>gzip</code></td><td><code>-l</code> / <code>-d</code></td><td>statystyka / rozpakuj</td></tr><tr><td><code>zcat</code> / <code>xzcat</code></td><td>—</td><td>czytaj spakowany plik bez rozpakowania</td></tr><tr><td><code>zip</code></td><td><code>-r</code></td><td>pakuj z podfolderami</td></tr><tr><td><code>unzip</code></td><td><code>-l</code> / <code>-d folder</code></td><td>spis / rozpakuj do folderu</td></tr><tr><td><code>rsync</code></td><td><code>-a</code></td><td>archiwum: uprawnienia, daty, podfoldery</td></tr><tr><td><code>rsync</code></td><td><code>-v</code> / <code>-z</code></td><td>gadaj / ściskaj w przesyle</td></tr><tr><td><code>rsync</code></td><td><code>--delete</code></td><td>usuwaj w celu to, czego nie ma w źródle</td></tr><tr><td><code>rsync</code></td><td><code>-n</code></td><td>próba generalna, nic nie zmienia</td></tr><tr><td><code>rsync</code></td><td><code>-P</code></td><td>postęp i wznawianie przerwanych plików</td></tr><tr><td><code>rsync</code></td><td><code>-e &quot;ssh -p 2222&quot;</code></td><td>własne ustawienia SSH</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>Pomylona kolejność liter w <code>tar</code>:</p><div class="kod"><pre><code>tar -cfz kopia.tar.gz projekt</code></pre></div><div class="kod"><pre><code>tar: kopia.tar.gz: Cannot stat: No such file or directory
+tar: Exiting with failure status due to previous errors</code></pre></div><p>„Nie mogę znaleźć pliku <code>kopia.tar.gz</code>”. Jak to, przecież to miała być nazwa archiwum? Nie. Po <code>f</code> musi stać nazwa archiwum, a stoi <code>z</code>. Więc tar utworzył archiwum o nazwie <code>z</code>, bez kompresji, i próbował do niego zapakować plik <code>kopia.tar.gz</code>, którego nie ma, oraz folder <code>projekt</code>:</p><div class="kod"><pre><code>ls -l z
+file z</code></pre></div><div class="kod"><pre><code>-rw-r--r-- 1 root root 133120 Nov  3 16:32 z
+z: POSIX tar archive (GNU)</code></pre></div><p>Gorsza wersja tego samego: <code>tar -czf skrypt.sh projekt</code> przy pomylonej kolejności argumentów nadpisuje Ci <code>skrypt.sh</code> archiwum. Bez pytania. Zasada: <code>f</code> zawsze na końcu grupy liter, zaraz po nim nazwa archiwum, a dopiero potem to, co pakujesz. <code>-czf</code>, nie <code>-cfz</code>.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><p>Z jednej maszyny wirtualnej zrób kopię folderu <code>/etc</code> na drugą przez <code>rsync</code> po SSH z logowaniem kluczem. Potem zrób archiwum <code>etc-DATA.tar.gz</code> z dzisiejszą datą w nazwie i wypisz jego zawartość bez rozpakowywania.</p><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><p>Zadanie było takie: skopiować <code>/etc</code> z jednej maszyny na drugą przez <code>rsync</code> po SSH z kluczem, a potem zrobić archiwum z datą w nazwie i zajrzeć do niego bez rozpakowywania.</p><div class="kod"><pre><code># na maszynie 1 (klucz już jest na maszynie 2 z odcinka 76)
+sudo rsync -az -e &quot;ssh -i /home/eryk/.ssh/id_ed25519&quot; /etc/ eryk@vm2:kopia-etc/</code></pre></div><p>Ukośnik na końcu <code>/etc/</code> znaczy „zawartość folderu”, nie sam folder. <code>-a</code> zachowuje uprawnienia, daty i dowiązania, <code>-z</code> kompresuje w drodze. Po co <code>sudo</code>? Bo w <code>/etc</code> są pliki, których zwykły użytkownik nie przeczyta, na przykład <code>/etc/shadow</code>. I tu jest haczyk, na którym wykłada się każdy. Kiedy piszesz <code>sudo rsync</code>, SSH uruchamia się jako root i szuka kluczy roota, w <code>/root/.ssh</code>, a nie Twoich. Dlatego podajesz klucz wprost przez <code>-e &quot;ssh -i …&quot;</code>. Bez tego dostajesz pytanie o hasło i podejrzenie, że klucze to jakaś ściema.</p><div class="kod"><pre><code>Number of created files: 1,904 (reg: 713, dir: 296, link: 895)
+...
+sent 1,261,039 bytes  received 17,515 bytes  852,369.33 bytes/sec
+total size is 7,395,375  speedup is 5.78</code></pre></div><p>Drugi haczyk widać po drugiej stronie:</p><div class="kod"><pre><code>-rw-r----- 1 eryk eryk 1613 Nov  3 16:27 kopia-etc/shadow</code></pre></div><p>Plik z hasłami roota należy teraz do zwykłego użytkownika na drugiej maszynie. Kopia <code>/etc</code> to kopia sejfu. Trzymaj ją tam, gdzie nikt postronny nie zagląda.</p><p>Archiwum:</p><div class="kod"><pre><code>sudo tar -czf &quot;etc-$(date +%F).tar.gz&quot; -C / etc
+tar -tzf etc-2026-11-03.tar.gz | head -3</code></pre></div><div class="kod"><pre><code>etc/
+etc/rc2.d/
+etc/rc2.d/S01autofs</code></pre></div><p><code>-C /</code> każe najpierw wejść do <code>/</code>, więc w archiwum ścieżki są względne, <code>etc/…</code>, bez ukośnika na początku. Przy rozpakowaniu nic nie nadpisze Ci prawdziwego <code>/etc</code>. Archiwum, które przy rozpakowaniu nadpisuje system, to nie kopia zapasowa, tylko bomba z opóźnionym zapłonem.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Sieć mamy za sobą: konfiguracja, diagnostyka, porty, zapory, routing, podsłuch, SSH i kopie. W następnej lekcji zajmiemy się ludźmi: użytkownicy i grupy, czyli kto w ogóle ma prawo wejść do tego budynku i do których pokojów dostaje klucze.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-076.html" rel="prev">← 76. SSH od środka</a><a class="btn domyslny zolty" href="lekcja-078.html" rel="next">78. Użytkownicy i grupy →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

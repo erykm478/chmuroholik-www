@@ -1,0 +1,967 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chmuroholik</title>
+<meta name="description" content="Chmuroholik — chmura, AWS i IT po ludzku i w pikselach. Kanał Eryka Mysony o chmurze, bezpieczeństwie i historii informatyki.">
+<meta property="og:title" content="Chmuroholik — IT po ludzku i w pikselach">
+<meta property="og:description" content="Chmura, AWS, bezpieczeństwo i historia Linuxa. Bez nudy, za to z pikselami.">
+<meta property="og:image" content="img/og.png">
+<link rel="icon" type="image/png" href="img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<style>
+:root{
+  --papier:#fff; --tusz:#000; --pulpit:#8f8f8f; --pulpit-j:#c4c4c4; --szary:#767676;
+  --zolty:#ffd60a; --czerwony:#e0322b; --niebieski:#2e6fd6; --zielony:#2fa84f;
+  --cien:8px 8px 0 0 #000; --cien-duzy:12px 12px 0 0 #000;
+  --pixel:"Pixelify Sans","Courier New",monospace; --blok:"Silkscreen","Pixelify Sans",monospace; --mono:"VT323","Courier New",monospace;
+  --dither:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4' shape-rendering='crispEdges'%3E%3Crect width='4' height='4' fill='%23ffffff'/%3E%3Crect width='1' height='1' fill='%23000'/%3E%3Crect x='2' y='2' width='1' height='1' fill='%23000'/%3E%3C/svg%3E");
+  --dither-g:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='2' height='2' shape-rendering='crispEdges'%3E%3Crect width='2' height='2' fill='%23ffffff'/%3E%3Crect width='1' height='1' fill='%23000'/%3E%3Crect x='1' y='1' width='1' height='1' fill='%23000'/%3E%3C/svg%3E");
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:48px}
+body{margin:0;background:var(--papier);color:var(--tusz);font-family:var(--pixel);font-size:18px;line-height:1.5;font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0;overflow-x:hidden;cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='30' viewBox='0 0 11 15' shape-rendering='crispEdges'%3E%3Cpath d='M0 0h1v1H0zM0 1h1v1H0zM1 1h1v1H1zM0 2h1v1H0zM2 2h1v1H2zM0 3h1v1H0zM3 3h1v1H3zM0 4h1v1H0zM4 4h1v1H4zM0 5h1v1H0zM5 5h1v1H5zM0 6h1v1H0zM6 6h1v1H6zM0 7h1v1H0zM7 7h1v1H7zM0 8h1v1H0zM8 8h1v1H8zM0 9h1v1H0zM5 9h4v1H5zM0 10h1v1H0zM2 10h1v1H2zM5 10h1v1H5zM0 11h2v1H0zM3 11h1v1H3zM6 11h1v1H6zM0 12h1v1H0zM3 12h1v1H3zM6 12h1v1H6zM4 13h1v1H4zM7 13h1v1H7zM4 14h3v1H4z' fill='%23000'/%3E%3Cpath d='M1 2h1v1H1zM1 3h2v1H1zM1 4h3v1H1zM1 5h4v1H1zM1 6h5v1H1zM1 7h6v1H1zM1 8h7v1H1zM1 9h4v1H1zM1 10h1v1H1zM3 10h2v1H3zM4 11h2v1H4zM4 12h2v1H4zM5 13h2v1H5z' fill='%23fff'/%3E%3C/svg%3E") 1 1,auto}
+a,button,.ikona,[data-drag] .belka{cursor:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='26' viewBox='0 0 12 13' shape-rendering='crispEdges'%3E%3Cpath d='M3 0h2v1H3zM2 1h1v4H2zM5 1h1v4H5zM6 4h2v1H6zM8 5h2v1H8zM10 6h1v4h-1zM0 6h2v1H0zM0 7h1v2H0zM1 9h1v1H1zM2 10h1v1H2zM3 11h1v1H3zM4 12h6v1H4zM9 10h1v2H9z' fill='%23000'/%3E%3Cpath d='M3 1h2v6h1V5h2v1h2v4H9v2H4v-1H3v-1H2V9H1V7h2z' fill='%23fff'/%3E%3C/svg%3E") 6 1,pointer}
+img{image-rendering:auto;max-width:100%;height:auto;display:block}
+::selection{background:var(--tusz);color:var(--papier)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* ---------- start systemu ---------- */
+/* intro: kompaktowy komputer z lat 80. z wbudowanym kineskopem */
+#boot{position:fixed;inset:0;z-index:100;background:radial-gradient(ellipse at 50% 40%,#3a3a3a 0,#161616 70%);display:grid;place-items:center;overflow:hidden;transition:opacity .5s ease}
+#boot.znika{opacity:0;pointer-events:none}
+#boot.zoomuje{background:#161616}
+.komp{--s:min(340px,62vw,46vh);width:var(--s);aspect-ratio:.82;position:relative;transform-origin:50% 36%;transition:transform 1.1s cubic-bezier(.7,0,.3,1)}
+.komp .obudowa{position:absolute;inset:0;background:linear-gradient(170deg,#efe8d6 0%,#e2d8c0 55%,#d3c7aa 100%);border-radius:14px 14px 8px 8px;box-shadow:inset -6px -8px 0 rgba(0,0,0,.08),inset 4px 4px 0 rgba(255,255,255,.6),0 30px 60px rgba(0,0,0,.6),0 4px 0 #b7aa8c}
+.komp .ramka{position:absolute;left:9%;right:9%;top:7%;height:58%;background:linear-gradient(160deg,#d9cfb6,#cfc3a6);border-radius:10px;box-shadow:inset 3px 3px 6px rgba(0,0,0,.25),inset -2px -2px 0 rgba(255,255,255,.5);display:grid;place-items:center}
+.crt{position:relative;width:86%;height:84%;background:#0b0c0b;border-radius:14% / 18%;overflow:hidden;box-shadow:inset 0 0 18px 6px rgba(0,0,0,.9),0 0 0 3px #a99d80}
+.crt .obraz{position:absolute;inset:0;background:#c4c4c4 var(--dither-g);background-size:2px;display:grid;place-items:center;opacity:0;filter:brightness(2.4) blur(1.5px)}
+.crt .linia{position:absolute;left:50%;top:50%;width:4px;height:4px;margin:-2px 0 0 -2px;background:#fff;border-radius:50%;box-shadow:0 0 18px 6px rgba(255,255,255,.9);opacity:0}
+.crt .skan{position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(to bottom,rgba(0,0,0,.18) 0 1px,transparent 1px 3px);mix-blend-mode:multiply}
+.crt .odblask{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 30% 20%,rgba(255,255,255,.18),transparent 45%),radial-gradient(ellipse at 50% 50%,transparent 55%,rgba(0,0,0,.55) 100%)}
+.komp .szczelina{position:absolute;right:14%;top:73%;width:30%;height:3.2%;background:#2b2618;border-radius:3px;box-shadow:0 2px 0 rgba(255,255,255,.6)}
+.komp .zlobienia{position:absolute;left:10%;top:72%;width:18%;height:14%;background:repeating-linear-gradient(to bottom,rgba(0,0,0,.18) 0 2px,transparent 2px 7px)}
+.komp .stopka{position:absolute;left:4%;right:4%;bottom:-4%;height:6%;background:#c9bd9f;border-radius:0 0 10px 10px;z-index:-1;box-shadow:0 12px 30px rgba(0,0,0,.5)}
+.boot-okno{background:var(--papier);border:2px solid var(--tusz);box-shadow:3px 3px 0 #000;padding:8% 10%;display:flex;flex-direction:column;align-items:center;gap:6px;width:78%}
+.boot-okno canvas{width:48px;height:auto;image-rendering:pixelated}
+.boot-tekst{font-size:clamp(10px,2.6vw,14px);font-weight:700;text-align:center;line-height:1.2}
+.boot-pasek{width:100%;height:10px;border:2px solid var(--tusz);padding:1px}
+.boot-pasek i{display:block;height:100%;width:0;background:repeating-linear-gradient(90deg,#000 0 3px,#555 3px 5px)}
+.boot-pomin{position:absolute;bottom:22px;left:0;right:0;text-align:center;color:#8a8a8a;font-size:14px}
+/* fazy włączania kineskopu */
+#boot.wl .crt .linia{animation:crtKropka .55s ease-out forwards}
+#boot.wl .crt .obraz{animation:crtObraz 1s ease-out .45s forwards}
+@keyframes crtKropka{0%{opacity:0;transform:scale(1)}15%{opacity:1;transform:scale(1)}50%{opacity:1;transform:scaleX(70) scaleY(.6)}80%{opacity:1;transform:scaleX(70) scaleY(40)}100%{opacity:0;transform:scaleX(70) scaleY(60)}}
+@keyframes crtObraz{0%{opacity:0;filter:brightness(3) blur(3px);transform:scaleY(.02)}25%{opacity:1;filter:brightness(2.6) blur(2px);transform:scaleY(1.04)}35%{opacity:.6}45%{opacity:1;filter:brightness(1.6) blur(1px);transform:scaleY(.99)}55%{opacity:.85}100%{opacity:1;filter:none;transform:none}}
+#boot.wl .crt{animation:crtSzum 2.6s steps(30) .5s}
+@keyframes crtSzum{0%,100%{filter:none}10%{filter:contrast(1.3)}12%{filter:none}40%{filter:brightness(1.08)}42%{filter:none}}
+.wyl{position:absolute;inset:0;background:#000;pointer-events:none;opacity:0}
+
+/* ---------- pasek menu ---------- */
+.menu{position:fixed;top:0;left:0;right:0;height:44px;z-index:50;background:var(--papier);border-bottom:3px solid var(--tusz);display:flex;align-items:center;gap:6px;padding:0 14px;font-size:18px;font-weight:600}
+.menu .logo{display:flex;align-items:center;margin-right:8px}
+.menu .logo img{width:30px;height:30px;border-radius:50%;border:2px solid var(--tusz);image-rendering:pixelated}
+.menu .linki{display:flex;gap:2px}
+.menu a{color:inherit;text-decoration:none;padding:2px 10px;line-height:28px}
+.menu a:hover,.menu a:focus-visible,.menu a.aktywny{background:var(--tusz);color:var(--papier);outline:none}
+.menu .zegar{margin-left:auto;font-family:var(--mono);font-size:24px;font-weight:400;letter-spacing:1px}
+.menu .burger{display:none;margin-left:auto;background:none;border:3px solid var(--tusz);font:inherit;padding:0 10px}
+@media (max-width:760px){
+  .menu .linki{display:none;position:absolute;top:41px;left:0;right:0;background:var(--papier);border-bottom:3px solid var(--tusz);flex-direction:column;padding:6px 0}
+  .menu .linki.otwarte{display:flex}
+  .menu .linki a{padding:6px 20px}
+  .menu .zegar{display:none}
+  .menu .burger{display:block}
+}
+
+/* ---------- okna ---------- */
+.okno{background:var(--papier);border:4px solid var(--tusz);box-shadow:var(--cien);position:relative}
+.okno.duze{box-shadow:var(--cien-duzy)}
+.belka{height:30px;border-bottom:4px solid var(--tusz);display:flex;align-items:center;justify-content:center;position:relative;background:repeating-linear-gradient(to bottom,var(--tusz) 0 2px,var(--papier) 2px 5px);background-clip:content-box;padding:5px 6px;user-select:none}
+.belka span{background:var(--papier);padding:0 12px;font-size:16px;font-weight:600;line-height:20px;white-space:nowrap}
+.belka .zamknij{position:absolute;left:12px;top:5px;width:20px;height:20px;background:var(--papier);border:3px solid var(--tusz);padding:0;box-shadow:0 0 0 3px var(--papier)}
+.belka .zamknij:active{background:var(--tusz)}
+.tresc{padding:22px 24px}
+
+/* animacja „zoom” starego Maca przy otwieraniu */
+.zoom-ramka{position:fixed;border:2px dotted var(--tusz);pointer-events:none;z-index:90}
+
+.pojaw{opacity:0;transform:translateY(24px) scale(.97);transition:opacity .45s steps(5),transform .45s steps(5)}
+.pojaw.widoczne{opacity:1;transform:none}
+
+/* ---------- przyciski ---------- */
+.btn{display:inline-flex;align-items:center;gap:10px;font:inherit;font-size:20px;font-weight:700;color:var(--tusz);background:var(--papier);border:4px solid var(--tusz);border-radius:14px;padding:8px 22px;text-decoration:none;position:relative;transition:transform .08s steps(1)}
+.btn.domyslny{box-shadow:0 0 0 4px var(--papier),0 0 0 8px var(--tusz);margin:8px}
+.btn:hover{background:var(--tusz);color:var(--papier)}
+.btn:active{transform:translate(2px,2px)}
+.btn.zolty{background:var(--zolty)}
+.btn.zolty:hover{background:var(--tusz);color:var(--zolty)}
+
+/* ---------- hero (pulpit) ---------- */
+.pulpit{position:relative;min-height:100vh;padding:90px 20px 60px;background:var(--dither);background-size:4px;display:grid;place-items:center;overflow:hidden}
+.chmurka{position:absolute;pointer-events:none;image-rendering:pixelated}
+.chmurka canvas{width:100%;height:auto;display:block}
+@keyframes dryf{from{transform:translateX(-12vw)}to{transform:translateX(112vw)}}
+@keyframes bujaj{0%,100%{translate:0 0}50%{translate:0 -10px}}
+.hero{width:min(1000px,100%);min-width:0;z-index:5}
+.hero .tresc{display:flex;gap:34px;align-items:center;padding:34px 40px 36px}
+.hero .duza-chmura{flex:0 0 auto;width:200px;animation:bujaj 3s steps(6) infinite}
+.hero .duza-chmura img{width:100%;height:auto;aspect-ratio:1;object-fit:cover;border-radius:50%;border:4px solid var(--tusz);box-shadow:6px 6px 0 #000;image-rendering:pixelated}
+.hero .tekst{flex:1;min-width:0;width:100%;container-type:inline-size}
+.tytul{font-family:var(--blok);font-weight:700;font-size:min(72px,7.6cqi);line-height:1;letter-spacing:.04em;margin:0 0 18px;white-space:nowrap}
+.tytul .kursor{display:inline-block;width:.5em;height:.9em;background:var(--tusz);vertical-align:-.05em;margin-left:.08em;animation:miga 1s steps(1) infinite}
+@keyframes miga{50%{opacity:0}}
+.haslo{display:inline-block;background:var(--zolty);border:4px solid var(--tusz);padding:6px 18px;font-size:clamp(17px,2.3vw,25px);font-weight:700;margin:0 0 12px}
+.motto{font-size:17px;margin:0 0 24px;color:#222}
+.akcje{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+@media (max-width:900px){.hero .tresc{flex-direction:column;align-items:flex-start;padding:24px}.hero .duza-chmura{width:110px}}
+
+.mini{position:absolute;width:230px;z-index:4;touch-action:none}
+.mini .tresc{padding:14px;display:grid;place-items:center;min-height:120px}
+.mini canvas{image-rendering:pixelated}
+.mini code{font-family:var(--mono);font-size:24px;line-height:1.1}
+.mini.przeciagany{z-index:20;box-shadow:var(--cien-duzy)}
+@media (max-width:1100px){.mini{display:none}}
+.zwoj{position:absolute;bottom:22px;left:50%;translate:-50% 0;font-size:16px;background:var(--papier);border:3px solid var(--tusz);padding:2px 12px;animation:bujaj 1.6s steps(4) infinite;text-decoration:none;color:inherit;z-index:5}
+
+/* ---------- sekcje ---------- */
+section{padding:90px 20px}
+.kontener{width:min(1120px,100%);margin:0 auto}
+.naglowek{display:flex;align-items:center;gap:16px;margin:0 0 34px;flex-wrap:wrap}
+.naglowek h2{font-family:var(--blok);font-size:clamp(26px,4vw,42px);margin:0;line-height:1;letter-spacing:.04em}
+.etykieta{background:var(--tusz);color:var(--papier);font-size:16px;padding:2px 10px;font-weight:600}
+.szary-pulpit{background:var(--pulpit-j) var(--dither-g);background-size:2px}
+
+/* pasek z hasłami */
+.tasma{border-block:4px solid var(--tusz);background:var(--zolty);overflow:hidden;white-space:nowrap;font-family:var(--blok);font-weight:700;font-size:22px;padding:10px 0}
+.tasma div{display:inline-block;animation:tasma 38s linear infinite}
+.tasma span{margin:0 26px}
+@keyframes tasma{to{transform:translateX(-50%)}}
+
+/* o mnie */
+.omnie{display:grid;grid-template-columns:300px 1fr;gap:34px;align-items:start}
+.omnie>*{min-width:0}
+.omnie .zdjecie{padding:18px;max-width:320px}
+.omnie .zdjecie img{width:100%;height:auto;aspect-ratio:1;object-fit:cover;border-radius:50%;border:4px solid var(--tusz);image-rendering:pixelated;background:#cfe8f7}
+.omnie .zdjecie figcaption{font-size:15px;text-align:center;margin-top:8px}
+.omnie p{margin:0 0 14px;font-size:19px}
+.fakty{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:22px}
+.fakt{border:3px solid var(--tusz);padding:12px 14px;background:var(--papier)}
+.fakt b{display:block;font-family:var(--pixel);font-weight:700;font-size:34px;line-height:1.1}
+.fakt small{font-size:15px}
+@media (max-width:820px){.omnie{grid-template-columns:1fr}.omnie .zdjecie{max-width:320px}.fakty{grid-template-columns:1fr 1fr}}
+
+/* odcinki: widok Findera */
+.finder .pasek-info{display:flex;justify-content:space-between;border-bottom:3px solid var(--tusz);padding:6px 18px;font-size:16px}
+.ikony{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px 10px;padding:28px 20px 30px}
+.ikona{background:none;border:0;font:inherit;color:inherit;display:flex;flex-direction:column;align-items:center;gap:8px;padding:8px 4px;text-align:center}
+.ikona .obrazek{width:96px;height:80px;display:grid;place-items:center;transition:transform .15s steps(3)}
+.ikona .obrazek canvas{image-rendering:pixelated;max-width:96px;max-height:80px}
+.ikona .podpis{font-size:16px;font-weight:600;line-height:1.25;padding:1px 6px}
+.ikona:hover .obrazek,.ikona:focus-visible .obrazek{transform:translateY(-6px)}
+.ikona:hover .podpis,.ikona:focus-visible .podpis,.ikona.zaznaczona .podpis{background:var(--tusz);color:var(--papier)}
+.ikona:focus-visible{outline:none}
+.ikona .seria{font-size:13px;font-weight:400;color:var(--szary)}
+
+/* okno dialogowe odcinka */
+#dialog{position:fixed;inset:0;z-index:80;display:none;place-items:center;padding:20px;background:rgba(255,255,255,.35)}
+#dialog.otwarty{display:grid}
+#dialog .okno{width:min(640px,100%);max-height:calc(100vh - 80px);overflow:auto;box-shadow:var(--cien-duzy)}
+#dialog .tresc{display:grid;grid-template-columns:120px 1fr;gap:22px}
+#dialog.z-wideo .okno{width:min(860px,100%)}
+#dialog.z-wideo .tresc{grid-template-columns:1fr}
+#dialog.z-wideo .dlg-ikona{display:none}
+.dlg-wideo{aspect-ratio:16/9;border:4px solid var(--tusz);background:#000;margin-bottom:14px;position:relative}
+.dlg-wideo iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.dlg-wideo .start{position:absolute;inset:0;width:100%;height:100%;border:0;padding:0;background:#000;cursor:pointer}
+.dlg-wideo .start canvas{width:100%;height:100%;image-rendering:pixelated;display:block}
+.dlg-wideo .start span{position:absolute;left:50%;top:50%;translate:-50% -50%;background:var(--zolty);border:4px solid var(--tusz);border-radius:14px;padding:8px 20px;font:700 20px var(--pixel);box-shadow:0 0 0 4px #fff,0 0 0 8px #000}
+.miniatura{width:96px;height:54px;border:3px solid var(--tusz);background:#000;box-shadow:3px 3px 0 #000;position:relative}
+.miniatura canvas{width:100%;height:100%;image-rendering:pixelated;display:block}
+.miniatura .czas{position:absolute;right:-3px;bottom:-3px;background:var(--tusz);color:var(--papier);font:400 15px var(--mono);padding:0 4px;line-height:1.1}
+.ikona:hover .miniatura,.ikona:focus-visible .miniatura{box-shadow:5px 5px 0 #000}
+.ikona .obrazek.film{width:auto;height:auto}
+.nowosc{display:inline-flex;align-items:center;gap:10px;margin:0 0 20px;text-decoration:none;color:inherit;border:3px solid var(--tusz);padding:4px 12px 4px 4px;background:var(--papier);max-width:100%;animation:bujaj 2.4s steps(4) infinite}
+.nowosc-etykieta{background:var(--czerwony);color:#fff;font-weight:700;font-size:14px;padding:1px 8px;flex:0 0 auto}
+#nowosc-tytul{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:16px}
+.nowosc:hover{background:var(--tusz);color:var(--papier)}
+.czesc .ogladaj{display:inline-block;margin-top:8px;font-size:14px;font-weight:700;border:2px solid var(--tusz);padding:0 8px;text-decoration:none;color:inherit;background:var(--zolty)}
+.czesc .ogladaj:hover{background:var(--tusz);color:var(--zolty)}
+.czesc .wkrotce{display:inline-block;margin-top:8px;font-size:13px;color:var(--szary)}
+.telefon .ekran .podglad{width:100%;aspect-ratio:9/12;border:3px solid var(--tusz);background:#000;overflow:hidden}
+.telefon .ekran .podglad canvas{width:100%;height:100%;image-rendering:pixelated;display:block}
+a.telefon{text-decoration:none;color:inherit}
+.aktualizacja{color:var(--szary);font-size:14px}
+#dialog .dlg-ikona{display:grid;place-items:start center}
+#dialog h3{font-size:24px;margin:0 0 6px;line-height:1.2}
+#dialog .meta{font-size:15px;color:var(--szary);margin:0 0 12px}
+#dialog p{margin:0 0 14px}
+#dialog ul{margin:0 0 18px;padding-left:20px}
+@media (max-width:560px){#dialog .tresc{grid-template-columns:1fr}}
+
+/* seria Linux: oś czasu */
+.os{position:relative;display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:12px;padding-top:70px}
+.os::before{content:"";position:absolute;left:0;right:0;top:30px;height:12px;border:3px solid var(--tusz);background:var(--papier)}
+.os .postep{position:absolute;left:3px;top:33px;height:6px;width:0;background:repeating-linear-gradient(90deg,#000 0 6px,#555 6px 9px);transition:width 1.6s steps(16)}
+.czesc{position:relative;display:flex;flex-direction:column;gap:8px}
+.czesc::before{content:"";position:absolute;top:-46px;left:calc(50% - 10px);width:20px;height:20px;border:3px solid var(--tusz);background:var(--papier);transition:background .2s steps(1)}
+.czesc.zaliczona::before{background:var(--tusz)}
+.czesc .rok{font-family:var(--pixel);font-weight:700;font-size:24px;text-align:center}
+.czesc .karta{border:3px solid var(--tusz);background:var(--papier);padding:10px;box-shadow:5px 5px 0 #000;flex:1;transition:transform .12s steps(2)}
+.czesc .karta:hover{transform:translate(-3px,-3px);box-shadow:8px 8px 0 #000}
+.czesc .nr{display:inline-block;background:var(--tusz);color:var(--papier);font-size:13px;padding:0 8px;margin-bottom:6px}
+.czesc .karta b{display:block;font-size:16px;overflow-wrap:anywhere;line-height:1.25;margin-bottom:6px}
+.czesc .karta small{font-size:14px;line-height:1.3;display:block;color:#222}
+.czesc.nowa .nr{background:var(--zolty);color:var(--tusz);border:2px solid var(--tusz)}
+.pingwin-bieg{position:absolute;top:-6px;left:0;width:44px;transition:left 1.6s steps(16);z-index:2}
+.pingwin-bieg canvas{width:44px;height:auto;image-rendering:pixelated}
+@media (max-width:1180px){
+  .os{grid-template-columns:1fr;padding-top:0;padding-left:56px}
+  .os::before{left:16px;right:auto;top:0;bottom:0;width:12px;height:auto}
+  .os .postep{left:19px;top:3px;width:6px!important;height:0;transition:height 1.6s steps(16);background:repeating-linear-gradient(180deg,#000 0 6px,#555 6px 9px)}
+  .czesc::before{top:12px;left:-49px}
+  .czesc .rok{text-align:left}
+  .pingwin-bieg{display:none}
+}
+
+/* kurs */
+.kurs-promo .tresc{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:34px;align-items:center;padding:30px}
+.kurs-promo h2{font-family:var(--blok);font-size:clamp(24px,3.4vw,38px);line-height:1.1;margin:12px 0}
+.kurs-promo p{margin:0 0 12px}
+.kurs-punkty{margin:0 0 14px;padding-left:22px}
+.kurs-ekran{background:#000;border:4px solid #000;box-shadow:inset 0 0 0 3px #444;min-height:260px;padding:16px}
+.kurs-ekran pre{margin:0;color:#fff;font-family:var(--mono);font-size:22px;line-height:1.2;white-space:pre-wrap}
+.kurs-ekran pre b{color:var(--zolty);font-weight:400}
+@media (max-width:820px){.kurs-promo .tresc{grid-template-columns:1fr}}
+
+/* pasek przewijania jak w Macintoshu 1984 (własny, rysowany przez stronę) */
+.mac-scroll{scrollbar-width:none}
+.mac-scroll::-webkit-scrollbar{display:none}
+.mac-pasek{display:flex;height:30px;margin-top:6px;border:4px solid #000;background:#fff;box-shadow:4px 4px 0 #000;user-select:none;touch-action:none}
+.mac-pasek button{flex:0 0 30px;width:30px;border:0;background:#fff;padding:0;display:grid;place-items:center;cursor:pointer}
+.mac-pasek button:first-child{border-right:4px solid #000}
+.mac-pasek button:last-child{border-left:4px solid #000}
+.mac-pasek button:active,.mac-pasek button.wcisniety{background:#000}
+.mac-pasek button:active svg path,.mac-pasek button.wcisniety svg path{fill:#fff}
+.mac-pasek button svg{width:16px;height:16px;shape-rendering:crispEdges}
+.mac-tor{position:relative;flex:1;background:#fff var(--dither-g);background-size:2px;cursor:pointer}
+.mac-suwak{position:absolute;top:0;bottom:0;left:0;min-width:30px;background:#fff;border-left:4px solid #000;border-right:4px solid #000;cursor:grab}
+.mac-suwak::after{content:"";position:absolute;inset:6px 30%;background:repeating-linear-gradient(90deg,#000 0 2px,transparent 2px 5px)}
+.mac-suwak.ciagniety{background:#000;cursor:grabbing}
+.mac-suwak.ciagniety::after{background:repeating-linear-gradient(90deg,#fff 0 2px,transparent 2px 5px)}
+.mac-pasek[hidden]{display:none}
+
+/* shorty: telefony */
+.telefony{display:flex;gap:24px;overflow-x:auto;padding:10px 6px 22px;scroll-snap-type:x mandatory}
+.telefon{flex:0 0 220px;scroll-snap-align:start;border:4px solid var(--tusz);border-radius:26px;background:var(--papier);padding:12px;box-shadow:var(--cien);display:flex;flex-direction:column;gap:10px;min-height:400px;transition:transform .15s steps(3)}
+.telefon:hover{transform:rotate(-2deg) translateY(-6px)}
+.telefon .glosnik{width:56px;height:8px;border:3px solid var(--tusz);border-radius:6px;margin:0 auto}
+.telefon .ekran{flex:1;border:3px solid var(--tusz);background:var(--dither);background-size:4px;display:flex;flex-direction:column;justify-content:space-between;padding:10px;gap:10px}
+.telefon .hak{background:var(--papier);border:3px solid var(--tusz);box-shadow:4px 4px 0 #000;font-family:var(--blok);font-weight:700;font-size:15px;line-height:1.15;padding:8px;text-align:center}
+.telefon .grafika{display:grid;place-items:center;flex:1}
+.telefon .grafika canvas{image-rendering:pixelated}
+.telefon .napis{align-self:center;background:var(--papier);border:3px solid var(--tusz);font-size:14px;padding:1px 8px}
+.telefon .napis em{font-style:normal;background:var(--tusz);color:var(--papier);padding:0 3px}
+.telefon .zrodlo{font-size:13px;text-align:center}
+
+/* terminal */
+.terminal{background:var(--tusz);color:var(--papier);font-family:var(--mono);font-size:24px;line-height:1.15;min-height:340px;max-height:460px;overflow:auto;padding:18px 20px;border:4px solid var(--tusz)}
+.terminal .linia{white-space:pre-wrap;word-break:break-word}
+.terminal .prompt{color:var(--zolty)}
+.terminal form{display:flex;gap:10px}
+.terminal input{flex:1;background:transparent;border:0;color:var(--papier);font:inherit;outline:none;caret-color:var(--zolty);min-width:0}
+.podpowiedzi{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.podpowiedzi button{font:inherit;font-size:16px;border:3px solid var(--tusz);background:var(--papier);padding:2px 10px}
+.podpowiedzi button:hover{background:var(--tusz);color:var(--papier)}
+
+/* alert subskrypcji */
+.alert{width:min(720px,100%);margin:0 auto}
+.alert .tresc{display:grid;grid-template-columns:90px 1fr;gap:24px;align-items:start;padding:30px}
+.alert h2{font-size:28px;margin:0 0 8px;line-height:1.2}
+.alert p{margin:0 0 20px}
+.alert .przyciski{display:flex;gap:12px;justify-content:flex-end;flex-wrap:wrap;align-items:center}
+.uciekinier{transition:transform .18s steps(3)}
+@media (max-width:560px){.alert .tresc{grid-template-columns:1fr}}
+
+footer{border-top:4px solid var(--tusz);padding:28px 20px 40px;font-size:16px}
+footer .kontener{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center}
+footer a{color:inherit}
+.kosz{display:flex;flex-direction:column;align-items:center;font-size:14px}
+
+/* konfetti z pikseli */
+.piksel{position:fixed;width:10px;height:10px;z-index:95;pointer-events:none}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .pojaw{opacity:1;transform:none}
+  #boot{display:none}
+}
+</style>
+</head>
+<body>
+
+<div id="boot" aria-hidden="true">
+  <div class="komp" id="komp">
+    <div class="stopka"></div>
+    <div class="obudowa"></div>
+    <div class="ramka">
+      <div class="crt" id="crt">
+        <div class="obraz">
+          <div class="boot-okno">
+            <canvas id="boot-ikona"></canvas>
+            <div class="boot-tekst">Witamy w Chmuroholiku</div>
+            <div class="boot-pasek"><i></i></div>
+          </div>
+        </div>
+        <div class="linia"></div>
+        <div class="skan"></div>
+        <div class="odblask"></div>
+      </div>
+    </div>
+    <div class="zlobienia"></div>
+    <div class="szczelina"></div>
+  </div>
+  <div class="boot-pomin">kliknij, żeby pominąć</div>
+</div>
+
+<nav class="menu" aria-label="Menu główne">
+  <a class="logo" href="#start" aria-label="Chmuroholik — start"><img src="img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="#omnie">O kanale</a>
+    <a href="#odcinki">Odcinki</a>
+    <a href="#linux">Seria Linux</a>
+    <a href="kurs/index.html">Kurs</a>
+    <a href="#shorty">Shorty</a>
+    <a href="#terminal">Terminal</a>
+    <a href="#subskrybuj">Subskrybuj</a>
+  </div>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+  <span class="zegar" id="zegar" aria-hidden="true">00:00</span>
+</nav>
+
+<main>
+<!-- ================= PULPIT ================= -->
+<header class="pulpit" id="start">
+  <div class="mini okno" data-drag style="left:4%;top:16%;rotate:-2deg">
+    <div class="belka"><button class="zamknij" aria-label="Zamknij"></button><span>root</span></div>
+    <div class="tresc"><canvas data-sprite="korona" data-skala="9"></canvas></div>
+  </div>
+  <div class="mini okno" data-drag style="right:4%;top:15%;rotate:2deg">
+    <div class="belka"><button class="zamknij" aria-label="Zamknij"></button><span>Serwery</span></div>
+    <div class="tresc"><div style="display:flex;gap:16px"><canvas data-sprite="serwer" data-skala="5"></canvas><canvas data-sprite="serwer" data-skala="5"></canvas><canvas data-sprite="serwer" data-skala="5"></canvas></div></div>
+  </div>
+  <div class="mini okno" data-drag style="left:5%;bottom:12%;rotate:1deg">
+    <div class="belka"><button class="zamknij" aria-label="Zamknij"></button><span>polityka.json</span></div>
+    <div class="tresc"><code>"Effect":<br>&nbsp;&nbsp;"Allow"</code></div>
+  </div>
+  <div class="mini okno" data-drag style="right:5%;bottom:13%;rotate:-1deg">
+    <div class="belka"><button class="zamknij" aria-label="Zamknij"></button><span>Uwaga</span></div>
+    <div class="tresc"><div style="display:flex;gap:14px;align-items:center"><canvas data-sprite="uwaga" data-skala="5"></canvas><b style="font-family:var(--blok);font-size:20px;line-height:1.2">ACCESS<br>DENIED</b></div></div>
+  </div>
+
+  <div class="okno duze hero" data-otworz>
+    <div class="belka"><span>Kanał</span></div>
+    <div class="tresc">
+      <div class="duza-chmura"><img src="img/logo.png" alt="Logo kanału Chmuroholik: pikselowy Eryk" width="640" height="640"></div>
+      <div class="tekst">
+        <h1 class="tytul"><span id="pisz" aria-label="Chmuroholik"></span><span class="kursor" aria-hidden="true"></span></h1>
+        <p class="haslo">chmura, AWS i IT po ludzku i w pikselach</p>
+        <p class="motto">There is no cloud. It’s just someone else’s computer.</p>
+        <a class="nowosc" id="nowosc" href="#" target="_blank" rel="noopener" hidden><span class="nowosc-etykieta">NOWOŚĆ</span><span id="nowosc-tytul"></span></a>
+        <div class="akcje">
+          <a class="btn domyslny zolty yt" href="#" target="_blank" rel="noopener">▶ Oglądaj na YouTube</a>
+          <a class="btn" href="#odcinki">Przeglądaj odcinki</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <a class="zwoj" href="#omnie">▼ przewiń</a>
+</header>
+
+<div class="tasma" aria-hidden="true"><div id="tasma"></div></div>
+
+<!-- ================= O KANALE ================= -->
+<section id="omnie">
+  <div class="kontener">
+    <div class="naglowek pojaw"><h2>O KANALE</h2><span class="etykieta">Plik › Informacje</span></div>
+    <div class="omnie">
+      <figure class="okno zdjecie pojaw" style="margin:0">
+        <img src="img/logo.png" alt="Pikselowy Eryk Mysona, autor kanału Chmuroholik" width="640" height="640">
+        <figcaption>Eryk · twórca kanału</figcaption>
+      </figure>
+      <div class="okno pojaw">
+        <div class="belka"><span>Czytaj mnie.txt</span></div>
+        <div class="tresc">
+          <p>Cześć, tu Eryk. Na <b>Chmuroholiku</b> tłumaczę IT tak, jak tłumaczyłbym znajomym przy kawie: bez żargonu, za to z porównaniami do mieszkań, pizzy, taksówek i pierogów.</p>
+          <p>Chmura, AWS, bezpieczeństwo, agenci AI i historia informatyki. Każda plansza w odcinkach to ręcznie robiony pixel art w stylu Macintosha z 1984 roku, a każdy fakt ma źródło w opisie.</p>
+          <p>Bo chmura to nie magia. To po prostu cudzy komputer.</p>
+          <div class="fakty">
+            <div class="fakt"><b id="licz-filmy">10</b><small>odcinków na YouTube</small></div>
+            <div class="fakt"><b id="licz-shorty">32</b><small>shortów na YouTube</small></div>
+            <div class="fakt"><b data-licz="1984">0</b><small>rocznik stylu graficznego</small></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ODCINKI ================= -->
+<section id="odcinki" class="szary-pulpit">
+  <div class="kontener">
+    <div class="naglowek pojaw"><h2 style="background:var(--papier);padding:4px 10px;border:4px solid var(--tusz)">ODCINKI</h2><span class="etykieta">kliknij ikonę, żeby otworzyć</span></div>
+    <div class="okno duze finder pojaw">
+      <div class="belka"><span>Chmuroholik HD</span></div>
+      <div class="pasek-info"><span id="licznik-ikon">8 obiektów</span><span>pełno pikseli</span><span>0 KB wolne</span></div>
+      <div class="ikony" id="ikony"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SERIA LINUX ================= -->
+<section id="linux">
+  <div class="kontener">
+    <div class="naglowek pojaw"><h2>SERIA: CO TO JEST LINUX</h2><span class="etykieta">8 części · od gry z 1969 do Marsa</span></div>
+    <div class="os" id="os"><div class="postep" id="postep"></div><div class="pingwin-bieg" id="pingwin"><canvas data-sprite="pingwin" data-skala="3"></canvas></div></div>
+  </div>
+</section>
+
+<!-- ================= KURS ================= -->
+<section id="kurs" class="szary-pulpit">
+  <div class="kontener">
+    <div class="okno duze kurs-promo pojaw">
+      <div class="belka"><span>Kurs.app</span></div>
+      <div class="tresc">
+        <div class="kurs-ekran" aria-hidden="true"><pre id="kurs-pisz"></pre></div>
+        <div>
+          <span class="etykieta">DARMOWY KURS</span>
+          <h2>Linux i Bash od zera do admina</h2>
+          <p>117 lekcji w 14 modułach: od pierwszego otwarcia terminala, przez skrypty, sieć, dyski i bezpieczeństwo, po Ansible i rozmowę rekrutacyjną. Każda lekcja ma zadanie z rozwiązaniem, a postęp zapisuje się w Twojej przeglądarce.</p>
+          <ul class="kurs-punkty"><li>bez znajomości programowania na starcie</li><li>komendy do skopiowania jednym kliknięciem</li><li>zakres egzaminów RHCSA i LFCS</li></ul>
+          <a class="btn domyslny zolty" href="kurs/index.html">▶ Zacznij kurs</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SHORTY ================= -->
+<section id="shorty" class="szary-pulpit">
+  <div class="kontener">
+    <div class="naglowek pojaw"><h2 style="background:var(--papier);padding:4px 10px;border:4px solid var(--tusz)">SHORTY</h2><span class="etykieta">minuta wiedzy na TikToku i YouTube Shorts</span></div>
+    <div class="telefony mac-scroll pojaw" id="telefony"></div>
+    <div class="mac-pasek" id="pasek-telefony" aria-hidden="true"><button type="button" tabindex="-1" data-kier="-1"><svg viewBox="0 0 8 8"><path d="M4 1h1v6H4zM3 2h1v4H3zM2 3h1v2H2zM1 3.5h1v1H1zM5 3h2v2H5z" fill="#000"/></svg></button><div class="mac-tor"><div class="mac-suwak"></div></div><button type="button" tabindex="-1" data-kier="1"><svg viewBox="0 0 8 8"><path d="M3 1h1v6H3zM4 2h1v4H4zM5 3h1v2H5zM6 3.5h1v1H6zM1 3h2v2H1z" fill="#000"/></svg></button></div>
+  </div>
+</section>
+
+<!-- ================= TERMINAL ================= -->
+<section id="terminal">
+  <div class="kontener">
+    <div class="naglowek pojaw"><h2>TERMINAL</h2><span class="etykieta">nie gryzie. obiecuję.</span></div>
+    <div class="okno duze pojaw">
+      <div class="belka"><span>eryk@chmuroholik: ~</span></div>
+      <div class="terminal" id="term" aria-live="polite">
+        <div id="term-wyjscie"></div>
+        <form id="term-form" autocomplete="off"><span class="prompt">eryk@chmuroholik:~$</span><label class="sr" for="term-in">Polecenie</label><input id="term-in" spellcheck="false" autocapitalize="off"></form>
+      </div>
+    </div>
+    <div class="podpowiedzi pojaw" id="podpowiedzi"></div>
+  </div>
+</section>
+
+<!-- ================= SUBSKRYPCJA ================= -->
+<section id="subskrybuj" class="szary-pulpit">
+  <div class="okno duze alert pojaw">
+    <div class="belka"><span>Komunikat systemowy</span></div>
+    <div class="tresc">
+      <canvas data-sprite="dzwonek" data-skala="7"></canvas>
+      <div>
+        <h2>Czy chcesz zasubskrybować Chmuroholika?</h2>
+        <p>Nowe odcinki o chmurze, bezpieczeństwie i historii IT. Zero spamu, sto procent pikseli.</p>
+        <div class="przyciski">
+          <button class="btn uciekinier" id="pozniej" type="button">Może później</button>
+          <a class="btn domyslny zolty yt-sub" id="subuj" href="#" target="_blank" rel="noopener">Subskrybuj</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="kontener">
+    <div>© <span id="rok">2026</span> Chmuroholik · Eryk Mysona<br><span style="color:var(--szary)">Grafiki pikselowe i muzyka: własne. Zrzuty stron i zdjęcia: źródła w opisach odcinków.</span><br><span class="aktualizacja" id="aktualizacja"></span></div>
+    <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+      <a class="yt" href="#" target="_blank" rel="noopener">YouTube</a>
+      <a href="#start">↑ Na górę</a>
+      <div class="kosz"><canvas data-sprite="kosz" data-skala="3"></canvas>Kosz</div>
+    </div>
+  </div>
+</footer>
+
+<div id="dialog" role="dialog" aria-modal="true" aria-labelledby="dlg-tytul">
+  <div class="okno">
+    <div class="belka"><button class="zamknij" id="dlg-zamknij" aria-label="Zamknij okno"></button><span id="dlg-belka">Informacje</span></div>
+    <div class="tresc">
+      <div class="dlg-ikona" id="dlg-ikona"></div>
+      <div>
+        <div class="dlg-wideo" id="dlg-wideo" hidden></div>
+        <h3 id="dlg-tytul"></h3>
+        <p class="meta" id="dlg-meta"></p>
+        <p id="dlg-opis"></p>
+        <ul id="dlg-lista"></ul>
+        <a class="btn domyslny zolty" id="dlg-yt" href="#" target="_blank" rel="noopener">▶ Obejrzyj na YouTube</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ===== KONFIGURACJA: wpisz tu prawdziwy adres kanału ===== */
+const KANAL_YT = 'https://www.youtube.com/@chmuroholik';
+
+/* ---------- pixel art (własne sprite'y) ---------- */
+const PAL = { k:'#000', w:'#fff', y:'#ffd60a', r:'#e0322b', b:'#2e6fd6', g:'#9aa0a6', o:'#f28c28', z:'#2fa84f', s:'#f1c27d', p:'#7d3cff', d:'#555' };
+const S = {
+  chmura:['.....kkkk.......','....kwwwwk......','..kkwwwwwwkkk...','.kwwwwwwwwwwwk..','kwwwwwwwwwwwwwk.','kwwwwwwwwwwwwwwk','kwwwwwwwwwwwwwwk','.kkkkkkkkkkkkkk.'],
+  korona:['k.....k..k.....k','kk...kkk.kk...kk','kyk.kyyykyyk.kyk','kyykyyyyyyyykyyk','kyyyyyyyyyyyyyyk','kyyyrryyyybbyyyk','kyyyrryyyybbyyyk','kkkkkkkkkkkkkkkk'],
+  serwer:['kkkkkkk','kwwwwwk','kkkkkkk','kwwwwwk','kkkkkkk','kwwwkwk','kwwwwwk','kkkkkkk','.k...k.'],
+  uwaga:['.....k.....','....kwk....','...kwkwk...','...kwkwk...','..kwwkwwk..','..kwwkwwk..','.kwwwwwwwk.','.kwwwkwwwk.','kwwwwwwwwwk','kkkkkkkkkkk'],
+  pingwin:['...kkkk...','..kkkkkk..','.kkwkkwkk.','.kkkookkk.','kkkwwwwkkk','kkwwwwwwkk','kkwwwwwwkk','.kwwwwwwk.','..kwwwwk..','.oo....oo.'],
+  klucz:['.kkk.......','k.y.k......','kyyykkkkkkk','k.y.k.k.k.k','.kkk.......'],
+  klodka:['..kkkk..','.k....k.','.k....k.','kkkkkkkk','kyyyyyyk','kyyk.yyk','kyyyyyyk','kkkkkkkk'],
+  homar:['r.......r','.r.....r.','rr.....rr','rrr...rrr','.rrrrrrr.','..rkrkr..','..rrrrr..','.r.rrr.r.','r..rrr..r','...r.r...','..rr.rr..'],
+  dynia:['.....kk.....','.....kz.....','..kkkkkkkk..','.koooooooook','koookooookook','kooookookooo','kookooooookok','koookkkkkoook','.koooooooook.','..kkkkkkkk..'],
+  slon:['.....kkkkkkk....','...kkpppppppkk..','..kpppppppppppk.','.kpkppppppppppk.','kppppppppppppppk','kpkpppppppppppk.','kpkpppppppppppk.','kpk.kpppkkpppk..','kpk.kppk..kppk..','.k..kkkk..kkkk..'],
+  spinacz:['..kkkkkk..','.kk....kk.','.k..kk..k.','.k.k..k.k.','.k.k..k.k.','.k.k..k.k.','.k.k..k.k.','.k.k....k.','.k.kkkkkk.','.k........','.kk.......','..kkkkkkk.'],
+  telefon:['.kkkkkkk.','kgggggggk','kgwwwwwgk','kgwrwrwgk','kgwwwwwgk','kgwrrrwgk','kgwwwwwgk','kgggkgggk','.kkkkkkk.'],
+  dzwonek:['....kk....','...kyyk...','..kyyyyk..','..kyyyyk..','.kyyyyyyk.','.kyyyyyyk.','kyyyyyyyyk','kkkkkkkkkk','....kk....'],
+  kosz:['.kkkkkk.','kkkkkkkk','.kwkwkk.','.kwkwkk.','.kwkwkk.','.kwkwkk.','.kkkkkk.'],
+  rakieta:['....k....','...kwk...','..kwwwk..','..kwbwk..','..kwwwk..','..kwwwk..','.kkwwwkk.','kwkwwwkwk','k.kkkkk.k','...ror...','....r....'],
+  krab:['r.......r','rr.....rr','.rr...rr.','..rrrrr..','.rkrrrkr.','rrrrrrrrr','r.rrrrr.r','..r...r..'],
+  komputer:['kkkkkkkkkk','kwwwwwwwwk','kwkkkkkkwk','kwkwwwwkwk','kwkwkwwkwk','kwkkkkkkwk','kwwwwwwwwk','kwwwwwkkwk','kkkkkkkkkk','.kwwwwwwk.','kkkkkkkkkk'],
+  mars:['...rrrr...','.rrorrrrr.','rrrrrrorrr','rorrrrrrrr','rrrrorrrrr','rrrrrrrror','rrorrrrrrr','.rrrrrorr.','...rrrr...'],
+  ksiazka:['kkkkkkkkkk','kwwwwkwwwk','kwkkwkwkkk','kwwwwkwwwk','kwkkwkwkkk','kwwwwkwwwk','kkkkkkkkkk'],
+  gra:['..kkkkkkkk..','.kggggggggk.','kgkgggggrgkk','kkkkggggkgbk','kgkgggggygkk','kggggkkkkggk','.kkkk..kkkk.'],
+  pendrive:['..kkkk..','..kwwk..','kkkkkkkk','kbbbbbbk','kbbbbbbk','kbbbbbbk','kbbbbbbk','kkkkkkkk'],
+  folder:['kkkkk.......','kyyyyk......','kkkkkkkkkkkk','kyyyyyyyyyyk','kyyyyyyyyyyk','kyyyyyyyyyyk','kkkkkkkkkkkk'],
+  pizza:['kkkkkkkkkk','kyyryyyyyk','.kyyyyryk.','.kyryyyyk.','..kyyyyk..','..kyyryk..','...kyyk...','...kyyk...','....kk....']
+};
+function rysuj(cv, nazwa, skala){
+  const g = S[nazwa]; if(!g) return;
+  const w = Math.max(...g.map(r=>r.length)), h = g.length;
+  cv.width = w*skala; cv.height = h*skala;
+  cv.style.width = w*skala+'px'; cv.style.height = h*skala+'px';
+  const c = cv.getContext('2d');
+  g.forEach((r,y)=>[...r].forEach((ch,x)=>{ if(PAL[ch]){ c.fillStyle=PAL[ch]; c.fillRect(x*skala,y*skala,skala,skala);} }));
+}
+function sprite(nazwa, skala){ const c=document.createElement('canvas'); rysuj(c,nazwa,skala); c.setAttribute('aria-hidden','true'); return c; }
+document.querySelectorAll('canvas[data-sprite]').forEach(c=>rysuj(c,c.dataset.sprite,+c.dataset.skala||4));
+rysuj(document.getElementById('boot-ikona'),'chmura',3);
+// logo w menu ma mieć stały rozmiar w CSS
+document.querySelectorAll('.hero .duza-chmura canvas').forEach(c=>{c.style.width='';c.style.height='';});
+
+/* ---------- linki do YouTube ---------- */
+document.querySelectorAll('a.yt').forEach(a=>a.href=KANAL_YT);
+document.querySelector('a.yt-sub').href = KANAL_YT + '?sub_confirmation=1';
+
+/* ---------- start systemu ---------- */
+const boot = document.getElementById('boot');
+(function(){
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { boot.remove(); return; }
+  document.documentElement.style.overflow='hidden';
+  const pasek = boot.querySelector('.boot-pasek i'), komp=document.getElementById('komp'), crt=document.getElementById('crt');
+  const timery=[]; let krok, skonczone=false;
+  const po=(ms,f)=>timery.push(setTimeout(f,ms));
+  // 1) chwila ciemności, 2) kineskop się włącza, 3) ładowanie, 4) wjazd w ekran
+  po(500,()=>boot.classList.add('wl'));
+  po(1600,()=>{ let p=0; krok=setInterval(()=>{ p+=6+Math.random()*14; pasek.style.width=Math.min(100,p)+'%'; if(p>=100){ clearInterval(krok); po(300,wjazd); } },95); });
+  function wjazd(){
+    const r=crt.getBoundingClientRect();
+    const sk=Math.max(innerWidth/r.width, innerHeight/r.height)*1.15;
+    const dx=innerWidth/2-(r.left+r.width/2), dy=innerHeight/2-(r.top+r.height/2);
+    boot.classList.add('zoomuje');
+    komp.style.transform=`translate(${dx}px,${dy}px) scale(${sk})`;
+    po(850,koniec);
+  }
+  function koniec(){
+    if(skonczone) return; skonczone=true;
+    timery.forEach(clearTimeout); clearInterval(krok);
+    document.documentElement.style.overflow='';
+    boot.classList.add('znika'); setTimeout(()=>boot.remove(),520); startHero();
+  }
+  boot.addEventListener('click', koniec);
+  addEventListener('keydown', koniec, {once:true});
+})();
+
+/* ---------- pisanie tytułu ---------- */
+let heroStart=false;
+function startHero(){
+  if(heroStart) return; heroStart=true;
+  const t='CHMUROHOLIK', el=document.getElementById('pisz'); let i=0;
+  const k=setInterval(()=>{ el.textContent=t.slice(0,++i); if(i>=t.length) clearInterval(k); },85);
+}
+if (!document.getElementById('boot')) startHero();
+
+/* ---------- zegar ---------- */
+const zegar=document.getElementById('zegar');
+const tik=()=>{ const d=new Date(); zegar.textContent=d.toLocaleTimeString('pl-PL',{hour:'2-digit',minute:'2-digit'}); };
+tik(); setInterval(tik,10000);
+document.getElementById('rok').textContent=new Date().getFullYear();
+
+/* ---------- menu mobilne ---------- */
+const burger=document.querySelector('.burger'), linki=document.getElementById('linki');
+burger.addEventListener('click',()=>{ const o=linki.classList.toggle('otwarte'); burger.setAttribute('aria-expanded',o); });
+linki.addEventListener('click',e=>{ if(e.target.tagName==='A'){ linki.classList.remove('otwarte'); burger.setAttribute('aria-expanded','false'); } });
+
+/* ---------- dryfujące chmurki ---------- */
+(function(){
+  const pulpit=document.querySelector('.pulpit');
+  for(let i=0;i<7;i++){
+    const d=document.createElement('div'); d.className='chmurka';
+    const sk=3+Math.floor(Math.random()*4); d.appendChild(sprite('chmura',sk));
+    d.style.top=(8+Math.random()*80)+'%'; d.style.left='0';
+    d.style.animation=`dryf ${40+Math.random()*50}s linear ${-Math.random()*90}s infinite`;
+    pulpit.appendChild(d);
+  }
+})();
+
+/* ---------- przeciąganie okienek na pulpicie ---------- */
+document.querySelectorAll('[data-drag]').forEach(okno=>{
+  const belka=okno.querySelector('.belka'); let sx,sy,ox,oy;
+  belka.addEventListener('pointerdown',e=>{
+    if(e.target.closest('.zamknij')) return;
+    const r=okno.getBoundingClientRect(), pr=okno.offsetParent.getBoundingClientRect();
+    okno.style.left=(r.left-pr.left)+'px'; okno.style.top=(r.top-pr.top)+'px'; okno.style.right='auto'; okno.style.bottom='auto';
+    sx=e.clientX; sy=e.clientY; ox=r.left-pr.left; oy=r.top-pr.top;
+    okno.classList.add('przeciagany'); belka.setPointerCapture(e.pointerId);
+  });
+  belka.addEventListener('pointermove',e=>{ if(!okno.classList.contains('przeciagany')) return; okno.style.left=(ox+e.clientX-sx)+'px'; okno.style.top=(oy+e.clientY-sy)+'px'; });
+  belka.addEventListener('pointerup',()=>okno.classList.remove('przeciagany'));
+  okno.querySelector('.zamknij').addEventListener('click',()=>{ zoom(okno.getBoundingClientRect(),null,true); okno.style.visibility='hidden'; });
+});
+
+/* ---------- animacja „zoom” jak w starym Finderze ---------- */
+function zoom(od, doR, odwrotnie){
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const cel = doR || {left:od.left+od.width/2-10, top:od.top+od.height/2-10, width:20, height:20};
+  const [a,b] = odwrotnie ? [od,cel] : [cel,od];
+  for(let i=1;i<=6;i++){
+    const t=i/6, r=document.createElement('div'); r.className='zoom-ramka';
+    Object.assign(r.style,{left:a.left+(b.left-a.left)*t+'px',top:a.top+(b.top-a.top)*t+'px',width:a.width+(b.width-a.width)*t+'px',height:a.height+(b.height-a.height)*t+'px',opacity:0});
+    document.body.appendChild(r);
+    setTimeout(()=>r.style.opacity=1,i*30); setTimeout(()=>r.remove(),i*30+90);
+  }
+}
+
+/* ---------- pasek z hasłami ---------- */
+(function(){
+  const h=['CHMURA TO CUDZY KOMPUTER','★','ROOT MA KORONĘ','★','ZRÓB BACKUP','★','A TERAZ GO ODTWÓRZ','★','I USE ARCH BTW','★','NIE KLIKAJ W LINKI OD „MARKA Z IT”','★','LINUX DZIAŁA NA MARSIE','★'];
+  const html=h.map(x=>`<span>${x}</span>`).join('');
+  document.getElementById('tasma').innerHTML=html+html;
+})();
+
+/* ---------- odcinki ---------- */
+const ODC=[
+  {id:'chmura',ikona:'chmura',pod:'Co to jest chmura?',seria:'odcinek',tytul:'Co to jest chmura? IT po ludzku',meta:'Chmura · AWS · Azure',opis:'Gdzie naprawdę leży chmura, czemu serwer jest jak mieszkanie i jak IaaS, PaaS i SaaS wytłumaczyć na pizzy. Odcinek, od którego wszystko się zaczęło.',lista:['Serwer jak mieszkanie','IaaS, PaaS, SaaS na przykładzie pizzy','Chmura jak taksówka z licznikiem','Co się dzieje, gdy AWS ma awarię']},
+  {id:'iam',ikona:'klucz',pod:'AWS IAM',seria:'odcinek',tytul:'AWS IAM: kto ma klucze do Twojej chmury',meta:'AWS · bezpieczeństwo',opis:'Użytkownicy, role i polityki w AWS wytłumaczone tak, że zrozumie je każdy. I dlaczego konto root powinno leżeć w sejfie.',lista:['Konto root i jego korona','Polityki: "Effect": "Allow"','Zasada najmniejszych uprawnień']},
+  {id:'openclaw',ikona:'homar',pod:'OpenClaw',seria:'odcinek',tytul:'Darmowy agent AI, który ma klucze do Twojego życia',meta:'Agenci AI · cyberbezpieczeństwo',opis:'OpenClaw to darmowy agent AI z dostępem do poczty, plików i terminala. Trzy zmiany nazwy, kryptoskamerzy, sieć społecznościowa dla botów i największe zagrożenie agentów: prompt injection.',lista:['Kto stoi za homarem','3 dramy w miesiąc','Jak działa agent AI']},
+  {id:'php',ikona:'slon',pod:'PHPokalipsa',seria:'odcinek',tytul:'PHPokalipsa: jeden usunięty post wyłączył pół Europy',meta:'PHP · RCE · łatki',opis:'Krótki post o dwóch dziurach w PHP znika z Hacker News, ale internet robi screena. Dzień później pół Europy wyłącza rządowe strony. Czym jest RCE i co tego dnia robił admin.',lista:['Czym jest PHP2Shell','Jak padło embargo','Najlepsza strategia: wyciągnąć kabel']},
+  {id:'halloween',ikona:'dynia',pod:'Horrory IT',seria:'Halloween',tytul:'5 prawdziwych horrorów IT',meta:'Edycja Halloween · backupy',opis:'Serwer zamurowany na cztery lata, film skasowany jedną komendą, pięć backupów i ani jednego działającego. W żadnej historii nie ma hakera w kapturze, jest za to zmęczenie o 23:00.',lista:['Zamurowany serwer','Jedna komenda, zero filmu','Backup, którego nikt nie odtworzył']},
+  {id:'panzit',ikona:'telefon',pod:'Na informatyka',seria:'odcinek',tytul:'Oszustwo „na informatyka”. Jeden telefon, 100 mln $',meta:'Socjotechnika · phishing',opis:'Miły „Marek z IT” pisze na firmowym komunikatorze, że chce pomóc. Tylko że w Twojej firmie nie ma żadnego Marka. Jak jeden telefon do helpdesku kosztował kasyno fortunę i trzy zasady, które kończą ten przekręt.',lista:['Przekręt krok po kroku','Dlaczego dają się na to mądrzy ludzie','Coś dla adminów']},
+  {id:'paperclip',ikona:'spinacz',pod:'Paperclip',seria:'odcinek',tytul:'Założyłem firmę, w której pracują tylko agenci AI',meta:'AI · open source',opis:'Paperclip to darmowe narzędzie, w którym zakładasz firmę i zatrudniasz agentów AI zamiast ludzi. Sprawdziłem, czy da się prowadzić biznes, nie wstając z kanapy.',lista:['Prezes AI, który zatrudnia','Heartbeat, tokeny i budżety','Ty jako zarząd']},
+  {id:'kurs',ikona:'komputer',pod:'Kurs Linux i Bash',seria:'kurs · 117 lekcji',tytul:'Darmowy kurs: Linux i Bash od zera do admina',meta:'14 modułów · zadania z rozwiązaniami',opis:'Od pierwszego otwarcia terminala do pracy administratora serwerów: skrypty, sieć, dyski, bezpieczeństwo, usługi, Ansible i rozmowa rekrutacyjna. Do czytania we własnym tempie, z zapisem postępu.',lista:['Moduł 0: pierwsze kroki w terminalu','Skrypty, które się nie sypią','Sieć, SSH i bezpieczeństwo','Projekty końcowe do portfolio'],link:'kurs/index.html'},
+  {id:'linux',ikona:'pingwin',pod:'Co to jest Linux',seria:'seria · 8 części',tytul:'Seria: Co to jest Linux',meta:'8 części · historia informatyki',opis:'Od gry o lataniu w kosmosie z 1969 roku, przez zaciętą drukarkę i „to tylko hobby”, po helikopter na Marsie. Cała historia najważniejszego systemu świata.',lista:['Unix powstał przez grę','Linus, profesor i dwója','Microsoft: „Linux to rak”','Jak spróbować Linuxa bezpiecznie'],link:'#linux'}
+];
+const ikony=document.getElementById('ikony');
+ODC.forEach(o=>{
+  const b=document.createElement('button'); b.className='ikona'; b.type='button';
+  const ob=document.createElement('div'); ob.className='obrazek'; ob.appendChild(sprite(o.ikona,o.ikona==='slon'||o.ikona==='dynia'?6:7));
+  b.append(ob); b.insertAdjacentHTML('beforeend',`<span class="podpis">${o.pod}</span><span class="seria">${o.seria}</span>`);
+  b.addEventListener('click',()=>{ dlg.classList.remove('z-wideo'); document.getElementById('dlg-wideo').hidden=true; otworz(o,b); });
+  ikony.appendChild(b);
+});
+document.getElementById('licznik-ikon').textContent=ODC.length+' obiektów';
+
+const dlg=document.getElementById('dialog'); let ostatnia=null;
+function otworz(o,b){
+  document.querySelectorAll('.ikona.zaznaczona').forEach(x=>x.classList.remove('zaznaczona'));
+  b.classList.add('zaznaczona'); ostatnia=b;
+  document.getElementById('dlg-belka').textContent=o.pod;
+  document.getElementById('dlg-tytul').textContent=o.tytul;
+  document.getElementById('dlg-meta').textContent=o.meta;
+  document.getElementById('dlg-opis').textContent=o.opis;
+  document.getElementById('dlg-lista').innerHTML=o.lista.map(x=>`<li>${x}</li>`).join('');
+  const ik=document.getElementById('dlg-ikona'); ik.innerHTML=''; ik.appendChild(sprite(o.ikona,9));
+  const yt=document.getElementById('dlg-yt');
+  if(o.yt){ yt.href=o.yt; yt.target='_blank'; yt.textContent='Otwórz na YouTube ↗'; }
+  else if(o.link){ yt.href=o.link; yt.removeAttribute('target'); yt.textContent=o.link.startsWith('#')?'Zobacz wszystkie części ↓':'▶ Otwórz kurs'; }
+  else { yt.href=KANAL_YT+'/search?query='+encodeURIComponent(o.pod); yt.target='_blank'; yt.textContent='▶ Obejrzyj na YouTube'; }
+  dlg.classList.add('otwarty');
+  zoom(b.getBoundingClientRect(), dlg.querySelector('.okno').getBoundingClientRect());
+  document.getElementById('dlg-zamknij').focus();
+}
+function zamknij(){ if(!dlg.classList.contains('otwarty')) return; const r=dlg.querySelector('.okno').getBoundingClientRect(); dlg.classList.remove('otwarty'); const w=document.getElementById('dlg-wideo'); w.innerHTML=''; w.hidden=true; dlg.classList.remove('z-wideo'); if(ostatnia){ zoom(r, ostatnia.getBoundingClientRect(), false); ostatnia.focus(); } }
+document.getElementById('dlg-zamknij').addEventListener('click',zamknij);
+dlg.addEventListener('click',e=>{ if(e.target===dlg) zamknij(); });
+document.getElementById('dlg-yt').addEventListener('click',e=>{ if(e.currentTarget.getAttribute('href').startsWith('#')) zamknij(); });
+addEventListener('keydown',e=>{ if(e.key==='Escape') zamknij(); });
+
+/* ---------- seria Linux ---------- */
+const LX=[
+  ['1969','Najważniejszy system świata powstał przez grę','Unix, gra Space Travel i stary PDP-7 w kącie.','gra'],
+  ['1983','Zacięła mu się drukarka. Zmienił cały świat IT','Stallman, GNU i wolne oprogramowanie.','ksiazka'],
+  ['1991','„To tylko hobby”. Dziś miliardy urządzeń','Linus, Minix i nazwa, którą wymyślił admin.','pingwin'],
+  ['1992','Profesor postawił Linuxowi dwóję','Tanenbaum, GPL i silnik, który już jeździł.','komputer'],
+  ['2001','Microsoft nazwał Linuxa rakiem','Red Hat, dokumenty Halloweenowe i „Microsoft ❤ Linux”.','dynia'],
+  ['2021','Rok Linuxa nadszedł dawno','Android, serwery, superkomputery, Mars i Git.','mars'],
+  ['dziś','Na Linuxie nie ma dysku C','Pod maską: terminal, root, pulpity i dystrybucje.','folder'],
+  ['jutro','Przyszłość i jak spróbować','Gry na Linuxie, Rust w jądrze i start z pendrive’a.','pendrive']
+];
+const os=document.getElementById('os');
+LX.forEach(([rok,t,o,ik],i)=>{
+  const d=document.createElement('div'); d.className='czesc'+(i===7?' nowa':'');
+  d.innerHTML=`<div class="rok">${rok}</div><div class="karta"><span class="nr">CZĘŚĆ ${i+1}${i===7?' · WKRÓTCE':''}</span><div class="spr"></div><b>${t}</b><small>${o}</small></div>`;
+  d.querySelector('.spr').appendChild(sprite(ik,4)); d.querySelector('.spr').style.marginBottom='8px';
+  os.appendChild(d);
+});
+
+/* ---------- shorty ---------- */
+const SH=[
+  ['UNIX POWSTAŁ PRZEZ GRĘ','gra','granie w pracy'],
+  ['DRUKARKA ZMIENIŁA ŚWIAT','ksiazka','kod źródłowy'],
+  ['NAZWĘ LINUX WYMYŚLIŁ ADMIN','folder','szacunek, Ari'],
+  ['MICROSOFT: LINUX TO RAK','komputer','13 lat później'],
+  ['GIT POWSTAŁ Z WKURZENIA','klucz','10 dni'],
+  ['LINUX POLECIAŁ NA MARSA','mars','pierwszy lot'],
+  ['TERMINAL: FILM VS ŻYCIE','komputer','10 minut googlowania'],
+  ['TWÓJ ASYSTENT AI BEZ HASŁA','homar','panel bez hasła'],
+  ['SERWER JAK MIESZKANIE','serwer','czynsz za prąd'],
+  ['IAAS, PAAS, SAAS I PIZZA','pizza','kto kroi?']
+];
+const tel=document.getElementById('telefony');
+SH.forEach(([hak,ik,nap])=>{
+  const s=nap.split(' '); const ost=s.pop();
+  const d=document.createElement('article'); d.className='telefon';
+  d.innerHTML=`<div class="glosnik"></div><div class="ekran"><div class="hak">${hak}</div><div class="grafika"></div><div class="napis">${s.join(' ')} <em>${ost}</em></div></div><div class="zrodlo">▶ Chmuroholik</div>`;
+  d.querySelector('.grafika').appendChild(sprite(ik,ik==='serwer'?8:6));
+  tel.appendChild(d);
+});
+
+/* ---------- filmy na żywo z kanału (dane/filmy.json) ---------- */
+function pikselMiniatura(id, w, h, kadr){
+  const c=document.createElement('canvas'); c.width=w; c.height=h; c.setAttribute('aria-hidden','true');
+  const x=c.getContext('2d'); x.fillStyle='#000'; x.fillRect(0,0,w,h);
+  const img=new Image(); img.referrerPolicy='no-referrer';
+  img.onload=()=>{ x.imageSmoothingEnabled=true;
+    if(kadr==='pion'){ const sw=img.height*w/h, sx=(img.width-sw)/2; x.drawImage(img,sx,0,sw,img.height,0,0,w,h); }
+    else x.drawImage(img,0,0,w,h); };
+  img.src=`https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+  return c;
+}
+const czas=s=>s?`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`:'';
+const dataPL=d=>d?new Date(d).toLocaleDateString('pl-PL',{day:'numeric',month:'long',year:'numeric'}):'';
+const odm=(n,a,b,c)=>n===1?a:(n%10>=2&&n%10<=4&&(n%100<10||n%100>=20))?b:c;
+function urlFilmu(f){ return f.typ==='short'?`https://www.youtube.com/shorts/${f.id}`:`https://www.youtube.com/watch?v=${f.id}`; }
+function otworzFilm(f,b){
+  const w=document.getElementById('dlg-wideo'); w.hidden=false; w.innerHTML='';
+  const start=document.createElement('button'); start.className='start'; start.type='button'; start.setAttribute('aria-label','Odtwórz film');
+  start.appendChild(pikselMiniatura(f.id,160,90)); start.insertAdjacentHTML('beforeend','<span>▶ Odtwórz</span>');
+  // odtwarzacz ładuje się dopiero po kliknięciu (youtube-nocookie, bez ciasteczek do tego momentu)
+  start.addEventListener('click',()=>{ w.innerHTML=`<iframe src="https://www.youtube-nocookie.com/embed/${f.id}?autoplay=1&rel=0" title="${f.tytul_krotki.replace(/"/g,'&quot;')}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`; });
+  w.appendChild(start);
+  dlg.classList.add('z-wideo');
+  otworz({ pod:f.typ==='short'?'Short':'Odcinek', tytul:f.tytul_krotki, meta:[dataPL(f.data), f.dlugosc?czas(f.dlugosc)+' min':'', f.wyswietlenia!=null?f.wyswietlenia.toLocaleString('pl-PL')+' '+odm(f.wyswietlenia,'wyświetlenie','wyświetlenia','wyświetleń'):''].filter(Boolean).join(' · '),
+    opis:f.zajawka||'', lista:[], ikona:'chmura', yt:urlFilmu(f) }, b);
+}
+fetch('dane/filmy.json',{cache:'no-cache'}).then(r=>{ if(!r.ok) throw 0; return r.json(); }).then(dane=>{
+  const filmy=dane.filmy.filter(f=>f.typ==='film'), shorty=dane.filmy.filter(f=>f.typ==='short');
+  document.getElementById('licz-filmy').textContent=filmy.length;
+  document.getElementById('licz-shorty').textContent=shorty.length;
+  // najnowszy film w oknie powitalnym
+  const nowy=dane.filmy[0];
+  if(nowy){ const a=document.getElementById('nowosc'); a.hidden=false; a.href=urlFilmu(nowy); document.getElementById('nowosc-tytul').textContent=nowy.tytul_krotki; }
+  // Finder z odcinkami: wszystkie długie filmy + ikona kursu
+  ikony.innerHTML='';
+  filmy.forEach(f=>{
+    const b=document.createElement('button'); b.className='ikona'; b.type='button';
+    const ob=document.createElement('div'); ob.className='obrazek film';
+    const m=document.createElement('div'); m.className='miniatura'; m.appendChild(pikselMiniatura(f.id,48,27)); m.insertAdjacentHTML('beforeend',`<span class="czas">${czas(f.dlugosc)}</span>`);
+    ob.appendChild(m); b.appendChild(ob);
+    b.insertAdjacentHTML('beforeend',`<span class="podpis"></span><span class="seria">${f.seria==='linux'?'Linux · część '+f.czesc:dataPL(f.data)}</span>`);
+    b.querySelector('.podpis').textContent=f.tytul_krotki;
+    b.addEventListener('click',()=>otworzFilm(f,b));
+    ikony.appendChild(b);
+  });
+  const kurs=ODC.find(o=>o.id==='kurs');
+  if(kurs){ const b=document.createElement('button'); b.className='ikona'; b.type='button'; const ob=document.createElement('div'); ob.className='obrazek'; ob.appendChild(sprite('komputer',7)); b.append(ob); b.insertAdjacentHTML('beforeend','<span class="podpis">Kurs Linux i Bash</span><span class="seria">117 lekcji</span>'); b.addEventListener('click',()=>{ dlg.classList.remove('z-wideo'); document.getElementById('dlg-wideo').hidden=true; otworz(kurs,b); }); ikony.appendChild(b); }
+  document.getElementById('licznik-ikon').textContent=(filmy.length+1)+' obiektów';
+  // seria Linux: opublikowane części dostają link
+  const czesci=filmy.filter(f=>f.seria==='linux');
+  document.querySelectorAll('.czesc').forEach((el,i)=>{
+    const f=czesci.find(x=>x.czesc===i+1), k=el.querySelector('.karta');
+    k.querySelectorAll('.ogladaj,.wkrotce').forEach(x=>x.remove());
+    if(f){ const a=document.createElement('a'); a.className='ogladaj'; a.href=urlFilmu(f); a.target='_blank'; a.rel='noopener'; a.textContent='▶ Obejrzyj'; k.appendChild(a); el.classList.remove('nowa'); }
+    else { const s=document.createElement('span'); s.className='wkrotce'; s.textContent='wkrótce na YouTube'; k.appendChild(s); }
+  });
+  // shorty: 12 najnowszych
+  tel.innerHTML='';
+  shorty.slice(0,12).forEach(f=>{
+    const a=document.createElement('a'); a.className='telefon'; a.href=urlFilmu(f); a.target='_blank'; a.rel='noopener';
+    a.innerHTML=`<div class="glosnik"></div><div class="ekran"><div class="hak"></div><div class="podglad"></div><div class="napis"></div></div><div class="zrodlo">▶ ${f.wyswietlenia!=null?f.wyswietlenia.toLocaleString('pl-PL')+' '+odm(f.wyswietlenia,'wyświetlenie','wyświetlenia','wyświetleń'):'Chmuroholik'}</div>`;
+    a.querySelector('.hak').textContent=f.tytul_krotki.toUpperCase();
+    a.querySelector('.podglad').appendChild(pikselMiniatura(f.id,36,48,'pion'));
+    a.querySelector('.napis').textContent=dataPL(f.data);
+    tel.appendChild(a);
+  });
+  const st=document.getElementById('aktualizacja'); if(st) st.textContent='Lista filmów z kanału, stan na '+new Date(dane.aktualizacja).toLocaleString('pl-PL',{day:'numeric',month:'long',hour:'2-digit',minute:'2-digit'});
+}).catch(()=>{ /* bez pliku z filmami zostaje wersja statyczna */ });
+
+/* ---------- pasek przewijania jak w Macintoshu ---------- */
+function pasekMac(obszar, pasek){
+  const tor=pasek.querySelector('.mac-tor'), suwak=pasek.querySelector('.mac-suwak');
+  const odswiez=()=>{
+    const max=obszar.scrollWidth-obszar.clientWidth; pasek.hidden=max<=2; if(max<=2) return;
+    const tw=tor.clientWidth, sw=Math.max(30, tw*obszar.clientWidth/obszar.scrollWidth);
+    suwak.style.width=sw+'px'; suwak.style.left=((tw-sw)*obszar.scrollLeft/max)+'px';
+  };
+  const krok=()=>{ const t=obszar.querySelector(':scope > *'); return t?t.getBoundingClientRect().width+24:200; };
+  pasek.querySelectorAll('button').forEach(b=>{
+    let pow=null;
+    const jedz=()=>obszar.scrollBy({left:+b.dataset.kier*krok(),behavior:'smooth'});
+    b.addEventListener('pointerdown',e=>{ e.preventDefault(); b.classList.add('wcisniety'); jedz(); pow=setInterval(jedz,350); });
+    const stop=()=>{ clearInterval(pow); b.classList.remove('wcisniety'); };
+    b.addEventListener('pointerup',stop); b.addEventListener('pointerleave',stop); b.addEventListener('pointercancel',stop);
+  });
+  tor.addEventListener('pointerdown',e=>{
+    if(e.target===suwak) return;
+    const r=suwak.getBoundingClientRect();
+    obszar.scrollBy({left:(e.clientX<r.left?-1:1)*obszar.clientWidth*.9,behavior:'smooth'});
+  });
+  let sx=0, sl=0;
+  suwak.addEventListener('pointerdown',e=>{ e.preventDefault(); e.stopPropagation(); sx=e.clientX; sl=obszar.scrollLeft; suwak.classList.add('ciagniety'); suwak.setPointerCapture(e.pointerId); obszar.style.scrollSnapType='none'; obszar.style.scrollBehavior='auto'; });
+  suwak.addEventListener('pointermove',e=>{ if(!suwak.classList.contains('ciagniety')) return; const max=obszar.scrollWidth-obszar.clientWidth, tw=tor.clientWidth-suwak.offsetWidth; obszar.scrollLeft=sl+(e.clientX-sx)*max/Math.max(1,tw); });
+  const pusc=()=>{ suwak.classList.remove('ciagniety'); obszar.style.scrollSnapType=''; obszar.style.scrollBehavior=''; };
+  suwak.addEventListener('pointerup',pusc); suwak.addEventListener('pointercancel',pusc);
+  obszar.addEventListener('scroll',odswiez,{passive:true}); addEventListener('resize',odswiez);
+  new MutationObserver(()=>requestAnimationFrame(odswiez)).observe(obszar,{childList:true});
+  odswiez(); setTimeout(odswiez,600);
+}
+pasekMac(document.getElementById('telefony'), document.getElementById('pasek-telefony'));
+
+/* ---------- terminal w promocji kursu ---------- */
+(function(){
+  const el=document.getElementById('kurs-pisz'); if(!el) return;
+  const linie=[['$ ','whoami'],['','kursant'],['$ ','ls kurs/'],['','modul00  modul01  …  modul13'],['$ ','grep -c lekcja kurs/*'],['','117'],['$ ','sudo zostan-adminem'],['','[sudo] hasło: ********'],['','Postęp: ▓▓▓░░░░░░░ zaczynamy!']];
+  let zaczete=false;
+  const io=new IntersectionObserver(w=>{ if(!w[0].isIntersecting||zaczete) return; zaczete=true;
+    if(matchMedia('(prefers-reduced-motion: reduce)').matches){ el.innerHTML=linie.map(([p,t])=>(p?'<b>'+p+'</b>':'')+t).join('\n'); return; }
+    let i=0,j=0,html='';
+    const krok=()=>{ if(i>=linie.length) return; const [p,t]=linie[i];
+      if(j===0&&p) html+='<b>'+p+'</b>';
+      if(!p){ html+=t+'\n'; i++; j=0; el.innerHTML=html; return setTimeout(krok,260); }
+      html+=t[j++]; el.innerHTML=html+'█';
+      if(j>=t.length){ html+='\n'; i++; j=0; return setTimeout(krok,380); }
+      setTimeout(krok,55+Math.random()*60); };
+    krok(); },{threshold:.4});
+  io.observe(el);
+})();
+
+/* ---------- terminal ---------- */
+const wy=document.getElementById('term-wyjscie'), we=document.getElementById('term-in'), term=document.getElementById('term');
+const historia=[]; let hi=0;
+function pisz(t,klasa){ const l=document.createElement('div'); l.className='linia'+(klasa?' '+klasa:''); l.textContent=t; wy.appendChild(l); term.scrollTop=term.scrollHeight; }
+const CMD={
+  help:()=>'Dostępne polecenia:\n  whoami        kim jestem\n  ls            lista odcinków\n  cat motto.txt motto kanału\n  uname -a      na czym to działa\n  ping chmura   gdzie jest chmura?\n  sudo subskrybuj\n  neofetch      informacje o systemie\n  clear         wyczyść ekran',
+  whoami:()=>'eryk — twórca Chmuroholika. Tłumaczy IT po ludzku i rysuje piksele.',
+  ls:()=>ODC.map(o=>o.id+'/').join('   '),
+  'ls -la':()=>'drwxr-xr-x  root  root   korona/\n'+ODC.map(o=>'drwxr-xr-x  eryk  eryk   '+o.id+'/').join('\n'),
+  'cat motto.txt':()=>'There is no cloud. It’s just someone else’s computer.',
+  'uname -a':()=>'Chmuroholik 1984.11 #1 SMP PREEMPT_PIXEL Mac-OS-like x86_64 GNU/Linux\n(tak, Panie Richardzie, GNU/Linux)',
+  'ping chmura':()=>'PING chmura (cudzy.komputer): 56 bajtów danych\n64 bajty od cudzy.komputer: icmp_seq=1 ttl=64 time=0.1984 ms\n--- chmura to po prostu cudzy komputer ---',
+  'sudo subskrybuj':()=>{ setTimeout(()=>window.open(KANAL_YT+'?sub_confirmation=1','_blank','noopener'),600); konfetti(); return '[sudo] hasło dla eryk: ********\nUprawnienia nadane. Otwieram YouTube… dzięki! 🐧'; },
+  subskrybuj:()=>'Brak uprawnień. Spróbuj: sudo subskrybuj',
+  neofetch:()=>'      .kkkk.        eryk@chmuroholik\n    .kwwwwk..      ----------------\n  kkwwwwwwwkkk     OS: Chmura 1984\nkwwwwwwwwwwwwk     Kernel: piksele 8x8\nkwwwwwwwwwwwwwk    Shell: VT323\n .kkkkkkkkkkkk.    Motyw: czarno-biały + żółty\n                   Uptime: od pierwszego odcinka',
+  'rm -rf /':()=>'Hola, hola. Najpierw backup. A potem sprawdź, czy da się go odtworzyć.',
+  'sudo rm -rf /':()=>'Nie tym razem. Ten serwer chcę mieć jeszcze w następnym odcinku.',
+  exit:()=>'Nie ma wyjścia. Jest tylko kolejny odcinek.',
+  date:()=>new Date().toLocaleString('pl-PL'),
+  pwd:()=>'/home/eryk/chmura'
+};
+function wykonaj(c){
+  c=c.trim(); if(!c) return;
+  pisz('eryk@chmuroholik:~$ '+c,'prompt'); historia.push(c); hi=historia.length;
+  if(c==='clear'){ wy.innerHTML=''; return; }
+  const f=CMD[c.toLowerCase()];
+  pisz(f?f():`${c.split(' ')[0]}: nie znaleziono polecenia. Wpisz „help”.`);
+}
+document.getElementById('term-form').addEventListener('submit',e=>{ e.preventDefault(); wykonaj(we.value); we.value=''; });
+we.addEventListener('keydown',e=>{ if(e.key==='ArrowUp'&&hi>0){ we.value=historia[--hi]; e.preventDefault(); } if(e.key==='ArrowDown'){ hi=Math.min(historia.length,hi+1); we.value=historia[hi]||''; } });
+term.addEventListener('click',()=>we.focus({preventScroll:true}));
+['help','whoami','ls','ping chmura','neofetch','sudo subskrybuj'].forEach(c=>{
+  const b=document.createElement('button'); b.type='button'; b.textContent=c; b.addEventListener('click',()=>{ wykonaj(c); }); document.getElementById('podpowiedzi').appendChild(b);
+});
+pisz('Chmuroholik OS 1984 — ostatnie logowanie: przed chwilą z cudzego komputera');
+pisz('Wpisz „help”, żeby zobaczyć polecenia.');
+
+/* ---------- uciekający przycisk „Może później” ---------- */
+(function(){
+  const b=document.getElementById('pozniej'); const teksty=['Może później','Na pewno?','Serio?','Ostatnia szansa','No dobra…']; let n=0;
+  const uciekaj=()=>{ if(n>=teksty.length-1) return; n++; b.textContent=teksty[n]; b.style.transform=`translate(${(Math.random()*-120-20)|0}px,${(Math.random()*40-20)|0}px) rotate(${(Math.random()*10-5)|0}deg)`; };
+  b.addEventListener('pointerenter',uciekaj);
+  b.addEventListener('click',()=>{ if(n<teksty.length-1){ uciekaj(); } else { b.textContent='Rozumiem 🙂'; b.style.transform=''; } });
+  document.getElementById('subuj').addEventListener('click',konfetti);
+})();
+
+/* ---------- konfetti z pikseli ---------- */
+function konfetti(){
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const kol=['#000','#ffd60a','#fff','#2e6fd6','#e0322b'];
+  for(let i=0;i<60;i++){
+    const p=document.createElement('div'); p.className='piksel';
+    p.style.background=kol[i%kol.length]; p.style.outline='2px solid #000';
+    p.style.left=innerWidth/2+'px'; p.style.top=innerHeight/2+'px';
+    document.body.appendChild(p);
+    const a=Math.random()*Math.PI*2, v=150+Math.random()*320;
+    p.animate([{transform:'translate(0,0)'},{transform:`translate(${Math.cos(a)*v}px,${Math.sin(a)*v+220}px)`}],{duration:900+Math.random()*500,easing:'steps(12)',fill:'forwards'}).onfinish=()=>p.remove();
+  }
+}
+
+/* ---------- pojawianie się przy przewijaniu ---------- */
+const io=new IntersectionObserver(w=>w.forEach(x=>{
+  if(!x.isIntersecting) return; x.target.classList.add('widoczne'); io.unobserve(x.target);
+  if(x.target.matches('.okno.duze, .okno.alert')){ const r=x.target.getBoundingClientRect(); zoom(r,null,false); }
+}),{threshold:.18});
+document.querySelectorAll('.pojaw').forEach(e=>io.observe(e));
+
+/* liczniki */
+const io2=new IntersectionObserver(w=>w.forEach(x=>{
+  if(!x.isIntersecting) return; io2.unobserve(x.target);
+  const cel=+x.target.dataset.licz; let n=0; const krok=Math.max(1,Math.ceil(cel/24));
+  const k=setInterval(()=>{ n=Math.min(cel,n+krok); x.target.textContent=n; if(n>=cel) clearInterval(k); },45);
+}),{threshold:.6});
+document.querySelectorAll('[data-licz]').forEach(e=>io2.observe(e));
+
+/* oś czasu Linuxa */
+const io3=new IntersectionObserver(w=>w.forEach(x=>{
+  if(!x.isIntersecting) return; io3.unobserve(x.target);
+  const pion=matchMedia('(max-width:1180px)').matches, post=document.getElementById('postep');
+  if(pion) post.style.height='calc(100% - 6px)'; else post.style.width='calc(87.5% + 0px)';
+  document.getElementById('pingwin').style.left='calc(87.5% - 22px)';
+  document.querySelectorAll('.czesc').forEach((c,i)=>setTimeout(()=>c.classList.add('zaliczona'),i*200));
+}),{threshold:.3});
+io3.observe(os);
+
+/* podświetlenie aktywnej sekcji w menu */
+const sekcje=[...document.querySelectorAll('main section')];
+const io4=new IntersectionObserver(w=>w.forEach(x=>{
+  if(!x.isIntersecting) return;
+  document.querySelectorAll('.menu .linki a').forEach(a=>a.classList.toggle('aktywny',a.getAttribute('href')==='#'+x.target.id));
+}),{rootMargin:'-45% 0px -50% 0px'});
+sekcje.forEach(s=>io4.observe(s));
+</script>
+</body>
+</html>

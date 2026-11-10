@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>16. Uprawnienia specjalne i ACL — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 16 kursu Linux i Bash od zera do admina: Uprawnienia specjalne i ACL. kursant rozpoznaje i ustawia SUID, SGID i sticky bit, szuka ich przez find -perm, nadaje wyjątkowe uprawnienia przez ACL i blokuje plik przed zmianą przez chattr +i.">
+<meta property="og:title" content="16. Uprawnienia specjalne i ACL — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 16 kursu Linux i Bash od zera do admina: Uprawnienia specjalne i ACL. kursant rozpoznaje i ustawia SUID, SGID i sticky bit, szuka ich przez find -perm, nadaje wyjątkowe uprawnienia przez ACL i blokuje plik przed zmianą przez chattr +i.">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 1</span></div>
+      <div class="boczny-tytul"><a href="index.html#m01">Praca w powłoce</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-005.html" data-lekcja="5"><span class="znacznik"></span><span class="nr">5</span> Gwiazdka, która robi robotę za ciebie</a></li><li><a href="lekcja-006.html" data-lekcja="6"><span class="znacznik"></span><span class="nr">6</span> Gdzie idzie wynik komendy</a></li><li><a href="lekcja-007.html" data-lekcja="7"><span class="znacznik"></span><span class="nr">7</span> Rura i narzędzia do tekstu</a></li><li><a href="lekcja-008.html" data-lekcja="8"><span class="znacznik"></span><span class="nr">8</span> Mapa Linuksa: co leży w którym folderze</a></li><li><a href="lekcja-009.html" data-lekcja="9"><span class="znacznik"></span><span class="nr">9</span> Co to jest powłoka i jakie są</a></li><li><a href="lekcja-010.html" data-lekcja="10"><span class="znacznik"></span><span class="nr">10</span> Jak Bash czyta twoją komendę</a></li><li><a href="lekcja-011.html" data-lekcja="11"><span class="znacznik"></span><span class="nr">11</span> nano: edytor, z którego da się wyjść</a></li><li><a href="lekcja-012.html" data-lekcja="12"><span class="znacznik"></span><span class="nr">12</span> vi i vim bez paniki</a></li><li><a href="lekcja-013.html" data-lekcja="13"><span class="znacznik"></span><span class="nr">13</span> Midnight Commander i inne menedżery plików</a></li><li><a href="lekcja-014.html" data-lekcja="14"><span class="znacznik"></span><span class="nr">14</span> Linki: skróty, które nie są skrótami</a></li><li><a href="lekcja-015.html" data-lekcja="15"><span class="znacznik"></span><span class="nr">15</span> Kto może czytać twój plik</a></li><li><a href="lekcja-016.html" data-lekcja="16" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">16</span> Uprawnienia specjalne i ACL</a></li><li><a href="lekcja-017.html" data-lekcja="17"><span class="znacznik"></span><span class="nr">17</span> Ustawienia Basha pod siebie</a></li><li><a href="lekcja-018.html" data-lekcja="18"><span class="znacznik"></span><span class="nr">18</span> tmux: terminal, który przeżyje rozłączenie</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="16" data-modul="1" data-tematy="SUID, SGID, sticky bit (/tmp), find -perm, getfacl, setfacl (-m, -x, -d), lsattr, chattr +i">
+    <div class="belka"><span>Lekcja 16 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m01">Moduł 1</a> › Lekcja 16</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Uprawnienia specjalne i ACL</h1>
+      <p class="meta"><span>⏱ ok. 10 min czytania</span><span>· moduł 1: Praca w powłoce</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant rozpoznaje i ustawia SUID, SGID i sticky bit, szuka ich przez <code>find -perm</code>, nadaje wyjątkowe uprawnienia przez ACL i blokuje plik przed zmianą przez <code>chattr +i</code>.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#suid-przepustka-na-czas-zalatwiania-sprawy">SUID: przepustka na czas załatwiania sprawy</a></li><li><a href="#sgid-wspolna-szafa-dzialu">SGID: wspólna szafa działu</a></li><li><a href="#sticky-bit-wyrzucasz-tylko-swoje">Sticky bit: wyrzucasz tylko swoje</a></li><li><a href="#find-perm-kto-ma-specjalne-klucze">find -perm: kto ma specjalne klucze</a></li><li><a href="#acl-wyjatek-od-reguly">ACL: wyjątek od reguły</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#chattr-plik-zabetonowany">chattr: plik zabetonowany</a></li><li><a href="#sciaga-flag">Ściąga flag</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p class="ekran"><code>/etc/shadow</code> z <code>-rw-r-----</code>, obok zwykły użytkownik wpisuje <code>passwd</code> i zmienia hasło</p><p>Twoje hasło leży w <code>/etc/shadow</code>. Ty nie masz prawa nawet tego pliku przeczytać. A jednak wpisujesz <code>passwd</code>, zmieniasz hasło i nowe hasło ląduje właśnie tam. Jak to możliwe, skoro z poprzedniej lekcji wynika, że to niemożliwe?</p><p>I druga sprawa z poprzedniej lekcji: Ania skasowała plik Eryka we wspólnym folderze, a jej nowe pliki dostały złą grupę. Dziś trzy specjalne bity to załatwią, a na deser plik, którego nie usunie nawet root.</p></section><section><h2 id="suid-przepustka-na-czas-zalatwiania-sprawy">SUID: przepustka na czas załatwiania sprawy</h2><p>Wyobraź sobie archiwum w urzędzie. Petent nie ma tam wstępu. Ale jest okienko, w którym siedzi urzędnik z kluczem do archiwum. Podajesz wniosek „zmień moje hasło”, on idzie do archiwum, podmienia dokładnie jedną kartkę, Twoją, i wraca. Ty do archiwum nie wszedłeś ani na krok.</p><p>Tym urzędnikiem jest program <code>passwd</code>, a mechanizm nazywa się <strong>SUID</strong>, od „set user ID”. Program z SUID działa z uprawnieniami swojego <strong>właściciela</strong>, a nie osoby, która go uruchomiła. <code>passwd</code> należy do roota, więc działa jako root. Widać to, kiedy Eryk w drugim terminalu zostawi otwarte <code>passwd</code>:</p><div class="kod"><pre><code>ps -o pid,ruser,euser,cmd -C passwd</code></pre></div><div class="kod"><pre><code>  PID RUSER    EUSER    CMD
+19562 eryk     root     passwd</code></pre></div><p><code>RUSER</code>, prawdziwy użytkownik, to eryk. <code>EUSER</code>, użytkownik efektywny, czyli ten, którego jądro bierze pod uwagę przy sprawdzaniu kluczy, to root. A program <code>passwd</code> sam pilnuje, żebyś zmienił tylko swoje hasło.</p><p>W <code>ls -l</code> SUID to <code>s</code> w miejscu <code>x</code> właściciela, a cyfrowo dodatkowa czwórka z przodu: 4755. Ustawiasz go tak:</p><div class="kod"><pre><code>chmod u+s program
+chmod 4755 program</code></pre></div><p>Ale uwaga. SUID na programie roota to dziura, jeśli program da się namówić do czegoś innego niż jego jedno zadanie. Wyobraź sobie SUID na edytorze tekstu. Każdy użytkownik otwiera nim <code>/etc/shadow</code> jako root. Dlatego programów z SUID jest w systemie garstka i admin regularnie sprawdza, czy nikt nie dorzucił nowych.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>na skrypty SUID nie działa. Zrobiłem skrypt <code>kim.sh</code> z <code>id -un</code>, właściciel root, tryb 4755, i uruchomiłem jako eryk. Wynik: <code>eryk</code>. Jądro Linuksa ignoruje SUID na plikach z <code>#!</code>, bo byłoby to zbyt łatwe do oszukania.</p></aside></section><section><h2 id="sgid-wspolna-szafa-dzialu">SGID: wspólna szafa działu</h2><p><strong>SGID</strong>, „set group ID”, ma dwa zastosowania.</p><p>Na programie działa jak SUID, tylko dla grupy. Na przykład <code>crontab</code> na Ubuntu ma <code>-rwxr-sr-x root crontab</code>: działa z grupą <code>crontab</code>, żeby móc dopisać Twoje zadanie do wspólnego folderu.</p><p>Ale ważniejsze dla admina jest drugie zastosowanie: SGID na <strong>folderze</strong>. Wtedy każdy nowy plik w środku dostaje grupę folderu, a nie grupę osoby, która go zrobiła. To jak szafa działu księgowości z naklejką: cokolwiek tu włożysz, staje się własnością księgowości.</p><div class="kod"><pre><code>sudo mkdir /srv/ksiegowosc
+sudo chgrp ksiegowosc /srv/ksiegowosc
+sudo chmod 770 /srv/ksiegowosc</code></pre></div><p>Ania tworzy plik, zanim włączymy SGID, i drugi po:</p><div class="kod"><pre><code>sudo chmod g+s /srv/ksiegowosc
+ls -ld /srv/ksiegowosc
+ls -l /srv/ksiegowosc</code></pre></div><div class="kod"><pre><code>drwxrws--- 2 root ksiegowosc 4096 Nov  3 16:31 /srv/ksiegowosc
+-rw-rw-r-- 1 ania ksiegowosc    2 Nov  3 16:31 po.txt
+drwxrwsr-x 2 ania ksiegowosc 4096 Nov  3 16:31 podfolder
+-rw-rw-r-- 1 ania ania          2 Nov  3 16:31 przed.txt</code></pre></div><p><code>przed.txt</code> ma grupę <code>ania</code>, więc reszta działu może go tylko czytać. <code>po.txt</code> ma <code>ksiegowosc</code>. A nowy podfolder dostał nie tylko grupę, ale też samo <code>s</code>, więc zasada idzie w dół całego drzewa. Cyfrowo SGID to dwójka z przodu: <code>chmod 2770</code>.</p></section><section><h2 id="sticky-bit-wyrzucasz-tylko-swoje">Sticky bit: wyrzucasz tylko swoje</h2><p>Pamiętasz, jak Ania skasowała plik Eryka, bo miała <code>w</code> na folderze? W naszej szafie działu też tak jest:</p><div class="kod"><pre><code>ania$ rm -v /srv/ksiegowosc/eryka.txt
+removed &#x27;/srv/ksiegowosc/eryka.txt&#x27;</code></pre></div><p>Na to jest <strong>sticky bit</strong>, „lepki bit”. Na folderze znaczy: pliki może usuwać albo zmieniać im nazwy tylko ich właściciel, właściciel folderu i root. Jak lodówka w biurze, do której każdy może wstawić jogurt, ale wyrzucić wolno tylko swój. Teoretycznie. W prawdziwych biurach sticky bit nie działa.</p><div class="kod"><pre><code>sudo chmod +t /srv/ksiegowosc
+ls -ld /srv/ksiegowosc
+stat -c &#x27;%a&#x27; /srv/ksiegowosc</code></pre></div><div class="kod"><pre><code>drwxrws--T 3 root ksiegowosc 4096 Nov  3 16:31 /srv/ksiegowosc
+3770</code></pre></div><div class="kod"><pre><code>ania$ rm /srv/ksiegowosc/eryka.txt
+rm: cannot remove &#x27;/srv/ksiegowosc/eryka.txt&#x27;: Operation not permitted</code></pre></div><p>Cyfrowo sticky to jedynka z przodu. SGID 2 plus sticky 1 daje 3, stąd 3770. Najsłynniejszy folder ze sticky bitem znasz z lekcji 8:</p><div class="kod"><pre><code>ls -ld /tmp</code></pre></div><div class="kod"><pre><code>drwxrwxrwt 13 root root 4096 Nov  3 16:30 /tmp</code></pre></div><p><code>/tmp</code> ma 1777: każdy może tam pisać, ale nikt nie skasuje cudzego pliku. Biurko na korytarzu z regułą „nie ruszaj cudzego”.</p><p>A czemu u mnie wyżej było duże <code>T</code>, a w <code>/tmp</code> małe <code>t</code>? Mała litera znaczy: bit specjalny plus zwykłe <code>x</code> pod spodem. Duża: bit specjalny bez <code>x</code>. To samo z <code>s</code> i <code>S</code>. Duże <code>S</code> na pliku to zwykle pomyłka, bo SUID bez prawa uruchomienia nic nie daje:</p><div class="kod"><pre><code>-rwSr-Sr-T 1 root root 0 Nov  3 16:31 x</code></pre></div></section><section><h2 id="find-perm-kto-ma-specjalne-klucze">find -perm: kto ma specjalne klucze</h2><p>Lista wszystkich programów z SUID w systemie:</p><div class="kod"><pre><code>find / -xdev -perm -4000 -type f 2&gt;/dev/null</code></pre></div><div class="kod"><pre><code>/usr/bin/at
+/usr/bin/chfn
+/usr/bin/chsh
+/usr/bin/gpasswd
+/usr/bin/mount
+/usr/bin/newgrp
+/usr/bin/passwd
+/usr/bin/su
+/usr/bin/sudo
+/usr/bin/umount
+...</code></pre></div><p><code>-perm -4000</code> znaczy „musi mieć co najmniej ten bit”. <code>-perm /6000</code> znaczy „którykolwiek z tych bitów”, czyli SUID albo SGID. <code>-xdev</code> nie wychodzi poza ten dysk, <code>2&gt;/dev/null</code> wycisza błędy, znasz z lekcji 6. Zapisz sobie tę listę na świeżym systemie i porównuj co jakiś czas. Nowy program z SUID, którego nikt nie instalował, to jeden z klasycznych śladów włamania.</p></section><section><h2 id="acl-wyjatek-od-reguly">ACL: wyjątek od reguły</h2><p>Zwykłe uprawnienia mają jedno ograniczenie: jeden właściciel, jedna grupa. A przychodzi audytor i ma czytać <code>budzet.txt</code>, ale nie może być w grupie księgowości, bo wtedy zobaczyłby wszystko. Na to są <strong>ACL</strong>, Access Control Lists, listy kontroli dostępu. Lista gości na bramce: „oprócz pracowników wpuszczamy też pana Kowalskiego, tylko do sali B”.</p><div class="kod"><pre><code>sudo setfacl -m u:audytor:r /srv/ksiegowosc/budzet.txt
+sudo setfacl -m u:audytor:x /srv/ksiegowosc
+ls -l /srv/ksiegowosc/budzet.txt
+getfacl /srv/ksiegowosc/budzet.txt</code></pre></div><div class="kod"><pre><code>-rw-r-----+ 1 root ksiegowosc 10 Nov  3 16:31 budzet.txt
+# file: budzet.txt
+# owner: root
+# group: ksiegowosc
+user::rw-
+user:audytor:r--
+group::r--
+mask::r--
+other::---</code></pre></div><p><code>-m</code> to modify, dodaj albo zmień wpis. <code>u:audytor:r</code> to użytkownik, kto, co. Dla grupy piszesz <code>g:nazwa:rx</code>. Plus na końcu uprawnień w <code>ls -l</code> to sygnał: „tu są wyjątki, zajrzyj do <code>getfacl</code>”. Audytorowi dałem też <code>x</code> na folderze, bo bez przejścia przez drzwi pokoju nie dojdzie do biurka.</p><div class="kod"><pre><code>audytor$ cat /srv/ksiegowosc/budzet.txt
+Q3: 1 mln
+audytor$ echo hack &gt;&gt; /srv/ksiegowosc/budzet.txt
+bash: /srv/ksiegowosc/budzet.txt: Permission denied</code></pre></div><p>Czyta, ale nie zmienia. Usuwanie wpisu to <code>-x</code>, a <code>-b</code> usuwa wszystkie wyjątki naraz:</p><div class="kod"><pre><code>sudo setfacl -x u:audytor /srv/ksiegowosc/budzet.txt
+sudo setfacl -b /srv/ksiegowosc/budzet.txt</code></pre></div><p>I trzecia flaga, najbardziej praktyczna: <code>-d</code>, czyli <strong>domyślne ACL</strong> na folderze. Wtedy każdy nowy plik w środku dziedziczy wyjątek sam:</p><div class="kod"><pre><code>sudo setfacl -d -m u:audytor:r /srv/ksiegowosc
+echo nowy &gt; /srv/ksiegowosc/nowy.txt
+getfacl -c /srv/ksiegowosc/nowy.txt</code></pre></div><div class="kod"><pre><code>user::rw-
+user:audytor:r--
+group::rwx	#effective:rw-
+mask::rw-
+other::---</code></pre></div><p>Nowy plik od razu ma audytora na liście.</p></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p>Uprawnienia to 12 bitów. Dziewięć znasz: trzy trójki rwx. Trzy pozostałe to właśnie SUID, SGID i sticky. Stąd czwarta cyfra z przodu: 4, 2, 1, tak samo jak r, w, x.</p><p>Kiedy uruchamiasz program z SUID, jądro przy starcie procesu ustawia jego efektywny numer użytkownika na numer właściciela pliku. Tak jak widać było w <code>ps</code>: RUSER eryk, EUSER root.</p><p>ACL to osobne dane, doczepione do i-węzła jako atrybuty rozszerzone. Właśnie przez to działają na ext4 na Ubuntu i na XFS na RHEL bez dodatkowej konfiguracji. Jest jedna pułapka: <strong>maska</strong>. Przy pliku z ACL to, co <code>ls -l</code> pokazuje w trójce grupy, to już nie uprawnienia grupy, tylko maska, czyli sufit dla wszystkich wyjątków. Zrób na takim pliku <code>chmod 600</code> i patrz:</p><div class="kod"><pre><code>user::rw-
+user:audytor:r--	#effective:---
+group::r--	#effective:---
+mask::---
+other::---</code></pre></div><p>Audytor dalej jest na liście, ale <code>#effective:---</code>. Na bramce stoi z zaproszeniem, a ochroniarz zamknął całe skrzydło.</p></section><section><h2 id="chattr-plik-zabetonowany">chattr: plik zabetonowany</h2><p>Ostatni zamek działa pod uprawnieniami, na poziomie systemu plików. <code>chattr</code> zmienia atrybuty pliku, a <code>lsattr</code> je pokazuje.</p><div class="kod"><pre><code>sudo chattr +i dns.conf
+lsattr dns.conf
+sudo sh -c &#x27;echo x &gt;&gt; dns.conf&#x27;
+sudo rm dns.conf</code></pre></div><div class="kod"><pre><code>----i---------e------- dns.conf
+sh: 1: cannot create dns.conf: Operation not permitted
+rm: cannot remove &#x27;dns.conf&#x27;: Operation not permitted</code></pre></div><p><code>+i</code> to immutable, niezmienny. Nie da się go zmienić, usunąć, przenieść, zrobić do niego twardego linku ani zmienić mu uprawnień. Nawet rootowi. Root musi najpierw świadomie zdjąć blokadę przez <code>chattr -i</code>. Pomnik z betonu: nie przestawisz, dopóki nie weźmiesz młota.</p><p>Po co? Na przykład żeby żaden program nie nadpisał ręcznie ustawionego pliku konfiguracyjnego. Jest też brat <code>+a</code>, append only: można tylko dopisywać na końcu, idealne dla logów.</p><div class="kod"><pre><code>sudo chattr +a app.log
+echo &quot;nowa linia&quot; | sudo tee -a app.log
+echo x | sudo tee app.log</code></pre></div><div class="kod"><pre><code>nowa linia
+tee: app.log: Operation not permitted
+x</code></pre></div><p>Uwaga na dwie rzeczy. Plik z <code>+i</code> potrafi doprowadzić do szaleństwa kogoś, kto o nim nie wie: root dostaje „Operation not permitted” i zaczyna podejrzewać wirusa, dysk i życiowe wybory. Jak coś dziwnie nie daje się usunąć, sprawdź <code>lsattr</code>. Po drugie: zwykły użytkownik nie ustawi <code>+i</code> nawet na własnym pliku, to zarezerwowane dla roota.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p><code>chattr</code> wymaga systemu plików, który obsługuje atrybuty. ext4 i XFS obsługują <code>i</code> i <code>a</code>, ale nie każdy atrybut z <code>man chattr</code> działa na każdym systemie plików. Literka <code>e</code> w <code>lsattr</code> na ext4 to extents, sposób zapisu pliku na dysku, nie ruszaj.</p></aside></section><section><h2 id="sciaga-flag">Ściąga flag</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga</th><th>Co robi</th></tr><tr><td><code>chmod</code></td><td><code>u+s</code> / <code>4xxx</code></td><td>SUID: program działa jako właściciel pliku</td></tr><tr><td><code>chmod</code></td><td><code>g+s</code> / <code>2xxx</code></td><td>SGID: na folderze nowe pliki dziedziczą grupę folderu</td></tr><tr><td><code>chmod</code></td><td><code>+t</code> / <code>1xxx</code></td><td>sticky: usuwać może tylko właściciel pliku</td></tr><tr><td><code>find</code></td><td><code>-perm -4000</code></td><td>pliki z SUID (musi mieć ten bit)</td></tr><tr><td><code>find</code></td><td><code>-perm /6000</code></td><td>pliki z SUID lub SGID (którykolwiek bit)</td></tr><tr><td><code>getfacl</code></td><td><code>plik</code></td><td>pokazuje ACL</td></tr><tr><td><code>getfacl</code></td><td><code>-c</code></td><td>bez nagłówka z nazwą i właścicielem</td></tr><tr><td><code>setfacl</code></td><td><code>-m u:nazwa:rwx</code></td><td>dodaje lub zmienia wpis użytkownika (<code>g:</code> dla grupy)</td></tr><tr><td><code>setfacl</code></td><td><code>-x u:nazwa</code></td><td>usuwa jeden wpis</td></tr><tr><td><code>setfacl</code></td><td><code>-b</code></td><td>usuwa wszystkie wpisy ACL</td></tr><tr><td><code>setfacl</code></td><td><code>-d -m ...</code></td><td>domyślne ACL na folderze, dziedziczone przez nowe pliki</td></tr><tr><td><code>setfacl</code></td><td><code>-R</code></td><td>rekurencyjnie</td></tr><tr><td><code>lsattr</code></td><td><code>plik</code></td><td>pokazuje atrybuty</td></tr><tr><td><code>chattr</code></td><td><code>+i</code> / <code>-i</code></td><td>blokuje / odblokowuje plik całkowicie</td></tr><tr><td><code>chattr</code></td><td><code>+a</code> / <code>-a</code></td><td>tylko dopisywanie / zdjęcie blokady</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>Wspólny folder działu ustawiony samym <code>chmod 770</code> i grupą. Po tygodniu telefon: „nie mogę edytować pliku Ani”. Sprawdzasz:</p><div class="kod"><pre><code>-rw-rw-r-- 1 ania ania          2 Nov  3 16:31 przed.txt</code></pre></div><p>Plik ma grupę <code>ania</code>, nie <code>ksiegowosc</code>. Folder był dobry, ale bez SGID każdy nowy plik dostaje grupę swojego autora. Naprawa w dwóch krokach. Najpierw na przyszłość SGID na folderze. Potem poprawka tego, co już powstało:</p><div class="kod"><pre><code>sudo chmod 2770 /srv/ksiegowosc
+sudo chgrp -R ksiegowosc /srv/ksiegowosc</code></pre></div><p>Przepis na porządny folder działu to więc: grupa, 2770, a jeśli ludzie mają nie kasować sobie nawzajem plików, jeszcze sticky, czyli 3770.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><ol><li>Utwórz grupę <code>projekt</code> i dwa konta testowe w tej grupie. Zrób folder <code>/srv/projekt</code>, w którym nowe pliki automatycznie dostają grupę <code>projekt</code>, a nikt nie może usunąć cudzego pliku. Sprawdź to, tworząc i usuwając pliki jako oba konta (<code>su - nazwa</code>).</li><li>Daj trzeciemu kontu, spoza grupy, prawo tylko do czytania wszystkich obecnych i przyszłych plików w tym folderze przez ACL.</li><li>Wypisz wszystkie pliki z SUID albo SGID w <code>/usr/bin</code>.</li><li>Zablokuj jeden plik testowy <code>chattr +i</code>, spróbuj go usunąć jako root i odblokuj.</li></ol><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><div class="kod"><pre><code>sudo groupadd projekt
+sudo useradd -m -s /bin/bash kasia
+sudo useradd -m -s /bin/bash tomek
+sudo useradd -m -s /bin/bash gosc
+sudo usermod -aG projekt kasia
+sudo usermod -aG projekt tomek
+sudo mkdir /srv/projekt
+sudo chgrp projekt /srv/projekt
+sudo chmod 3770 /srv/projekt
+ls -ld /srv/projekt</code></pre></div><div class="kod"><pre><code>drwxrws--T 2 root projekt 4096 Nov  3 22:18 /srv/projekt</code></pre></div><p>3770, czyli SGID i sticky naraz, plus pełne prawa dla właściciela i grupy. Test: Kasia robi plik, Tomek robi plik i próbuje usunąć plik Kasi.</p><div class="kod"><pre><code>rm: cannot remove &#x27;/srv/projekt/kasia.txt&#x27;: Operation not permitted
+-rw-rw-r-- 1 kasia projekt 7 Nov  3 22:18 kasia.txt
+-rw-rw-r-- 1 tomek projekt 8 Nov  3 22:18 tomek.txt</code></pre></div><p>Oba pliki mają grupę <code>projekt</code>, a Tomek odbił się od cudzego. Teraz gość:</p><div class="kod"><pre><code>sudo setfacl -R -m u:gosc:rX /srv/projekt
+sudo setfacl -d -m u:gosc:rX /srv/projekt</code></pre></div><p>Pierwsza linijka załatwia to, co już jest, druga to, co dopiero powstanie. Duże <code>X</code> z lekcji 15 daje przejście przez foldery, a plikom samo czytanie. Kasia robi nowy plik, gość próbuje:</p><div class="kod"><pre><code>nowy
+-bash: line 1: /srv/projekt/nowy.txt: Permission denied</code></pre></div><p>Czyta, nie pisze. A lista plików z SUID lub SGID w <code>/usr/bin</code> to <code>find /usr/bin -perm /6000 -type f</code>, u mnie 19 pozycji, między innymi <code>passwd</code>, <code>sudo</code>, <code>su</code>, <code>crontab</code>. Na koniec <code>chattr +i</code>, próba <code>rm</code> jako root kończy się <code>Operation not permitted</code>, <code>chattr -i</code> i dopiero wtedy plik znika. Jeśli komuś root się nie odbił, niech sprawdzi, czy na pewno dodał plus, a nie minus.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Cały czas pracujesz w Bashu takim, jaki dostałeś z pudełka. W następnej lekcji urządzamy go pod siebie: zmienne środowiskowe, <code>PATH</code>, czyli skąd Bash wie, gdzie szukać programów, <code>.bashrc</code> kontra <code>.bash_profile</code>, aliasy, kolorowy znak zachęty i historia, która nie zapomina.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-015.html" rel="prev">← 15. Kto może czytać twój plik</a><a class="btn domyslny zolty" href="lekcja-017.html" rel="next">17. Ustawienia Basha pod siebie →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

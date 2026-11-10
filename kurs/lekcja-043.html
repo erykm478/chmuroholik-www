@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>43. Słowniki — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 43 kursu Linux i Bash od zera do admina: Słowniki. kursant tworzy słownik w Bashu przez declare -A, wkłada i wyjmuje wartości po nazwie, przechodzi po kluczach, sprawdza, czy klucz istnieje, i liczy nim wystąpienia, wiedząc, że na Macu potrzebuje do tego nowego Basha.">
+<meta property="og:title" content="43. Słowniki — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 43 kursu Linux i Bash od zera do admina: Słowniki. kursant tworzy słownik w Bashu przez declare -A, wkłada i wyjmuje wartości po nazwie, przechodzi po kluczach, sprawdza, czy klucz istnieje, i liczy nim wystąpienia, wiedząc, że na Macu potrzebuje do tego nowego Basha.">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 4</span></div>
+      <div class="boczny-tytul"><a href="index.html#m04">Napisy, listy i przetwarzanie danych</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-041.html" data-lekcja="41"><span class="znacznik"></span><span class="nr">41</span> Nożyczki do tekstu</a></li><li><a href="lekcja-042.html" data-lekcja="42"><span class="znacznik"></span><span class="nr">42</span> Listy (tablice)</a></li><li><a href="lekcja-043.html" data-lekcja="43" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">43</span> Słowniki</a></li><li><a href="lekcja-044.html" data-lekcja="44"><span class="znacznik"></span><span class="nr">44</span> Ładne wypisywanie i długie teksty</a></li><li><a href="lekcja-045.html" data-lekcja="45"><span class="znacznik"></span><span class="nr">45</span> Wyrażenia regularne</a></li><li><a href="lekcja-046.html" data-lekcja="46"><span class="znacznik"></span><span class="nr">46</span> sed od podstaw</a></li><li><a href="lekcja-047.html" data-lekcja="47"><span class="znacznik"></span><span class="nr">47</span> awk od podstaw</a></li><li><a href="lekcja-048.html" data-lekcja="48"><span class="znacznik"></span><span class="nr">48</span> Znajdź wszystko</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="43" data-modul="4" data-tematy="declare -A, klucze i wartości [macOS: wymaga nowego Basha]">
+    <div class="belka"><span>Lekcja 43 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m04">Moduł 4</a> › Lekcja 43</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Słowniki</h1>
+      <p class="meta"><span>⏱ ok. 9 min czytania</span><span>· moduł 4: Napisy, listy i przetwarzanie danych</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant tworzy słownik w Bashu przez <code>declare -A</code>, wkłada i wyjmuje wartości po nazwie, przechodzi po kluczach, sprawdza, czy klucz istnieje, i liczy nim wystąpienia, wiedząc, że na Macu potrzebuje do tego nowego Basha.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#slownik-czyli-szatnia-z-nazwiskami">Słownik, czyli szatnia z nazwiskami</a></li><li><a href="#ile-wieszakow-jakie-nazwiska-jakie-plaszcze">Ile wieszaków, jakie nazwiska, jakie płaszcze</a></li><li><a href="#czy-taki-wieszak-w-ogole-istnieje">Czy taki wieszak w ogóle istnieje?</a></li><li><a href="#licznik-slownik-w-roli-kasownika">Licznik: słownik w roli kasownika</a></li><li><a href="#slownik-jako-konfiguracja">Słownik jako konfiguracja</a></li><li><a href="#macos-slowniki-wymagaja-nowego-basha">[macOS] Słowniki wymagają nowego Basha</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga-flag">Ściąga flag</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p>W poprzedniej lekcji mieliśmy szufladę z przegródkami numer 0, 1, 2. Świetna, dopóki nie zapytasz: „jaki adres ma db01?”. Wtedy musisz pamiętać, że db01 siedzi w przegródce numer 2, a jego IP w drugiej tablicy, też pod numerem 2. Dwie tablice trzymane równo jak dwa końce prześcieradła przy składaniu. Puszczasz jeden i wszystko się rozjeżdża.</p><p>Dziś numerki wyrzucamy. Przegródki dostają nazwy. Pytasz „db01?” i dostajesz adres. Bez liczenia na palcach.</p></section><section><h2 id="slownik-czyli-szatnia-z-nazwiskami">Słownik, czyli szatnia z nazwiskami</h2><p>Wyobraź sobie szatnię w teatrze. Zwykle dostajesz numerek. Ale w tej szatni nie ma numerków. Na każdym wieszaku jest nazwisko. Przychodzisz, mówisz „Kowalski” i pani podaje Ci płaszcz Kowalskiego.</p><p>To jest <strong>słownik</strong>. Po angielsku associative array, tablica asocjacyjna. Nazwisko na wieszaku to <strong>klucz</strong>, płaszcz to <strong>wartość</strong>. W innych językach zwie się to dictionary, hash albo mapa, ale chodzi o to samo: szatnia z nazwiskami.</p><p>I jedna rzecz, której nie wolno pominąć. Słownik trzeba ogłosić, zanim go użyjesz:</p><div class="kod"><pre><code>declare -A ip</code></pre></div><p><code>declare -A</code>, wielkie A. To jak zawieszenie tabliczki „szatnia imienna”. Bez niej Bash założy, że to zwykła szuflada z numerami. Co się wtedy dzieje, zobaczysz w błędach i obiecuję, że zapamiętasz.</p><p>Teraz wieszamy płaszcze:</p><div class="kod"><pre><code>ip[web01]=10.0.0.11
+ip[web02]=10.0.0.12
+ip[db01]=10.0.0.21
+echo &quot;${ip[db01]}&quot;</code></pre></div><div class="kod"><pre><code>10.0.0.21</code></pre></div><p>Nawias kwadratowy jak w tablicy, tylko w środku zamiast numeru jest nazwa. I tyle. Pytasz po nazwie, dostajesz wartość.</p><p>Możesz też zawiesić wszystko naraz, przy ogłoszeniu:</p><div class="kod"><pre><code>declare -A port=([ssh]=22 [http]=80 [https]=443 [&quot;dns server&quot;]=53)
+echo &quot;${port[https]} ${port[&quot;dns server&quot;]}&quot;</code></pre></div><div class="kod"><pre><code>443 53</code></pre></div><p>Klucz ze spacją? Proszę bardzo, tylko w kopercie, czyli w cudzysłowie.</p></section><section><h2 id="ile-wieszakow-jakie-nazwiska-jakie-plaszcze">Ile wieszaków, jakie nazwiska, jakie płaszcze</h2><p>Znaczki znasz z tablic. Działają tak samo:</p><div class="kod"><pre><code>echo &quot;${#ip[@]}&quot;
+echo &quot;${!ip[@]}&quot;
+echo &quot;${ip[@]}&quot;</code></pre></div><div class="kod"><pre><code>3
+db01 web01 web02
+10.0.0.21 10.0.0.11 10.0.0.12</code></pre></div><p><code>#</code> to liczba wieszaków. Wykrzyknik <code>!</code> daje listę kluczy, czyli nazwisk. A samo <code>@</code> daje wartości, czyli płaszcze.</p><p>Pętla po słowniku to prawie zawsze pętla po kluczach. Bierzesz nazwisko, a płaszcz wyciągasz po nazwisku:</p><div class="kod"><pre><code>for h in &quot;${!ip[@]}&quot;; do
+    echo &quot;$h -&gt; ${ip[$h]}&quot;
+done</code></pre></div><div class="kod"><pre><code>db01 -&gt; 10.0.0.21
+web01 -&gt; 10.0.0.11
+web02 -&gt; 10.0.0.12</code></pre></div><p>A teraz uważnie. Kolejność wyszła tu ładna, alfabetyczna. Przypadek. Zobacz słownik portów:</p><div class="kod"><pre><code>declare -p port</code></pre></div><div class="kod"><pre><code>declare -A port=([ssh]=&quot;22&quot; [https]=&quot;443&quot; [&quot;dns server&quot;]=&quot;53&quot; [http]=&quot;80&quot; )</code></pre></div><p>Wpisywałem ssh, http, https, dns. Wyszło ssh, https, dns, http. Słownik nie pamięta kolejności. Szatniarka wiesza płaszcze tam, gdzie jej wygodnie, a nie w kolejności przychodzenia. Jeśli kolejność ma znaczenie, sortujesz sam:</p><div class="kod"><pre><code>for h in $(printf &#x27;%s\n&#x27; &quot;${!ip[@]}&quot; | sort); do
+    echo &quot;$h -&gt; ${ip[$h]}&quot;
+done</code></pre></div><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>ta wersja z <code>$( )</code> bez cudzysłowu rozsypie się na kluczach ze spacją. Wersja odporna to <code>mapfile -t klucze &lt; &lt;(printf &#x27;%s\n&#x27; &quot;${!ip[@]}&quot; | sort)</code> i pętla po <code>&quot;${klucze[@]}&quot;</code>. Składanie trzech rzeczy z trzech ostatnich lekcji w jedną linijkę. Tak wygląda Bash w praktyce.</p></aside></section><section><h2 id="czy-taki-wieszak-w-ogole-istnieje">Czy taki wieszak w ogóle istnieje?</h2><p>Pytasz o kogoś, kogo nie ma:</p><div class="kod"><pre><code>echo &quot;[${ip[mail01]}]&quot;</code></pre></div><div class="kod"><pre><code>[]</code></pre></div><p>Pusto. Żadnego błędu. Szatniarka nie mówi „nie ma takiego”, tylko podaje Ci powietrze. To podstępne, bo pusty wynik wygląda tak samo jak płaszcz, który ktoś zostawił pusty. Dlatego sprawdzamy jawnie, operatorem <code>-v</code>:</p><div class="kod"><pre><code>if [[ -v ip[web01] ]]; then echo &quot;web01 jest&quot;; fi
+if [[ ! -v ip[mail01] ]]; then echo &quot;mail01 nie ma&quot;; fi</code></pre></div><div class="kod"><pre><code>web01 jest
+mail01 nie ma</code></pre></div><p>Albo, jeśli wystarczy Ci wartość zastępcza, nożyczki z lekcji 41:</p><div class="kod"><pre><code>echo &quot;${ip[mail01]:-nieznany}&quot;</code></pre></div><div class="kod"><pre><code>nieznany</code></pre></div><p>Zdjęcie płaszcza z wieszaka to <code>unset</code>, a podmiana to po prostu nowe przypisanie:</p><div class="kod"><pre><code>unset &#x27;ip[web02]&#x27;
+ip[web01]=10.0.0.99
+echo &quot;${!ip[@]}&quot;
+echo &quot;${ip[web01]}&quot;</code></pre></div><div class="kod"><pre><code>db01 web01
+10.0.0.99</code></pre></div><p>Jeden klucz to jeden wieszak. Nie da się mieć dwóch web01. Drugie przypisanie nadpisuje pierwsze.</p></section><section><h2 id="licznik-slownik-w-roli-kasownika">Licznik: słownik w roli kasownika</h2><p>Teraz najczęstsze zastosowanie słownika u admina. Liczenie. Ile razy pojawił się dany adres w logu, ile kont ma daną powłokę, ile plików ma dane rozszerzenie.</p><p>Obraz: liczenie głosów w wyborach samorządowych. Wyciągasz kartkę, czytasz nazwisko, stawiasz kreskę przy tym nazwisku. Nowe nazwisko? Nowa linijka i pierwsza kreska.</p><div class="kod"><pre><code>#!/bin/bash
+# powloki.sh – ile kont używa której powłoki
+declare -A licznik
+while IFS=: read -r _ _ _ _ _ _ powloka; do
+    (( licznik[$powloka]++ ))
+done &lt; /etc/passwd
+
+for p in &quot;${!licznik[@]}&quot;; do
+    echo &quot;${licznik[$p]} $p&quot;
+done | sort -rn</code></pre></div><div class="kod"><pre><code>37 /usr/sbin/nologin
+32 /sbin/nologin
+11 /bin/bash
+4 /bin/false
+1 /bin/sync
+1 /bin/sh</code></pre></div><p>Rozbierzmy to. <code>IFS=:</code> tnie linijkę z <code>/etc/passwd</code> na dwukropkach. Pierwsze sześć pól nas nie interesuje, więc wrzucamy je do <code>_</code>, czyli do kosza. Siódme to powłoka. <code>(( licznik[$powloka]++ ))</code> stawia kreskę. Jak klucza jeszcze nie było, Bash traktuje go jak zero i robi z niego jedynkę. Na koniec wypisujemy „liczba nazwa” i sortujemy liczbowo od największej.</p><p>Ta sama technika to już połowa analizy logów: kto się najczęściej dobija, który adres wali w <code>/admin</code>. Zrobisz to w zadaniu.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p><code>(( x++ ))</code> zwraca stary wynik, a gdy ten był zerem, kod wyjścia to 1. Z <code>set -e</code>, które poznasz w module 5, skrypt zginie na pierwszej kresce. <code>(( ++x ))</code> zwraca już nową wartość i problem znika. Sprawdziłem: wersja z <code>x++</code> pod <code>set -e</code> kończy się kodem 1, wersja z <code>++x</code> przechodzi.</p></aside></section><section><h2 id="slownik-jako-konfiguracja">Słownik jako konfiguracja</h2><p>Drugie zastosowanie: wczytanie pliku ustawień w stylu <code>klucz=wartość</code>. Mamy plik <code>ustawienia.conf</code>:</p><div class="kod"><pre><code># ustawienia kopii
+host=db01
+port=5432
+
+uzytkownik=backup</code></pre></div><div class="kod"><pre><code>#!/bin/bash
+declare -A konfig
+while IFS=&#x27;=&#x27; read -r klucz wartosc; do
+    [[ -z $klucz || $klucz == &#x27;#&#x27;* ]] &amp;&amp; continue
+    konfig[$klucz]=$wartosc
+done &lt; ustawienia.conf
+
+echo &quot;Łączę się z ${konfig[host]}:${konfig[port]} jako ${konfig[uzytkownik]}&quot;
+echo &quot;Hasło: ${konfig[haslo]:-BRAK, ustaw w pliku}&quot;</code></pre></div><div class="kod"><pre><code>Łączę się z db01:5432 jako backup
+Hasło: BRAK, ustaw w pliku</code></pre></div><p>Puste linijki i komentarze z krzyżykiem pomijamy przez <code>continue</code>. Reszta ląduje w szatni. I zamiast pięciu zmiennych o pięciu nazwach masz jedną szatnię, z której bierzesz, co trzeba.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>to jest bezpieczniejsze niż <code>source ustawienia.conf</code>. <code>source</code> wykona plik jak skrypt, więc jeśli ktoś wpisze tam <code>rm -rf ~</code>, to się wykona. Pętla z <code>read</code> tylko czyta tekst.</p></aside></section><section><h2 id="macos-slowniki-wymagaja-nowego-basha">[macOS] Słowniki wymagają nowego Basha</h2><p>Tu już się nie wymigasz. Słowniki weszły do Basha w wersji 4.0, w 2009 roku. Systemowy Bash na Macu to 3.2. Napiszesz <code>declare -A</code> i dostaniesz:</p><div class="kod"><pre><code>-bash: declare: -A: invalid option</code></pre></div><p>Co robisz? <code>brew install bash</code>, a skrypty zaczynasz od <code>#!/usr/bin/env bash</code>. Ta linijka mówi „użyj pierwszego Basha, jakiego znajdziesz na ścieżkach”, więc weźmie tego z Homebrew. <code>#!/bin/bash</code> na Macu zawsze wskazuje na stary.</p><p>I uwaga na pułapkę, w którą wpada pełno ludzi. <code>bash --version</code> pokazuje wersję pierwszego <code>bash</code> na ścieżkach, a nie tej powłoki, w której właśnie siedzisz. Prawdę mówi zmienna:</p><div class="kod"><pre><code>echo &quot;$BASH_VERSION&quot;</code></pre></div><div class="kod"><pre><code>5.2.21(1)-release</code></pre></div><p>Na serwerach z Linuksem masz Basha 4 albo 5 od lat, więc tam ten problem nie istnieje. A jeśli piszesz skrypt, który może trafić na Maca, daj mu bramkarza na samej górze:</p><div class="kod"><pre><code>if (( BASH_VERSINFO[0] &lt; 4 )); then
+    echo &quot;Ten skrypt wymaga Basha 4 lub nowszego, masz $BASH_VERSION&quot; &gt;&amp;2
+    exit 1
+fi</code></pre></div><p>Lepiej odbić się od bramki z jasnym komunikatem niż wywrócić w połowie sali.</p></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p>Zwykła tablica w Bashu to lista par numer–tekst. Słownik to tablica mieszająca, po angielsku hash table. Bash bierze klucz, na przykład <code>db01</code>, przepuszcza go przez funkcję mieszającą i wychodzi z tego numer kubełka. W tym kubełku szuka wartości.</p><p>To jak szatnia, w której nazwiska na A do F wiszą w pierwszym rzędzie, G do M w drugim i tak dalej. Szatniarka nie przegląda całej szatni, idzie od razu do właściwego rzędu. Dlatego wyszukanie po kluczu jest szybkie nawet przy tysiącach wieszaków. I dlatego kolejność jest taka dziwna: o miejscu decyduje funkcja mieszająca, a nie kolejność wpisywania.</p><p>I druga rzecz, pod spodem najważniejsza. W zwykłej tablicy to, co w nawiasie kwadratowym, Bash liczy jak działanie matematyczne. W słowniku traktuje jako tekst. To jedno zdanie wyjaśnia błąd, który zaraz zobaczysz.</p></section><section><h2 id="sciaga-flag">Ściąga flag</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga</th><th>Co robi</th></tr><tr><td><code>declare -A s</code></td><td><code>-A</code></td><td>ogłasza słownik (obowiązkowo, Bash 4+)</td></tr><tr><td><code>declare -A s=([a]=1 [b]=2)</code></td><td>lista w nawiasie</td><td>tworzy słownik z wartościami</td></tr><tr><td><code>s[klucz]=wartość</code></td><td>[klucz]</td><td>wstawia albo nadpisuje</td></tr><tr><td><code>${s[klucz]}</code></td><td></td><td>wartość pod kluczem (pusto, gdy brak)</td></tr><tr><td><code>${!s[@]}</code></td><td><code>!</code></td><td>lista kluczy</td></tr><tr><td><code>${s[@]}</code></td><td><code>@</code></td><td>lista wartości</td></tr><tr><td><code>${#s[@]}</code></td><td><code>#</code></td><td>liczba par</td></tr><tr><td>[[ -v s[klucz] ]]</td><td><code>-v</code></td><td>czy klucz istnieje</td></tr><tr><td><code>${s[klucz]:-x}</code></td><td><code>:-</code></td><td>wartość albo <code>x</code>, gdy brak</td></tr><tr><td><code>unset &#x27;s[klucz]&#x27;</code></td><td></td><td>usuwa jedną parę</td></tr><tr><td><code>(( s[$k]++ ))</code></td><td><code>++</code></td><td>licznik: dodaje 1 przy kluczu</td></tr><tr><td><code>declare -p s</code></td><td><code>-p</code></td><td>pokazuje cały słownik</td></tr><tr><td><code>$BASH_VERSION</code></td><td></td><td>wersja Basha, w którym jesteś</td></tr><tr><td><code>BASH_VERSINFO[0]</code></td><td></td><td>główny numer wersji jako liczba</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>Zapomniałeś o <code>declare -A</code>:</p><div class="kod"><pre><code>#!/bin/bash
+ip[web01]=10.0.0.11
+ip[db01]=10.0.0.21
+echo &quot;${ip[web01]}&quot;
+declare -p ip</code></pre></div><div class="kod"><pre><code>10.0.0.21
+declare -a ip=([0]=&quot;10.0.0.21&quot;)</code></pre></div><p>Pytasz o web01, dostajesz adres db01. I żadnego błędu.</p><p>Co się stało? Bez tabliczki „szatnia imienna” Bash zrobił zwykłą tablicę z numerami. A w zwykłej tablicy nawias kwadratowy to matematyka. <code>web01</code> potraktował jako nazwę zmiennej w działaniu. Takiej zmiennej nie ma, więc wyszło zero. <code>db01</code> też zero. Oba adresy poleciały do przegródki numer 0, drugi nadpisał pierwszy. A pytanie o <code>ip[web01]</code> to też pytanie o zero. Szatnia, w której wszyscy dostają ten sam płaszcz.</p><p>Zobacz <code>declare -a</code>, małe a. To jest dowód. ShellCheck też coś czuje:</p><div class="kod"><pre><code>SC2154 (warning): web01 is referenced but not assigned.</code></pre></div><p>Czyli: „używasz zmiennej web01, której nigdzie nie ustawiłeś”. Jeśli widzisz takie ostrzeżenie przy nawiasie kwadratowym, prawie na pewno brakuje <code>declare -A</code>. Naprawa: dopisz je na początku. I jeszcze jedno: <code>declare -A</code> w funkcji robi słownik lokalny, jak <code>local</code>. Jeśli chcesz słownik widoczny dla całego skryptu, ogłoś go poza funkcją albo przez <code>declare -gA</code>.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><p>Napisz skrypt <code>rozszerzenia.sh</code>, który dostaje folder jako argument (bez argumentu bierze <code>/etc</code>) i liczy słownikiem, ile jest w nim plików z każdym rozszerzeniem. Pliki bez kropki w nazwie licz jako „(bez rozszerzenia)”. Wypisz pięć najczęstszych, od największej liczby.</p><p>Podpowiedź: nożyczki z lekcji 41 wyciągną rozszerzenie z nazwy pliku.</p><p>Rozwiązanie znajdziesz pod spodem.</p><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><p>Zadanie: policzyć słownikiem rozszerzenia plików w folderze i wypisać pięć najczęstszych.</p><div class="kod"><pre><code>#!/bin/bash
+# rozszerzenia.sh – ile plików jakiego rodzaju leży w folderze
+folder=${1:-/etc}
+declare -A ile
+
+for f in &quot;$folder&quot;/*; do
+    [[ -f $f ]] || continue
+    nazwa=${f##*/}
+    if [[ $nazwa == *.* ]]; then
+        roz=${nazwa##*.}
+    else
+        roz=&quot;(bez rozszerzenia)&quot;
+    fi
+    (( ile[$roz]++ ))
+done
+
+for r in &quot;${!ile[@]}&quot;; do
+    echo &quot;${ile[$r]} $r&quot;
+done | sort -rn | head -5</code></pre></div><div class="kod"><pre><code>55 (bez rozszerzenia)
+39 conf
+2 rc
+2 net
+2 deny</code></pre></div><p>W tym jednym skrypcie są cztery ostatnie lekcje naraz. Wartość domyślna <code>${1:-/etc}</code>. Nożyczki <code>##*/</code> i <code>##*.</code>. Słownik z licznikiem. I bramkarz <code>[[ -f $f ]] || continue</code>, który wpuszcza tylko pliki, a foldery odsyła do domu.</p><p>Wynik też mówi coś o Linuksie. Większość plików w <code>/etc</code> nie ma rozszerzenia wcale, bo Linux, w przeciwieństwie do Windowsa, nie potrzebuje kropki, żeby wiedzieć, co to za plik. Z tych, które mają, króluje <code>.conf</code>. Zero niespodzianek, ale teraz masz na to dowód.</p><p>I zauważ, jak brzydko ten wynik wygląda. Liczba, spacja, nazwa. Jak paragon wydrukowany na drukarce, której skończył się toner. Dziś to naprawimy.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Nasze wyniki wyglądają na razie jak notatki na serwetce: liczba, spacja, nazwa, wszystko krzywo. W następnej lekcji robimy z tego równe tabelki przez <code>printf</code>, a długie teksty, maile i pliki konfiguracyjne wpisujemy here-dokiem.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-042.html" rel="prev">← 42. Listy (tablice)</a><a class="btn domyslny zolty" href="lekcja-044.html" rel="next">44. Ładne wypisywanie i długie teksty →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

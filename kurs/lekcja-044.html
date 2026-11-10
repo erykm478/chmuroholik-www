@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>44. Ładne wypisywanie i długie teksty — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 44 kursu Linux i Bash od zera do admina: Ładne wypisywanie i długie teksty. kursant wypisuje dane w równych kolumnach przez printf z formatami, wpisuje wielolinijkowe teksty i pliki konfiguracyjne here-dokiem i podaje komendzie tekst ze zmiennej przez here-string.">
+<meta property="og:title" content="44. Ładne wypisywanie i długie teksty — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 44 kursu Linux i Bash od zera do admina: Ładne wypisywanie i długie teksty. kursant wypisuje dane w równych kolumnach przez printf z formatami, wpisuje wielolinijkowe teksty i pliki konfiguracyjne here-dokiem i podaje komendzie tekst ze zmiennej przez here-string.">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 4</span></div>
+      <div class="boczny-tytul"><a href="index.html#m04">Napisy, listy i przetwarzanie danych</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-041.html" data-lekcja="41"><span class="znacznik"></span><span class="nr">41</span> Nożyczki do tekstu</a></li><li><a href="lekcja-042.html" data-lekcja="42"><span class="znacznik"></span><span class="nr">42</span> Listy (tablice)</a></li><li><a href="lekcja-043.html" data-lekcja="43"><span class="znacznik"></span><span class="nr">43</span> Słowniki</a></li><li><a href="lekcja-044.html" data-lekcja="44" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">44</span> Ładne wypisywanie i długie teksty</a></li><li><a href="lekcja-045.html" data-lekcja="45"><span class="znacznik"></span><span class="nr">45</span> Wyrażenia regularne</a></li><li><a href="lekcja-046.html" data-lekcja="46"><span class="znacznik"></span><span class="nr">46</span> sed od podstaw</a></li><li><a href="lekcja-047.html" data-lekcja="47"><span class="znacznik"></span><span class="nr">47</span> awk od podstaw</a></li><li><a href="lekcja-048.html" data-lekcja="48"><span class="znacznik"></span><span class="nr">48</span> Znajdź wszystko</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="44" data-modul="4" data-tematy="printf z formatami, here-doc, here-string">
+    <div class="belka"><span>Lekcja 44 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m04">Moduł 4</a> › Lekcja 44</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Ładne wypisywanie i długie teksty</h1>
+      <p class="meta"><span>⏱ ok. 11 min czytania</span><span>· moduł 4: Napisy, listy i przetwarzanie danych</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant wypisuje dane w równych kolumnach przez <code>printf</code> z formatami, wpisuje wielolinijkowe teksty i pliki konfiguracyjne here-dokiem i podaje komendzie tekst ze zmiennej przez here-string.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#czemu-nie-echo">Czemu nie echo</a></li><li><a href="#printf-czyli-formularz-z-rubrykami">printf, czyli formularz z rubrykami</a></li><li><a href="#szerokosc-rubryk-tu-rodza-sie-tabelki">Szerokość rubryk: tu rodzą się tabelki</a></li><li><a href="#dwie-sztuczki-basha-data-i-zmienna">Dwie sztuczki Basha: data i zmienna</a></li><li><a href="#wszystko-razem-raport-dyskow">Wszystko razem: raport dysków</a></li><li><a href="#here-doc-list-w-kopercie">Here-doc: list w kopercie</a></li><li><a href="#here-string-kartka-zamiast-koperty">Here-string: kartka zamiast koperty</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga-flag">Ściąga flag</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p>Ten sam skrypt. Te same dane. Lewy raport wysyłasz szefowi i dostajesz pytanie „co to jest?”. Prawy wysyłasz i dostajesz pytanie „możesz to robić co tydzień?”.</p><p>Różnica to dwie rzeczy: <code>printf</code> i here-doc. Dziś obie.</p></section><section><h2 id="czemu-nie-echo">Czemu nie echo</h2><p>Do tej pory wypisywaliśmy wszystko przez <code>echo</code>. I <code>echo</code> jest fajne, dopóki nie chcesz czegoś więcej. Zobacz:</p><div class="kod"><pre><code>echo &quot;Linia1\nLinia2&quot;
+echo -e &quot;Linia1\nLinia2&quot;
+printf &#x27;Linia1\nLinia2\n&#x27;</code></pre></div><div class="kod"><pre><code>Linia1\nLinia2
+Linia1
+Linia2
+Linia1
+Linia2</code></pre></div><p>Zwykłe <code>echo</code> wypisało <code>\n</code> dosłownie. <code>echo -e</code> już zrozumiało. Ale tu jest haczyk: w różnych powłokach <code>echo</code> zachowuje się różnie. Pamiętasz dasha z lekcji 9? Inny urzędnik, inne zwyczaje. <code>printf</code> za to zachowuje się wszędzie tak samo. Dlatego w skryptach, które mają wyglądać porządnie, używa się <code>printf</code>.</p></section><section><h2 id="printf-czyli-formularz-z-rubrykami">printf, czyli formularz z rubrykami</h2><p><code>printf</code> działa jak formularz w urzędzie. Masz gotowy wzór z pustymi rubrykami: „Imię: ____, Wiek: ____”. Podajesz dane, a urzędnik wpisuje je w rubryki po kolei.</p><p>Wzór to pierwszy argument, nazywa się <strong>format</strong>. Rubryki to znaczki zaczynające się od procentu. Najważniejszy to <code>%s</code>, czyli „tu wstaw tekst”:</p><div class="kod"><pre><code>printf &#x27;Witaj, %s!\n&#x27; &quot;Eryk&quot;</code></pre></div><div class="kod"><pre><code>Witaj, Eryk!</code></pre></div><p>Uwaga, <code>printf</code> sam nie dodaje nowej linii. Jeśli jej nie wpiszesz jako <code>\n</code>, następny tekst przyklei się do tego. Zapomnisz raz, a znak zachęty wyląduje Ci na końcu raportu.</p><p>A teraz magia. Jeśli podasz więcej danych niż rubryk, <code>printf</code> bierze formularz jeszcze raz. I jeszcze raz:</p><div class="kod"><pre><code>printf &#x27;%s\n&#x27; web01 web02 db01
+printf &#x27;%s -&gt; %s\n&#x27; web01 10.0.0.11 db01 10.0.0.21</code></pre></div><div class="kod"><pre><code>web01
+web02
+db01
+web01 -&gt; 10.0.0.11
+db01 -&gt; 10.0.0.21</code></pre></div><p><code>printf &#x27;%s\n&#x27; &quot;${tablica[@]}&quot;</code> to najkrótszy sposób na wypisanie tablicy, każdy element w osobnej linijce. Używaliśmy tego już przy słownikach, teraz wiesz, czemu działa.</p></section><section><h2 id="szerokosc-rubryk-tu-rodza-sie-tabelki">Szerokość rubryk: tu rodzą się tabelki</h2><p>Między procent a literę możesz wpisać szerokość. To jak rubryka w formularzu, która ma określoną liczbę kratek.</p><div class="kod"><pre><code>printf &#x27;[%10s]\n&#x27; &quot;prawo&quot;
+printf &#x27;[%-10s]\n&#x27; &quot;lewo&quot;</code></pre></div><div class="kod"><pre><code>[     prawo]
+[lewo      ]</code></pre></div><p><code>%10s</code> to dziesięć kratek, tekst dosunięty do prawej. Z minusem, <code>%-10s</code>, do lewej. Nawiasy kwadratowe są tu tylko po to, żebyś widział spacje. Zasada w tabelkach: teksty do lewej, liczby do prawej. Wtedy jedności stoją pod jednościami, jak w słupku z podstawówki.</p><p>Dla liczb są osobne rubryki:</p><div class="kod"><pre><code>printf &#x27;[%5d]\n&#x27; 42
+printf &#x27;[%05d]\n&#x27; 42
+printf &#x27;%.2f\n&#x27; 3.14159
+printf &#x27;%d%%\n&#x27; 87
+printf &#x27;%x\n&#x27; 255</code></pre></div><div class="kod"><pre><code>[   42]
+[00042]
+3.14
+87%
+ff</code></pre></div><p><code>%d</code> to liczba całkowita. <code>%05d</code> dopełnia zerami, przydaje się do numerowania plików, żeby <code>plik007</code> sortował się przed <code>plik010</code>. <code>%.2f</code> to liczba z dwoma miejscami po przecinku. <code>%%</code> to sam znak procentu, bo pojedynczy procent zarezerwował sobie formularz. A <code>%x</code> zamienia na szesnastkowy, co się przyda przy uprawnieniach i adresach.</p><p>I fajna rzecz dla admina: <code>%d</code> pilnuje, czy dostał liczbę.</p><div class="kod"><pre><code>printf &#x27;%d\n&#x27; &quot;12abc&quot;</code></pre></div><div class="kod"><pre><code>bash: printf: 12abc: invalid number
+12</code></pre></div><p>Krzyknął, wpisał tyle, ile zrozumiał, i zwrócił kod błędu. Darmowy kontroler danych.</p></section><section><h2 id="dwie-sztuczki-basha-data-i-zmienna">Dwie sztuczki Basha: data i zmienna</h2><p><code>printf</code> w Bashu umie wstawić datę bez wołania programu <code>date</code>:</p><div class="kod"><pre><code>printf &#x27;%(%Y-%m-%d %H:%M)T\n&#x27; -1</code></pre></div><div class="kod"><pre><code>2026-11-03 22:17</code></pre></div><p><code>-1</code> znaczy „teraz”. A w nawiasie te same literki co w <code>date +</code>.</p><p>I <code>printf -v</code>, czyli „nie wypisuj, tylko włóż do pudełka”:</p><div class="kod"><pre><code>printf -v dzis &#x27;%(%F)T&#x27; -1
+echo &quot;Dziś: $dzis&quot;</code></pre></div><div class="kod"><pre><code>Dziś: 2026-11-03</code></pre></div><p>Czyli funkcja <code>kopia</code> z lekcji 40 mogłaby wziąć datę bez uruchamiania <code>date</code>. Jeden proces mniej. [macOS] <code>%( )T</code> jest od Basha 4.2, <code>-v</code> działa i na starym 3.2.</p></section><section><h2 id="wszystko-razem-raport-dyskow">Wszystko razem: raport dysków</h2><div class="kod"><pre><code>#!/bin/bash
+# raport.sh – krótki raport o dyskach serwera
+wiersz() {
+    printf &#x27;%-20s %8s %8s %8s\n&#x27; &quot;$@&quot;
+}
+
+cat &lt;&lt;EOF
+=============================================
+ RAPORT DYSKÓW: $(hostname)
+ Data: $(date &#x27;+%F %H:%M&#x27;)
+=============================================
+EOF
+
+wiersz &quot;PUNKT MONTOWANIA&quot; &quot;ROZMIAR&quot; &quot;WOLNE&quot; &quot;PROCENT&quot;
+while read -r rozmiar wolne procent punkt; do
+    wiersz &quot;$punkt&quot; &quot;$rozmiar&quot; &quot;$wolne&quot; &quot;$procent&quot;
+done &lt; &lt;(df -h --output=size,avail,pcent,target -x tmpfs -x devtmpfs | tail -n +2)</code></pre></div><div class="kod"><pre><code>=============================================
+ RAPORT DYSKÓW: vm
+ Data: 2026-11-03 22:18
+=============================================
+PUNKT MONTOWANIA      ROZMIAR    WOLNE  PROCENT
+/                        252G      25G      42%
+/srv/dane                452M     312M      26%</code></pre></div><p>Format jest w jednym miejscu, w funkcji <code>wiersz</code>. Nagłówek i dane idą przez ten sam przycisk w windzie, więc zawsze trzymają się tych samych kolumn. Chcesz szerszą pierwszą kolumnę? Zmieniasz jedną liczbę. <code>df --output</code> wybiera kolumny, <code>-x tmpfs</code> wyrzuca dyski w pamięci, a <code>tail -n +2</code> zjada nagłówek <code>df</code>, bo mamy własny.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>czemu funkcja, a nie zmienna <code>format=&#x27;...&#x27;</code> i <code>printf &quot;$format&quot;</code>? Bo ShellCheck przy formacie w zmiennej zgłasza SC2059: „Don&#x27;t use variables in the printf format string”. Gdyby do formatu trafił tekst od użytkownika z procentem w środku, <code>printf</code> potraktowałby go jak rubrykę. Funkcja ma format na sztywno i ShellCheck jest zadowolony.</p></aside><p>[macOS] <code>df --output</code> to opcja z GNU. Macowy <code>df</code> jej nie zna, tam ten skrypt odpalisz tylko na Linuksie.</p><p>A ta górna ramka? To był here-doc. Czas na niego.</p></section><section><h2 id="here-doc-list-w-kopercie">Here-doc: list w kopercie</h2><p>Czasem chcesz wypisać nie jedną linijkę, tylko cały akapit. Ramkę raportu. Instrukcję użycia skryptu. Cały plik konfiguracyjny. Dwadzieścia <code>echo</code> pod rząd to jak pisanie listu, w którym każda linijka ma osobną kopertę.</p><p>Here-doc to jedna koperta na cały list. Mówisz komendzie: „czytaj od następnej linijki, aż zobaczysz słowo EOF”.</p><div class="kod"><pre><code>serwer=web01
+cat &lt;&lt;EOF
+Raport z serwera: $serwer
+Data: $(date +%F)
+Koszt: \$100
+EOF</code></pre></div><div class="kod"><pre><code>Raport z serwera: web01
+Data: 2026-11-03
+Koszt: $100</code></pre></div><p><code>&lt;&lt;EOF</code> otwiera kopertę, samo <code>EOF</code> w osobnej linijce ją zamyka. EOF to skrót od „end of file”, ale możesz użyć dowolnego słowa. W środku zmienne i <code>$( )</code> działają jak w cudzysłowie. A jeśli chcesz dolara dosłownie, dajesz przed nim ukośnik.</p><p>A jeśli nie chcesz, żeby cokolwiek się rozwijało? Bierzesz słowo zamykające w apostrofy:</p><div class="kod"><pre><code>cat &lt;&lt;&#x27;EOF&#x27;
+Raport z serwera: $serwer
+Data: $(date +%F)
+EOF</code></pre></div><div class="kod"><pre><code>Raport z serwera: $serwer
+Data: $(date +%F)</code></pre></div><p>To jest koperta zaklejona na głucho. Co włożyłeś, to wyjdzie. Idealne, kiedy here-dokiem tworzysz… inny skrypt, który ma mieć w sobie dolary.</p><p>Here-doc można skierować do pliku. Tak się tworzy pliki konfiguracyjne w skryptach instalacyjnych:</p><div class="kod"><pre><code>cat &gt; motd.txt &lt;&lt;EOF
+Witaj na $serwer
+Zanim coś zepsujesz, zrób kopię.
+EOF
+cat motd.txt</code></pre></div><div class="kod"><pre><code>Witaj na web01
+Zanim coś zepsujesz, zrób kopię.</code></pre></div><p>A plik, do którego pisać może tylko root? Wtedy przez <code>sudo tee</code>:</p><div class="kod"><pre><code>sudo tee /etc/motd &gt; /dev/null &lt;&lt;EOF
+Witaj na $serwer
+EOF</code></pre></div><p><code>tee</code> to rozgałęziacz, pisze do pliku i na ekran. Ekran wyciszamy przez <code>/dev/null</code>. Czemu nie po prostu <code>sudo cat &gt; /etc/motd</code>? Wyjaśnię w błędach. Uwaga: <code>tee</code> bez <code>-a</code> nadpisuje cały plik. Pliki w <code>/etc</code> zmieniaj najpierw na maszynie wirtualnej, a przed zmianą zrób kopię, na przykład funkcją <code>kopia</code>.</p><p>I jeszcze jedna odmiana, <code>&lt;&lt;-</code> z minusem. Pozwala wciąć tekst i słowo zamykające, żeby ładnie wyglądało w <code>if</code>-ie. Ale wycina tylko tabulatory. Nie spacje. Tylko tabulatory. Wrócimy do tego w błędach, bo to klasyka.</p></section><section><h2 id="here-string-kartka-zamiast-koperty">Here-string: kartka zamiast koperty</h2><p>Here-doc to list. A czasem chcesz podać komendzie tylko jedną linijkę ze zmiennej. Do tego są trzy strzałki, <code>&lt;&lt;&lt;</code>, czyli here-string. Karteczka podana przez okienko.</p><div class="kod"><pre><code>linia=&quot;web01 10.0.0.11 ubuntu&quot;
+read -r nazwa adres system &lt;&lt;&lt; &quot;$linia&quot;
+echo &quot;$nazwa | $adres | $system&quot;
+bc &lt;&lt;&lt; &quot;scale=2; 7/3&quot;
+tr &#x27;[:lower:]&#x27; &#x27;[:upper:]&#x27; &lt;&lt;&lt; &quot;awaria&quot;</code></pre></div><div class="kod"><pre><code>web01 | 10.0.0.11 | ubuntu
+2.33
+AWARIA</code></pre></div><p>Pierwsza rzecz to rozbicie zmiennej na kawałki, widziałeś to już przy <code>read -a</code>. Druga to kalkulator <code>bc</code> z lekcji 38, bez <code>echo</code> i rury. Trzecia to podanie tekstu komendzie, która czyta tylko z wejścia.</p><p>Czemu nie <code>echo &quot;$linia&quot; | read ...</code>? Bo to ten sam problem co z <code>mapfile</code> w rurze: <code>read</code> działałby w podpowłoce i zmienne by przepadły. Here-string nie tworzy rury, więc zmienne zostają.</p></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p>Here-doc i here-string to przekierowania, tak jak <code>&lt;</code> z pliku. Bash bierze tekst, wkłada go do tymczasowego pliku albo do rury w pamięci, i podpina to komendzie jako wejście standardowe, czyli deskryptor 0. Komenda nawet nie wie, że tekst przyszedł ze skryptu. Myśli, że czyta z pliku. Dlatego here-doc działa z każdą komendą, która umie czytać z wejścia: <code>cat</code>, <code>wc</code>, <code>mysql</code>, <code>ssh</code>, <code>bc</code>.</p><div class="kod"><pre><code>wc -l &lt;&lt;EOF
+jeden
+dwa
+trzy
+EOF</code></pre></div><div class="kod"><pre><code>3</code></pre></div><p>A <code>printf</code>? To polecenie wbudowane, urzędnik robi to sam. Szerokość rubryki liczy w bajtach, nie w literach. I tu zaczyna się problem z polskimi znakami:</p><div class="kod"><pre><code>printf &#x27;[%-6s]\n&#x27; &quot;lodz&quot; &quot;łódź&quot;</code></pre></div><div class="kod"><pre><code>[lodz  ]
+[łódź]</code></pre></div><p>„Łódź” ma cztery litery, ale siedem bajtów, więc w sześciu kratkach już się nie mieści i <code>printf</code> nie dodał ani jednej spacji. Kolumna się rozjechała. Na serwerach rzadko masz polskie nazwy kont, ale w raportach dla ludzi już tak.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>obejście to policzyć dopełnienie samemu, bo <code>${#s}</code> liczy litery: <code>printf &#x27;[%s%*s]\n&#x27; &quot;$s&quot; $((6 - ${#s})) &quot;&quot;</code>. Gwiazdka w <code>%*s</code> znaczy „szerokość weź z argumentu”. Sprawdziłem w <code>C.UTF-8</code>, daje <code>[łódź  ]</code>.</p></aside><p>I druga pułapka, tym razem dla osób z polskim systemem. <code>printf</code> czyta liczby według ustawień regionalnych. W polskich ustawieniach przecinek dziesiętny to przecinek, nie kropka:</p><div class="kod"><pre><code>LC_ALL=pl_PL.UTF-8 bash -c &#x27;printf &quot;%.2f\n&quot; 3.14159&#x27;
+LC_ALL=pl_PL.UTF-8 bash -c &#x27;printf &quot;%.2f\n&quot; 3,14159&#x27;</code></pre></div><div class="kod"><pre><code>bash: line 1: printf: 3.14159: invalid number
+3,00
+3,14</code></pre></div><p>Na serwerze z angielskimi ustawieniami ten sam skrypt działał, na laptopie z polskimi wywala się. W skryptach, które liczą ułamki, ustaw na górze <code>export LC_NUMERIC=C</code> i śpij spokojnie.</p></section><section><h2 id="sciaga-flag">Ściąga flag</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga</th><th>Co robi</th></tr><tr><td><code>printf &#x27;format&#x27; dane</code></td><td></td><td>wypisuje dane według wzoru, bez automatycznego <code>\n</code></td></tr><tr><td><code>printf</code></td><td><code>%s</code></td><td>tekst</td></tr><tr><td><code>printf</code></td><td><code>%10s</code> / <code>%-10s</code></td><td>tekst w 10 kratkach, do prawej / do lewej</td></tr><tr><td><code>printf</code></td><td><code>%d</code> / <code>%5d</code> / <code>%05d</code></td><td>liczba całkowita, w 5 kratkach, dopełniona zerami</td></tr><tr><td><code>printf</code></td><td><code>%.2f</code></td><td>liczba z 2 miejscami po przecinku (uwaga na locale)</td></tr><tr><td><code>printf</code></td><td><code>%x</code></td><td>liczba szesnastkowo</td></tr><tr><td><code>printf</code></td><td><code>%%</code></td><td>znak procentu</td></tr><tr><td><code>printf</code></td><td><code>%*s</code></td><td>szerokość z argumentu</td></tr><tr><td><code>printf</code></td><td><code>%(%F)T</code></td><td>data według wzoru jak w <code>date</code>, <code>-1</code> = teraz (Bash 4.2+)</td></tr><tr><td><code>printf</code></td><td><code>-v zmienna</code></td><td>zapisuje wynik do zmiennej zamiast wypisywać</td></tr><tr><td><code>cat &lt;&lt;EOF</code></td><td></td><td>here-doc, zmienne i <code>$( )</code> działają</td></tr><tr><td><code>cat &lt;&lt;&#x27;EOF&#x27;</code></td><td>apostrofy</td><td>here-doc dosłowny, nic się nie rozwija</td></tr><tr><td><code>cat &lt;&lt;-EOF</code></td><td><code>-</code></td><td>here-doc z wcięciem, wycina tylko tabulatory</td></tr><tr><td><code>cat &gt; plik &lt;&lt;EOF</code></td><td><code>&gt;</code></td><td>here-doc prosto do pliku</td></tr><tr><td><code>sudo tee plik &gt; /dev/null &lt;&lt;EOF</code></td><td></td><td>here-doc do pliku roota (<code>tee -a</code> dopisuje)</td></tr><tr><td><code>komenda &lt;&lt;&lt; &quot;$v&quot;</code></td><td><code>&lt;&lt;&lt;</code></td><td>here-string, jedna linijka na wejście komendy</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>Piszesz porządnie, z wcięciami, żeby ładnie wyglądało:</p><div class="kod"><pre><code>#!/bin/bash
+if true; then
+    cat &lt;&lt;EOF
+    Witaj na serwerze
+    EOF
+fi
+echo &quot;koniec&quot;</code></pre></div><div class="kod"><pre><code>zly.sh: line 7: warning: here-document at line 3 delimited by end-of-file (wanted `EOF&#x27;)
+zly.sh: line 8: syntax error: unexpected end of file</code></pre></div><p>Bash szuka linijki, w której jest dokładnie <code>EOF</code> i nic więcej. Ty masz cztery spacje i <code>EOF</code>. Dla niego to zupełnie inne słowo. Więc czyta dalej, przez <code>fi</code>, przez <code>echo</code>, do końca pliku. Zjadł Ci resztę skryptu. A potem się dziwi, że <code>if</code> nie ma końca. To jak list, w którym zapomniałeś podpisu, więc listonosz wsadził do koperty jeszcze Twoją lodówkę.</p><p>ShellCheck powie Ci dokładnie, co zrobić:</p><div class="kod"><pre><code>SC1039 (error): Remove indentation before end token (or use &lt;&lt;- and indent with tabs).</code></pre></div><p>Naprawa: <code>EOF</code> zawsze od pierwszej kolumny. Albo <code>&lt;&lt;-EOF</code> i wcięcia tabulatorami. Uwaga, wiele edytorów zamienia Tab na spacje, więc <code>&lt;&lt;-</code> zdradza w najmniej spodziewanym momencie. Bezpieczniej trzymać <code>EOF</code> przy lewej krawędzi i nie kombinować.</p><p>I obiecany drugi błąd, z <code>sudo</code>:</p><div class="kod"><pre><code>sudo cat &gt; /etc/motd &lt;&lt;EOF
+Witaj
+EOF</code></pre></div><div class="kod"><pre><code>bash: /etc/motd: Permission denied</code></pre></div><p><code>sudo</code> działa tylko na <code>cat</code>. Ale przekierowanie <code>&gt;</code> robi Twoja powłoka, jeszcze zanim <code>sudo</code> w ogóle ruszy. A Twoja powłoka to zwykły użytkownik, który do <code>/etc</code> nie ma klucza. To jak dać świadkowi przepustkę VIP, a samemu stanąć przed bramką bez niej. Dlatego <code>sudo tee</code>: wtedy do pliku pisze <code>tee</code>, który ma uprawnienia roota.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><p>Wypisz <code>printf</code>-em tabelkę wszystkich kont z <code>/etc/passwd</code>, które mają powłokę <code>/bin/bash</code>: nazwa, UID i folder domowy, w równych kolumnach. Nagłówek tabelki zrób here-dokiem.</p><p>Rozwiązanie znajdziesz pod spodem.</p><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><p>Zadanie: tabelka <code>printf</code>-em ze wszystkich kont z <code>/etc/passwd</code>, które mają powłokę <code>/bin/bash</code>. Nazwa, UID i folder domowy w równych kolumnach, a nagłówek here-dokiem.</p><div class="kod"><pre><code>#!/bin/bash
+# Tabelka kont z powłoką /bin/bash
+cat &lt;&lt;NAGLOWEK
+Konta z powłoką /bin/bash na: $(hostname)
+NAGLOWEK
+printf &#x27;%-12s %6s  %s\n&#x27; &quot;NAZWA&quot; &quot;UID&quot; &quot;FOLDER DOMOWY&quot;
+printf &#x27;%-12s %6s  %s\n&#x27; &quot;-----&quot; &quot;---&quot; &quot;-------------&quot;
+while IFS=: read -r nazwa _ uid _ _ dom powloka; do
+    if [[ $powloka == /bin/bash ]]; then
+        printf &#x27;%-12s %6d  %s\n&#x27; &quot;$nazwa&quot; &quot;$uid&quot; &quot;$dom&quot;
+    fi
+done &lt; /etc/passwd</code></pre></div><div class="kod"><pre><code>Konta z powłoką /bin/bash na: vm
+NAZWA           UID  FOLDER DOMOWY
+-----           ---  -------------
+root              0  /root
+eryk           1000  /home/eryk</code></pre></div><p>Co tu się dzieje. Here-doc nie ma apostrofów wokół słowa <code>NAGLOWEK</code>, więc Bash rozwija w nim <code>$(hostname)</code>. <code>IFS=:</code> mówi <code>read</code>, że kolumny oddziela dwukropek, a podkreślnik <code>_</code> to pudełko na śmieci: kolumny, których nie potrzebujemy, wrzucamy tam i zapominamy. <code>%-12s</code> to napis dosunięty do lewej na dwanaście znaków, <code>%6d</code> to liczba dosunięta do prawej. Liczby do prawej, napisy do lewej, i tabelka wygląda jak z banku, a nie jak lista zakupów pisana w tramwaju.</p><p>Jeśli masz zainstalowanego PostgreSQL-a, wyskoczy też <code>postgres</code>. Tak, baza danych ma Basha. Czasem też chce pogadać z urzędnikiem.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Nożyczki z lekcji 41 tną według prostych wzorców z gwiazdką. A co, jeśli musisz znaleźć w logu wszystkie adresy IP albo sprawdzić, czy ktoś podał poprawny adres e-mail? W następnej lekcji wyrażenia regularne: <code>grep -E</code>, <code>grep -o</code> i <code>[[ =~ ]]</code>. Język, który wygląda jak kot przeszedł po klawiaturze, a jest najpotężniejszym narzędziem do tekstu, jakie znasz.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-043.html" rel="prev">← 43. Słowniki</a><a class="btn domyslny zolty" href="lekcja-045.html" rel="next">45. Wyrażenia regularne →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>54. Komunikaty, logi i kolory — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 54 kursu Linux i Bash od zera do admina: Komunikaty, logi i kolory. kursant pisze skrypty, które oddzielają dane (stdout) od komunikatów (stderr), zapisują ważne zdarzenia do dziennika systemowego przez logger, kolorują komunikaty tylko wtedy, gdy ma to sens, i kończą się kodem wyjścia, z któ">
+<meta property="og:title" content="54. Komunikaty, logi i kolory — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 54 kursu Linux i Bash od zera do admina: Komunikaty, logi i kolory. kursant pisze skrypty, które oddzielają dane (stdout) od komunikatów (stderr), zapisują ważne zdarzenia do dziennika systemowego przez logger, kolorują komunikaty tylko wtedy, gdy ma to sens, i kończą się kodem wyjścia, z któ">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 5</span></div>
+      <div class="boczny-tytul"><a href="index.html#m05">Skrypty, które się nie sypią</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-049.html" data-lekcja="49"><span class="znacznik"></span><span class="nr">49</span> Spacje w nazwach plików</a></li><li><a href="lekcja-050.html" data-lekcja="50"><span class="znacznik"></span><span class="nr">50</span> Tryb „zatrzymaj się przy błędzie”</a></li><li><a href="lekcja-051.html" data-lekcja="51"><span class="znacznik"></span><span class="nr">51</span> Sprzątanie po sobie</a></li><li><a href="lekcja-052.html" data-lekcja="52"><span class="znacznik"></span><span class="nr">52</span> Opcje jak w prawdziwych programach</a></li><li><a href="lekcja-053.html" data-lekcja="53"><span class="znacznik"></span><span class="nr">53</span> Szukanie błędów</a></li><li><a href="lekcja-054.html" data-lekcja="54" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">54</span> Komunikaty, logi i kolory</a></li><li><a href="lekcja-055.html" data-lekcja="55"><span class="znacznik"></span><span class="nr">55</span> Duży skrypt w porządku</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="54" data-modul="5" data-tematy="stdout kontra stderr w skryptach, logger, kolory, konwencje kodów wyjścia">
+    <div class="belka"><span>Lekcja 54 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m05">Moduł 5</a> › Lekcja 54</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Komunikaty, logi i kolory</h1>
+      <p class="meta"><span>⏱ ok. 13 min czytania</span><span>· moduł 5: Skrypty, które się nie sypią</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant pisze skrypty, które oddzielają dane (stdout) od komunikatów (stderr), zapisują ważne zdarzenia do dziennika systemowego przez <code>logger</code>, kolorują komunikaty tylko wtedy, gdy ma to sens, i kończą się kodem wyjścia, z którego inny program coś zrozumie.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#dwa-glosniki-dwie-role">Dwa głośniki, dwie role</a></li><li><a href="#logger-wpis-do-dziennika-budowy">logger: wpis do dziennika budowy</a></li><li><a href="#kolory-farba-ktora-nie-zawsze-wysycha">Kolory: farba, która nie zawsze wysycha</a></li><li><a href="#kody-wyjscia-kciuk-w-gore-kciuk-w-dol-i-liczby-pom">Kody wyjścia: kciuk w górę, kciuk w dół i liczby pomiędzy</a></li><li><a href="#wszystko-razem-miejsce-sh">Wszystko razem: miejsce.sh</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga-flag">Ściąga flag</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p class="ekran">plik z wynikiem nocnego skryptu, w środku liczby przemieszane z napisami „Sprawdzam…”, „OK!”, „Hmm, coś dziwnego” i krzaczkami <code>^[[32m</code></p><p>Kolega napisał skrypt, który zbiera zajętość dysków. Drugi skrypt bierze jego wynik i robi z niego wykres. Wykres od tygodnia pokazuje zero. Dlaczego? Bo w wyniku poza liczbami jest „Sprawdzam dysk…”, „Wszystko gra!” i zielony kolor, który w pliku wygląda, jakby ktoś przeszedł kotem po klawiaturze.</p><p>Skrypt, który gada do człowieka i do maszyny tym samym kanałem, to jak kelner, który przynosi zupę i od razu wylewa do niej swoje przemyślenia o życiu. Dziś rozdzielamy te dwie rzeczy. Do tego dziennik systemowy, kolory, które wiedzą, kiedy się wyłączyć, i kody wyjścia, z którymi da się coś zrobić.</p></section><section><h2 id="dwa-glosniki-dwie-role">Dwa głośniki, dwie role</h2><p>Pamiętasz dwa głośniki z modułu pierwszego? Głośnik 1, stdout, i głośnik 2, stderr. Do tej pory traktowaliśmy je jako „wynik” i „błędy”. W skryptach przyjmij trochę szerszą zasadę:</p><ul><li><strong>stdout to dane.</strong> To, co ktoś może chcieć przekazać rurą dalej albo zapisać do pliku: liczby, listy, raport.</li><li><strong>stderr to rozmowa z człowiekiem.</strong> Błędy, ostrzeżenia, ale też „sprawdzam…”, „gotowe”, postęp pracy.</li></ul><p>Tak robią porządne programy. <code>find</code> wypisuje znalezione pliki na stdout, a „Permission denied” na stderr. Dzięki temu <code>find / -name x 2&gt;/dev/null</code> daje czystą listę.</p><p>W skrypcie wysyłasz komunikat na drugi głośnik przez <code>&gt;&amp;2</code>:</p><div class="kod"><pre><code>echo &quot;Sprawdzam dyski...&quot; &gt;&amp;2
+echo &quot;/ 40&quot;</code></pre></div><p>Pierwsza linijka to rozmowa, druga to dane. Najwygodniej zrobić sobie funkcje, żeby nie pisać <code>&gt;&amp;2</code> w stu miejscach:</p><div class="kod"><pre><code>info() { echo &quot;$*&quot; &gt;&amp;2; }
+blad() { echo &quot;BŁĄD: $*&quot; &gt;&amp;2; }</code></pre></div><p>Funkcja to przycisk w windzie. Naciskasz <code>blad</code>, a winda sama wie, że jedzie na drugie piętro, czyli do głośnika 2.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>stdout programu w C czy Pythonie jest buforowany, gdy idzie do pliku albo rury, a stderr nie. Dlatego przy <code>program &gt; log 2&gt;&amp;1</code> komunikaty potrafią wylądować w pliku w innej kolejności, niż były wypisane. Bashowe <code>echo</code> wypisuje od razu, więc w samych skryptach rzadko to zobaczysz.</p></aside></section><section><h2 id="logger-wpis-do-dziennika-budowy">logger: wpis do dziennika budowy</h2><p>Komunikat na stderr widzisz, kiedy siedzisz przy terminalu. A o trzeciej w nocy, kiedy skrypt odpala budzik, czyli cron, nikt nie siedzi. Komunikat leci w próżnię albo do maila, którego nikt nie czyta.</p><p>Dlatego ważne zdarzenia zapisujemy do <strong>dziennika systemowego</strong>. Wyobraź sobie dziennik budowy: każda ekipa, która coś zrobiła albo coś zepsuła, wpisuje się z godziną i nazwą firmy. Kierownik rano otwiera jeden zeszyt i widzi wszystko. Wpis do tego dziennika robi komenda <code>logger</code>.</p><div class="kod"><pre><code>logger &quot;Kopia zrobiona&quot;
+logger -t kopia -p user.warning &quot;Mało miejsca na /srv&quot;
+logger -s -t kopia &quot;Kopia zrobiona: 120 plików&quot;</code></pre></div><p><code>-t kopia</code> to podpis, tak zwany tag. Bez niego wpis podpisze się Twoją nazwą użytkownika i za miesiąc nie będziesz wiedział, który skrypt to napisał. <code>-p user.warning</code> to waga wpisu. <code>-s</code> dodatkowo wypisuje to samo na stderr, czyli i do dziennika, i na ekran.</p><p>Gdzie to potem znaleźć?</p><div class="kod"><pre><code>journalctl -t kopia                  # [Ubuntu] i [RHEL], wszędzie z systemd
+journalctl -t kopia -p warning       # tylko ostrzeżenia i gorsze
+journalctl -t kopia -f               # podgląd na żywo
+sudo grep kopia /var/log/syslog      # [Ubuntu], gdy działa rsyslog
+sudo grep kopia /var/log/messages    # [RHEL], gdy działa rsyslog</code></pre></div><div class="kod"><pre><code>2026-11-03T16:28:29.160951+01:00 vm kopia: Mało miejsca na /srv
+2026-11-03T16:28:29.163857+01:00 vm kopia: Kopia zrobiona: 120 plików</code></pre></div><p>Data, nazwa komputera, podpis, treść. Kierownik budowy byłby dumny.</p><p>Wagi wpisów mają ustaloną kolejność, od najgorszej: <code>emerg</code> (0), <code>alert</code> (1), <code>crit</code> (2), <code>err</code> (3), <code>warning</code> (4), <code>notice</code> (5), <code>info</code> (6), <code>debug</code> (7). W skryptach admina wystarczą trzy: <code>err</code> dla błędów, <code>warning</code> dla ostrzeżeń, <code>info</code> dla zwykłych zdarzeń. <code>emerg</code> zostaw na sytuacje typu „serwerownia płonie”. Jeśli Twój skrypt kopii zapasowej wysyła <code>emerg</code>, bo plik ma o jeden bajt za dużo, to koledzy szybko nauczą się ignorować wszystko, co wysyłasz.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p><code>logger -s</code> wypisuje na ekran coś w stylu <code>&lt;13&gt;Nov  3 16:28:29 kopia: ...</code>. Ta trzynastka to zakodowana grupa i waga: grupa <code>user</code> ma numer 1, waga <code>notice</code> ma numer 5, a wzór to grupa razy 8 plus waga. 1 × 8 + 5 = 13. Domyślnie <code>logger</code> wysyła właśnie <code>user.notice</code>.</p></aside></section><section><h2 id="kolory-farba-ktora-nie-zawsze-wysycha">Kolory: farba, która nie zawsze wysycha</h2><p>Kolory w terminalu to nie magia, tylko specjalne ciągi znaków. Terminal dostaje bajt <code>ESC</code>, potem <code>[31m</code> i rozumie: „od teraz pisz na czerwono”. <code>[0m</code> znaczy „wróć do normalnych kolorów”.</p><div class="kod"><pre><code>printf &#x27;\e[31mBŁĄD\e[0m: brak pliku\n&#x27;
+printf &#x27;\e[33mUWAGA\e[0m: mało miejsca\n&#x27;
+printf &#x27;\e[32mOK\e[0m: kopia zrobiona\n&#x27;</code></pre></div><p><code>\e</code> to właśnie bajt <code>ESC</code>. 31 to czerwony, 32 zielony, 33 żółty. Na ekranie wygląda świetnie. Problem zaczyna się, kiedy przekierujesz to do pliku:</p><div class="kod"><pre><code>$ cat -v naiwny.log
+^[[31mBŁĄD: brak pliku^[[0m</code></pre></div><p><code>cat -v</code> pokazuje niewidoczne znaki. Plik zawiera surowe kody, bo plik nie jest terminalem i nie ma komu ich zinterpretować. W logu, w mailu z crona, w drugim skrypcie zostaje sama farba rozlana po kartce.</p><p>Stąd złota zasada: <strong>koloruj tylko wtedy, gdy piszesz do terminala.</strong> Bash ma na to test <code>-t</code>:</p><div class="kod"><pre><code>if [[ -t 2 &amp;&amp; -z ${NO_COLOR-} ]]; then
+    czerwony=$&#x27;\e[31m&#x27;; zolty=$&#x27;\e[33m&#x27;; zielony=$&#x27;\e[32m&#x27;; reset=$&#x27;\e[0m&#x27;
+else
+    czerwony=&#x27;&#x27;; zolty=&#x27;&#x27;; zielony=&#x27;&#x27;; reset=&#x27;&#x27;
+fi</code></pre></div><p><code>[[ -t 2 ]]</code> pyta: „czy głośnik 2 jest podłączony do terminala?”. Jeśli stderr idzie do pliku albo do crona, odpowiedź brzmi nie i zmienne kolorów zostają puste. Skrypt dalej je wkleja, tylko że wkleja nic.</p><p>A <code>NO_COLOR</code> to umowa między programistami: jeśli zmienna środowiskowa <code>NO_COLOR</code> jest ustawiona i niepusta, program nie powinien dodawać kolorów. Ktoś ma problem ze wzrokiem, ktoś ma jasny motyw, na którym żółty jest niewidoczny, ktoś po prostu nie lubi. Szanujmy to, kosztuje jeden warunek.</p><p>Zamiast kodów można użyć <code>tput</code>, które pyta bazę terminali, jakie kody działają na tym konkretnym ekranie:</p><div class="kod"><pre><code>czerwony=$(tput setaf 1)
+reset=$(tput sgr0)</code></pre></div><p>Czytelniej, ale uwaga: bez zmiennej <code>TERM</code>, na przykład w cronie, <code>tput</code> się wykłada z <code>tput: No value for $TERM and no -T specified</code> i kodem 2. Dlatego wywołuj je tylko wewnątrz warunku z <code>-t</code>.</p></section><section><h2 id="kody-wyjscia-kciuk-w-gore-kciuk-w-dol-i-liczby-pom">Kody wyjścia: kciuk w górę, kciuk w dół i liczby pomiędzy</h2><p>Kod wyjścia to kciuk, który skrypt pokazuje na koniec. Zero to kciuk w górę. Wszystko inne to kciuk w dół. Ale kciuk w dół ma 255 odcieni i warto ich używać świadomie, bo inny skrypt, cron czy systemd podejmuje na ich podstawie decyzje.</p><p>Konwencje, które warto znać:</p><div class="kod"><pre><code>0        wszystko dobrze
+1        ogólny błąd, &quot;coś poszło nie tak&quot;
+2        złe użycie komendy wbudowanej Basha, w wielu programach poważniejszy błąd
+126      komenda znaleziona, ale nie da się jej uruchomić (brak prawa wykonania)
+127      komenda nie znaleziona
+128+N    proces zabity sygnałem N: 130 to Ctrl+C, 137 to kill -9, 143 to zwykłe kill</code></pre></div><p>Sprawdzone w praktyce:</p><div class="kod"><pre><code>$ ./nieexec.sh; echo &quot;kod: $?&quot;
+bash: ./nieexec.sh: Permission denied
+kod: 126
+$ nieistniejaca_komenda; echo &quot;kod: $?&quot;
+bash: nieistniejaca_komenda: command not found
+kod: 127
+$ sleep 100 &amp; kill $!; wait $!; echo &quot;kod: $?&quot;
+kod: 143</code></pre></div><p><code>grep</code> to wzór programu, który mądrze używa kodów: <code>0</code> znalazł, <code>1</code> nie znalazł, <code>2</code> wystąpił błąd, na przykład brak pliku. Dzięki temu „nic nie znalazłem” to coś innego niż „nie mogłem szukać”. Twój skrypt powinien robić tak samo.</p><p>Jest też starszy zestaw z systemów BSD, plik <code>sysexits.h</code>, który nadaje znaczenie numerom od 64 do 78. Najprzydatniejsze:</p><div class="kod"><pre><code>64  EX_USAGE        złe użycie (złe opcje, brak argumentów)
+66  EX_NOINPUT      nie ma pliku wejściowego
+73  EX_CANTCREAT    nie da się utworzyć pliku wynikowego
+75  EX_TEMPFAIL     chwilowy problem, spróbuj później
+77  EX_NOPERM       brak uprawnień
+78  EX_CONFIG       błąd w konfiguracji</code></pre></div><p>To nie jest obowiązkowe prawo, raczej dobry obyczaj. Najważniejsze: wybierz swoje kody, wypisz je w komentarzu na górze skryptu i trzymaj się ich. Kod wyjścia, który zmienia znaczenie co wersję, to kciuk, który czasem znaczy „super”, a czasem „uciekaj”.</p><p>Uwaga na pułapkę: kod wyjścia to liczba od 0 do 255. <code>exit 300</code> da w praktyce 44, bo liczy się reszta z dzielenia przez 256. A <code>exit -1</code> da 255. Arytmetyka jak na zegarze, na którym po 23 jest 0.</p></section><section><h2 id="wszystko-razem-miejsce-sh">Wszystko razem: miejsce.sh</h2><div class="kod"><pre><code>#!/bin/bash
+# miejsce.sh — sprawdza zajętość systemów plików
+# Kody wyjścia: 0 wszystko OK, 1 przekroczony próg, 2 błąd, 64 złe użycie
+
+prog=${0##*/}
+
+# Kolory tylko wtedy, gdy stderr to terminal i nikt nie prosi o brak kolorów
+if [[ -t 2 &amp;&amp; -z ${NO_COLOR-} ]]; then
+    czerwony=$&#x27;\e[31m&#x27;; zolty=$&#x27;\e[33m&#x27;; zielony=$&#x27;\e[32m&#x27;; reset=$&#x27;\e[0m&#x27;
+else
+    czerwony=&#x27;&#x27;; zolty=&#x27;&#x27;; zielony=&#x27;&#x27;; reset=&#x27;&#x27;
+fi
+
+info()  { printf &#x27;%s[ OK ]%s %s\n&#x27; &quot;$zielony&quot; &quot;$reset&quot; &quot;$*&quot; &gt;&amp;2; }
+uwaga() { printf &#x27;%s[UWAGA]%s %s\n&#x27; &quot;$zolty&quot; &quot;$reset&quot; &quot;$*&quot; &gt;&amp;2
+          logger -t &quot;$prog&quot; -p user.warning -- &quot;$*&quot;; }
+blad()  { printf &#x27;%s[BŁĄD]%s %s\n&#x27; &quot;$czerwony&quot; &quot;$reset&quot; &quot;$*&quot; &gt;&amp;2
+          logger -t &quot;$prog&quot; -p user.err -- &quot;$*&quot;; }
+
+if [[ $# -lt 2 ]]; then
+    echo &quot;Użycie: $prog PRÓG_PROCENT PUNKT_MONTOWANIA...&quot; &gt;&amp;2
+    exit 64
+fi
+
+prog_proc=$1
+shift
+if [[ ! $prog_proc =~ ^[0-9]+$ ]]; then
+    blad &quot;Próg musi być liczbą, a dostałem: $prog_proc&quot;
+    exit 64
+fi
+
+wynik=0
+for punkt in &quot;$@&quot;; do
+    zajete=$(df --output=pcent -- &quot;$punkt&quot; 2&gt;/dev/null | tail -n 1 | tr -dc &#x27;0-9&#x27;)
+    if [[ -z $zajete ]]; then
+        blad &quot;Nie mogę sprawdzić: $punkt&quot;
+        wynik=2
+        continue
+    fi
+    if (( zajete &gt;= prog_proc )); then
+        uwaga &quot;$punkt zajęty w $zajete% (próg $prog_proc%)&quot;
+        (( wynik == 0 )) &amp;&amp; wynik=1
+    else
+        info &quot;$punkt zajęty w $zajete%&quot;
+    fi
+    echo &quot;$punkt $zajete&quot;          # czyste dane na stdout
+done
+exit &quot;$wynik&quot;</code></pre></div><p><code>${0##*/}</code> to nazwa skryptu bez ścieżki, czyli <code>miejsce.sh</code>, a nie <code>/home/eryk/bin/miejsce.sh</code>. Używamy jej jako podpisu w dzienniku. <code>df --output=pcent</code> wypisuje samą kolumnę z procentem zajętości, a <code>tr -dc &#x27;0-9&#x27;</code> wyrzuca wszystko, co nie jest cyfrą. <code>--</code> w <code>logger</code> chroni przed komunikatem, który zaczyna się od minusa.</p><p>Sprawdzamy w terminalu:</p><div class="kod"><pre><code>$ ./miejsce.sh 30 / /nie/ma
+[UWAGA] / zajęty w 40% (próg 30%)
+/ 40
+[BŁĄD] Nie mogę sprawdzić: /nie/ma
+$ echo $?
+2</code></pre></div><p>Na ekranie wszystko razem, z kolorami. A teraz rozdzielamy głośniki:</p><div class="kod"><pre><code>$ ./miejsce.sh 30 / /nie/ma &gt; dane.txt
+[UWAGA] / zajęty w 40% (próg 30%)
+[BŁĄD] Nie mogę sprawdzić: /nie/ma
+$ cat dane.txt
+/ 40
+$ ./miejsce.sh 30 / 2&gt; komunikaty.txt &gt; /dev/null
+$ cat -v komunikaty.txt
+[UWAGA] / zajM-DM-^Yty w 40% (prM-CM-3g 30%)</code></pre></div><p>W <code>dane.txt</code> czyste dane, które drugi skrypt może łyknąć bez dławienia. W <code>komunikaty.txt</code> nie ma ani jednego kodu koloru, bo stderr szedł do pliku, więc skrypt sam wyłączył farbę. Te dziwne <code>M-DM-^Y</code> to tylko sposób, w jaki <code>cat -v</code> pokazuje polskie litery, bo też są dla niego „niezwykłymi” bajtami. W edytorze zobaczysz zwykłe „zajęty”.</p><p>A w dzienniku:</p><div class="kod"><pre><code>$ sudo grep miejsce.sh /var/log/syslog
+2026-11-03T16:37:36.265441+01:00 vm miejsce.sh: Nie mogę sprawdzić: /nie/ma
+2026-11-03T16:37:36.306652+01:00 vm miejsce.sh: / zajęty w 40% (próg 30%)</code></pre></div><p>Do dziennika trafiły tylko ostrzeżenia i błędy. „Wszystko OK” nie musi być zapisywane co pięć minut przez rok. Dziennik budowy to nie pamiętnik.</p></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p>Każdy proces ma tabelkę otwartych plików, w której pozycja 1 to stdout, a pozycja 2 to stderr. Kiedy siedzisz w terminalu, obie pozycje wskazują na to samo urządzenie terminala, dlatego widzisz wszystko razem. Przekierowanie <code>&gt;</code> czy <code>2&gt;</code> podmienia tylko jedną pozycję w tabelce. <code>&gt;&amp;2</code> przy <code>echo</code> znaczy: „na czas tej jednej komendy podłącz głośnik 1 tam, gdzie jest głośnik 2”.</p><p>Test <code>[[ -t 2 ]]</code> zadaje jądru pytanie: „czy to, co jest pod pozycją 2, jest terminalem?”. Programy w C robią to samo funkcją <code>isatty</code>. Dlatego <code>ls</code> w terminalu wypisuje kolorowe nazwy w kolumnach, a <code>ls | cat</code> jedną nazwę na linijkę i bez kolorów. To nie przypadek, tylko ta sama sztuczka.</p><p><code>logger</code> nie pisze do pliku. Wysyła krótką wiadomość do gniazda <code>/dev/log</code>, czyli do skrzynki pocztowej, którą opróżnia usługa dziennika. W systemach z systemd odbiera ją <code>systemd-journald</code> i zapisuje w swoim dzienniku, który czytasz przez <code>journalctl</code>. Jeśli dodatkowo działa <code>rsyslog</code>, dostaje kopię i zapisuje ją do zwykłego pliku tekstowego, <code>/var/log/syslog</code> na Ubuntu albo <code>/var/log/messages</code> na Red Hacie. Gdy nie ma kto odebrać, <code>logger</code> zgłasza <code>socket /dev/log: No such file or directory</code>.</p></section><section><h2 id="sciaga-flag">Ściąga flag</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga</th><th>Co robi</th></tr><tr><td><code>echo</code> / <code>printf</code></td><td><code>&gt;&amp;2</code></td><td>wysyła komunikat na stderr</td></tr><tr><td><code>logger</code></td><td><code>-t TAG</code></td><td>podpis wpisu w dzienniku</td></tr><tr><td><code>logger</code></td><td><code>-p grupa.waga</code></td><td>waga wpisu, np. <code>user.err</code>, <code>user.warning</code></td></tr><tr><td><code>logger</code></td><td><code>-s</code></td><td>dodatkowo wypisuje na stderr</td></tr><tr><td><code>logger</code></td><td><code>--</code></td><td>koniec opcji, dalej sama treść</td></tr><tr><td><code>journalctl</code></td><td><code>-t TAG</code></td><td>wpisy z danym podpisem</td></tr><tr><td><code>journalctl</code></td><td><code>-p warning</code></td><td>tylko ta waga i gorsze</td></tr><tr><td><code>journalctl</code></td><td><code>-f</code></td><td>podgląd na żywo</td></tr><tr><td>[[ ]]</td><td><code>-t 1</code> / <code>-t 2</code></td><td>czy stdout / stderr to terminal</td></tr><tr><td><code>tput</code></td><td><code>setaf N</code> / <code>sgr0</code></td><td>kolor tekstu N / powrót do normalnych</td></tr><tr><td><code>cat</code></td><td><code>-v</code></td><td>pokazuje niewidoczne znaki, np. kody kolorów</td></tr><tr><td><code>df</code></td><td><code>--output=pcent</code></td><td>tylko kolumna z procentem zajętości</td></tr><tr><td><code>exit</code></td><td><code>0</code>–<code>255</code></td><td>kod wyjścia; większe liczby zawijają się modulo 256</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><div class="kod"><pre><code>#!/bin/bash
+echo &quot;Coś nie tak&quot; &gt;2</code></pre></div><p>Uruchamiasz i na ekranie cisza. Żadnego błędu. A po chwili w folderze pojawia się plik o nazwie <code>2</code>.</p><div class="kod"><pre><code>$ ls -l 2
+-rw-r--r-- 1 eryk eryk 13 Nov  3 16:29 2
+$ cat 2
+Coś nie tak</code></pre></div><p>Bez znaku <code>&amp;</code> Bash rozumie <code>&gt;2</code> jako „przekieruj do pliku o nazwie 2”. Komunikat o błędzie trafia do pliku, którego nikt nie szuka, a w folderze ze skryptami rośnie kolekcja plików z cyframi w nazwach. Jak list wysłany na adres „Dwa”, bez ulicy i miasta. Poczta coś z nim zrobi, ale nie to, co chciałeś.</p><p>Poprawnie: <code>&gt;&amp;2</code>. Ampersand mówi „to nie nazwa pliku, tylko numer głośnika”. ShellCheck to łapie:</p><div class="kod"><pre><code>In z2.sh line 2:
+echo &quot;Coś nie tak&quot; &gt;2
+                   ^-- SC2210 (warning): This is a file redirection. Was it supposed to be a comparison or fd operation?</code></pre></div><p>Kolejny powód, żeby każdy skrypt przed wdrożeniem przeszedł przez sąsiada zza płotu.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><p>Weź poprawiony <code>policz.sh</code> z poprzedniego zadania i zrób z niego porządnego obywatela:</p><ol><li>Na stdout ma iść <strong>tylko sama liczba plików</strong>. Wszystkie inne napisy idą na stderr przez funkcje <code>info</code> i <code>blad</code>.</li><li>Bez argumentu skrypt wypisuje, jak go używać, i kończy się kodem 64. Gdy folder nie istnieje, wypisuje błąd i kończy się kodem 66.</li><li>Każdy błąd trafia też do dziennika przez <code>logger</code> z podpisem <code>policz</code>.</li><li>Słowo „BŁĄD” jest czerwone, ale tylko gdy stderr to terminal i nie ustawiono <code>NO_COLOR</code>.</li></ol><p>Sprawdź: <code>./policz.sh /etc &gt; wynik.txt</code> (w pliku ma być sama liczba), <code>./policz.sh /nie/ma; echo $?</code> (ma być 66) i <code>journalctl -t policz</code> albo <code>grep policz</code> w pliku dziennika.</p><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><div class="kod"><pre><code>#!/bin/bash
+# policz.sh — liczy pliki w folderze; na stdout tylko liczba
+# Kody: 0 OK, 64 złe użycie, 66 brak folderu
+
+if [[ -t 2 &amp;&amp; -z ${NO_COLOR-} ]]; then
+    czerwony=$(tput setaf 1); reset=$(tput sgr0)
+else
+    czerwony=&#x27;&#x27;; reset=&#x27;&#x27;
+fi
+
+info() { echo &quot;$*&quot; &gt;&amp;2; }
+blad() {
+    echo &quot;${czerwony}BŁĄD:${reset} $*&quot; &gt;&amp;2
+    logger -t policz -p user.err -- &quot;$*&quot;
+}
+
+if [[ $# -ne 1 ]]; then
+    blad &quot;Użycie: ${0##*/} FOLDER&quot;
+    exit 64
+fi
+
+katalog=$1
+if [[ ! -d $katalog ]]; then
+    blad &quot;Nie ma folderu: $katalog&quot;
+    exit 66
+fi
+
+ile=0
+for f in &quot;$katalog&quot;/*; do
+    if [[ -f $f ]]; then
+        ile=$((ile + 1))
+    fi
+done
+
+info &quot;Liczę pliki w: $katalog&quot;
+echo &quot;$ile&quot;</code></pre></div><div class="kod"><pre><code>$ ./policz.sh &quot;Moje dokumenty&quot; &gt; wynik.txt
+Liczę pliki w: Moje dokumenty
+$ cat wynik.txt
+6
+$ ./policz.sh /nie/ma; echo &quot;kod: $?&quot;
+BŁĄD: Nie ma folderu: /nie/ma
+kod: 66
+$ sudo grep policz /var/log/syslog
+2026-11-03T16:37:31.737545+01:00 vm policz: Nie ma folderu: /nie/ma</code></pre></div><p>Na stdout sama szóstka, cała reszta na drugim głośniku. <code>tput</code> wywołujemy tylko w środku warunku z <code>-t 2</code>, więc w cronie, gdzie nie ma terminala ani zmiennej <code>TERM</code>, nikt go nawet nie zawoła. I zauważ, że skoro jesteśmy już w Bashu, przeszliśmy z <code>[ ]</code> na <code>[[ ]]</code>. W podwójnych nawiasach Bash nie rozsypuje zmiennych na kawałki, więc <code>[[ -f $f ]]</code> jest bezpieczne nawet bez cudzysłowów. Bramkarz w lepszych butach.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Nasze skrypty rosną. Funkcje do komunikatów kopiujemy już z pliku do pliku, a to pierwszy krok do bałaganu. W następnej lekcji robimy duży skrypt jak należy: wspólne funkcje w osobnej bibliotece wczytywanej przez <code>source</code>, porządna struktura z funkcją <code>main</code>, styl, który da się czytać po roku, i blokada <code>flock</code>, żeby skrypt nie wystartował dwa razy naraz.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-053.html" rel="prev">← 53. Szukanie błędów</a><a class="btn domyslny zolty" href="lekcja-055.html" rel="next">55. Duży skrypt w porządku →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

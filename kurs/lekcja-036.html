@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>36. Wybór z menu — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 36 kursu Linux i Bash od zera do admina: Wybór z menu. kursant używa case, żeby zamiast drabinki z elif napisać czytelny wybór jednej z wielu dróg, rozumie wzorce w case i buduje proste menu z numerkami przez select.">
+<meta property="og:title" content="36. Wybór z menu — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 36 kursu Linux i Bash od zera do admina: Wybór z menu. kursant używa case, żeby zamiast drabinki z elif napisać czytelny wybór jednej z wielu dróg, rozumie wzorce w case i buduje proste menu z numerkami przez select.">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 3</span></div>
+      <div class="boczny-tytul"><a href="index.html#m03">Pisanie skryptów</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-031.html" data-lekcja="31"><span class="znacznik"></span><span class="nr">31</span> Twój pierwszy skrypt</a></li><li><a href="lekcja-032.html" data-lekcja="32"><span class="znacznik"></span><span class="nr">32</span> Zmienne i cudzysłowy</a></li><li><a href="lekcja-033.html" data-lekcja="33"><span class="znacznik"></span><span class="nr">33</span> Skrypt, który przyjmuje polecenia</a></li><li><a href="lekcja-034.html" data-lekcja="34"><span class="znacznik"></span><span class="nr">34</span> Udało się czy nie?</a></li><li><a href="lekcja-035.html" data-lekcja="35"><span class="znacznik"></span><span class="nr">35</span> Jeśli… to…</a></li><li><a href="lekcja-036.html" data-lekcja="36" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">36</span> Wybór z menu</a></li><li><a href="lekcja-037.html" data-lekcja="37"><span class="znacznik"></span><span class="nr">37</span> Pętle</a></li><li><a href="lekcja-038.html" data-lekcja="38"><span class="znacznik"></span><span class="nr">38</span> Bash umie liczyć (trochę)</a></li><li><a href="lekcja-039.html" data-lekcja="39"><span class="znacznik"></span><span class="nr">39</span> Wynik komendy w zmiennej</a></li><li><a href="lekcja-040.html" data-lekcja="40"><span class="znacznik"></span><span class="nr">40</span> Funkcje</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="36" data-modul="3" data-tematy="case, wzorce, select">
+    <div class="belka"><span>Lekcja 36 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m03">Moduł 3</a> › Lekcja 36</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Wybór z menu</h1>
+      <p class="meta"><span>⏱ ok. 10 min czytania</span><span>· moduł 3: Pisanie skryptów</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant używa <code>case</code>, żeby zamiast drabinki z <code>elif</code> napisać czytelny wybór jednej z wielu dróg, rozumie wzorce w <code>case</code> i buduje proste menu z numerkami przez <code>select</code>.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#case-czyli-rozdzielnia-na-poczcie">case, czyli rozdzielnia na poczcie</a></li><li><a href="#wzorce-czyli-gwiazdka-wraca">Wzorce, czyli gwiazdka wraca</a></li><li><a href="#select-czyli-menu-jak-w-bankomacie">select, czyli menu jak w bankomacie</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga-flag">Ściąga flag</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p class="ekran">skrypt z siedmioma <code>elif</code> pod rząd, ekran przewija się w dół jak regulamin promocji</p><p>Piszesz skrypt, który obsługuje polecenia <code>start</code>, <code>stop</code>, <code>restart</code>, <code>reload</code> i <code>status</code>. Z tym, co znasz, wygląda to tak: <code>if [ &quot;$1&quot; = &quot;start&quot; ]</code>, potem <code>elif [ &quot;$1&quot; = &quot;stop&quot; ]</code>, potem <code>elif</code>, <code>elif</code>, <code>elif</code>. Każda linijka powtarza to samo <code>&quot;$1&quot; =</code>. Czytasz to i czujesz się jak w kolejce do okienka, w której każdy petent pyta urzędnika o to samo innymi słowami.</p><p>Dziś zrobimy z tego czystą listę: „jeśli start, to to; jeśli stop, to tamto; jeśli coś innego, to pokaż instrukcję”. A na koniec zbudujemy menu z numerkami, które wygląda jak z bankomatu: wybierz 1, żeby sprawdzić dysk, 2, żeby zobaczyć, kto jest zalogowany. Bez żadnych dodatkowych programów, sam Bash.</p></section><section><h2 id="case-czyli-rozdzielnia-na-poczcie">case, czyli rozdzielnia na poczcie</h2><p>Wyobraź sobie rozdzielnię listów na poczcie. Pani bierze kopertę, patrzy na kod pocztowy i wrzuca do odpowiedniej przegródki: 30 do Krakowa, 00 do Warszawy, 80 do Gdańska. Nie zadaje sobie siedmiu pytań po kolei. Patrzy raz i wie, gdzie to idzie. A jak kod jest nieczytelny, list ląduje w przegródce „inne”.</p><p>W Bashu ta pani nazywa się <code>case</code>:</p><div class="kod"><pre><code>#!/bin/bash
+# usluga.sh — udaje skrypt sterujący usługą
+
+case &quot;$1&quot; in
+    start)
+        echo &quot;Uruchamiam usługę&quot;
+        ;;
+    stop)
+        echo &quot;Zatrzymuję usługę&quot;
+        ;;
+    restart|reload)
+        echo &quot;Restartuję usługę&quot;
+        ;;
+    status)
+        echo &quot;Usługa działa (chyba)&quot;
+        ;;
+    *)
+        echo &quot;Użycie: $0 {start|stop|restart|status}&quot;
+        exit 1
+        ;;
+esac</code></pre></div><p><code>case &quot;$1&quot; in</code> znaczy: „weź to, co jest w <code>$1</code>, i porównuj z tym, co niżej”.</p><p>Każda przegródka to wzorzec zakończony nawiasem, na przykład <code>start)</code>. Pod nim komendy, które mają się wykonać. A na końcu przegródki dwa średniki <code>;;</code>. To jest „koniec, nie sprawdzaj dalej”.</p><p><code>restart|reload)</code> to dwa wzorce w jednej przegródce. Pionowa kreska znaczy tu „albo”. Uwaga, to nie jest rura. Ten sam znak, inny pokój, inna robota. Jak klucz, który w jednych drzwiach otwiera, a w innych służy do otwierania piwa.</p><p><code>*)</code> to przegródka „wszystko inne”. Gwiazdka pasuje do każdego tekstu, więc stawiamy ją na samym końcu.</p><p>I zamknięcie: <code>esac</code>. Tak, to <code>case</code> czytane od tyłu. Tak samo jak <code>fi</code> zamyka <code>if</code>. Autorzy powłoki mieli poczucie humoru, którego nie dało się już cofnąć.</p><div class="kod"><pre><code>./usluga.sh start
+./usluga.sh reload
+./usluga.sh; echo &quot;kod $?&quot;
+./usluga.sh Start</code></pre></div><div class="kod"><pre><code>Uruchamiam usługę
+Restartuję usługę
+Użycie: ./usluga.sh {start|stop|restart|status}
+kod 1
+Użycie: ./usluga.sh {start|stop|restart|status}</code></pre></div><p>Zwróć uwagę na ostatnią linijkę. <code>Start</code> z wielkiej litery nie pasuje do <code>start</code>. <code>case</code> porównuje dokładnie, litera w literę. Jak urzędnik, który nie przyjmie wniosku, bo napisałeś „Kraków” zamiast „KRAKÓW” drukowanymi.</p><p>To, co właśnie widzisz, to szkielet klasycznych skryptów startowych. Zanim systemd przejął zarządzanie usługami, w <code>/etc/init.d/</code> leżały skrypty zbudowane dokładnie tak: wielki <code>case</code> ze <code>start</code>, <code>stop</code>, <code>restart</code> i <code>status</code>. Na niektórych systemach ten folder nadal istnieje, więc jak będziesz miał chwilę, zajrzyj. Archeologia dla adminów.</p></section><section><h2 id="wzorce-czyli-gwiazdka-wraca">Wzorce, czyli gwiazdka wraca</h2><p>Pamiętasz gwiazdkę, znak zapytania i nawiasy kwadratowe z lekcji o wzorcach nazw plików? W <code>case</code> działają tak samo, tylko zamiast nazw plików dopasowują tekst.</p><p>Najczęstszy przykład z życia: pytanie „na pewno?”.</p><div class="kod"><pre><code>#!/bin/bash
+read -r -p &quot;Na pewno usunąć? [t/n] &quot; odp
+
+case &quot;$odp&quot; in
+    [tT]|[tT]ak|[yY]|[yY]es)
+        echo &quot;Usuwam&quot;
+        ;;
+    [nN]*)
+        echo &quot;Nic nie robię&quot;
+        ;;
+    &quot;&quot;)
+        echo &quot;Nic nie wpisałeś, więc nic nie robię&quot;
+        ;;
+    *)
+        echo &quot;Nie rozumiem: $odp&quot;
+        ;;
+esac</code></pre></div><p><code>[tT]</code> pasuje do małego albo wielkiego <code>t</code>. <code>[tT]ak</code> pasuje do „tak” i „Tak”. <code>[nN]*</code> pasuje do wszystkiego, co zaczyna się na <code>n</code>: „n”, „nie”, „NIE”, a nawet „nigdy w życiu”. <code>&quot;&quot;</code> to pusty tekst, czyli ktoś wcisnął sam Enter.</p><div class="kod"><pre><code>t      -&gt; Usuwam
+Tak    -&gt; Usuwam
+y      -&gt; Usuwam
+nie    -&gt; Nic nie robię
+(Enter)-&gt; Nic nie wpisałeś, więc nic nie robię
+moze   -&gt; Nie rozumiem: moze</code></pre></div><p>I zasada, której warto się trzymać przy wszystkim, co niszczy dane: jak nie wiesz, co użytkownik miał na myśli, nie rób nic. „Może” to nie jest zgoda. Ani w adminowaniu, ani w życiu.</p><p>Wzorce w <code>case</code> przydają się też do końcówek plików:</p><div class="kod"><pre><code>case &quot;$plik&quot; in
+    *.jpg|*.png) echo &quot;obraz&quot; ;;
+    *.txt)       echo &quot;tekst&quot; ;;
+    *)           echo &quot;nie wiem&quot; ;;
+esac</code></pre></div><p>Jak przegródka mieści się w jednej linijce, możesz napisać ją w jednej linijce, z <code>;;</code> na końcu. Bash się nie obrazi.</p><p>A jeśli chcesz, żeby wielkość liter nie miała znaczenia w całym skrypcie, jest przełącznik:</p><div class="kod"><pre><code>shopt -s nocasematch</code></pre></div><p>Po nim <code>tak</code> pasuje i do „TAK”, i do „tAk”. Przydatne, kiedy użytkownicy piszą tak, jak im się podoba, czyli zawsze.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>oprócz <code>;;</code> są jeszcze dwa zakończenia. <code>;&amp;</code> każe wykonać od razu komendy z następnej przegródki, bez sprawdzania jej wzorca, jak brak <code>break</code> w <code>switch</code> w C. <code>;;&amp;</code> każe sprawdzać kolejne wzorce dalej, jakby ten nie pasował. Przykład: <code>*.tar.gz) echo &quot;archiwum tar&quot; ;&amp;</code>, a pod spodem <code>*.gz) echo &quot;skompresowane gzipem&quot; ;;</code> — dla <code>a.tar.gz</code> wypisze obie linijki. Działa w Bashu, ale nie w każdej powłoce, więc w skryptach dla <code>sh</code> tego nie używaj.</p></aside></section><section><h2 id="select-czyli-menu-jak-w-bankomacie">select, czyli menu jak w bankomacie</h2><p>Teraz coś, co wygląda na magię, a jest jedną komendą. <code>select</code> wyświetla ponumerowaną listę, pyta o numer i daje Ci to, co wybrano. Jak bankomat: 1 wypłata, 2 saldo, 3 doładowanie telefonu. Nikt nie wpisuje słowa „wypłata”, wszyscy klikają numer.</p><div class="kod"><pre><code>#!/bin/bash
+# menu.sh — małe menu admina
+
+PS3=&quot;Wybierz numer: &quot;
+
+select opcja in &quot;Miejsce na dysku&quot; &quot;Kto jest zalogowany&quot; &quot;Czas pracy&quot; &quot;Wyjście&quot;; do
+    case &quot;$opcja&quot; in
+        &quot;Miejsce na dysku&quot;)
+            df -h /
+            ;;
+        &quot;Kto jest zalogowany&quot;)
+            who
+            ;;
+        &quot;Czas pracy&quot;)
+            uptime
+            ;;
+        &quot;Wyjście&quot;)
+            echo &quot;Do zobaczenia&quot;
+            break
+            ;;
+        *)
+            echo &quot;Nie ma opcji numer $REPLY&quot;
+            ;;
+    esac
+done</code></pre></div><div class="kod"><pre><code>1) Miejsce na dysku	3) Czas pracy
+2) Kto jest zalogowany	4) Wyjście
+Wybierz numer: 3
+ 16:24:51 up 6 min,  0 user,  load average: 0.58, 0.20, 0.07
+Wybierz numer: 7
+Nie ma opcji numer 7
+Wybierz numer: 4
+Do zobaczenia</code></pre></div><p>Rozbierzmy to.</p><p><code>PS3</code> to tekst zaproszenia, który <code>select</code> wyświetla przed pytaniem o numer. Jak go nie ustawisz, zobaczysz domyślne <code>#?</code>, które wygląda, jakby skrypt sam nie wiedział, czego chce.</p><p><code>select opcja in ... ; do ... done</code> działa jak pętla. Wyświetla listę, czeka na numer, wkłada wybrany tekst do zmiennej <code>opcja</code>, wykonuje to, co jest między <code>do</code> i <code>done</code>, i pyta znowu. W kółko. Pętle dokładnie poznamy w następnej lekcji, na razie wystarczy, że wiesz: to się kręci, dopóki ktoś nie powie dość.</p><p>To „dość” to <code>break</code>. Wychodzi z menu. Bez niego jedyną drogą ucieczki jest Ctrl+D albo Ctrl+C. Ctrl+D to koniec wejścia, czyli grzeczne „nie mam już nic do powiedzenia”, i <code>select</code> się wtedy kończy.</p><p>Gdy ktoś wpisze numer spoza listy albo w ogóle nie numer, <code>opcja</code> jest pusta, a to, co naprawdę wpisał, leży w zmiennej <code>REPLY</code>. Dlatego w gałęzi <code>*)</code> pokazujemy <code>$REPLY</code>. A jak ktoś wciśnie sam Enter, <code>select</code> po prostu wyświetla menu jeszcze raz. Jak bankomat, który na pusty ekran mówi „Wybierz operację” po raz czwarty.</p><p>I zauważ, że <code>select</code> i <code>case</code> to para jak kelner i kucharz. <code>select</code> zbiera zamówienie, <code>case</code> decyduje, co z nim zrobić.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>lista w <code>select</code> to zwykłe słowa po <code>in</code>, więc możesz tam dać wzorzec. <code>select plik in *.log</code> zrobi menu ze wszystkich logów w folderze. Szerokość układu <code>select</code> dobiera do zmiennej <code>COLUMNS</code>, dlatego w wąskim oknie opcje ustawią się jedna pod drugą.</p></aside></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p><code>case</code> nie uruchamia żadnego programu. Nie ma pliku <code>/usr/bin/case</code>. To jest słowo zastrzeżone Basha, jak <code>if</code>, <code>for</code> czy <code>while</code>, więc całą robotę robi sam urzędnik w okienku, bez dzwonienia do innych działów. Możesz to sprawdzić:</p><div class="kod"><pre><code>type case select</code></pre></div><div class="kod"><pre><code>case is a shell keyword
+select is a shell keyword</code></pre></div><p>Co robi Bash, kiedy dochodzi do <code>case</code>? Najpierw rozwija słowo po <code>case</code>, czyli zamienia <code>&quot;$1&quot;</code> na prawdziwą wartość. Potem bierze przegródki od góry i porównuje tekst z każdym wzorcem po kolei. Przy pierwszym trafieniu wykonuje komendy i przy <code>;;</code> wyskakuje za <code>esac</code>. Dlatego kolejność ma znaczenie: jeśli <code>*)</code> postawisz na górze, to złapie wszystko i reszta przegródek nigdy nie dostanie żadnego listu. Pani na poczcie, która wszystko wrzuca do „inne”, bo tak szybciej.</p><p>Ważne: wzorce w <code>case</code> nie szukają plików na dysku. <code>*.txt</code> w <code>case</code> nie patrzy, jakie pliki leżą w folderze. Porównuje tylko tekst ze wzorcem. To jest ta sama gwiazdka, ale używana jak szablon, a nie jak wyszukiwarka.</p><p><code>select</code> działa tak: wypisuje listę i zaproszenie <code>PS3</code> na wyjście błędów, czyli na drugi głośnik, dzięki czemu menu widać nawet wtedy, gdy zwykły wynik przekierujesz do pliku. Potem czyta jedną linijkę z wejścia i zapisuje ją w <code>REPLY</code>. Jeśli to numer z listy, wkłada odpowiedni tekst do Twojej zmiennej. Jeśli przeczyta koniec wejścia, kończy się z kodem 1.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p><code>case</code> jest w standardzie POSIX, więc zadziała też w <code>dash</code> i każdej innej powłoce. <code>select</code> przyszedł z Korn shella i w standardzie POSIX go nie ma, a <code>dash</code> go nie zna. Skrypt z <code>select</code> musi mieć <code>#!/bin/bash</code>.</p></aside></section><section><h2 id="sciaga-flag">Ściąga flag</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga / element</th><th>Co robi</th></tr><tr><td><code>case</code></td><td><code>wzorzec)</code></td><td>początek przegródki</td></tr><tr><td><code>case</code></td><td><code>a|b)</code></td><td>pasuje do <code>a</code> albo <code>b</code></td></tr><tr><td><code>case</code></td><td><code>*)</code></td><td>wszystko inne, stawiaj na końcu</td></tr><tr><td><code>case</code></td><td>[tT]</td><td>jeden znak z listy</td></tr><tr><td><code>case</code></td><td><code>?</code></td><td>dokładnie jeden dowolny znak</td></tr><tr><td><code>case</code></td><td><code>&quot;&quot;)</code></td><td>pusty tekst</td></tr><tr><td><code>case</code></td><td><code>;;</code></td><td>koniec przegródki, wyjdź z <code>case</code></td></tr><tr><td><code>case</code></td><td><code>;&amp;</code></td><td>wykonaj też następną przegródkę</td></tr><tr><td><code>case</code></td><td><code>;;&amp;</code></td><td>sprawdzaj dalej kolejne wzorce</td></tr><tr><td><code>case</code></td><td><code>esac</code></td><td>koniec całego <code>case</code></td></tr><tr><td><code>shopt</code></td><td><code>-s nocasematch</code></td><td>wielkość liter bez znaczenia w <code>case</code> i <code>[[ ]]</code></td></tr><tr><td><code>select</code></td><td><code>PS3</code></td><td>tekst zaproszenia przed numerem</td></tr><tr><td><code>select</code></td><td><code>REPLY</code></td><td>to, co użytkownik naprawdę wpisał</td></tr><tr><td><code>select</code></td><td><code>break</code></td><td>wyjście z menu</td></tr><tr><td><code>select</code></td><td>Ctrl+D</td><td>koniec wejścia, menu się kończy</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>Zapomniane dwa średniki:</p><div class="kod"><pre><code>case &quot;$1&quot; in
+    start)
+        echo &quot;Start&quot;
+    stop)
+        echo &quot;Stop&quot;
+        ;;
+esac</code></pre></div><div class="kod"><pre><code>zle.sh: line 5: syntax error near unexpected token `)&#x27;
+zle.sh: line 5: `    stop)&#x27;</code></pre></div><p>Bash czyta <code>stop)</code> jako dalszy ciąg komend z przegródki <code>start</code> i nie wie, co zrobić z nawiasem. Zauważ, że skrypt nie wykonał nawet pierwszej linijki. Błąd składni wywala cały blok, zanim cokolwiek się uruchomi. Naprawa: <code>;;</code> na końcu każdej przegródki. ShellCheck od razu pyta: „Did you forget the ;; after the previous case item?”. Czyli kolega przy biurku obok, który zauważa, zanim szef zauważy.</p><p>Drugi błąd jest podstępniejszy, bo nie daje żadnego komunikatu:</p><div class="kod"><pre><code>case &quot;$1&quot; in
+    &quot;*.txt&quot;) echo &quot;plik tekstowy&quot; ;;
+    *)       echo &quot;coś innego&quot; ;;
+esac</code></pre></div><p>Dla <code>notatki.txt</code> wypisze „coś innego”. Bo wzorzec w cudzysłowie to już nie wzorzec, tylko zwykły tekst. Pasuje wyłącznie do kogoś, kto nazwał plik dosłownie gwiazdka-kropka-txt. Koperta chroni zawartość przed rozwijaniem, także gwiazdkę. Zasada: słowo po <code>case</code> w cudzysłowie, wzorce z gwiazdką bez.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><p>Napisz skrypt <code>typ.sh</code>, który dostaje nazwę pliku i po końcówce mówi, co to jest: <code>.jpg</code>, <code>.jpeg</code>, <code>.png</code> to obraz, <code>.txt</code> i <code>.md</code> to tekst, <code>.tar.gz</code>, <code>.tgz</code> i <code>.zip</code> to archiwum, <code>.sh</code> to skrypt, a wszystko inne „nie wiem, co to”. Wielkość liter ma nie mieć znaczenia, czyli <code>ZDJECIE.JPG</code> też jest obrazem. Bez argumentu skrypt ma wypisać, jak go używać, i zakończyć się kodem 1.</p><p>Bonus: drugi skrypt <code>typ_menu.sh</code>, który przez <code>select</code> pokazuje menu ze wszystkimi plikami w bieżącym folderze i dla wybranego woła <code>typ.sh</code>.</p><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><div class="kod"><pre><code>#!/bin/bash
+# typ.sh — zgaduje rodzaj pliku po końcówce nazwy
+
+if [ $# -eq 0 ]; then
+    echo &quot;Użycie: $0 NAZWA_PLIKU&quot;
+    exit 1
+fi
+
+shopt -s nocasematch
+
+case &quot;$1&quot; in
+    *.jpg|*.jpeg|*.png)    echo &quot;$1: obraz&quot; ;;
+    *.txt|*.md)            echo &quot;$1: tekst&quot; ;;
+    *.tar.gz|*.tgz|*.zip)  echo &quot;$1: archiwum&quot; ;;
+    *.sh)                  echo &quot;$1: skrypt&quot; ;;
+    *)                     echo &quot;$1: nie wiem, co to&quot; ;;
+esac</code></pre></div><div class="kod"><pre><code>ZDJECIE.JPG: obraz
+notatki.md: tekst
+kopia.tar.gz: archiwum
+instalka.sh: skrypt
+dziwne.xyz: nie wiem, co to</code></pre></div><p><code>shopt -s nocasematch</code> załatwia wielkość liter jedną linijką. Bez niego musiałbyś pisać <code>*.[jJ][pP][gG]</code>, co wygląda jak hasło do Wi-Fi w hotelu. I zauważ: <code>*.tar.gz</code> stoi przed jakimkolwiek <code>*.gz</code>, bo <code>case</code> bierze pierwsze trafienie.</p><p>Bonus:</p><div class="kod"><pre><code>#!/bin/bash
+# typ_menu.sh — wybierz plik z listy, a skrypt powie, co to
+
+PS3=&quot;Który plik? (Ctrl+D kończy) &quot;
+
+select plik in *; do
+    if [ -n &quot;$plik&quot; ]; then
+        ./typ.sh &quot;$plik&quot;
+    else
+        echo &quot;Nie ma pliku numer $REPLY&quot;
+    fi
+done</code></pre></div><div class="kod"><pre><code>1) lista.txt
+2) typ.sh
+3) wakacje.PNG
+Który plik? (Ctrl+D kończy) 3
+wakacje.PNG: obraz
+Który plik? (Ctrl+D kończy) 9
+Nie ma pliku numer 9</code></pre></div><p>Gwiazdka po <code>in</code> zamienia się na listę plików, a <code>select</code> robi z niej menu. Dwie linijki i masz własnego menedżera plików. No, prawie. Bardzo prawie.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>W bonusie <code>select</code> kręci się w kółko, dopóki nie przerwiesz. W następnej lekcji dowiesz się, jak takie kręcenie robić świadomie: pętle <code>for</code>, <code>while</code> i <code>until</code>, czyli jak kazać komputerowi zrobić to samo sto razy, kiedy Tobie nie chce się nawet dwa.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-035.html" rel="prev">← 35. Jeśli… to…</a><a class="btn domyslny zolty" href="lekcja-037.html" rel="next">37. Pętle →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

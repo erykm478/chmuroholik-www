@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>32. Zmienne i cudzysłowy — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 32 kursu Linux i Bash od zera do admina: Zmienne i cudzysłowy. kursant zapisuje dane w zmiennych, wie, kiedy użyć cudzysłowu podwójnego, a kiedy pojedynczego, i umie zapytać użytkownika o dane przez read, także o hasło.">
+<meta property="og:title" content="32. Zmienne i cudzysłowy — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 32 kursu Linux i Bash od zera do admina: Zmienne i cudzysłowy. kursant zapisuje dane w zmiennych, wie, kiedy użyć cudzysłowu podwójnego, a kiedy pojedynczego, i umie zapytać użytkownika o dane przez read, także o hasło.">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 3</span></div>
+      <div class="boczny-tytul"><a href="index.html#m03">Pisanie skryptów</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-031.html" data-lekcja="31"><span class="znacznik"></span><span class="nr">31</span> Twój pierwszy skrypt</a></li><li><a href="lekcja-032.html" data-lekcja="32" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">32</span> Zmienne i cudzysłowy</a></li><li><a href="lekcja-033.html" data-lekcja="33"><span class="znacznik"></span><span class="nr">33</span> Skrypt, który przyjmuje polecenia</a></li><li><a href="lekcja-034.html" data-lekcja="34"><span class="znacznik"></span><span class="nr">34</span> Udało się czy nie?</a></li><li><a href="lekcja-035.html" data-lekcja="35"><span class="znacznik"></span><span class="nr">35</span> Jeśli… to…</a></li><li><a href="lekcja-036.html" data-lekcja="36"><span class="znacznik"></span><span class="nr">36</span> Wybór z menu</a></li><li><a href="lekcja-037.html" data-lekcja="37"><span class="znacznik"></span><span class="nr">37</span> Pętle</a></li><li><a href="lekcja-038.html" data-lekcja="38"><span class="znacznik"></span><span class="nr">38</span> Bash umie liczyć (trochę)</a></li><li><a href="lekcja-039.html" data-lekcja="39"><span class="znacznik"></span><span class="nr">39</span> Wynik komendy w zmiennej</a></li><li><a href="lekcja-040.html" data-lekcja="40"><span class="znacznik"></span><span class="nr">40</span> Funkcje</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="32" data-modul="3" data-tematy="przypisanie, $zmienna, ${zmienna}, &quot;...&quot; kontra &#x27;...&#x27;, read (-p, -s, -r)">
+    <div class="belka"><span>Lekcja 32 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m03">Moduł 3</a> › Lekcja 32</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Zmienne i cudzysłowy</h1>
+      <p class="meta"><span>⏱ ok. 10 min czytania</span><span>· moduł 3: Pisanie skryptów</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant zapisuje dane w zmiennych, wie, kiedy użyć cudzysłowu podwójnego, a kiedy pojedynczego, i umie zapytać użytkownika o dane przez <code>read</code>, także o hasło.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#zmienna-czyli-pudelko-z-napisem">Zmienna, czyli pudełko z napisem</a></li><li><a href="#klamry-gdzie-konczy-sie-nazwa">Klamry: gdzie kończy się nazwa</a></li><li><a href="#cudzyslowy-czyli-koperty">Cudzysłowy, czyli koperty</a></li><li><a href="#dlaczego-zawsze-mina-z-dzieleniem-na-slowa">Dlaczego „zawsze”? Mina z dzieleniem na słowa</a></li><li><a href="#read-skrypt-zadaje-pytanie">read: skrypt zadaje pytanie</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga-flag">Ściąga flag</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p>Twój raport z poprzedniej lekcji ma wszystko wpisane na sztywno. To jak formularz w urzędzie, na którym ktoś z góry wpisał „Jan Kowalski”. Działa świetnie, pod warunkiem że jesteś Janem Kowalskim.</p><p>Dziś nauczymy skrypt zapamiętywać rzeczy i pytać o nie. A po drodze rozbroimy najczęstszą minę w całym Bashu: brak cudzysłowu. Ta mina wysadziła więcej skryptów niż wszystkie inne błędy razem wzięte.</p></section><section><h2 id="zmienna-czyli-pudelko-z-napisem">Zmienna, czyli pudełko z napisem</h2><p>Wyobraź sobie pudełko po butach. Na boku piszesz markerem „imie”, a do środka wkładasz karteczkę „Eryk”. Kiedy potrzebujesz imienia, nie pamiętasz go, tylko sięgasz do pudełka z napisem „imie”.</p><p>To jest zmienna. Nazwa na zewnątrz, zawartość w środku.</p><div class="kod"><pre><code>imie=Eryk
+echo &quot;Cześć, $imie&quot;</code></pre></div><div class="kod"><pre><code>Cześć, Eryk</code></pre></div><p>Dwie zasady, które musisz wbić sobie w pamięć od razu:</p><p>Przy wkładaniu do pudełka piszesz samą nazwę, bez dolara. Przy wyjmowaniu piszesz dolar przed nazwą. <code>imie=Eryk</code> wkłada, <code>$imie</code> wyjmuje.</p><p>I żadnych spacji wokół znaku równości. Nigdy. Bash nie jest szkolnym zeszytem od matematyki, gdzie spacje wokół „=” wyglądają ładnie. O tym, co się dzieje, kiedy je dodasz, w typowym błędzie, bo to klasyk.</p><p>Nazwy zmiennych: litery, cyfry i podkreślnik, nie mogą zaczynać się od cyfry. Polskie litery w nazwach odpadają, więc <code>imie</code>, a nie <code>imię</code>. I dobra rada: swoje zmienne pisz małymi literami. Wielkimi literami system ma już swoje zmienne, takie jak <code>PATH</code>, <code>HOME</code> czy <code>USER</code>. Jeśli w skrypcie napiszesz <code>PATH=/home/ania/zdjecia</code>, to właśnie wymazałeś Bashowi mapę, gdzie szukać komend, i nagle nie działa nawet <code>ls</code>.</p><p>Zmienna, której nie ma, nie powoduje błędu. Bash po prostu wstawia pustkę:</p><div class="kod"><pre><code>echo &quot;[$nieistnieje]&quot;</code></pre></div><div class="kod"><pre><code>[]</code></pre></div><p>Puste pudełko. Żadnego ostrzeżenia. Brzmi wygodnie, a jest źródłem bardzo ciekawych awarii, do których wrócimy przy <code>set -u</code>. Pudełko wyrzucasz przez <code>unset imie</code>.</p></section><section><h2 id="klamry-gdzie-konczy-sie-nazwa">Klamry: gdzie kończy się nazwa</h2><div class="kod"><pre><code>plik=raport
+echo &quot;$plik_kopia.txt&quot;
+echo &quot;${plik}_kopia.txt&quot;</code></pre></div><div class="kod"><pre><code>.txt
+raport_kopia.txt</code></pre></div><p>Co się stało w pierwszej linijce? Bash czyta nazwę zmiennej tak długo, jak długo widzi litery, cyfry i podkreślniki. Więc szuka pudełka o nazwie <code>plik_kopia</code>. Takiego nie ma, wstawia pustkę, zostaje samo <code>.txt</code>.</p><p>Klamry <code>${plik}</code> mówią wprost: nazwa jest dokładnie tutaj, ani litery dalej. Jak taśma klejąca na pudełku, która pokazuje, gdzie kończy się napis. Przy kropce klamry nie są potrzebne, bo kropki nie ma w nazwach zmiennych, więc <code>$plik.txt</code> da <code>raport.txt</code>. Ale jeśli nie jesteś pewien, dawaj klamry. Nie kosztują nic.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>klamry to też brama do całej rodziny sztuczek typu <code>${plik%.txt}</code> czy <code>${imie^^}</code>. Ma na nie osobna lekcja, „Nożyczki do tekstu”.</p></aside></section><section><h2 id="cudzyslowy-czyli-koperty">Cudzysłowy, czyli koperty</h2><p>Teraz najważniejsza część lekcji. Cudzysłów to koperta. To, co włożysz do koperty, Bash przenosi jako jedną przesyłkę. Ale są dwa rodzaje kopert.</p><p>Cudzysłów podwójny <code>&quot;...&quot;</code> to koperta z okienkiem. Bash zagląda przez okienko i podmienia zmienne na ich zawartość. Reszty nie rusza.</p><p>Apostrof, czyli pojedynczy cudzysłów <code>&#x27;...&#x27;</code>, to koperta zaklejona na głucho. Bash do środka nie zagląda. Co wpisałeś, to dostajesz, znak w znak.</p><div class="kod"><pre><code>cena=100
+echo &quot;Kosztuje $cena zł&quot;
+echo &#x27;Kosztuje $cena zł&#x27;
+echo &quot;Kosztuje \$cena zł&quot;</code></pre></div><div class="kod"><pre><code>Kosztuje 100 zł
+Kosztuje $cena zł
+Kosztuje $cena zł</code></pre></div><p>Trzecia linijka pokazuje trzeci sposób: ukośnik wsteczny przed dolarem. Mówi „ten jeden znak potraktuj dosłownie”. Jak naklejka „nie otwierać” na jednym znaku.</p><p>A co z cudzysłowem w środku cudzysłowu? Prosta zasada: w podwójnych możesz trzymać apostrofy, w apostrofach możesz trzymać podwójne.</p><div class="kod"><pre><code>echo &quot;Ma &#x27;apostrof&#x27; w środku&quot;
+echo &#x27;Ma &quot;cudzysłów&quot; w środku&#x27;</code></pre></div><p>Apostrofu wewnątrz apostrofów nie da się wsadzić wcale. Zaklejona koperta to zaklejona koperta. Wtedy używasz podwójnych.</p><p>Kiedy który? Apostrofy, kiedy chcesz tekst dokładnie tak, jak go napisałeś: wzorce dla <code>grep</code>, hasła w przykładach, wszystko z dolarami, które mają zostać dolarami. Podwójne, kiedy w środku są zmienne. I tu złota zasada całego kursu: <strong>każdą zmienną bierz w podwójny cudzysłów</strong>. <code>&quot;$plik&quot;</code>, a nie <code>$plik</code>. Zawsze. Chyba że dokładnie wiesz, dlaczego nie.</p></section><section><h2 id="dlaczego-zawsze-mina-z-dzieleniem-na-slowa">Dlaczego „zawsze”? Mina z dzieleniem na słowa</h2><div class="kod"><pre><code>nazwa=&quot;moje notatki.txt&quot;
+touch &quot;$nazwa&quot;
+ls -l $nazwa
+ls -l &quot;$nazwa&quot;</code></pre></div><div class="kod"><pre><code>ls: cannot access &#x27;moje&#x27;: No such file or directory
+ls: cannot access &#x27;notatki.txt&#x27;: No such file or directory
+-rw-r--r-- 1 eryk eryk 0 Nov  3 16:29 moje notatki.txt</code></pre></div><p>Bez koperty Bash wyjął z pudełka „moje notatki.txt”, zobaczył spację i pociął to na dwa słowa. <code>ls</code> dostał dwa osobne pliki do pokazania, żadnego nie ma. W kopercie cała nazwa pojechała jako jedna przesyłka.</p><p>Teraz wyobraź sobie, że zamiast <code>ls</code> jest <code>rm</code>. I że w folderze akurat leży plik <code>moje</code>. Właśnie tak powstają historie, które admini opowiadają sobie przy piwie łamiącym się głosem.</p><p>I druga mina, jeszcze zabawniejsza:</p><div class="kod"><pre><code>gwiazdka=&quot;*&quot;
+echo $gwiazdka
+echo &quot;$gwiazdka&quot;</code></pre></div><div class="kod"><pre><code>a.txt b.txt notatki.md
+*</code></pre></div><p>Bez cudzysłowu Bash po wyjęciu gwiazdki z pudełka potraktował ją jak wzorzec z lekcji piątego i rozwinął w listę plików. Zamawiałeś gwiazdkę, dostałeś cały folder. Z cudzysłowem gwiazdka została gwiazdką.</p><p>To samo z wieloma spacjami: <code>echo $tekst</code> ściśnie <code>dużo     spacji</code> do <code>dużo spacji</code>, a <code>echo &quot;$tekst&quot;</code> zostawi wszystkie.</p><p>ShellCheck łapie to od ręki:</p><div class="kod"><pre><code>In zle.sh line 4:
+ls -l $nazwa
+      ^----^ SC2086 (info): Double quote to prevent globbing and word splitting.</code></pre></div><p>Ten plik jest specjalnie zły, żebyś zobaczył ostrzeżenie. Kiedy ShellCheck mówi SC2086, to nie sugestia, to prośba.</p></section><section><h2 id="read-skrypt-zadaje-pytanie">read: skrypt zadaje pytanie</h2><p>Pudełka możesz napełniać sam, w skrypcie. Ale możesz też poprosić użytkownika, żeby coś do nich włożył. Jak urzędnik, który podsuwa formularz i czeka, aż go wypełnisz.</p><div class="kod"><pre><code>#!/bin/bash
+# powitanie.sh - pyta o dane i wita użytkownika
+read -r -p &quot;Jak masz na imię? &quot; imie
+read -r -s -p &quot;Podaj hasło (nie będzie widać): &quot; haslo
+echo
+echo &quot;Cześć, ${imie}!&quot;
+echo &quot;Hasło dla testu (nigdy tak nie rób): $haslo&quot;</code></pre></div><div class="kod"><pre><code>Jak masz na imię? Ania
+Podaj hasło (nie będzie widać): 
+Cześć, Ania!
+Hasło dla testu (nigdy tak nie rób): tajne123</code></pre></div><p><code>read</code> czeka, aż użytkownik coś wpisze i wciśnie Enter, a potem wkłada to do pudełka o podanej nazwie. Bez dolara, bo wkładamy, a nie wyjmujemy.</p><p><code>-p &quot;tekst&quot;</code> to pytanie wyświetlane przed kursorem. Bez tego użytkownik patrzy w migający kursor i nie wie, czy komputer na niego czeka, czy się zawiesił.</p><p><code>-s</code> to tryb tajny, od „silent”. Wpisywane znaki nie pojawiają się na ekranie, nawet gwiazdki. Do haseł. Dlatego po nim jest puste <code>echo</code>: Enter wciśnięty w trybie tajnym też się nie wyświetlił i bez tego następny tekst przykleiłby się do pytania.</p><p><code>-r</code> to „raw”, czyli surowo. Bez niego <code>read</code> traktuje ukośniki wsteczne jako znaki specjalne i je zjada:</p><div class="kod"><pre><code>read sciezka &lt;&lt;&lt; &#x27;C:\Users\ania&#x27;
+echo &quot;$sciezka&quot;
+read -r sciezka &lt;&lt;&lt; &#x27;C:\Users\ania&#x27;
+echo &quot;$sciezka&quot;</code></pre></div><div class="kod"><pre><code>C:Usersania
+C:\Users\ania</code></pre></div><p>Trzy strzałki <code>&lt;&lt;&lt;</code> podają tekst na wejście zamiast klawiatury, żeby dało się to pokazać bez pisania. Dokładnie omówimy je przy here-stringach. Wniosek: <code>-r</code> dawaj zawsze. ShellCheck i tak się o to upomni (SC2162).</p><p>Dwa bonusy. <code>read</code> może napełnić kilka pudełek naraz, dzieli wtedy po spacjach, a ostatnie pudełko dostaje całą resztę:</p><div class="kod"><pre><code>read -r imie nazwisko &lt;&lt;&lt; &quot;Jan Maria Kowalski&quot;
+echo &quot;imie=[$imie] nazwisko=[$nazwisko]&quot;</code></pre></div><div class="kod"><pre><code>imie=[Jan] nazwisko=[Maria Kowalski]</code></pre></div><p>A jeśli nie podasz żadnej nazwy, odpowiedź ląduje w pudełku <code>REPLY</code>.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p><code>-p</code> pokazuje pytanie tylko wtedy, gdy wejście jest terminalem, a samo pytanie idzie na drugi głośnik, czyli stderr. Dlatego <code>./powitanie.sh &gt; plik</code> dalej wyświetli pytania na ekranie, a do pliku trafią tylko odpowiedzi skryptu. Jest też <code>-t 10</code>, czyli limit czasu na odpowiedź w sekundach, i <code>-n 1</code>, czyli czytanie jednego znaku bez Entera.</p></aside></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p>Zmienne mieszkają w pamięci procesu Basha. Każdy Bash ma swoją szafkę z pudełkami. Pamiętasz z poprzedniej lekcji, że skrypt to osobny proces? Więc zmienne z Twojego terminala nie są widoczne w skrypcie, a zmienne ze skryptu znikają, kiedy się skończy.</p><div class="kod"><pre><code>imie=Ola
+bash -c &#x27;echo &quot;[$imie]&quot;&#x27;
+export imie
+bash -c &#x27;echo &quot;[$imie]&quot;&#x27;</code></pre></div><div class="kod"><pre><code>[]
+[Ola]</code></pre></div><p>Zwykła zmienna to pudełko w Twojej szafce. <code>export</code> robi z niego zmienną środowiskową, czyli wkłada kopię do paczki, którą każdy proces-dziecko dostaje na start. Kopię, nie oryginał. Dziecko może ją zmienić, ale rodzic tego nie zobaczy. Jak kopia klucza: dorabiasz ją synowi, ale jak on ją zgubi, Twój klucz zostaje w kieszeni.</p><p>A kiedy Bash podmienia <code>$imie</code> na zawartość? Zanim uruchomi komendę. Z lekcji dziesiątego wiesz, że Bash najpierw przerabia całą linijkę, a dopiero potem wykonuje. Kolejność jest taka: najpierw rozwija zmienne, potem dzieli wynik na słowa po spacjach, potem rozwija gwiazdki, a na końcu zdejmuje cudzysłowy. Cudzysłów wyłącza dwa środkowe kroki. Dlatego <code>echo $gwiazdka</code> dostało listę plików: zmienna została rozwinięta, a potem gwiazdka trafiła na krok rozwijania wzorców. Program <code>echo</code> nigdy nie zobaczył gwiazdki. Zobaczył już gotową listę.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>wszystkie zmienne Basha to w gruncie rzeczy napisy. Nawet <code>x=5</code> to napis „5”. Liczyć umie dopiero w specjalnym kontekście <code>$(( ))</code>, o którym będzie lekcja „Bash umie liczyć (trochę)”. Podejrzysz zmienną razem z jej atrybutami przez <code>declare -p imie</code>.</p></aside></section><section><h2 id="sciaga-flag">Ściąga flag</h2><div class="tabela"><table><tr><th>Komenda / składnia</th><th>Flaga / forma</th><th>Co robi</th></tr><tr><td><code>nazwa=wartość</code></td><td>bez spacji</td><td>wkłada wartość do zmiennej</td></tr><tr><td><code>$nazwa</code></td><td>—</td><td>wyjmuje wartość</td></tr><tr><td><code>${nazwa}</code></td><td>klamry</td><td>wyjmuje wartość, jasno kończąc nazwę</td></tr><tr><td><code>&quot;...&quot;</code></td><td>podwójny</td><td>jedna przesyłka, zmienne są rozwijane</td></tr><tr><td><code>&#x27;...&#x27;</code></td><td>pojedynczy</td><td>jedna przesyłka, wszystko dosłownie</td></tr><tr><td><code>\</code></td><td>przed znakiem</td><td>ten jeden znak dosłownie</td></tr><tr><td><code>read</code></td><td><code>-r</code></td><td>nie zjada ukośników wstecznych (dawaj zawsze)</td></tr><tr><td><code>read</code></td><td><code>-p &quot;tekst&quot;</code></td><td>wyświetla pytanie</td></tr><tr><td><code>read</code></td><td><code>-s</code></td><td>nie pokazuje wpisywanych znaków (hasła)</td></tr><tr><td><code>read</code></td><td><code>-t N</code></td><td>czeka najwyżej N sekund</td></tr><tr><td><code>read</code></td><td><code>-n N</code></td><td>czyta N znaków bez czekania na Enter</td></tr><tr><td><code>export</code></td><td><code>nazwa</code></td><td>przekazuje zmienną procesom-dzieciom</td></tr><tr><td><code>unset</code></td><td><code>nazwa</code></td><td>usuwa zmienną</td></tr><tr><td><code>declare</code></td><td><code>-p nazwa</code></td><td>pokazuje zmienną i jej atrybuty</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><div class="kod"><pre><code>imie = Eryk</code></pre></div><div class="kod"><pre><code>bash: imie: command not found</code></pre></div><p>Czemu Bash szuka komendy <code>imie</code>? Bo dla niego spacja oddziela komendę od argumentów. Widzi więc: komenda <code>imie</code>, argumenty <code>=</code> i <code>Eryk</code>. Zupełnie jak <code>ls -l /etc</code>. Takiej komendy nie ma, więc błąd.</p><p>A wersja ze spacją tylko po równości?</p><div class="kod"><pre><code>imie= Eryk</code></pre></div><div class="kod"><pre><code>bash: Eryk: command not found</code></pre></div><p>To jeszcze sprytniejsze. Bash rozumie to jako „ustaw <code>imie</code> na pusto, ale tylko na czas uruchomienia komendy <code>Eryk</code>”. To ta sama składnia, co <code>LC_ALL=C lscpu</code> z poprzedniej lekcji. Komendy <code>Eryk</code> nie ma. Na razie. Może w przyszłym roku.</p><p>ShellCheck od razu ostrzega:</p><div class="kod"><pre><code>imie = Eryk
+     ^-- SC2283 (error): Remove spaces around = to assign (or use [ ] to compare, or quote &#x27;=&#x27; if literal).</code></pre></div><p>Naprawa: <code>imie=Eryk</code>. Jeśli w wartości ma być spacja, cudzysłów: <code>imie=&quot;Jan Maria&quot;</code>.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><p>Napisz skrypt <code>wizytowka.sh</code>, który pyta przez <code>read -r -p</code> o Twoje imię i o nazwę folderu. Potem wypisuje powitanie z imieniem, pokazuje zawartość tego folderu (<code>ls</code>) i jego rozmiar (<code>du -sh</code>). Na końcu ma wypisać dosłownie zdanie: <code>Zmienne nazywały się $imie i $folder.</code>, z dolarami, a nie z wartościami. Przetestuj na folderze, który ma spację w nazwie, na przykład <code>moje pliki</code>. Jeśli działa, usuń jeden cudzysłów przy <code>ls</code> i zobacz, co się stanie.</p><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><div class="kod"><pre><code>#!/bin/bash
+# wizytowka.sh - pyta o imię i folder, pokazuje folder i jego rozmiar
+read -r -p &quot;Jak masz na imię? &quot; imie
+read -r -p &quot;Który folder pokazać? &quot; folder
+
+echo &quot;Cześć, ${imie}! Oto folder \&quot;$folder\&quot;:&quot;
+ls &quot;$folder&quot;
+du -sh &quot;$folder&quot;
+# shellcheck disable=SC2016  # celowo: chcemy wypisać dosłownie $imie
+echo &#x27;Zmienne nazywały się $imie i $folder.&#x27;</code></pre></div><div class="kod"><pre><code>Jak masz na imię? Ania
+Który folder pokazać? moje pliki
+Cześć, Ania! Oto folder &quot;moje pliki&quot;:
+x
+y
+4.0K	moje pliki
+Zmienne nazywały się $imie i $folder.</code></pre></div><p>Ostatnie zdanie jest w apostrofach, bo chcemy dolary dosłownie. ShellCheck grzecznie zapyta, czy na pewno (SC2016), więc linijka wyżej jest komentarz <code># shellcheck disable=SC2016</code> z wyjaśnieniem. To sposób, żeby powiedzieć: „Wiem, co robię, nie zaczepiaj”. Używaj oszczędnie, jak zwolnienia lekarskiego.</p><p>A po usunięciu cudzysłowu przy <code>ls</code>:</p><div class="kod"><pre><code>ls: cannot access &#x27;moje&#x27;: No such file or directory
+ls: cannot access &#x27;pliki&#x27;: No such file or directory</code></pre></div><p>Nożyczki Basha w akcji. Teraz już wiesz, skąd się biorą.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p><code>read</code> jest miłe, ale skrypt, który ciągle o coś pyta, nie nadaje się do automatu ani do crona. Prawdziwe komendy dostają dane od razu w linijce: <code>ls -l /etc</code>. W następnej lekcji nauczymy nasze skrypty przyjmować argumenty: <code>$1</code>, <code>$#</code>, <code>&quot;$@&quot;</code> i <code>shift</code>.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-031.html" rel="prev">← 31. Twój pierwszy skrypt</a><a class="btn domyslny zolty" href="lekcja-033.html" rel="next">33. Skrypt, który przyjmuje polecenia →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

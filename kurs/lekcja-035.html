@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>35. Jeśli… to… — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 35 kursu Linux i Bash od zera do admina: Jeśli… to…. kursant pisze skrypty, które podejmują decyzje: if, elif, else, sprawdza pliki, liczby i napisy przez test, [ ] i [[ ]] i wie, które nawiasy wybrać.">
+<meta property="og:title" content="35. Jeśli… to… — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 35 kursu Linux i Bash od zera do admina: Jeśli… to…. kursant pisze skrypty, które podejmują decyzje: if, elif, else, sprawdza pliki, liczby i napisy przez test, [ ] i [[ ]] i wie, które nawiasy wybrać.">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 3</span></div>
+      <div class="boczny-tytul"><a href="index.html#m03">Pisanie skryptów</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-031.html" data-lekcja="31"><span class="znacznik"></span><span class="nr">31</span> Twój pierwszy skrypt</a></li><li><a href="lekcja-032.html" data-lekcja="32"><span class="znacznik"></span><span class="nr">32</span> Zmienne i cudzysłowy</a></li><li><a href="lekcja-033.html" data-lekcja="33"><span class="znacznik"></span><span class="nr">33</span> Skrypt, który przyjmuje polecenia</a></li><li><a href="lekcja-034.html" data-lekcja="34"><span class="znacznik"></span><span class="nr">34</span> Udało się czy nie?</a></li><li><a href="lekcja-035.html" data-lekcja="35" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">35</span> Jeśli… to…</a></li><li><a href="lekcja-036.html" data-lekcja="36"><span class="znacznik"></span><span class="nr">36</span> Wybór z menu</a></li><li><a href="lekcja-037.html" data-lekcja="37"><span class="znacznik"></span><span class="nr">37</span> Pętle</a></li><li><a href="lekcja-038.html" data-lekcja="38"><span class="znacznik"></span><span class="nr">38</span> Bash umie liczyć (trochę)</a></li><li><a href="lekcja-039.html" data-lekcja="39"><span class="znacznik"></span><span class="nr">39</span> Wynik komendy w zmiennej</a></li><li><a href="lekcja-040.html" data-lekcja="40"><span class="znacznik"></span><span class="nr">40</span> Funkcje</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="35" data-modul="3" data-tematy="if, elif, else, test, [ ], [[ ]], -eq, -lt, -z, -n, -f, -d, -e, -r, -x">
+    <div class="belka"><span>Lekcja 35 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m03">Moduł 3</a> › Lekcja 35</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Jeśli… to…</h1>
+      <p class="meta"><span>⏱ ok. 11 min czytania</span><span>· moduł 3: Pisanie skryptów</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant pisze skrypty, które podejmują decyzje: <code>if</code>, <code>elif</code>, <code>else</code>, sprawdza pliki, liczby i napisy przez <code>test</code>, <code>[ ]</code> i <code>[[ ]]</code> i wie, które nawiasy wybrać.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#if-czyli-bramkarz">if, czyli bramkarz</a></li><li><a href="#test-i-nawiasy-kwadratowe">test i nawiasy kwadratowe</a></li><li><a href="#porownywanie-liczb">Porównywanie liczb</a></li><li><a href="#porownywanie-napisow">Porównywanie napisów</a></li><li><a href="#pytania-o-pliki">Pytania o pliki</a></li><li><a href="#podwojne-nawiasy">Podwójne nawiasy [[ ]]</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga-flag">Ściąga flag</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p class="ekran">bramkarz przed klubem z listą gości, obok terminal z <code>if</code></p><p>Do tej pory nasze skrypty były jak automat z kawą: wrzucasz monetę, dostajesz zawsze to samo. A prawdziwy skrypt admina musi decydować. Czy plik z backupem w ogóle powstał? Czy dysk nie jest pełny? Czy użytkownik podał argument? Czy folder, który zaraz wyczyścimy, to na pewno ten folder?</p><p>Dziś skrypt dostaje bramkarza. Kogoś, kto stoi przy drzwiach, patrzy na gościa i decyduje: wchodzisz, nie wchodzisz, a ty idź do drugiego wejścia.</p></section><section><h2 id="if-czyli-bramkarz">if, czyli bramkarz</h2><div class="kod"><pre><code>if warunek; then
+    komendy, gdy warunek jest spełniony
+fi</code></pre></div><p><code>if</code> to „jeśli”. <code>then</code> to „to”. A <code>fi</code> to <code>if</code> czytane od tyłu i znaczy „koniec”. Ktoś uznał, że to zabawne. Miał rację, ale tylko za pierwszym razem.</p><p>I teraz najważniejsza rzecz w tej lekcji, którą większość kursów pomija: <strong>warunkiem w </strong><strong><code>if</code></strong><strong> jest komenda</strong>. Dowolna. Bramkarz nie sprawdza niczego sam. Woła komendę i patrzy na jej kciuk z poprzedniej lekcji. Kciuk w górę, czyli kod 0: wchodzisz. Kciuk w dół: nie.</p><div class="kod"><pre><code>#!/bin/bash
+# czy_ktos.sh - if bez nawiasów: warunkiem może być każda komenda
+if getent passwd &quot;$1&quot; &gt; /dev/null; then
+    echo &quot;Konto $1 istnieje.&quot;
+else
+    echo &quot;Konta $1 nie ma.&quot;
+fi</code></pre></div><div class="kod"><pre><code>$ ./czy_ktos.sh root
+Konto root istnieje.
+$ ./czy_ktos.sh nikt
+Konta nikt nie ma.</code></pre></div><p>Żadnych nawiasów. <code>if</code> uruchomił <code>getent</code> i spojrzał na kod wyjścia. To ten sam skrypt co w zadaniu, tylko czytelny. <code>else</code> to „w przeciwnym razie”: drugie drzwi, które otwierają się, gdy pierwsze zostały zamknięte.</p><p><code>then</code> może stać w osobnej linijce, ale przyjęło się pisać go po średniku w tej samej. Wcięcia są dla ludzi, Bashowi jest wszystko jedno. Ludziom nie jest.</p></section><section><h2 id="test-i-nawiasy-kwadratowe">test i nawiasy kwadratowe</h2><p>No dobrze, ale co, jak chcę sprawdzić coś, co nie jest komendą? Na przykład czy liczba jest większa od 5 albo czy plik istnieje? Wtedy używasz komendy, która nic nie robi, tylko sprawdza i pokazuje kciuk. Nazywa się <code>test</code>.</p><div class="kod"><pre><code>test 5 -gt 3; echo &quot;$?&quot;
+[ 5 -gt 3 ]; echo &quot;$?&quot;
+[ 5 -lt 3 ]; echo &quot;$?&quot;</code></pre></div><div class="kod"><pre><code>0
+0
+1</code></pre></div><p>I tu jest największy sekret Basha. Nawias kwadratowy <code>[</code> to <strong>komenda</strong>. Dokładnie ta sama co <code>test</code>, tylko z innym imieniem i z wymogiem, żeby na końcu postawić <code>]</code>. Jak urzędnik, który przyjmie wniosek tylko z pieczątką na końcu.</p><div class="kod"><pre><code>type test [ [[
+ls -l /usr/bin/[</code></pre></div><div class="kod"><pre><code>test is a shell builtin
+[ is a shell builtin
+[[ is a shell keyword
+-rwxr-xr-x 1 root root 55744 Aug 25 17:09 /usr/bin/[</code></pre></div><p><code>[</code> jest wbudowany w Basha, a dla innych powłok leży nawet jako osobny program w <code>/usr/bin</code>. Plik, który nazywa się nawias. Witaj w Linuksie.</p><p>Skoro <code>[</code> to komenda, to obowiązują ją zasady komend: po nazwie komendy spacja, między argumentami spacje. Więc <code>[ 5 -gt 3 ]</code>, a nie <code>[5 -gt 3]</code>. Każda spacja w tym zapisie jest obowiązkowa. To jest najczęstszy błąd początkujących i wrócimy do niego na końcu.</p></section><section><h2 id="porownywanie-liczb">Porównywanie liczb</h2><p>Do liczb są skróty z angielskiego, które trzeba po prostu zapamiętać:</p><p><code>-eq</code> równe (equal), <code>-ne</code> różne (not equal), <code>-lt</code> mniejsze (less than), <code>-le</code> mniejsze lub równe, <code>-gt</code> większe (greater than), <code>-ge</code> większe lub równe.</p><p>Czemu nie <code>&lt;</code> i <code>&gt;</code>? Bo w Bashu to są przekierowania, nasze dwa głośniki. <code>[ 10 &gt; 9 ]</code> nie porówna niczego, tylko utworzy plik o nazwie <code>9</code>. Zupełnie jakbyś na pytanie „która liczba większa?” dostał w odpowiedzi nowy plik. Bardzo kreatywne. Bardzo bez sensu.</p><p>Zróbmy skrypt z prawdziwym wyborem z kilku dróg:</p><div class="kod"><pre><code>#!/bin/bash
+# dysk.sh - ocenia zajętość dysku podaną w procentach
+proc=$1
+
+if [ -z &quot;$proc&quot; ]; then
+    echo &quot;Użycie: $0 PROCENT&quot; &gt;&amp;2
+    exit 2
+fi
+
+if [ &quot;$proc&quot; -ge 90 ]; then
+    echo &quot;ALARM: dysk zajęty w $proc%!&quot;
+    exit 1
+elif [ &quot;$proc&quot; -ge 75 ]; then
+    echo &quot;Uwaga: dysk zajęty w $proc%.&quot;
+else
+    echo &quot;OK: $proc% to jeszcze nic.&quot;
+fi</code></pre></div><div class="kod"><pre><code>$ ./dysk.sh 95
+ALARM: dysk zajęty w 95%!
+$ ./dysk.sh 80
+Uwaga: dysk zajęty w 80%.
+$ ./dysk.sh 30
+OK: 30% to jeszcze nic.
+$ ./dysk.sh
+Użycie: ./dysk.sh PROCENT</code></pre></div><p><code>elif</code> to „else if”, czyli „a jeśli nie, to może…”. Bramkarz sprawdza warunki po kolei, od góry, i wpuszcza przez pierwsze pasujące drzwi. Reszty już nie sprawdza. Dlatego kolejność ma znaczenie: gdybyś najpierw sprawdził <code>-ge 75</code>, to 95 też by tam wpadło i alarmu nigdy by nie było. <code>elif</code> może być ile chcesz, <code>else</code> najwyżej jeden, na końcu.</p><p>A co, jeśli użytkownik wpisze bzdurę?</p><div class="kod"><pre><code>$ ./dysk.sh dużo
+./dysk.sh: line 10: [: dużo: integer expression expected
+./dysk.sh: line 13: [: dużo: integer expression expected
+OK: dużo% to jeszcze nic.</code></pre></div><p><code>[</code> wypluwa błąd, zwraca kod 2, czyli „nie”, więc bramkarz wpuszcza przez <code>else</code>. Skrypt twierdzi, że „dużo” to jeszcze nic. Optymista. Sprawdzanie, czy argument jest liczbą, zrobimy porządnie przy wyrażeniach regularnych.</p></section><section><h2 id="porownywanie-napisow">Porównywanie napisów</h2><p><code>=</code> równe, <code>!=</code> różne. Do tego dwa testy na pustkę:</p><p><code>-z &quot;$x&quot;</code> — prawda, gdy napis jest pusty (zero długości).</p><p><code>-n &quot;$x&quot;</code> — prawda, gdy napis nie jest pusty (non-zero).</p><div class="kod"><pre><code>[ -z &quot;&quot; ]; echo &quot;$?&quot;
+[ -n &quot;&quot; ]; echo &quot;$?&quot;</code></pre></div><div class="kod"><pre><code>0
+1</code></pre></div><p>I złota zasada z lekcji o cudzysłowach wraca tu ze zdwojoną siłą. Zobacz:</p><div class="kod"><pre><code>pusty=&quot;&quot;
+[ $pusty = &quot;tak&quot; ]</code></pre></div><div class="kod"><pre><code>bash: [: =: unary operator expected</code></pre></div><p>Bez cudzysłowu pusta zmienna znika całkowicie. Komenda <code>[</code> dostaje <code>= tak ]</code> i nie wie, co porównać z czym. Z cudzysłowem dostaje pusty napis, porównuje go z „tak” i spokojnie mówi „nie”. A to jeszcze nic:</p><div class="kod"><pre><code>f=&quot;&quot;
+[ -f $f ]; echo &quot;$?&quot;
+[ -f &quot;$f&quot; ]; echo &quot;$?&quot;</code></pre></div><div class="kod"><pre><code>0
+1</code></pre></div><p>Bez cudzysłowu „czy pusty napis jest plikiem?” dało odpowiedź „tak”. Bo <code>[ -f ]</code> z jednym słowem sprawdza tylko, czy to słowo nie jest puste, a <code>-f</code> puste nie jest. Teraz wyobraź sobie <code>if [ -f $plik ]; then rm ...</code>. Cudzysłowy, proszę państwa. Zawsze.</p></section><section><h2 id="pytania-o-pliki">Pytania o pliki</h2><p>To jest chleb powszedni admina. Najważniejsze testy:</p><p><code>-e</code> — istnieje cokolwiek o tej nazwie (exists).</p><p><code>-f</code> — istnieje i jest zwykłym plikiem (file).</p><p><code>-d</code> — istnieje i jest folderem (directory).</p><p><code>-r</code> — mogę czytać (readable).</p><p><code>-x</code> — mogę uruchomić, a przy folderze: mogę do niego wejść (executable).</p><div class="kod"><pre><code>[ -e /etc/hostname ] &amp;&amp; echo &quot;coś jest&quot;
+[ -f /etc/hostname ] &amp;&amp; echo &quot;plik&quot;
+[ -d /etc ] &amp;&amp; echo &quot;folder&quot;
+[ -x /bin/ls ] &amp;&amp; echo &quot;można uruchomić&quot;</code></pre></div><div class="kod"><pre><code>coś jest
+plik
+folder
+można uruchomić</code></pre></div><p>Pytania <code>-r</code> i <code>-x</code> odpowiadają z punktu widzenia tego, kto pyta. Klucze do pokojów, pamiętasz? Ten sam plik <code>/etc/shadow</code>, w którym są skróty haseł:</p><div class="kod"><pre><code># jako root:
+[ -r /etc/shadow ]  -&gt;  0
+# jako zwykły użytkownik:
+[ -r /etc/shadow ]  -&gt;  1</code></pre></div><p>[Ubuntu] <code>/etc/shadow</code> ma prawa <code>-rw-r-----</code> i grupę <code>shadow</code>. [RHEL] ma zwykle prawa <code>----------</code>, czyli <code>0000</code>, i tego wymagają też wytyczne bezpieczeństwa STIG. Root i tak przeczyta, bo dla roota zamki są z dykty.</p><p>Wzorzec, który będziesz pisać setki razy:</p><div class="kod"><pre><code>if [ ! -d &quot;$cel&quot; ]; then
+    echo &quot;Folder $cel nie istnieje&quot; &gt;&amp;2
+    exit 1
+fi</code></pre></div><p>Wykrzyknik odwraca test: „jeśli NIE jest folderem”. Najpierw sprawdź, potem działaj. Zwłaszcza przed <code>rm</code>.</p></section><section><h2 id="podwojne-nawiasy">Podwójne nawiasy [[ ]]</h2><p>Bash ma też ulepszoną wersję: <code>[[ ]]</code>. To już nie komenda, tylko część gramatyki Basha, jak <code>if</code> czy <code>fi</code>. Dzięki temu Bash wie, że jest w środku testu, i może być mądrzejszy. Pojedyncze nawiasy to bramkarz z kartką i długopisem. Podwójne to bramkarz z czytnikiem kodów i bazy danych.</p><p>Co daje <code>[[ ]]</code>:</p><p>Zmienne bez cudzysłowu nie są cięte na słowa. <code>[[ $pusty = &quot;tak&quot; ]]</code> po prostu odpowie „nie”, bez błędu. Cudzysłowy i tak warto dawać z przyzwyczajenia, ale tu wybaczy.</p><p><code>&amp;&amp;</code> i <code>||</code> w środku: <code>[[ -f &quot;$p&quot; &amp;&amp; -r &quot;$p&quot; ]]</code>. W pojedynczych trzeba pisać <code>[ -f &quot;$p&quot; ] &amp;&amp; [ -r &quot;$p&quot; ]</code>.</p><p>Wzorce przy <code>==</code>: <code>[[ $plik == *.txt ]]</code> sprawdza, czy nazwa kończy się na <code>.txt</code>. Gwiazdka działa jak w lekcji piątym, tylko porównuje napis, a nie szuka plików.</p><p><code>&lt;</code> i <code>&gt;</code> porównują napisy alfabetycznie, a nie tworzą plików.</p><div class="kod"><pre><code>[[ &quot;plik.txt&quot; == *.txt ]] &amp;&amp; echo &quot;pasuje&quot;
+[ &quot;plik.txt&quot; == *.txt ]; echo &quot;kod: $?&quot;</code></pre></div><div class="kod"><pre><code>pasuje
+bash: [: too many arguments
+kod: 2</code></pre></div><p>W pojedynczych nawiasach gwiazdka została rozwinięta w listę plików <code>.txt</code> z bieżącego folderu i <code>[</code> dostał za dużo słów.</p><p>Które więc wybrać? Piszesz skrypt z <code>#!/bin/bash</code>? Bierz <code>[[ ]]</code>. Piszesz pod <code>#!/bin/sh</code>, żeby działało też w dash na Ubuntu albo w malutkich systemach? Tam <code>[[ ]]</code> nie istnieje, zostają pojedyncze. Pamiętaj tylko, że <code>[[ ]]</code> uważa <code>&lt;</code> za porównanie napisów, więc <code>[[ 10 &lt; 9 ]]</code> jest prawdą, bo „1” jest w alfabecie przed „9”. Liczby zawsze przez <code>-lt</code>, <code>-gt</code> i spółkę.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>w pojedynczych nawiasach są też <code>-a</code> i <code>-o</code> jako „i” oraz „lub”, ale POSIX oznacza je jako przestarzałe i mylące. Lepiej łączyć kilka <code>[ ]</code> przez <code>&amp;&amp;</code> i <code>||</code>. A <code>[[ ]]</code> ma jeszcze operator <code>=~</code> do wyrażeń regularnych, który dostanie swój lekcja.</p></aside></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p><code>if</code> nie wie nic o liczbach, plikach ani napisach. Bash wykonuje to, co stoi między <code>if</code> a <code>then</code>, odbiera kod wyjścia, dokładnie tak jak przy <code>&amp;&amp;</code>, i na tej podstawie wybiera gałąź. Cała inteligencja siedzi w komendzie, którą wołasz. Możesz mieć nawet kilka komend przed <code>then</code>, liczy się kciuk ostatniej.</p><p><code>[</code> to zwykła komenda, więc zanim dostanie argumenty, Bash przepuszcza je przez wszystkie znane Ci kroki: rozwinięcie zmiennych, cięcie na słowa, rozwijanie gwiazdek. Dlatego niecytowana pusta zmienna znika, a gwiazdka zamienia się w listę plików. Komenda <code>[</code> dostaje już gotową, czasem pokiereszowaną listę słów i liczy je: jedno słowo to test „czy niepuste”, dwa to test jednoargumentowy typu <code>-f plik</code>, trzy to porównanie. Przy złej liczbie słów mówi „too many arguments” albo „unary operator expected”.</p><p><code>[[ ]]</code> Bash rozpoznaje wcześniej, już przy czytaniu linijki, i wewnątrz nie tnie zmiennych na słowa i nie rozwija gwiazdek. Dlatego jest bezpieczniejszy.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>zasady liczenia argumentów przez <code>test</code> opisuje POSIX i <code>help test</code> w Bashu. Szybka ściąga z całą listą operatorów: <code>help test</code>, a dla podwójnych <code>help [[</code>.</p></aside></section><section><h2 id="sciaga-flag">Ściąga flag</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga</th><th>Co robi</th></tr><tr><td><code>[ ]</code> / <code>test</code></td><td><code>-eq</code> / <code>-ne</code></td><td>liczby równe / różne</td></tr><tr><td><code>[ ]</code> / <code>test</code></td><td><code>-lt</code> / <code>-le</code></td><td>mniejsze / mniejsze lub równe</td></tr><tr><td><code>[ ]</code> / <code>test</code></td><td><code>-gt</code> / <code>-ge</code></td><td>większe / większe lub równe</td></tr><tr><td><code>[ ]</code> / <code>test</code></td><td><code>=</code> / <code>!=</code></td><td>napisy równe / różne</td></tr><tr><td><code>[ ]</code> / <code>test</code></td><td><code>-z</code></td><td>napis pusty</td></tr><tr><td><code>[ ]</code> / <code>test</code></td><td><code>-n</code></td><td>napis niepusty</td></tr><tr><td><code>[ ]</code> / <code>test</code></td><td><code>-e</code></td><td>istnieje cokolwiek</td></tr><tr><td><code>[ ]</code> / <code>test</code></td><td><code>-f</code></td><td>istnieje zwykły plik</td></tr><tr><td><code>[ ]</code> / <code>test</code></td><td><code>-d</code></td><td>istnieje folder</td></tr><tr><td><code>[ ]</code> / <code>test</code></td><td><code>-r</code> / <code>-w</code> / <code>-x</code></td><td>mogę czytać / pisać / uruchomić</td></tr><tr><td><code>[ ]</code> / <code>test</code></td><td><code>-s</code></td><td>plik istnieje i nie jest pusty</td></tr><tr><td><code>[ ]</code> / <code>test</code></td><td><code>!</code></td><td>odwraca wynik testu</td></tr><tr><td>[[ ]]</td><td><code>==</code> z <code>*</code></td><td>dopasowanie do wzorca</td></tr><tr><td>[[ ]]</td><td><code>&amp;&amp;</code> / <code>||</code></td><td>„i” / „lub” w środku testu</td></tr><tr><td><code>if</code></td><td><code>elif</code> / <code>else</code> / <code>fi</code></td><td>kolejny warunek / w przeciwnym razie / koniec</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><div class="kod"><pre><code>x=10
+[$x -eq 10]
+[ &quot;$x&quot; -eq 10]</code></pre></div><div class="kod"><pre><code>bash: [10: command not found
+bash: [: missing `]&#x27;</code></pre></div><p>Pierwsza linijka: bez spacji po nawiasie Bash skleja <code>[</code> z wartością zmiennej i szuka komendy o nazwie <code>[10</code>. Nie ma takiej. Druga: bez spacji przed <code>]</code> ostatnim słowem jest <code>10]</code>, a <code>[</code> czeka na samodzielne <code>]</code> jak na pieczątkę i jej nie dostaje.</p><p>Naprawa: spacje wszędzie. <code>[ &quot;$x&quot; -eq 10 ]</code>. Pomaga myślenie, że <code>[</code> to komenda jak <code>ls</code>, a <code>]</code> jej ostatni argument. Nikt nie pisze <code>ls-l</code>, więc nikt nie pisze <code>[$x</code>.</p><p>I drugi klasyk, już znany: <code>[ 10 &gt; 9 ]</code> nie porównuje, tylko tworzy plik o nazwie <code>9</code>. Jeśli w folderze ze skryptami nagle pojawiają się pliki o nazwach <code>9</code>, <code>100</code> albo <code>0</code>, to wiesz, kto je robi.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><p>Napisz skrypt <code>sprawdz.sh</code>, który dostaje ścieżkę jako argument i mówi, czy to plik, folder, czy nic takiego nie istnieje. Bez argumentu ma wypisać, jak go używać, i zakończyć się kodem 1.</p><p>Przetestuj na <code>/etc/hostname</code>, <code>/etc</code>, na czymś, czego nie ma, na ścieżce ze spacją i bez argumentu. Sprawdź kod wyjścia przez <code>echo $?</code> i przepuść skrypt przez ShellCheck.</p><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><div class="kod"><pre><code>#!/bin/bash
+# sprawdz.sh — mówi, czym jest podana ścieżka
+
+if [ $# -eq 0 ]; then
+    echo &quot;Użycie: $0 ŚCIEŻKA&quot;
+    exit 1
+fi
+
+if [ -f &quot;$1&quot; ]; then
+    echo &quot;$1 to plik&quot;
+elif [ -d &quot;$1&quot; ]; then
+    echo &quot;$1 to folder&quot;
+elif [ -e &quot;$1&quot; ]; then
+    echo &quot;$1 istnieje, ale to ani zwykły plik, ani folder&quot;
+else
+    echo &quot;$1 nie istnieje&quot;
+fi</code></pre></div><p>Sprawdzamy:</p><div class="kod"><pre><code>./sprawdz.sh; echo &quot;kod: $?&quot;
+./sprawdz.sh /etc/hostname
+./sprawdz.sh /etc
+./sprawdz.sh /nie/ma
+./sprawdz.sh /dev/null</code></pre></div><div class="kod"><pre><code>Użycie: ./sprawdz.sh ŚCIEŻKA
+kod: 1
+/etc/hostname to plik
+/etc to folder
+/nie/ma nie istnieje
+/dev/null istnieje, ale to ani zwykły plik, ani folder</code></pre></div><p>Najpierw bramkarz sprawdza, czy w ogóle ktoś przyszedł, czyli <code>$#</code>. Potem kolejność ma znaczenie: <code>-f</code> i <code>-d</code> przed <code>-e</code>, bo <code>-e</code> mówi „tak” na wszystko, co istnieje. Trzecia gałąź to bonus dla dociekliwych: <code>/dev/null</code> istnieje, ale nie jest ani plikiem, ani folderem, tylko urządzeniem. Czarna dziura z własnym adresem.</p><p>I najważniejsze: <code>&quot;$1&quot;</code> w cudzysłowie. Bez koperty skrypt wyłoży się na pliku <code>moje notatki</code>, bo spacja rozetnie nazwę na dwa kawałki. Jeśli Twój skrypt na to nie wpadł, sprawdź go teraz. Ja poczekam.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Bramkarz z <code>if</code> i <code>elif</code> jest świetny, ale kiedy drzwi jest dziesięcioro, robi się z tego drabinka nie do czytania. W następnej lekcji poznasz <code>case</code>, czyli wybór z menu po wzorcach, i <code>select</code>, który sam narysuje użytkownikowi ponumerowane menu.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-034.html" rel="prev">← 34. Udało się czy nie?</a><a class="btn domyslny zolty" href="lekcja-036.html" rel="next">36. Wybór z menu →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>41. Nożyczki do tekstu — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 41 kursu Linux i Bash od zera do admina: Nożyczki do tekstu. kursant tnie, skraca, podmienia i zmienia wielkość liter w zmiennych samym Bashem, bez sed, cut i basename, i umie dać zmiennej wartość domyślną.">
+<meta property="og:title" content="41. Nożyczki do tekstu — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 41 kursu Linux i Bash od zera do admina: Nożyczki do tekstu. kursant tnie, skraca, podmienia i zmienia wielkość liter w zmiennych samym Bashem, bez sed, cut i basename, i umie dać zmiennej wartość domyślną.">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 4</span></div>
+      <div class="boczny-tytul"><a href="index.html#m04">Napisy, listy i przetwarzanie danych</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-041.html" data-lekcja="41" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">41</span> Nożyczki do tekstu</a></li><li><a href="lekcja-042.html" data-lekcja="42"><span class="znacznik"></span><span class="nr">42</span> Listy (tablice)</a></li><li><a href="lekcja-043.html" data-lekcja="43"><span class="znacznik"></span><span class="nr">43</span> Słowniki</a></li><li><a href="lekcja-044.html" data-lekcja="44"><span class="znacznik"></span><span class="nr">44</span> Ładne wypisywanie i długie teksty</a></li><li><a href="lekcja-045.html" data-lekcja="45"><span class="znacznik"></span><span class="nr">45</span> Wyrażenia regularne</a></li><li><a href="lekcja-046.html" data-lekcja="46"><span class="znacznik"></span><span class="nr">46</span> sed od podstaw</a></li><li><a href="lekcja-047.html" data-lekcja="47"><span class="znacznik"></span><span class="nr">47</span> awk od podstaw</a></li><li><a href="lekcja-048.html" data-lekcja="48"><span class="znacznik"></span><span class="nr">48</span> Znajdź wszystko</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="41" data-modul="4" data-tematy="${#v}, ${v:0:3}, ${v#}, ${v%}, ${v/a/b}, ${v^^}, ${v:-domyślnie}">
+    <div class="belka"><span>Lekcja 41 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m04">Moduł 4</a> › Lekcja 41</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Nożyczki do tekstu</h1>
+      <p class="meta"><span>⏱ ok. 10 min czytania</span><span>· moduł 4: Napisy, listy i przetwarzanie danych</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant tnie, skraca, podmienia i zmienia wielkość liter w zmiennych samym Bashem, bez <code>sed</code>, <code>cut</code> i <code>basename</code>, i umie dać zmiennej wartość domyślną.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#dlugosc-ile-liter-siedzi-w-pudelku">Długość: ile liter siedzi w pudełku</a></li><li><a href="#wycinanie-od-ktorej-litery-i-ile">Wycinanie: od której litery i ile</a></li><li><a href="#obcinanie-z-przodu-i-z-tylu">Obcinanie z przodu i z tyłu</a></li><li><a href="#zamiana-znajdz-i-zamien">Zamiana: znajdź i zamień</a></li><li><a href="#wielkie-i-male-litery">Wielkie i małe litery</a></li><li><a href="#wartosci-domyslne-a-jak-pudelko-jest-puste">Wartości domyślne: a jak pudełko jest puste?</a></li><li><a href="#wszystko-razem-skrypt-rozbierz-sh">Wszystko razem: skrypt rozbierz.sh</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga-flag">Ściąga flag</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p class="ekran">skrypt, w którym jedna linijka to <code>nazwa=$(echo &quot;$plik&quot; | sed &#x27;s/.*\///&#x27; | cut -d. -f1)</code></p><p>Widziałeś kiedyś takie coś w skrypcie? Trzy programy, rura, ukośniki jak płot w ogródku. A wszystko po to, żeby z <code>/var/log/nginx/access.log</code> wyciągnąć słowo <code>access</code>.</p><p>To jak zamawianie firmy przeprowadzkowej, żeby przesunąć krzesło o metr.</p><p>Bash ma w sobie nożyczki. Wbudowane, darmowe, szybkie. Dziś je poznasz i od jutra połowa Twoich rur zniknie. Mówię „połowa”, bo drugą połową zajmiemy się przy <code>sed</code> i <code>awk</code>.</p></section><section><h2 id="dlugosc-ile-liter-siedzi-w-pudelku">Długość: ile liter siedzi w pudełku</h2><p>Zmienna to pudełko z napisem. Do tej pory umieliśmy włożyć coś do pudełka i wyjąć całość. Dziś będziemy z tego pudełka wyjmować kawałki.</p><p>Najprostsze pytanie: ile tego jest w środku? Stawiasz przed nazwą krzyżyk <code>#</code>.</p><div class="kod"><pre><code>haslo=&quot;tajne123&quot;
+echo &quot;${#haslo}&quot;</code></pre></div><div class="kod"><pre><code>8</code></pre></div><p>Po co adminowi długość? Choćby do sprawdzenia hasła, zanim wyślesz je do systemu:</p><div class="kod"><pre><code>if (( ${#haslo} &lt; 12 )); then
+    echo &quot;Za krótkie hasło: ${#haslo} znaków&quot;
+fi</code></pre></div><div class="kod"><pre><code>Za krótkie hasło: 8 znaków</code></pre></div><p>Zauważ: wszystko, co dziś robimy, ma klamry <code>${ }</code>. Same klamry poznałeś przy zmiennych, <code>${nazwa}</code>. Teraz wkładamy do nich narzędzia.</p></section><section><h2 id="wycinanie-od-ktorej-litery-i-ile">Wycinanie: od której litery i ile</h2><p>Wyobraź sobie taśmę mierniczą. Zaczyna się od zera. Mówisz: „utnij mi od czwartego centymetra, pięć centymetrów”. Tak działa <code>${zmienna:start:ile}</code>.</p><div class="kod"><pre><code>data=&quot;2026-11-03&quot;
+echo &quot;${data:0:4}&quot;
+echo &quot;${data:5:2}&quot;
+echo &quot;${data:8}&quot;</code></pre></div><div class="kod"><pre><code>2026
+11
+03</code></pre></div><p>Rok to cztery znaki od zera. Miesiąc to dwa znaki od piątego. Dzień to wszystko od ósmego do końca, bo jak nie podasz długości, Bash tnie do końca.</p><p>A od końca? Liczba ujemna. Ale uwaga, tu jest pułapka, do której jeszcze wrócimy. Między dwukropkiem a minusem musi być spacja:</p><div class="kod"><pre><code>echo &quot;${data: -2}&quot;</code></pre></div><div class="kod"><pre><code>03</code></pre></div></section><section><h2 id="obcinanie-z-przodu-i-z-tylu">Obcinanie z przodu i z tyłu</h2><p>To jest najważniejsza część lekcji. Wyobraź sobie bagietkę. Możesz uciąć piętkę z lewej, możesz z prawej. I możesz uciąć skromnie, kawałeczek, albo łapczywie, tyle, ile się da.</p><ul><li><code>#</code> obcina z lewej, skromnie, najkrótszy pasujący kawałek,</li><li><code>##</code> obcina z lewej, łapczywie, najdłuższy,</li><li><code>%</code> obcina z prawej, skromnie,</li><li><code>%%</code> obcina z prawej, łapczywie.</li></ul><p>A jak zapamiętać, który jest który? Spójrz na klawiaturę. <code>#</code> to Shift+3, <code>%</code> to Shift+5. A dolar, <code>$</code>, to Shift+4, czyli siedzi pośrodku. Krzyżyk stoi przed dolarem, więc tnie z przodu. Procent stoi za dolarem, więc tnie z tyłu. [na ekranie: zbliżenie na klawisze 3, 4, 5]</p><p>To, co obcinamy, opisujemy wzorcem, takim samym jak przy plikach: gwiazdka znaczy „cokolwiek”. Patrz:</p><div class="kod"><pre><code>plik=&quot;/var/log/nginx/access.log.2.gz&quot;
+echo &quot;${plik##*/}&quot;
+echo &quot;${plik%/*}&quot;
+echo &quot;${plik%.*}&quot;
+echo &quot;${plik%%.*}&quot;
+echo &quot;${plik#*/}&quot;</code></pre></div><div class="kod"><pre><code>access.log.2.gz
+/var/log/nginx
+/var/log/nginx/access.log.2
+/var/log/nginx/access
+var/log/nginx/access.log.2.gz</code></pre></div><p>Po kolei. <code>##*/</code> znaczy: z lewej utnij łapczywie wszystko aż do ukośnika. Łapczywie, czyli do ostatniego ukośnika. Zostaje sama nazwa pliku. To robi komenda <code>basename</code>.</p><p><code>%/*</code> znaczy: z prawej utnij skromnie ukośnik i wszystko za nim. Zostaje folder. To robi <code>dirname</code>.</p><p><code>%.*</code> ucina ostatnie rozszerzenie, <code>.gz</code>. A <code>%%.*</code> ucina od pierwszej kropki, czyli zostaje sam rdzeń, bez <code>.log.2.gz</code>.</p><p>I ostatni przykład, <code>#*/</code>, czyli skromnie z lewej. Najkrótsze „cokolwiek, potem ukośnik” to… sam pierwszy ukośnik. Uciął jeden znak. To pokazuje różnicę między skromnym a łapczywym lepiej niż tysiąc slajdów.</p><p>Zastosowanie z życia admina, nazwy serwerów:</p><div class="kod"><pre><code>host=&quot;web01.prod.firma.pl&quot;
+echo &quot;${host%%.*}&quot;
+echo &quot;${host#*.}&quot;</code></pre></div><div class="kod"><pre><code>web01
+prod.firma.pl</code></pre></div><p>Krótka nazwa i domena, jednym ruchem nożyczek.</p></section><section><h2 id="zamiana-znajdz-i-zamien">Zamiana: znajdź i zamień</h2><p>To jest Ctrl+H z Worda, tylko w zmiennej. <code>${zmienna/co/na_co}</code> zamienia pierwsze wystąpienie, a z dwoma ukośnikami, <code>${zmienna//co/na_co}</code>, wszystkie.</p><div class="kod"><pre><code>w=&quot;web01 padł, web01 nie odpowiada&quot;
+echo &quot;${w/web01/web02}&quot;
+echo &quot;${w//web01/web02}&quot;
+echo &quot;${w// /_}&quot;</code></pre></div><div class="kod"><pre><code>web02 padł, web01 nie odpowiada
+web02 padł, web02 nie odpowiada
+web01_padł,_web01_nie_odpowiada</code></pre></div><p>Ten trzeci to klasyk: spacje na podkreślniki, zanim zrobisz z tekstu nazwę pliku. A jak nie podasz, na co zamienić, Bash po prostu usuwa:</p><div class="kod"><pre><code>echo &quot;${w//web01}&quot;</code></pre></div><div class="kod"><pre><code> padł,  nie odpowiada</code></pre></div><p>Są jeszcze dwa warianty z kotwicą. <code>/#</code> zamienia tylko, jeśli tekst pasuje na samym początku, a <code>/%</code> tylko na samym końcu:</p><div class="kod"><pre><code>plik=&quot;raport.txt&quot;
+echo &quot;${plik/#raport/RAPORT}&quot;
+echo &quot;${plik/%txt/csv}&quot;</code></pre></div><div class="kod"><pre><code>RAPORT.txt
+raport.csv</code></pre></div><p>A teraz rzecz, za którą mi podziękujesz przy pierwszym zrzucie zdjęć z telefonu. Zmiana rozszerzenia w całym folderze:</p><div class="kod"><pre><code>for f in *.jpeg; do
+    mv -- &quot;$f&quot; &quot;${f%.jpeg}.jpg&quot;
+done
+ls</code></pre></div><div class="kod"><pre><code>kot.jpg
+moja plaża.jpg
+wakacje.jpg</code></pre></div><p>Pętla to taśma przy kasie, każdy plik przejeżdża po kolei. <code>${f%.jpeg}</code> odcina stare rozszerzenie z tyłu, a <code>.jpg</code> dokleja nowe. I działa nawet z plażą ze spacją w nazwie, bo wszystko jest w kopertach, czyli w cudzysłowach. [dla zaawansowanych: tu celowo <code>%</code>, a nie <code>/</code>. <code>${f/.jpeg/.jpg}</code> zamieniłby pierwsze <code>.jpeg</code> w nazwie, a plik <code>stary.jpeg.kopia.jpeg</code> dostałby nową nazwę <code>stary.jpg.kopia.jpeg</code>. Kotwica na końcu, czyli <code>%</code>, nie ma tego problemu.]</p></section><section><h2 id="wielkie-i-male-litery">Wielkie i małe litery</h2><p>Znasz to: pytasz użytkownika „tak czy nie?”, a on odpowiada „TAK”, „Tak”, „tAk”. Zamiast sprawdzać wszystkie kombinacje, sprowadzasz odpowiedź do małych liter.</p><ul><li><code>${v^^}</code> wszystko wielkimi,</li><li><code>${v,,}</code> wszystko małymi,</li><li><code>${v^}</code> tylko pierwsza litera wielka,</li><li><code>${v,}</code> tylko pierwsza mała.</li></ul><p>Daszek do góry jak strzałka w górę, przecinek w dół jak ogonek. Tak to zapamiętałem i działa.</p><div class="kod"><pre><code>#!/bin/bash
+read -r -p &quot;Restartować serwer? [t/n] &quot; odp
+if [[ ${odp,,} == t ]]; then
+    echo &quot;Restartuję...&quot;
+else
+    echo &quot;Nic nie robię.&quot;
+fi</code></pre></div><p>Wpisuję <code>T</code>, wielkie:</p><div class="kod"><pre><code>Restartować serwer? [t/n] T
+Restartuję...</code></pre></div><p>I nazwa hosta do nagłówka raportu:</p><div class="kod"><pre><code>echo &quot;${host^^}&quot;</code></pre></div><div class="kod"><pre><code>WEB01.PROD.FIRMA.PL</code></pre></div><p>[macOS] Uwaga dla użytkowników Maca: zmiana wielkości liter weszła do Basha w wersji 4.0, w 2009 roku. Systemowy Bash na Macu to 3.2. Dostaniesz tam błąd <code>bad substitution</code>. Rozwiązanie to samo co zawsze: nowy Bash z Homebrew albo Linux w maszynie wirtualnej. Cała reszta z tej lekcji działa i na starym.</p></section><section><h2 id="wartosci-domyslne-a-jak-pudelko-jest-puste">Wartości domyślne: a jak pudełko jest puste?</h2><p>Pamiętasz funkcję <code>kopia</code> wywołaną bez argumentu? To jest ten problem. Pudełko puste, a skrypt i tak sięga do środka.</p><p>Wyobraź sobie bar mleczny. Pytasz: „Co dziś do picia?”. Pani mówi: „Jak pan nic nie wybierze, będzie kompot”. To jest <code>${v:-domyślnie}</code>.</p><div class="kod"><pre><code>#!/bin/bash
+kto=${1:-nieznajomy}
+echo &quot;Cześć, ${kto^}!&quot;</code></pre></div><div class="kod"><pre><code>./witaj.sh
+./witaj.sh ela</code></pre></div><div class="kod"><pre><code>Cześć, Nieznajomy!
+Cześć, Ela!</code></pre></div><p>Całe rodzeństwo wygląda tak:</p><ul><li><code>${v:-kompot}</code> — jak puste, podaj kompot, ale do pudełka nic nie wkładaj,</li><li><code>${v:=kompot}</code> — jak puste, podaj kompot i od razu włóż go do pudełka na stałe,</li><li><code>${v:?komunikat}</code> — jak puste, krzyknij komunikat i przerwij skrypt,</li><li><code>${v:+coś}</code> — odwrotność: jak NIE jest puste, podaj „coś”, a jak puste, nic.</li></ul><p>W skryptach admina wygląda to tak:</p><div class="kod"><pre><code>katalog=${1:-/var/log}
+echo &quot;Sprawdzam: $katalog&quot;
+: &quot;${BACKUP_DIR:=/srv/backup}&quot;
+echo &quot;Kopie lecą do: $BACKUP_DIR&quot;</code></pre></div><div class="kod"><pre><code>Sprawdzam: /var/log
+Kopie lecą do: /srv/backup</code></pre></div><p>A jak ktoś poda swoje?</p><div class="kod"><pre><code>BACKUP_DIR=/mnt/nas ./skrypt.sh /etc</code></pre></div><div class="kod"><pre><code>Sprawdzam: /etc
+Kopie lecą do: /mnt/nas</code></pre></div><p>Ten dwukropek na początku linijki to komenda, która nic nie robi. Serio, nazywa się „null”. Potrzebujemy jej tylko po to, żeby Bash rozwinął <code>${BACKUP_DIR:=...}</code> i przy okazji wpisał wartość do pudełka.</p><p>A <code>:?</code> to strażnik przy wejściu:</p><div class="kod"><pre><code>#!/bin/bash
+sciezka=${1:?Użycie: rozbierz.sh ŚCIEŻKA}</code></pre></div><div class="kod"><pre><code>rozbierz.sh: line 2: 1: Użycie: rozbierz.sh ŚCIEŻKA</code></pre></div><p>Skrypt kończy się kodem 1 i nie robi ani kroku dalej. Jedna linijka zamiast całego <code>if</code>-a.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>dwukropek ma znaczenie. <code>${v-x}</code> bez dwukropka reaguje tylko, gdy zmienna w ogóle nie istnieje. <code>${v:-x}</code> także wtedy, gdy istnieje, ale jest pusta. Przy <code>pusty=&quot;&quot;</code> pierwsza forma da pusty tekst, druga <code>x</code>. W praktyce prawie zawsze chcesz wersję z dwukropkiem.</p></aside></section><section><h2 id="wszystko-razem-skrypt-rozbierz-sh">Wszystko razem: skrypt rozbierz.sh</h2><div class="kod"><pre><code>#!/bin/bash
+# rozbierz.sh – rozkłada ścieżkę pliku na części
+sciezka=${1:?Użycie: rozbierz.sh ŚCIEŻKA}
+
+folder=${sciezka%/*}
+nazwa=${sciezka##*/}
+rdzen=${nazwa%%.*}
+rozszerzenie=${nazwa#*.}
+
+echo &quot;Folder:       $folder&quot;
+echo &quot;Nazwa:        $nazwa&quot;
+echo &quot;Rdzeń:        $rdzen&quot;
+echo &quot;Rozszerzenie: $rozszerzenie&quot;
+echo &quot;Kopia:        ${folder}/${rdzen}_KOPIA.${rozszerzenie}&quot;
+echo &quot;Wielkimi:     ${nazwa^^}&quot;</code></pre></div><div class="kod"><pre><code>./rozbierz.sh /var/log/nginx/access.log.2.gz</code></pre></div><div class="kod"><pre><code>Folder:       /var/log/nginx
+Nazwa:        access.log.2.gz
+Rdzeń:        access
+Rozszerzenie: log.2.gz
+Kopia:        /var/log/nginx/access_KOPIA.log.2.gz
+Wielkimi:     ACCESS.LOG.2.GZ</code></pre></div><p>Zero zewnętrznych programów. ShellCheck czysty. A teraz test, który oblewa połowa skryptów w internecie:</p><div class="kod"><pre><code>./rozbierz.sh raport.txt</code></pre></div><div class="kod"><pre><code>Folder:       raport.txt
+Nazwa:        raport.txt
+...
+Kopia:        raport.txt/raport_KOPIA.txt</code></pre></div><p>Nie ma ukośnika, więc <code>%/*</code> nie miał czego uciąć i oddał całość. Nożyczki są szybkie, ale głupie: tną dokładnie tam, gdzie każesz. Jeśli plik może leżeć „tu, w bieżącym folderze”, musisz to sprawdzić sam, na przykład bramkarzem <code>if [[ $sciezka == */* ]]</code>. Albo w takim jednym miejscu świadomie użyć <code>dirname</code>, które wie, że wtedy folder to kropka.</p></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p>Wszystko z tej lekcji robi sam urzędnik, czyli Bash. Nie woła nikogo z zaplecza. A <code>basename</code>, <code>sed</code> czy <code>cut</code> to osobne programy. Każde ich wywołanie w <code>$( )</code> to nowy proces: Bash się klonuje, klon zamienia się w program, program startuje, robi swoje i umiera. Jak zatrudnianie kucharza do pokrojenia jednej cebuli.</p><p>Zmierzyłem to. Tysiąc razy wyciągam nazwę pliku:</p><div class="kod"><pre><code>time (for i in {1..1000}; do x=$(basename &quot;$plik&quot;); done)
+time (for i in {1..1000}; do x=${plik##*/}; done)</code></pre></div><div class="kod"><pre><code>real	0m1.716s
+real	0m0.003s</code></pre></div><p>Półtorej sekundy kontra trzy milisekundy. Kilkaset razy szybciej. Przy jednym pliku nie ma różnicy, przy pętli po stu tysiącach linii logu to różnica między „chwilę” a „idę na kawę”.</p><p>Druga rzecz: wzorce w nożyczkach to wzorce plikowe, te same co w <code>ls *.txt</code>. Gwiazdka, znak zapytania, nawiasy kwadratowe. To NIE są wyrażenia regularne. Te poznasz za cztery lekcje i wtedy zobaczysz, że to zupełnie inny język.</p><p>Trzecia: Bash liczy znaki według ustawień językowych, czyli locale. W <code>C.UTF-8</code> słowo „Łódź” ma 4 znaki. Uruchomione z <code>LC_ALL=C</code> ma 7, bo Bash liczy wtedy bajty, a polskie litery zajmują po dwa. I <code>^^</code> nie umie wtedy zrobić wielkiego „ó”.</p><div class="kod"><pre><code>C.UTF-8:  ŁÓDŹ 4
+C:        ŁóDź 7</code></pre></div><p>Na serwerze z dziwnie ustawionym locale polskie znaki potrafią się rozjechać właśnie tak. [dla zaawansowanych: ShellCheck zna te nożyczki. Jak napiszesz <code>$(echo &quot;$v&quot; | sed &quot;s/a/b/&quot;)</code>, dostaniesz ostrzeżenie SC2001: „See if you can use ${variable//search/replace} instead”.]</p></section><section><h2 id="sciaga-flag">Ściąga flag</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga</th><th>Co robi</th></tr><tr><td><code>${#v}</code></td><td><code>#</code> przed nazwą</td><td>długość tekstu w znakach</td></tr><tr><td><code>${v:2:3}</code></td><td><code>:start:ile</code></td><td>wycina 3 znaki od pozycji 2 (liczymy od 0)</td></tr><tr><td><code>${v: -2}</code></td><td>spacja + minus</td><td>ostatnie 2 znaki</td></tr><tr><td><code>${v#wzór}</code></td><td><code>#</code></td><td>utnij z lewej najkrótszy pasujący kawałek</td></tr><tr><td><code>${v##wzór}</code></td><td><code>##</code></td><td>utnij z lewej najdłuższy (np. <code>##*/</code> = nazwa pliku)</td></tr><tr><td><code>${v%wzór}</code></td><td><code>%</code></td><td>utnij z prawej najkrótszy (np. <code>%.*</code> = bez rozszerzenia)</td></tr><tr><td><code>${v%%wzór}</code></td><td><code>%%</code></td><td>utnij z prawej najdłuższy (np. <code>%%.*</code> = rdzeń nazwy)</td></tr><tr><td><code>${v/a/b}</code></td><td><code>/</code></td><td>zamień pierwsze <code>a</code> na <code>b</code></td></tr><tr><td><code>${v//a/b}</code></td><td><code>//</code></td><td>zamień wszystkie</td></tr><tr><td><code>${v/#a/b}</code></td><td><code>/#</code></td><td>zamień tylko na początku</td></tr><tr><td><code>${v/%a/b}</code></td><td><code>/%</code></td><td>zamień tylko na końcu</td></tr><tr><td><code>${v^^}</code> / <code>${v,,}</code></td><td><code>^^</code> / <code>,,</code></td><td>wszystko wielkimi / małymi (Bash 4+)</td></tr><tr><td><code>${v^}</code> / <code>${v,}</code></td><td><code>^</code> / <code>,</code></td><td>tylko pierwsza litera</td></tr><tr><td><code>${v:-x}</code></td><td><code>:-</code></td><td>jak puste, użyj <code>x</code></td></tr><tr><td><code>${v:=x}</code></td><td><code>:=</code></td><td>jak puste, użyj <code>x</code> i zapisz do zmiennej</td></tr><tr><td><code>${v:?tekst}</code></td><td><code>:?</code></td><td>jak puste, wypisz błąd i przerwij</td></tr><tr><td><code>${v:+x}</code></td><td><code>:+</code></td><td>jak NIE puste, użyj <code>x</code></td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>Chcesz dwa ostatnie znaki daty i piszesz:</p><div class="kod"><pre><code>data=&quot;2026-11-03&quot;
+echo &quot;${data:-2}&quot;</code></pre></div><div class="kod"><pre><code>2026-11-03</code></pre></div><p>Żadnego błędu. Po prostu cała data. Dlaczego? Bo <code>:-</code> to dla Basha wartość domyślna z dzisiejszej sekcji o kompocie. Przeczytał to jako „jak <code>data</code> jest pusta, daj 2”. A nie jest pusta, więc oddał całość. Brak błędu to tu najgorsze, bo skrypt jedzie dalej z niewłaściwą wartością.</p><p>Naprawa: spacja albo nawias.</p><div class="kod"><pre><code>echo &quot;${data: -2}&quot;
+echo &quot;${data:(-2)}&quot;</code></pre></div><div class="kod"><pre><code>03
+03</code></pre></div><p>Drugi częsty błąd to pomylenie skromnego z łapczywym. Chcesz zdjąć rozszerzenie z <code>access.log.2.gz</code>, piszesz <code>%%.*</code> i zostaje Ci <code>access</code>, a chciałeś <code>access.log.2</code>. Zasada: jedna litera, <code>#</code> albo <code>%</code>, tnie mało. Podwójna tnie dużo.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><ol><li>Masz zmienną:</li></ol><div class="kod"><pre><code>url=&quot;https://www.chmuroholik.pl/blog/odcinek-41.html&quot;</code></pre></div><p>Samymi nożyczkami, bez <code>sed</code>, <code>cut</code> i <code>basename</code>, wyciągnij z niej: protokół (<code>https</code>), nazwę hosta, wypisaną WIELKIMI literami, i nazwę strony bez <code>.html</code>.</p><ol><li>Napisz skrypt <code>witaj.sh</code>, który wita osobę podaną w pierwszym argumencie, z wielkiej litery. Bez argumentu ma witać „Nieznajomego”.</li></ol><p>Rozwiązanie znajdziesz pod spodem.</p><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><p>Pierwsza część: rozebrać adres strony samymi nożyczkami.</p><div class="kod"><pre><code>#!/bin/bash
+url=&quot;https://www.chmuroholik.pl/blog/odcinek-41.html&quot;
+protokol=${url%%:*}
+reszta=${url#*://}
+host=${reszta%%/*}
+nazwa=${url##*/}
+nazwa=${nazwa%.html}
+echo &quot;Protokół: $protokol&quot;
+echo &quot;Host:     ${host^^}&quot;
+echo &quot;Strona:   $nazwa&quot;</code></pre></div><div class="kod"><pre><code>Protokół: https
+Host:     WWW.CHMUROHOLIK.PL
+Strona:   odcinek-41</code></pre></div><p>Protokół to wszystko przed pierwszym dwukropkiem, więc z prawej tniemy łapczywie: <code>%%:*</code>. Host jest trudniejszy, bo siedzi w środku. Dlatego dwa cięcia: najpierw z lewej zdejmujemy <code>https://</code>, potem z prawej wszystko od pierwszego ukośnika. Kto próbował zrobić to jednym cięciem, ten wie, dlaczego chirurdzy mają więcej niż jeden skalpel.</p><p>Druga część, <code>witaj.sh</code>:</p><div class="kod"><pre><code>#!/bin/bash
+kto=${1:-nieznajomy}
+echo &quot;Cześć, ${kto^}!&quot;</code></pre></div><div class="kod"><pre><code>$ ./witaj.sh
+Cześć, Nieznajomy!
+$ ./witaj.sh ela
+Cześć, Ela!</code></pre></div><p>Wartość domyślna plus wielka pierwsza litera. Dwie linijki. Kiedyś na to był <code>if</code>, <code>tr</code> i trzy minuty z dokumentacją.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Do tej pory w jednym pudełku trzymaliśmy jedną rzecz. W następnej lekcji dostajemy szufladę z przegródkami: tablice. Listę serwerów, listę plików, całe pliki wczytane linijka po linijce przez <code>mapfile</code>.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-040.html" rel="prev">← 40. Funkcje</a><a class="btn domyslny zolty" href="lekcja-042.html" rel="next">42. Listy (tablice) →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

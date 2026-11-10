@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>58. Partycje — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 58 kursu Linux i Bash od zera do admina: Partycje. kursant rozumie różnicę między MBR a GPT, dzieli dysk na partycje w fdisk, gdisk i parted, nadaje im właściwe typy i wie, co zrobić przez partprobe, kiedy jądro nie widzi nowej partycji.">
+<meta property="og:title" content="58. Partycje — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 58 kursu Linux i Bash od zera do admina: Partycje. kursant rozumie różnicę między MBR a GPT, dzieli dysk na partycje w fdisk, gdisk i parted, nadaje im właściwe typy i wie, co zrobić przez partprobe, kiedy jądro nie widzi nowej partycji.">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 6</span></div>
+      <div class="boczny-tytul"><a href="index.html#m06">Dyski i systemy plików</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-056.html" data-lekcja="56"><span class="znacznik"></span><span class="nr">56</span> Dyski i miejsce</a></li><li><a href="lekcja-057.html" data-lekcja="57"><span class="znacznik"></span><span class="nr">57</span> Co to jest system plików</a></li><li><a href="lekcja-058.html" data-lekcja="58" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">58</span> Partycje</a></li><li><a href="lekcja-059.html" data-lekcja="59"><span class="znacznik"></span><span class="nr">59</span> Montowanie</a></li><li><a href="lekcja-060.html" data-lekcja="60"><span class="znacznik"></span><span class="nr">60</span> Swap</a></li><li><a href="lekcja-061.html" data-lekcja="61"><span class="znacznik"></span><span class="nr">61</span> LVM i szyfrowanie dysków</a></li><li><a href="lekcja-062.html" data-lekcja="62"><span class="znacznik"></span><span class="nr">62</span> RAID i zdrowie dysków</a></li><li><a href="lekcja-063.html" data-lekcja="63"><span class="znacznik"></span><span class="nr">63</span> Dyski przez sieć</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="58" data-modul="6" data-tematy="MBR kontra GPT, fdisk, gdisk, parted, partprobe">
+    <div class="belka"><span>Lekcja 58 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m06">Moduł 6</a> › Lekcja 58</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Partycje</h1>
+      <p class="meta"><span>⏱ ok. 12 min czytania</span><span>· moduł 6: Dyski i systemy plików</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant rozumie różnicę między MBR a GPT, dzieli dysk na partycje w <code>fdisk</code>, <code>gdisk</code> i <code>parted</code>, nadaje im właściwe typy i wie, co zrobić przez <code>partprobe</code>, kiedy jądro nie widzi nowej partycji.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#tablica-partycji-czyli-plan-mieszkania-na-drzwiach">Tablica partycji, czyli plan mieszkania na drzwiach</a></li><li><a href="#przygotowanie-dysk-z-pliku">Przygotowanie: dysk z pliku</a></li><li><a href="#fdisk-klasyk-z-menu">fdisk: klasyk z menu</a></li><li><a href="#partprobe-kiedy-jadro-przespalo-zmiane">partprobe: kiedy jądro przespało zmianę</a></li><li><a href="#gdisk-fdisk-w-wersji-gpt">gdisk: fdisk w wersji GPT</a></li><li><a href="#parted-bez-menu-za-to-od-razu">parted: bez menu, za to od razu</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga-flag">Ściąga flag</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p class="ekran"><code>lsblk</code> na maszynie wirtualnej, dysk <code>sda</code> podzielony na <code>sda1</code> 1G <code>/boot</code>, <code>sda2</code> reszta</p><p>Popatrz na dowolny serwer. Prawie nigdy nie zobaczysz systemu plików położonego bezpośrednio na całym dysku. Zawsze jest <code>sda1</code>, <code>sda2</code>, <code>nvme0n1p1</code>. Dysk najpierw jest dzielony na kawałki, a dopiero na kawałkach stoją regały.</p><p>Dlaczego? Bo jeden kawałek musi być dla programu rozruchowego, drugi dla systemu, trzeci może na dane, które przeżyją reinstalację. Jak mieszkanie: niby można mieć jedno wielkie pomieszczenie z wanną obok łóżka i kuchenką przy szafie, ale ktoś kiedyś wymyślił ściany i ludzkość na tym zyskała.</p><p>Dziś stawiamy ściany. Trzema narzędziami, bo na egzaminie i w pracy spotkasz wszystkie trzy.</p><p>Uwaga: zła partycja na złym dysku to najszybszy sposób, żeby skasować komuś cały serwer. Ćwicz na maszynie wirtualnej z dodatkowym, pustym dyskiem albo na pliku, tak jak ja. Przed każdym zapisem sprawdź <code>lsblk</code>, czy na pewno masz przed sobą właściwy dysk. Dwa razy.</p></section><section><h2 id="tablica-partycji-czyli-plan-mieszkania-na-drzwiach">Tablica partycji, czyli plan mieszkania na drzwiach</h2><p>Na samym początku dysku leży mała tabliczka: plan mieszkania. Mówi, gdzie zaczyna się i kończy każdy pokój. To tablica partycji. Są dwa standardy takich tabliczek.</p><p><strong>MBR</strong>, Master Boot Record. Stara tabliczka z czasów pierwszych pecetów, wyryta na jednym 512-bajtowym sektorze na samym początku dysku. Ma miejsce na cztery wpisy. Cztery pokoje i koniec. Chcesz więcej? Jeden z czterech pokoi zamieniasz na korytarz, czyli partycję rozszerzoną, a w korytarzu robisz kolejne pomieszczenia, czyli partycje logiczne. Działa, ale wygląda jak mieszkanie po trzech remontach różnych ekip. Do tego MBR liczy sektory na 32 bitach, więc przy zwykłych sektorach po 512 bajtów nie ogarnie więcej niż 2 TiB. Dysk 4 TB z MBR to mieszkanie, w którym połowy pokoi nie ma na planie.</p><p><strong>GPT</strong>, GUID Partition Table. Nowoczesna tabliczka, część standardu UEFI. Domyślnie 128 wpisów, gigantyczne rozmiary, każda partycja ma własny unikalny identyfikator i nazwę. A co najważniejsze: kopię planu trzyma też na końcu dysku. Zniszczysz początek, plan przeżyje na zapleczu.</p><p>Wybór? Nowy dysk: GPT. MBR tylko wtedy, gdy musisz, na przykład stary sprzęt startujący w trybie BIOS albo mały pendrive dla starego telewizora.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>GPT zostawia w pierwszym sektorze tak zwany ochronny MBR, protective MBR, z jedną partycją na cały dysk. Stare narzędzia, które GPT nie rozumieją, widzą dysk zajęty i niczego nie ruszają. <code>gdisk -l</code> pokazuje to w linijce <code>MBR: protective</code>.</p></aside></section><section><h2 id="przygotowanie-dysk-z-pliku">Przygotowanie: dysk z pliku</h2><p>Na maszynie wirtualnej po prostu dodajesz drugi dysk w ustawieniach VirtualBoxa czy virt-managera i pojawi się jako <code>sdb</code> albo <code>vdb</code>. Ja robię dysk z pliku i podpinam go jako urządzenie:</p><div class="kod"><pre><code>truncate -s 2G dysk.img
+sudo losetup -fP --show dysk.img</code></pre></div><div class="kod"><pre><code>/dev/loop8</code></pre></div><p><code>losetup</code> podpina plik jako urządzenie blokowe <code>/dev/loop8</code>. <code>-f</code> bierze pierwszy wolny numer, <code>-P</code> każe jądru szukać na nim partycji, <code>--show</code> wypisuje, co dostaliśmy. Od teraz <code>/dev/loop8</code> udaje dysk tak dobrze, że <code>fdisk</code> nie zauważy różnicy. Ty w każdej komendzie zamiast <code>/dev/loop8</code> wpisz swój dysk.</p></section><section><h2 id="fdisk-klasyk-z-menu">fdisk: klasyk z menu</h2><p><code>fdisk</code> to interaktywne menu sterowane literkami. Jak bankomat ze starego filmu: wciskasz literę, on o coś pyta.</p><div class="kod"><pre><code>sudo fdisk /dev/loop8</code></pre></div><p>Wpisuję po kolei:</p><ul><li><code>g</code>, czyli nowa, pusta tablica GPT. Dla MBR byłoby <code>o</code>.</li><li><code>n</code>, nowa partycja. Numer zostawiam domyślny Enterem, początek też Enterem, a na koniec wpisuję <code>+500M</code>, czyli pięćset megabajtów od początku.</li><li><code>n</code> jeszcze raz, numer i początek Enterem, koniec <code>+1G</code>.</li><li><code>t</code>, zmiana typu. Wybieram partycję <code>2</code> i wpisuję <code>lvm</code>.</li><li><code>p</code>, pokaż, co mam.</li></ul><div class="kod"><pre><code>Created a new GPT disklabel (GUID: 9980810F-58C1-40A2-9741-B1787FD88291).
+Created a new partition 1 of type &#x27;Linux filesystem&#x27; and of size 500 MiB.
+Created a new partition 2 of type &#x27;Linux filesystem&#x27; and of size 1 GiB.
+Changed type of partition &#x27;Linux filesystem&#x27; to &#x27;Linux LVM&#x27;.
+
+Disklabel type: gpt
+Device         Start     End Sectors  Size Type
+/dev/loop8p1    2048 1026047 1024000  500M Linux filesystem
+/dev/loop8p2 1026048 3123199 2097152    1G Linux LVM</code></pre></div><p>I teraz najważniejsze. Wszystko do tej pory było tylko na kartce. <code>fdisk</code> mówi to zresztą na powitanie: <code>Changes will remain in memory only, until you decide to write them.</code> Zmiany są w pamięci, dopóki nie wciśniesz <code>w</code>, czyli „write”, zapisz. <code>q</code> wychodzi bez zapisywania. To Twój hamulec bezpieczeństwa: pomyliłeś się, <code>q</code>, nic się nie stało.</p><div class="kod"><pre><code>Command (m for help): w
+The partition table has been altered.
+Calling ioctl() to re-read partition table.
+Syncing disks.</code></pre></div><p>Po co zmiana typu? Typ partycji to tabliczka na drzwiach pokoju: „kuchnia”, „łazienka”, „schowek”. Nic nie blokuje, ale narzędzia i ludzie się nią kierują. Najważniejsze dla admina: <code>Linux filesystem</code> na zwykłe dane, <code>Linux LVM</code> pod LVM, o którym za trzy lekcje, <code>Linux swap</code> pod pamięć wymiany, o której w lekcji sześćdziesiątym, i <code>EFI System</code> pod partycję rozruchową. W <code>fdisk</code> możesz wpisać skrót: <code>lvm</code>, <code>swap</code>, <code>linux</code>, zamiast szukać numeru na liście.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>w MBR typ to jeden bajt w zapisie szesnastkowym: <code>83</code> Linux, <code>82</code> swap, <code>8e</code> LVM, <code>5</code> partycja rozszerzona. Sprawdziłem: na tablicy MBR po <code>o</code> alias <code>lvm</code> też działa i ustawia <code>8e</code>.</p></aside></section><section><h2 id="partprobe-kiedy-jadro-przespalo-zmiane">partprobe: kiedy jądro przespało zmianę</h2><p>Sprawdzam, czy system widzi nowe partycje:</p><div class="kod"><pre><code>lsblk /dev/loop8</code></pre></div><div class="kod"><pre><code>NAME  MAJ:MIN RM SIZE RO TYPE MOUNTPOINTS
+loop8   7:8    0   2G  0 loop</code></pre></div><p>Nic. Tablica jest zapisana na dysku, ale jądro dalej trzyma w pamięci stary plan. To się zdarza naprawdę, szczególnie gdy dysk jest w użyciu albo gdy ktoś zmieniał partycje innym narzędziem. Jak administracja budynku, która dostała nowy plan mieszkania, ale położyła go na stosie „do przeczytania w poniedziałek”.</p><p><code>partprobe</code> każe jądru przeczytać plan od nowa:</p><div class="kod"><pre><code>sudo partprobe -s /dev/loop8
+lsblk /dev/loop8</code></pre></div><div class="kod"><pre><code>/dev/loop8: gpt partitions 1 2
+NAME      MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+loop8       7:8    0    2G  0 loop
+|-loop8p1 259:2    0  500M  0 part
+`-loop8p2 259:3    0    1G  0 part</code></pre></div><p>Są. <code>-s</code> dopisuje krótkie podsumowanie. Na RHEL <code>partprobe</code> jest w pakiecie <code>parted</code>, na Ubuntu też, więc jeśli masz <code>parted</code>, masz i <code>partprobe</code>.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>jeśli partycja, którą zmieniasz, jest akurat zamontowana albo używana, jądro może odmówić przeładowania. Wtedy pomaga odmontowanie albo restart. Alternatywa dla <code>partprobe</code> to <code>partx -u /dev/sdb</code> z pakietu util-linux.</p></aside></section><section><h2 id="gdisk-fdisk-w-wersji-gpt">gdisk: fdisk w wersji GPT</h2><p><code>gdisk</code> wygląda prawie jak <code>fdisk</code> i powstał, kiedy <code>fdisk</code> jeszcze nie umiał GPT. Dziś <code>fdisk</code> umie, ale <code>gdisk</code> dalej jest w podręcznikach i na egzaminach. Jeśli go nie masz: <code>sudo apt install gdisk</code> [Ubuntu] albo <code>sudo dnf install gdisk</code> [RHEL].</p><p>Najpierw tylko podglądam:</p><div class="kod"><pre><code>sudo gdisk -l /dev/loop8</code></pre></div><div class="kod"><pre><code>Partition table scan:
+  MBR: protective
+  GPT: present
+
+Found valid GPT with protective MBR; using GPT.
+Partition table holds up to 128 entries
+Partitions will be aligned on 2048-sector boundaries
+
+Number  Start (sector)    End (sector)  Size       Code  Name
+   1            2048         1026047   500.0 MiB   8300
+   2         1026048         3123199   1024.0 MiB  8E00</code></pre></div><p>Typy w <code>gdisk</code> to czterocyfrowe kody: <code>8300</code> Linux filesystem, <code>8E00</code> LVM, <code>8200</code> swap, <code>EF00</code> partycja EFI. Komendy w środku są podobne: <code>o</code> nowa tablica GPT, <code>n</code> nowa partycja, <code>t</code> typ, <code>c</code> nazwa partycji, <code>p</code> podgląd, <code>w</code> zapis, <code>q</code> wyjście bez zapisu. Przy zapisie <code>gdisk</code> pyta jeszcze raz i krzyczy wielkimi literami:</p><div class="kod"><pre><code>Final checks complete. About to write GPT data. THIS WILL OVERWRITE EXISTING
+PARTITIONS!!
+
+Do you want to proceed? (Y/N): y
+OK; writing new GUID partition table (GPT) to g.img.
+Warning: The kernel is still using the old partition table.
+The new table will be used at the next reboot or after you
+run partprobe(8) or kpartx(8)</code></pre></div><p>Zobacz: sam <code>gdisk</code> podpowiada <code>partprobe</code>. Narzędzia też wiedzą, że jądro bywa śpiące.</p></section><section><h2 id="parted-bez-menu-za-to-od-razu">parted: bez menu, za to od razu</h2><p><code>parted</code> działa inaczej niż dwaj poprzednicy. Można go używać jedną linijką, bez menu, co jest idealne do skryptów. I uwaga, ważna różnica: <strong><code>parted</code></strong><strong> zapisuje zmiany od razu</strong>, bez żadnego <code>w</code>. Nie ma kartki w pamięci. Jest długopis po ścianie.</p><p>Podgląd z wolnym miejscem, w jednostkach MiB:</p><div class="kod"><pre><code>sudo parted /dev/loop8 unit MiB print free</code></pre></div><div class="kod"><pre><code>Partition Table: gpt
+Number  Start    End      Size     File system  Name  Flags
+        0.02MiB  1.00MiB  0.98MiB  Free Space
+ 1      1.00MiB  501MiB   500MiB
+ 2      501MiB   1525MiB  1024MiB                     lvm
+        1525MiB  2048MiB  523MiB   Free Space</code></pre></div><p>Zostało 523 MiB wolnego od 1525 MiB do końca. Robię tam trzecią partycję o nazwie <code>kopie</code>:</p><div class="kod"><pre><code>sudo parted -s /dev/loop8 mkpart kopie ext4 1525MiB 100%
+sudo parted /dev/loop8 print</code></pre></div><div class="kod"><pre><code>Number  Start   End     Size    File system  Name   Flags
+ 1      1049kB  525MB   524MB
+ 2      525MB   1599MB  1074MB                      lvm
+ 3      1599MB  2146MB  547MB                kopie</code></pre></div><p><code>-s</code> to tryb „script”, czyli nie zadawaj pytań. <code>mkpart</code> przyjmuje nazwę, typ systemu plików, początek i koniec. <code>100%</code> znaczy „do końca dysku”. Słowo <code>ext4</code> w <code>mkpart</code> to tylko podpowiedź dla typu partycji. <code>parted</code> nie formatuje. Regały stawiasz dalej przez <code>mkfs</code>.</p><p>Pułapka z jednostkami: <code>parted</code> domyślnie pokazuje MB, czyli miliony bajtów, a <code>fdisk</code> MiB, czyli potęgi dwójki. 500 MiB to 524 MB. Ten sam pokój, dwie różne miarki. Dlatego przy tworzeniu zawsze pisz jednostkę wprost: <code>MiB</code> albo <code>GiB</code>.</p><p>Partycja jest, to stawiamy regały:</p><div class="kod"><pre><code>sudo partprobe /dev/loop8
+sudo mkfs.ext4 -q -L KOPIE /dev/loop8p3
+sudo blkid /dev/loop8p3</code></pre></div><div class="kod"><pre><code>/dev/loop8p3: LABEL=&quot;KOPIE&quot; UUID=&quot;a694c353-a877-4681-b13f-855c71e1f462&quot; BLOCK_SIZE=&quot;4096&quot; TYPE=&quot;ext4&quot; PARTLABEL=&quot;kopie&quot; PARTUUID=&quot;5cd92bfb-ac3a-473f-8efd-d5ace7246411&quot;</code></pre></div><p>Popatrz na końcówkę. Są dwa identyfikatory. <code>UUID</code> należy do systemu plików i zmieni się, gdy zrobisz <code>mkfs</code> od nowa. <code>PARTUUID</code> i <code>PARTLABEL</code> należą do partycji w tablicy GPT i przeżyją formatowanie. Jak numer mieszkania i nazwisko lokatora: lokator się wyprowadzi, numer zostaje.</p></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p>Dysk to dla jądra długa taśma sektorów po 512 bajtów, czasem po 4096. Partycja to po prostu zapis „od sektora 2048 do sektora 1026047”. Nic więcej. Żadnych ścian w środku, tylko liczby na planie.</p><p>Dlaczego pierwsza partycja zaczyna się od sektora 2048, a nie od 34? 2048 sektorów po 512 bajtów to dokładnie 1 MiB. Wszystkie nowe narzędzia wyrównują partycje do pełnego mebibajta, bo dyski SSD i macierze pracują dużymi blokami. Partycja zaczynająca się w połowie bloku to jak meblościanka postawiona tak, że każda szafka zahacza o dwa panele podłogi: działa, ale wszystko robi się dwa razy.</p><p>GPT na dysku wygląda tak: sektor 0 to ochronny MBR, sektor 1 to nagłówek GPT, sektory od 2 do 33 to tablica 128 wpisów, a na samym końcu dysku leży kopia tablicy i kopia nagłówka. Dlatego <code>fdisk</code> pisze, że ostatni użyteczny sektor to 4194270, a nie 4194303: ostatnie 33 sektory są zajęte przez zapasowy plan.</p><p>Kiedy piszesz <code>w</code>, narzędzie zapisuje tablicę na dysk i prosi jądro przez wywołanie <code>ioctl</code>, żeby wczytało ją ponownie. Jądro tworzy wtedy urządzenia <code>sdb1</code>, <code>sdb2</code> i ich odpowiedniki w <code>/dev</code>. Jeśli jądro odmówi albo przegapi prośbę, masz to, co widzieliśmy: tablica na dysku jest, urządzeń nie ma. Wtedy <code>partprobe</code>.</p></section><section><h2 id="sciaga-flag">Ściąga flag</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga / klawisz</th><th>Co robi</th></tr><tr><td><code>fdisk</code></td><td><code>-l</code></td><td>wypisuje tablice partycji</td></tr><tr><td><code>fdisk</code> (menu)</td><td><code>g</code> / <code>o</code></td><td>nowa tablica GPT / MBR</td></tr><tr><td><code>fdisk</code> (menu)</td><td><code>n</code></td><td>nowa partycja</td></tr><tr><td><code>fdisk</code> (menu)</td><td><code>t</code></td><td>typ partycji (aliasy: <code>linux</code>, <code>lvm</code>, <code>swap</code>)</td></tr><tr><td><code>fdisk</code> (menu)</td><td><code>d</code></td><td>usuwa partycję</td></tr><tr><td><code>fdisk</code> (menu)</td><td><code>p</code></td><td>pokazuje plan</td></tr><tr><td><code>fdisk</code> (menu)</td><td><code>w</code> / <code>q</code></td><td>zapisz i wyjdź / wyjdź bez zapisu</td></tr><tr><td><code>gdisk</code></td><td><code>-l</code></td><td>wypisuje tablicę GPT</td></tr><tr><td><code>gdisk</code> (menu)</td><td><code>o</code>, <code>n</code>, <code>t</code>, <code>c</code>, <code>p</code>, <code>w</code>, <code>q</code></td><td>nowa tablica, partycja, typ, nazwa, podgląd, zapis, wyjście</td></tr><tr><td><code>parted</code></td><td><code>-s</code></td><td>tryb skryptowy, bez pytań</td></tr><tr><td><code>parted</code></td><td><code>mklabel gpt</code> / <code>msdos</code></td><td>nowa tablica GPT / MBR</td></tr><tr><td><code>parted</code></td><td><code>mkpart NAZWA TYP OD DO</code></td><td>nowa partycja (zapis od razu)</td></tr><tr><td><code>parted</code></td><td><code>unit MiB print free</code></td><td>plan w MiB z wolnym miejscem</td></tr><tr><td><code>parted</code></td><td><code>rm N</code></td><td>usuwa partycję N</td></tr><tr><td><code>partprobe</code></td><td><code>-s</code></td><td>przeładowuje tablicę w jądrze i pokazuje podsumowanie</td></tr><tr><td><code>losetup</code></td><td><code>-fP --show PLIK</code></td><td>podpina plik jako dysk i szuka partycji</td></tr><tr><td><code>losetup</code></td><td><code>-d URZĄDZENIE</code></td><td>odpina dysk z pliku</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>Zrobiłeś partycję, od razu chcesz założyć system plików:</p><div class="kod"><pre><code>sudo mkfs.ext4 /dev/loop9p1</code></pre></div><div class="kod"><pre><code>mke2fs 1.47.0 (5-Feb-2023)
+The file /dev/loop9p1 does not exist and no size was specified.</code></pre></div><p>Komunikat brzmi groźnie, ale znaczy tylko: „nie ma takiego urządzenia”. Partycja jest w tablicy, ale jądro jeszcze jej nie wystawiło. Zamiast od razu robić drugą partycję albo restartować, sprawdź:</p><div class="kod"><pre><code>lsblk /dev/loop9
+sudo partprobe /dev/loop9
+lsblk /dev/loop9</code></pre></div><div class="kod"><pre><code>NAME  MAJ:MIN RM SIZE RO TYPE MOUNTPOINTS
+loop9   7:9    0   1G  0 loop
+NAME      MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS
+loop9       7:9    0    1G  0 loop
+`-loop9p1 259:1    0  300M  0 part</code></pre></div><p>I dopiero teraz <code>mkfs</code>. Druga wersja tego błędu jest gorsza: wpisujesz <code>mkfs.ext4 /dev/sda1</code> zamiast <code>/dev/sdb1</code>, bo palec się omsknął. Wtedy żadna komenda nie pomoże. Dlatego przed każdym <code>mkfs</code> i <code>fdisk</code> patrzysz w <code>lsblk</code>: rozmiar, czy coś jest zamontowane, czy na pewno nowy dysk.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><p>Na maszynie wirtualnej dodaj drugi dysk 2 GB albo zrób go z pliku przez <code>truncate</code> i <code>losetup -fP --show</code>. Potem:</p><ol><li>W <code>fdisk</code> załóż tablicę GPT, partycję 1 o rozmiarze 500 MiB typu Linux filesystem i partycję 2 o rozmiarze 1 GiB typu Linux LVM. Zapisz.</li><li>Resztę dysku zajmij jedną linijką <code>parted</code> jako partycję o nazwie <code>kopie</code>.</li><li>Sprawdź wynik w <code>lsblk</code>, <code>gdisk -l</code> i <code>parted ... unit MiB print free</code>. Jeśli <code>lsblk</code> nie widzi partycji, użyj <code>partprobe</code>.</li><li>Załóż ext4 z etykietą <code>DANE</code> na partycji 1 i zapisz sobie jej UUID z <code>blkid</code>. Przyda się w następnej lekcji.</li></ol><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><p>Mój „drugi dysk” to znowu plik, podpięty jako <code>/dev/loop1</code>. Ty masz <code>/dev/sdb</code> albo <code>/dev/vdb</code>.</p><div class="kod"><pre><code>sudo fdisk /dev/loop1        # g, n (+500M), n (+1G), t 2 lvm, w
+sudo parted -s /dev/loop1 mkpart kopie ext4 1525MiB 100%
+sudo partprobe /dev/loop1
+lsblk -o NAME,SIZE,TYPE /dev/loop1
+sudo parted /dev/loop1 unit MiB print free
+sudo mkfs.ext4 -q -L DANE /dev/loop1p1
+sudo blkid /dev/loop1p1</code></pre></div><div class="kod"><pre><code>NAME       SIZE TYPE
+loop1        2G loop
+|-loop1p1  500M part
+|-loop1p2    1G part
+`-loop1p3  522M part
+
+ 1      1.00MiB  501MiB   500MiB
+ 2      501MiB   1525MiB  1024MiB                      lvm
+ 3      1525MiB  2047MiB  522MiB                kopie
+        2047MiB  2048MiB  0.98MiB  Free Space
+
+/dev/loop1p1: LABEL=&quot;DANE&quot; UUID=&quot;3d211a77-05fd-4f40-af9e-a59e28329d1f&quot; BLOCK_SIZE=&quot;4096&quot; TYPE=&quot;ext4&quot; PARTUUID=&quot;bba0b016-23b8-477d-8674-90aebdd64b03&quot;</code></pre></div><p>Zwróć uwagę na ostatnią linijkę <code>parted</code>: „do końca dysku”, czyli <code>100%</code>, zostawiło jeszcze prawie megabajt wolnego. To nie błąd. Na końcu dysku GPT trzyma zapasowy plan, a <code>parted</code> wyrównuje partycje do pełnych mebibajtów. Okruszek, który zostaje na talerzu z grzeczności.</p><p>UUID z ostatniej linijki zapisz. Za chwilę wpiszemy go do najważniejszego pliku tej lekcji.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Mamy partycję, mamy na niej system plików, mamy UUID. Brakuje jednego: drzwi z korytarza do tego pokoju. W następnej lekcji montowanie: <code>mount</code>, <code>umount</code>, „device is busy”, <code>findmnt</code> i plik <code>/etc/fstab</code>, w którym jedna literówka potrafi nie wpuścić serwera do własnego domu.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-057.html" rel="prev">← 57. Co to jest system plików</a><a class="btn domyslny zolty" href="lekcja-059.html" rel="next">59. Montowanie →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

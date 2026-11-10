@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>34. Udało się czy nie? — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 34 kursu Linux i Bash od zera do admina: Udało się czy nie?. kursant czyta kody wyjścia komend przez $?, kończy swoje skrypty własnym kodem przez exit i łączy komendy warunkowo przez &amp;&amp; i ||, żeby jedna awaria nie ciągnęła za sobą następnych.">
+<meta property="og:title" content="34. Udało się czy nie? — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 34 kursu Linux i Bash od zera do admina: Udało się czy nie?. kursant czyta kody wyjścia komend przez $?, kończy swoje skrypty własnym kodem przez exit i łączy komendy warunkowo przez &amp;&amp; i ||, żeby jedna awaria nie ciągnęła za sobą następnych.">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 3</span></div>
+      <div class="boczny-tytul"><a href="index.html#m03">Pisanie skryptów</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-031.html" data-lekcja="31"><span class="znacznik"></span><span class="nr">31</span> Twój pierwszy skrypt</a></li><li><a href="lekcja-032.html" data-lekcja="32"><span class="znacznik"></span><span class="nr">32</span> Zmienne i cudzysłowy</a></li><li><a href="lekcja-033.html" data-lekcja="33"><span class="znacznik"></span><span class="nr">33</span> Skrypt, który przyjmuje polecenia</a></li><li><a href="lekcja-034.html" data-lekcja="34" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">34</span> Udało się czy nie?</a></li><li><a href="lekcja-035.html" data-lekcja="35"><span class="znacznik"></span><span class="nr">35</span> Jeśli… to…</a></li><li><a href="lekcja-036.html" data-lekcja="36"><span class="znacznik"></span><span class="nr">36</span> Wybór z menu</a></li><li><a href="lekcja-037.html" data-lekcja="37"><span class="znacznik"></span><span class="nr">37</span> Pętle</a></li><li><a href="lekcja-038.html" data-lekcja="38"><span class="znacznik"></span><span class="nr">38</span> Bash umie liczyć (trochę)</a></li><li><a href="lekcja-039.html" data-lekcja="39"><span class="znacznik"></span><span class="nr">39</span> Wynik komendy w zmiennej</a></li><li><a href="lekcja-040.html" data-lekcja="40"><span class="znacznik"></span><span class="nr">40</span> Funkcje</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="34" data-modul="3" data-tematy="kod wyjścia, $?, exit, &amp;&amp;, ||, true, false">
+    <div class="belka"><span>Lekcja 34 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m03">Moduł 3</a> › Lekcja 34</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Udało się czy nie?</h1>
+      <p class="meta"><span>⏱ ok. 10 min czytania</span><span>· moduł 3: Pisanie skryptów</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant czyta kody wyjścia komend przez <code>$?</code>, kończy swoje skrypty własnym kodem przez <code>exit</code> i łączy komendy warunkowo przez <code>&amp;&amp;</code> i <code>||</code>, żeby jedna awaria nie ciągnęła za sobą następnych.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#kod-wyjscia-czyli-kciuk-w-gore-albo-w-dol">Kod wyjścia, czyli kciuk w górę albo w dół</a></li><li><a href="#co-mowia-numerki">Co mówią numerki</a></li><li><a href="#jest-jak-zlota-rybka">$? jest jak złota rybka</a></li><li><a href="#exit-czyli-kciuk-twojego-skryptu">exit, czyli kciuk Twojego skryptu</a></li><li><a href="#i-czyli-jesli-sie-udalo-i-jesli-nie">&amp;&amp; i ||, czyli „jeśli się udało” i „jeśli nie”</a></li><li><a href="#porzadny-skrypt-mowi-ze-cos-jest-nie-tak">Porządny skrypt mówi, że coś jest nie tak</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga-flag">Ściąga flag</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p>Prawdziwa historia, która zdarza się co roku w setkach firm. Skrypt do sprzątania starych logów:</p><div class="kod"><pre><code>cd /var/log/aplikacja/stare
+rm -rf *</code></pre></div><p>Działał latami. Aż ktoś zmienił nazwę folderu. <code>cd</code> się nie udał, wypisał błąd, którego nikt nie czytał, bo skrypt chodził w nocy z crona. A <code>rm -rf *</code> wykonało się dalej. W folderze, w którym skrypt akurat był. Na przykład w domowym. Albo w głównym.</p><p>Nie odpalaj tego, nawet na maszynie wirtualnej. Pokażę to samo bezpiecznie, z <code>ls</code> zamiast <code>rm</code>:</p><div class="kod"><pre><code>cd /tmp/stare_logi ; ls</code></pre></div><div class="kod"><pre><code>bash: cd: /tmp/stare_logi: No such file or directory
+a.txt
+b.txt
+notatki.md</code></pre></div><p><code>cd</code> się nie udał, a <code>ls</code> i tak pokazał pliki. Ale nie z <code>/tmp/stare_logi</code>, tylko z miejsca, w którym stałem. Z <code>rm</code> zamiast <code>ls</code> właśnie straciłbym te pliki. Dziś nauczysz się jednego znaczka, który by temu zapobiegł. Dwa znaki. Ampersand, ampersand.</p></section><section><h2 id="kod-wyjscia-czyli-kciuk-w-gore-albo-w-dol">Kod wyjścia, czyli kciuk w górę albo w dół</h2><p>Każda komenda, kiedy kończy pracę, pokazuje kciuk. W górę: udało się. W dół: coś poszło nie tak. Ten kciuk to kod wyjścia, po angielsku exit status albo exit code. To liczba od 0 do 255.</p><p>I tu jest pułapka dla wszystkich, którzy kiedyś programowali albo chodzili do szkoły: <strong>zero oznacza sukces</strong>. Wszystko inne to porażka. Dlaczego odwrotnie niż w szkole? Bo sukces jest jeden, a porażek wiele rodzajów. Zero mówi „wszystko gra”. Jedynka, dwójka, sto dwadzieścia siedem mówią, co dokładnie nie gra. Jak lekarz: „zdrowy” jest jedno, a choroby mają numery w całej księdze.</p><p>Kod ostatniej komendy Bash trzyma w specjalnym pudełku <code>$?</code>:</p><div class="kod"><pre><code>ls /etc/hostname
+echo &quot;kod: $?&quot;
+ls /nie/ma/takiego
+echo &quot;kod: $?&quot;</code></pre></div><div class="kod"><pre><code>/etc/hostname
+kod: 0
+ls: cannot access &#x27;/nie/ma/takiego&#x27;: No such file or directory
+kod: 2</code></pre></div></section><section><h2 id="co-mowia-numerki">Co mówią numerki</h2><p>Niektóre kody ustala sam Bash i są takie same wszędzie:</p><div class="kod"><pre><code>nieistniejacakomenda
+echo &quot;kod: $?&quot;
+./raport.txt
+echo &quot;kod: $?&quot;</code></pre></div><div class="kod"><pre><code>bash: nieistniejacakomenda: command not found
+kod: 127
+bash: ./raport.txt: Permission denied
+kod: 126</code></pre></div><p>127 to „nie znalazłem takiej komendy”. 126 to „znalazłem, ale nie mogę uruchomić”, na przykład brak prawa <code>x</code>. Jeśli komendę zabił sygnał, kod to 128 plus numer sygnału. Pamiętasz sygnały? Ctrl+C to SIGINT, numer 2, więc kod 130. Grzeczne <code>kill</code>, czyli SIGTERM, numer 15, daje 143. Kiedy widzisz w logu 137, wiesz, że ktoś komuś wyłączył prąd, czyli SIGKILL, dziewiątka. Często robi to OOM killer, kiedy brakuje pamięci.</p><p>Resztę ustala każdy program po swojemu i trzeba zajrzeć do jego <code>man</code>, do sekcji EXIT STATUS. Najpiękniejszy przykład to <code>grep</code>:</p><div class="kod"><pre><code>grep -q root /etc/passwd
+echo &quot;znalazł: $?&quot;
+grep -q zzzz /etc/passwd
+echo &quot;nie znalazł: $?&quot;
+grep -q root /nie/ma
+echo &quot;błąd: $?&quot;</code></pre></div><div class="kod"><pre><code>znalazł: 0
+nie znalazł: 1
+grep: /nie/ma: No such file or directory
+błąd: 2</code></pre></div><p><code>-q</code> to tryb cichy: <code>grep</code> nic nie wypisuje, tylko pokazuje kciuk. Zero: znalazłem. Jeden: przeszukałem i nie ma. Dwa: nie mogłem nawet szukać. To trzy różne sytuacje i dobry skrypt umie je rozróżnić.</p></section><section><h2 id="jest-jak-zlota-rybka">$? jest jak złota rybka</h2><div class="kod"><pre><code>false
+echo &quot;pierwsze: $?&quot;
+echo &quot;drugie: $?&quot;</code></pre></div><div class="kod"><pre><code>pierwsze: 1
+drugie: 0</code></pre></div><p><code>$?</code> pamięta tylko ostatnią komendę. Pierwsze <code>echo</code> pokazało kod <code>false</code>. Ale samo <code>echo</code> też jest komendą, udało mu się, więc drugie <code>echo</code> widzi już jego zero. Pamięć złotej rybki. Jeśli kod będzie Ci potrzebny później, przepisz go od razu do zwykłego pudełka: <code>kod=$?</code>.</p><p>A skoro o <code>false</code> mowa: <code>true</code> i <code>false</code> to komendy, które nic nie robią, tylko pokazują kciuk. <code>true</code> zawsze zero, <code>false</code> zawsze jeden. Najbardziej leniwi pracownicy w całym systemie, a i tak się przydają: do testów, do pętli bez końca, do miejsc, gdzie składnia wymaga komendy, a Ty nie chcesz nic robić.</p></section><section><h2 id="exit-czyli-kciuk-twojego-skryptu">exit, czyli kciuk Twojego skryptu</h2><p>Twój skrypt też jest komendą, więc też pokazuje kciuk. Domyślnie pokazuje kciuk ostatniej komendy, którą wykonał. Ale możesz zdecydować sam:</p><div class="kod"><pre><code>exit 0
+exit 3</code></pre></div><p><code>exit</code> natychmiast kończy skrypt i zwraca podany kod. Wszystko, co jest niżej, się nie wykona. To jak wyjście ewakuacyjne: kiedy przez nie wyjdziesz, reszta zwiedzania odpada.</p><p>Konwencja: <code>0</code> sukces, <code>1</code> ogólny błąd, <code>2</code> złe użycie, na przykład brak argumentu. Resztę możesz ustalić sam i opisać w komentarzu. Tylko nie wchodź na 126 i wyżej, bo to pole Basha i sygnałów.</p><p>A co, jeśli przesadzisz z liczbą?</p><div class="kod"><pre><code>bash -c &#x27;exit 256&#x27;; echo &quot;$?&quot;
+bash -c &#x27;exit 300&#x27;; echo &quot;$?&quot;</code></pre></div><div class="kod"><pre><code>0
+44</code></pre></div><p>Kod ma osiem bitów, więc mieści liczby od 0 do 255. Większe się „przekręcają” jak licznik kilometrów w starym maluchu: 256 to znowu 0, a 300 to 44. Czyli <code>exit 256</code> to sukces. Najdziwniejszy sukces w historii.</p></section><section><h2 id="i-czyli-jesli-sie-udalo-i-jesli-nie">&amp;&amp; i ||, czyli „jeśli się udało” i „jeśli nie”</h2><p>Teraz obiecany znaczek. Między dwiema komendami możesz postawić trzy różne łączniki:</p><p><code>;</code> — „potem”. Druga komenda wykona się zawsze, bez względu na kciuk pierwszej.</p><p><code>&amp;&amp;</code> — „i jeśli się udało, to”. Druga komenda wykona się tylko wtedy, gdy pierwsza pokazała kciuk w górę.</p><p><code>||</code> — „a jeśli nie, to”. Druga komenda wykona się tylko wtedy, gdy pierwsza pokazała kciuk w dół.</p><p>Jak sztafeta. <code>&amp;&amp;</code> to zawodnik, który rusza tylko wtedy, gdy kolega dobiegł z pałeczką. <code>||</code> to rezerwowy, który wbiega na boisko tylko wtedy, gdy kolega się przewrócił.</p><div class="kod"><pre><code>mkdir /tmp/demo34 &amp;&amp; echo &quot;Założono folder&quot;
+mkdir /tmp/demo34 &amp;&amp; echo &quot;Założono folder&quot;
+mkdir /tmp/demo34 || echo &quot;Nie udało się, ale żyjemy dalej&quot;</code></pre></div><div class="kod"><pre><code>Założono folder
+mkdir: cannot create directory &#x27;/tmp/demo34&#x27;: File exists
+mkdir: cannot create directory &#x27;/tmp/demo34&#x27;: File exists
+Nie udało się, ale żyjemy dalej</code></pre></div><p>Za pierwszym razem folder powstał, więc <code>echo</code> się wykonało. Za drugim <code>mkdir</code> dostał kciuk w dół, więc <code>echo</code> po <code>&amp;&amp;</code> zostało pominięte. Za trzecim <code>||</code> wpuściło rezerwowego.</p><p>I teraz nasz skrypt z haka, naprawiony:</p><div class="kod"><pre><code>cd /tmp/stare_logi &amp;&amp; ls</code></pre></div><div class="kod"><pre><code>bash: cd: /tmp/stare_logi: No such file or directory</code></pre></div><p>Nic więcej. <code>ls</code>, a w prawdziwym życiu <code>rm</code>, nie wystartował. Dwa znaki uratowały Ci dzień. W skryptach jeszcze częściej pisze się <code>cd /folder || exit</code>, czyli „albo wejdź, albo kończ”. To właśnie ten pas bezpieczeństwa, który obiecałem wyjaśnić w lekcji 31. ShellCheck sam podpowiada go przy każdym gołym <code>cd</code> w skrypcie (SC2164).</p><p>Jest też wykrzyknik, który odwraca kciuk: <code>! grep -q zzzz /etc/passwd</code> da zero, bo „nie znalazłem” jest tu sukcesem.</p></section><section><h2 id="porzadny-skrypt-mowi-ze-cos-jest-nie-tak">Porządny skrypt mówi, że coś jest nie tak</h2><p>Pamiętasz <code>kto_to.sh</code> z poprzedniej lekcji, który bez argumentu udawał, że wszystko gra? Poprawiamy:</p><div class="kod"><pre><code>#!/bin/bash
+# kto_to.sh - pokazuje informacje o koncie podanym jako argument
+getent passwd &quot;$1&quot; &gt; /dev/null || { echo &quot;Nie znam konta: &#x27;$1&#x27;&quot; &gt;&amp;2; exit 2; }
+echo &quot;=== Konto: $1 ===&quot;
+getent passwd &quot;$1&quot;
+id &quot;$1&quot;</code></pre></div><div class="kod"><pre><code>./kto_to.sh nikt; echo &quot;kod=$?&quot;
+./kto_to.sh root; echo &quot;kod=$?&quot;</code></pre></div><div class="kod"><pre><code>Nie znam konta: &#x27;nikt&#x27;
+kod=2
+=== Konto: root ===
+root:x:0:0:root:/root:/bin/bash
+uid=0(root) gid=0(root) groups=0(root)
+kod=0</code></pre></div><p>Rozbierzmy tę jedną gęstą linijkę. <code>getent passwd &quot;$1&quot; &gt; /dev/null</code> sprawdza, czy konto istnieje, a wynik wyrzuca do czarnej dziury, bo interesuje nas tylko kciuk. Jeśli kciuk jest w dół, <code>||</code> wpuszcza to, co jest w klamrach. Klamry to spinacz: zbierają dwie komendy w jedną paczkę, żeby obie wykonały się jako „rezerwowy”. Uwaga na składnię: spacja po <code>{</code> i średnik przed <code>}</code> są obowiązkowe. W środku komunikat leci na drugi głośnik, czyli <code>&gt;&amp;2</code>, bo to błąd, a nie wynik. A potem <code>exit 2</code>.</p><p>Pusty argument też się tu łapie, bo konta o pustej nazwie nie ma. Teraz ten skrypt można wpiąć w większą całość i ta całość będzie wiedziała, co się stało. Bez czytania komunikatów.</p></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p>Kiedy proces kończy pracę, wywołuje funkcję systemową <code>exit</code> z liczbą. Jądro zapisuje tę liczbę i trzyma ją, aż rodzic ją odbierze. Rodzic robi to wywołaniem <code>wait</code>. Pamiętasz zombie z lekcji o rodzajach procesów, czyli rachunek gościa, który już wyszedł, a kelner go nie zamknął? To jest dokładnie ta sytuacja: proces się skończył, kod wyjścia czeka na odbiór, a rodzic go jeszcze nie odebrał. Bash odbiera kod od razu i wkłada go do <code>$?</code>.</p><p>W tym samym miejscu jądro zapisuje też, czy proces zakończył się sam, czy zabił go sygnał. Bash zamienia to drugie na 128 plus numer sygnału, żebyś mógł to rozpoznać jedną liczbą.</p><p><code>&amp;&amp;</code> i <code>||</code> to nie są osobne programy. To gramatyka Basha. Bash uruchamia pierwszą komendę, czeka na jej kciuk, i dopiero wtedy decyduje, czy uruchomić drugą. Dlatego cały łańcuch zwraca kod ostatniej komendy, która naprawdę się wykonała.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>w rurze <code>a | b</code> kod całości to kod ostatniej komendy, więc <code>false | true</code> daje 0. Kody wszystkich członów są w tablicy <code>PIPESTATUS</code>: <code>false | true; echo &quot;${PIPESTATUS[@]}&quot;</code> wypisze <code>1 0</code>. Opcja <code>set -o pipefail</code> zmienia tę zasadę i będzie miała własna lekcja.</p></aside></section><section><h2 id="sciaga-flag">Ściąga flag</h2><div class="tabela"><table><tr><th>Komenda / zapis</th><th>Flaga / wartość</th><th>Co robi</th></tr><tr><td><code>$?</code></td><td>—</td><td>kod ostatniej komendy (tylko ostatniej!)</td></tr><tr><td><code>exit</code></td><td><code>N</code></td><td>kończy skrypt z kodem N (0–255)</td></tr><tr><td><code>exit</code></td><td>bez liczby</td><td>kończy z kodem ostatniej komendy</td></tr><tr><td><code>a ; b</code></td><td>—</td><td>b zawsze</td></tr><tr><td><code>a &amp;&amp; b</code></td><td>—</td><td>b tylko, gdy a się udało (kod 0)</td></tr><tr><td><code>a || b</code></td><td>—</td><td>b tylko, gdy a się nie udało</td></tr><tr><td><code>! a</code></td><td>—</td><td>odwraca kciuk</td></tr><tr><td><code>{ a; b; }</code></td><td>—</td><td>grupuje komendy (spacje i średnik obowiązkowe)</td></tr><tr><td><code>true</code> / <code>false</code></td><td>—</td><td>zawsze 0 / zawsze 1</td></tr><tr><td><code>grep</code></td><td><code>-q</code></td><td>nic nie wypisuje, tylko kod: 0 znalazł, 1 nie, 2 błąd</td></tr><tr><td>kod</td><td><code>126</code> / <code>127</code></td><td>nie można uruchomić / nie ma komendy</td></tr><tr><td>kod</td><td><code>128+N</code></td><td>zabity sygnałem N (130 = Ctrl+C, 137 = SIGKILL, 143 = SIGTERM)</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p><code>&amp;&amp;</code> i <code>||</code> w jednej linijce wyglądają jak „jeśli… to… w przeciwnym razie…”:</p><div class="kod"><pre><code>grep -q root /etc/passwd &amp;&amp; echo &quot;Jest root&quot; || echo &quot;Nie ma roota&quot;</code></pre></div><p>I zwykle tak działają. Ale nie zawsze. To nie jest „jeśli A, to B, inaczej C”. To jest „A, jeśli się udało, to B, a jeśli cokolwiek przed <code>||</code> się nie udało, to C”.</p><div class="kod"><pre><code>true &amp;&amp; false || echo &quot;Ojej&quot;</code></pre></div><div class="kod"><pre><code>Ojej</code></pre></div><p>Pierwsza komenda się udała, więc Bash wykonał drugą. Druga się nie udała, więc <code>||</code> wpuściło rezerwowego. W prawdziwym życiu wygląda to tak: „Skopiuj backup i napisz „OK”, a jak się nie uda, wyślij alarm”. Kopia się udaje, <code>echo OK</code> się nie udaje, bo na przykład dysk z logami jest pełny, i dostajesz alarm o nieudanej kopii, która była udana. A raz na jakiś czas odwrotnie, więc nikt już alarmom nie wierzy.</p><p>Na prawdziwe „jeśli… to… w przeciwnym razie…” jest <code>if</code>, którego poznasz w następnej lekcji. <code>&amp;&amp;</code> i <code>||</code> zostaw do prostych sytuacji: „zrób to, a jak się uda, to tamto” albo „zrób to, a jak nie, to kończ”.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><p>Napisz skrypt <code>czy_jest.sh</code>, który dostaje nazwę konta jako argument. Jeśli konto istnieje (sprawdź przez <code>getent passwd</code>), wypisuje „Konto X istnieje.” i kończy się kodem 0. Jeśli nie istnieje, wypisuje „Konta X nie ma.” na stderr i kończy się kodem 3. Użyj <code>&amp;&amp;</code> albo <code>||</code> i <code>exit</code>, bez <code>if</code>. Sprawdź kod przez <code>echo $?</code> dla <code>root</code> i dla wymyślonego konta. A na koniec użyj swojego skryptu w łańcuchu: <code>./czy_jest.sh root &amp;&amp; echo &quot;Można działać&quot;</code>.</p><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><div class="kod"><pre><code>#!/bin/bash
+# czy_jest.sh - sprawdza, czy konto istnieje; kod 0 = jest, 3 = nie ma
+getent passwd &quot;$1&quot; &gt; /dev/null &amp;&amp; echo &quot;Konto $1 istnieje.&quot; &amp;&amp; exit 0
+echo &quot;Konta $1 nie ma.&quot; &gt;&amp;2
+exit 3</code></pre></div><div class="kod"><pre><code>./czy_jest.sh root; echo &quot;kod=$?&quot;
+./czy_jest.sh nikt; echo &quot;kod=$?&quot;
+./czy_jest.sh root &amp;&amp; echo &quot;Można działać&quot;</code></pre></div><div class="kod"><pre><code>Konto root istnieje.
+kod=0
+Konta nikt nie ma.
+kod=3
+Konto root istnieje.
+Można działać</code></pre></div><p>Jeśli konto jest, łańcuch <code>&amp;&amp;</code> dobiega do <code>exit 0</code> i skrypt kończy się w pierwszej linijce. Jeśli nie ma, łańcuch się urywa na <code>getent</code> i Bash idzie do następnej linijki: komunikat na stderr i <code>exit 3</code>. Działa, ale przyznaj: żeby to przeczytać, trzeba się chwilę zatrzymać. Za dziesięć minut napiszemy to samo tak, że zrozumie nawet Twój szef. Nawet ten, który drukuje maile.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p><code>&amp;&amp;</code> i <code>||</code> są jak szybka odpowiedź „tak albo nie”. W następnej lekcji wchodzi bramkarz: <code>if</code>, <code>elif</code>, <code>else</code>, test plików, test liczb, test tekstów, i wszystkie te dziwne nawiasy kwadratowe, pojedyncze i podwójne.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-033.html" rel="prev">← 33. Skrypt, który przyjmuje polecenia</a><a class="btn domyslny zolty" href="lekcja-035.html" rel="next">35. Jeśli… to… →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

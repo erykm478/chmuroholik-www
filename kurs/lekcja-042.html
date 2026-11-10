@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>42. Listy (tablice) — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 42 kursu Linux i Bash od zera do admina: Listy (tablice). kursant tworzy tablice w Bashu, dokłada do nich elementy, liczy je, przechodzi po nich pętlą bez gubienia spacji i wczytuje plik do tablicy przez mapfile.">
+<meta property="og:title" content="42. Listy (tablice) — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 42 kursu Linux i Bash od zera do admina: Listy (tablice). kursant tworzy tablice w Bashu, dokłada do nich elementy, liczy je, przechodzi po nich pętlą bez gubienia spacji i wczytuje plik do tablicy przez mapfile.">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 4</span></div>
+      <div class="boczny-tytul"><a href="index.html#m04">Napisy, listy i przetwarzanie danych</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-041.html" data-lekcja="41"><span class="znacznik"></span><span class="nr">41</span> Nożyczki do tekstu</a></li><li><a href="lekcja-042.html" data-lekcja="42" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">42</span> Listy (tablice)</a></li><li><a href="lekcja-043.html" data-lekcja="43"><span class="znacznik"></span><span class="nr">43</span> Słowniki</a></li><li><a href="lekcja-044.html" data-lekcja="44"><span class="znacznik"></span><span class="nr">44</span> Ładne wypisywanie i długie teksty</a></li><li><a href="lekcja-045.html" data-lekcja="45"><span class="znacznik"></span><span class="nr">45</span> Wyrażenia regularne</a></li><li><a href="lekcja-046.html" data-lekcja="46"><span class="znacznik"></span><span class="nr">46</span> sed od podstaw</a></li><li><a href="lekcja-047.html" data-lekcja="47"><span class="znacznik"></span><span class="nr">47</span> awk od podstaw</a></li><li><a href="lekcja-048.html" data-lekcja="48"><span class="znacznik"></span><span class="nr">48</span> Znajdź wszystko</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="42" data-modul="4" data-tematy="tworzenie, dodawanie, ${a[@]}, ${#a[@]}, pętle po tablicach, mapfile">
+    <div class="belka"><span>Lekcja 42 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m04">Moduł 4</a> › Lekcja 42</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Listy (tablice)</h1>
+      <p class="meta"><span>⏱ ok. 9 min czytania</span><span>· moduł 4: Napisy, listy i przetwarzanie danych</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant tworzy tablice w Bashu, dokłada do nich elementy, liczy je, przechodzi po nich pętlą bez gubienia spacji i wczytuje plik do tablicy przez <code>mapfile</code>.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#tablica-czyli-szuflada-z-przegrodkami">Tablica, czyli szuflada z przegródkami</a></li><li><a href="#dokladanie-i-wyjmowanie">Dokładanie i wyjmowanie</a></li><li><a href="#petla-po-tablicy-tasma-przy-kasie">Pętla po tablicy: taśma przy kasie</a></li><li><a href="#nozyczki-dzialaja-na-calej-szufladzie">Nożyczki działają na całej szufladzie</a></li><li><a href="#skad-brac-tablice-pliki-wyniki-komend-mapfile">Skąd brać tablice: pliki, wyniki komend, mapfile</a></li><li><a href="#wszystko-razem-ping-sh">Wszystko razem: ping.sh</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga-flag">Ściąga flag</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p class="ekran">skrypt, który ma <code>serwer1=web01</code>, <code>serwer2=web02</code>, <code>serwer3=db01</code> i trzy prawie identyczne bloki <code>ping</code></p><p>Znasz takie skrypty. Trzy serwery, trzy zmienne, trzy kopie tego samego kodu. A potem szef mówi: „doszło nam dwanaście maszyn”. I zaczyna się kopiuj-wklej, w którym zawsze gdzieś zostaje <code>serwer7</code> zamiast <code>serwer8</code>.</p><p>Dziś zrobimy z tego jedną listę, jedną pętlę i jeden plik z nazwami serwerów. Doszedł serwer? Dopisujesz linijkę do pliku. Skryptu nie ruszasz.</p></section><section><h2 id="tablica-czyli-szuflada-z-przegrodkami">Tablica, czyli szuflada z przegródkami</h2><p>Zwykła zmienna to pudełko z napisem. Jedno pudełko, jedna rzecz. Tablica to szuflada z przegródkami, jak ta na sztućce. Jedna nazwa na froncie szuflady, a w środku ponumerowane przegródki: zero, jeden, dwa…</p><p>Tak, od zera. Programiści liczą od zera i nie ma od tego odwołania.</p><p>Tablicę tworzysz nawiasami okrągłymi, elementy oddzielasz spacją:</p><div class="kod"><pre><code>serwery=(web01 web02 db01)
+echo &quot;${serwery[0]}&quot;
+echo &quot;${serwery[2]}&quot;</code></pre></div><div class="kod"><pre><code>web01
+db01</code></pre></div><p>Numer przegródki, czyli <strong>indeks</strong>, piszesz w nawiasie kwadratowym. I klamry są tu obowiązkowe. Zaraz w błędach zobaczysz, co się dzieje bez nich.</p><p>Cała szuflada naraz to <code>@</code>, a liczba elementów to znany już krzyżyk:</p><div class="kod"><pre><code>echo &quot;${serwery[@]}&quot;
+echo &quot;${#serwery[@]}&quot;</code></pre></div><div class="kod"><pre><code>web01 web02 db01
+3</code></pre></div></section><section><h2 id="dokladanie-i-wyjmowanie">Dokładanie i wyjmowanie</h2><p>Dokładanie na koniec to <code>+=</code> z nawiasem. Nawias jest ważny, zaraz powiem dlaczego.</p><div class="kod"><pre><code>serwery+=(backup01)
+serwery+=(&quot;mail 01&quot;)
+echo &quot;${#serwery[@]}&quot;
+echo &quot;${serwery[-1]}&quot;</code></pre></div><div class="kod"><pre><code>5
+mail 01</code></pre></div><p><code>[-1]</code> to ostatni element, <code>[-2]</code> przedostatni. [macOS] Ujemne indeksy działają od Basha 4.2, na systemowym Bashu z Maca nie.</p><p>A bez nawiasu? <code>serwery+=backup01</code> nie dokłada nowego elementu, tylko dokleja tekst do pierwszego. Wychodzi <code>web01backup01</code>. Serwer, którego nikt nigdy nie kupił.</p><p>Kawałek tablicy, czyli plaster, robisz tak jak przy tekście, od którego i ile:</p><div class="kod"><pre><code>echo &quot;${serwery[@]:1:2}&quot;</code></pre></div><div class="kod"><pre><code>web02 db01</code></pre></div><p>A wyrzucenie elementu to <code>unset</code>. I tu pierwsza niespodzianka:</p><div class="kod"><pre><code>unset &#x27;serwery[1]&#x27;
+echo &quot;${#serwery[@]}&quot;
+echo &quot;${!serwery[@]}&quot;</code></pre></div><div class="kod"><pre><code>4
+0 2 3 4</code></pre></div><p>Element zszedł, ale numeracja się nie przesunęła. Przegródka numer 1 jest teraz pusta. <code>${!serwery[@]}</code>, z wykrzyknikiem, pokazuje, które numery w ogóle są zajęte. To jak bloki na osiedlu po rozbiórce: jest blok 0, 2, 3 i 4, a jedynki już nie ma. Listonosz musi o tym wiedzieć. Twoja pętla też.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>tablice w Bashu są rzadkie, po angielsku sparse. Możesz napisać <code>serwery[10]=nowy</code> i Bash nie utworzy przegródek 5–9. Podgląd całej szuflady z numerami daje <code>declare -p serwery</code>. A <code>unset</code> w apostrofach dlatego, żeby nawias kwadratowy nie został potraktowany jak wzorzec pliku, gdyby w folderze leżał plik o nazwie <code>serwery1</code>.</p></aside></section><section><h2 id="petla-po-tablicy-tasma-przy-kasie">Pętla po tablicy: taśma przy kasie</h2><p>To jest serce lekcji. Pętla to taśma przy kasie. Tablica to zakupy w koszyku. Wykładasz wszystko na taśmę i kasjerka bierze po kolei.</p><div class="kod"><pre><code>for s in &quot;${serwery[@]}&quot;; do
+    echo &quot;Sprawdzam: $s&quot;
+done</code></pre></div><div class="kod"><pre><code>Sprawdzam: web01
+Sprawdzam: web02
+Sprawdzam: db01
+Sprawdzam: backup01
+Sprawdzam: mail 01</code></pre></div><p>Zobacz ostatnią linijkę. <code>mail 01</code> ze spacją przeszedł w całości. Bo <code>&quot;${serwery[@]}&quot;</code> w cudzysłowie ma specjalną moc: każdy element dostaje własną kopertę.</p><p>A teraz to samo bez cudzysłowu:</p><div class="kod"><pre><code>for s in ${serwery[@]}; do
+    echo &quot;Sprawdzam: $s&quot;
+done</code></pre></div><div class="kod"><pre><code>...
+Sprawdzam: backup01
+Sprawdzam: mail
+Sprawdzam: 01</code></pre></div><p>Nagle mamy serwer <code>mail</code> i serwer <code>01</code>. Bez koperty Bash rozciął element na spacji. Kasjerka przepuściła ser osobno i dziury z sera osobno. Zasada na całe życie: <code>&quot;${tablica[@]}&quot;</code>, zawsze w cudzysłowie.</p><p>A kiedy potrzebujesz numeru? Pętla po indeksach:</p><div class="kod"><pre><code>for i in &quot;${!serwery[@]}&quot;; do
+    echo &quot;$i: ${serwery[i]}&quot;
+done</code></pre></div><div class="kod"><pre><code>0: web01
+1: web02
+2: db01
+3: backup01
+4: mail 01</code></pre></div><p>I to działa także po <code>unset</code>, bo idziesz po numerach, które naprawdę istnieją. Wewnątrz nawiasu kwadratowego nie musisz pisać <code>$i</code>, Bash liczy tam jak w <code>(( ))</code>.</p></section><section><h2 id="nozyczki-dzialaja-na-calej-szufladzie">Nożyczki działają na całej szufladzie</h2><p>Pamiętasz nożyczki z poprzedniej lekcji? One działają też na tablicy, na każdym elemencie naraz:</p><div class="kod"><pre><code>pliki=(access.log error.log syslog.log)
+echo &quot;${pliki[@]%.log}&quot;
+echo &quot;${pliki[@]^^}&quot;</code></pre></div><div class="kod"><pre><code>access error syslog
+ACCESS.LOG ERROR.LOG SYSLOG.LOG</code></pre></div><p>Jeden ruch, trzy pliki bez rozszerzenia. Jak krajalnica do jajek.</p><p>Jest jeszcze <code>${tablica[*]}</code>, z gwiazdką. W cudzysłowie skleja wszystko w JEDEN tekst. Przydaje się do wypisania listy w jednej linijce:</p><div class="kod"><pre><code>echo &quot;Padnięte: ${padniete[*]}&quot;</code></pre></div><p>Zasada: <code>@</code> do pętli, <code>*</code> do wypisywania.</p></section><section><h2 id="skad-brac-tablice-pliki-wyniki-komend-mapfile">Skąd brać tablice: pliki, wyniki komend, mapfile</h2><p>Tablicę rzadko wpisujesz ręcznie. Zwykle bierzesz ją skądś.</p><p>Z listy plików:</p><div class="kod"><pre><code>logi=(logi/*.log)
+echo &quot;${#logi[@]}&quot;
+printf &#x27;%s\n&#x27; &quot;${logi[@]}&quot;</code></pre></div><div class="kod"><pre><code>3
+logi/a.log
+logi/b.log
+logi/stary log.log</code></pre></div><p>Gwiazdkę rozwija sam Bash, a każdy plik ląduje w osobnej przegródce, nawet ze spacją w nazwie.</p><p>A z pliku tekstowego? Tu wchodzi <code>mapfile</code>. Ma też drugą nazwę, <code>readarray</code>, to ta sama komenda. Mamy plik z serwerami:</p><div class="kod"><pre><code>web01
+web02
+db01
+backup01</code></pre></div><div class="kod"><pre><code>mapfile -t serwery &lt; serwery.txt
+echo &quot;Wczytano: ${#serwery[@]}&quot;
+declare -p serwery</code></pre></div><div class="kod"><pre><code>Wczytano: 4
+declare -a serwery=([0]=&quot;web01&quot; [1]=&quot;web02&quot; [2]=&quot;db01&quot; [3]=&quot;backup01&quot;)</code></pre></div><p>Każda linijka pliku to jedna przegródka. Prosto jak składanie ubrań do szuflady, jeden sweter na przegródkę.</p><p>Po co <code>-t</code>? Bez niego każdy element ma na końcu znak nowej linii:</p><div class="kod"><pre><code>declare -a bez=([0]=$&#x27;web01\n&#x27; [1]=$&#x27;web02\n&#x27; ...)</code></pre></div><p>I potem <code>ping</code> szuka serwera o nazwie „web01 plus Enter”. Nie znajdzie. <code>-t</code> to „obetnij końcówkę”. Używaj zawsze.</p><p>A z wyniku komendy? Przez podstawienie procesu <code>&lt; &lt;( )</code>, które znałeś z lekcji 39:</p><div class="kod"><pre><code>mapfile -t webowe &lt; &lt;(grep web serwery.txt)
+echo &quot;${#webowe[@]}&quot;</code></pre></div><div class="kod"><pre><code>2</code></pre></div><p>Jest też sposób na podzielenie jednej linijki na kawałki, <code>read -a</code>:</p><div class="kod"><pre><code>IFS=: read -r -a pola &lt;&lt;&lt; &quot;root:x:0:0:root:/root:/bin/bash&quot;
+echo &quot;${pola[0]} ${pola[5]} ${pola[-1]}&quot;</code></pre></div><div class="kod"><pre><code>root /root /bin/bash</code></pre></div><p><code>IFS=:</code> mówi, że separatorem jest dwukropek. Linijka z <code>/etc/passwd</code> rozpada się na siedem przegródek. Te trzy strzałki <code>&lt;&lt;&lt;</code> to here-string, jeszcze o nich porozmawiamy za dwa lekcje.</p><p>[macOS] <code>mapfile</code> i <code>readarray</code> weszły w Bashu 4.0. Na systemowym Bashu 3.2 z Maca ich nie ma.</p></section><section><h2 id="wszystko-razem-ping-sh">Wszystko razem: ping.sh</h2><div class="kod"><pre><code>#!/bin/bash
+# ping.sh – sprawdza listę serwerów z pliku
+plik=${1:-serwery.txt}
+mapfile -t serwery &lt; &quot;$plik&quot;
+
+echo &quot;Serwerów do sprawdzenia: ${#serwery[@]}&quot;
+padniete=()
+for s in &quot;${serwery[@]}&quot;; do
+    if ping -c 1 -W 1 &quot;$s&quot; &gt; /dev/null 2&gt;&amp;1; then
+        echo &quot;OK    $s&quot;
+    else
+        echo &quot;BRAK  $s&quot;
+        padniete+=(&quot;$s&quot;)
+    fi
+done
+
+echo &quot;Nie odpowiada: ${#padniete[@]}&quot;
+if (( ${#padniete[@]} &gt; 0 )); then
+    echo &quot;Lista: ${padniete[*]}&quot;
+fi</code></pre></div><div class="kod"><pre><code>./ping.sh lista.txt</code></pre></div><div class="kod"><pre><code>Serwerów do sprawdzenia: 3
+OK    localhost
+OK    127.0.0.1
+BRAK  web99.nieistnieje.invalid
+Nie odpowiada: 1
+Lista: web99.nieistnieje.invalid</code></pre></div><p>Zobacz, co tu się dzieje. Pierwsza tablica przychodzi z pliku. Druga, <code>padniete</code>, startuje pusta, <code>()</code>, i rośnie w pętli. Na końcu liczymy, ile urósło. <code>ping -c 1</code> wysyła jedno zapytanie, a <code>-W 1</code> czeka najwyżej sekundę. [macOS] Na Macu <code>ping</code> ma inne opcje, tam <code>-W</code> liczy się w milisekundach, więc ten skrypt odpalaj na Linuksie.</p><p>Doszedł serwer? Dopisujesz linijkę do pliku. Skrypt zostaje, jak był. To jest cała idea.</p></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p>Tablica w Bashu to nie jest blok pamięci z równymi przegródkami, jak w języku C. To lista par: numer i tekst. Dlatego może mieć dziury i dlatego <code>unset</code> niczego nie przesuwa. Bash po prostu wyrzuca jedną parę z listy.</p><p>Podpatrzysz to przez <code>declare -p</code>:</p><div class="kod"><pre><code>serwery[10]=nowy
+declare -p serwery</code></pre></div><div class="kod"><pre><code>declare -a serwery=([0]=&quot;web01&quot; [2]=&quot;db01&quot; [3]=&quot;backup01&quot; [4]=&quot;mail 01&quot; [10]=&quot;nowy&quot;)</code></pre></div><p>Pięć elementów, a najwyższy numer to 10. Dlatego <code>${#serwery[@]}</code> to nie to samo co „ostatni indeks plus jeden”.</p><p>I ważna rzecz: w Bashu wszystko jest tekstem. W tablicy nie ma liczb, są napisy, które wyglądają jak liczby. Bash zamienia je na liczby dopiero w <code>(( ))</code>.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>tablicą, którą masz od zawsze, są argumenty skryptu. <code>&quot;$@&quot;</code> działa dokładnie jak <code>&quot;${tablica[@]}&quot;</code>, a <code>$#</code> jak <code>${#tablica[@]}</code>. Dlatego <code>args=(&quot;$@&quot;)</code> kopiuje wszystkie argumenty do zwykłej tablicy, którą możesz potem modyfikować.</p></aside></section><section><h2 id="sciaga-flag">Ściąga flag</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga</th><th>Co robi</th></tr><tr><td><code>a=(x y z)</code></td><td>nawiasy</td><td>tworzy tablicę</td></tr><tr><td><code>${a[0]}</code></td><td>[n]</td><td>element numer n (od zera)</td></tr><tr><td><code>${a[-1]}</code></td><td>ujemny indeks</td><td>ostatni element (Bash 4.2+)</td></tr><tr><td><code>&quot;${a[@]}&quot;</code></td><td><code>@</code> w cudzysłowie</td><td>wszystkie elementy, każdy osobno</td></tr><tr><td><code>&quot;${a[*]}&quot;</code></td><td><code>*</code> w cudzysłowie</td><td>wszystkie elementy sklejone w jeden tekst</td></tr><tr><td><code>${#a[@]}</code></td><td><code>#</code></td><td>liczba elementów</td></tr><tr><td><code>${!a[@]}</code></td><td><code>!</code></td><td>lista zajętych indeksów</td></tr><tr><td><code>${a[@]:1:2}</code></td><td><code>:od:ile</code></td><td>plaster tablicy</td></tr><tr><td><code>a+=(x)</code></td><td><code>+=( )</code></td><td>dokłada element na koniec</td></tr><tr><td><code>unset &#x27;a[1]&#x27;</code></td><td></td><td>usuwa element (bez przesuwania!)</td></tr><tr><td><code>declare -p a</code></td><td><code>-p</code></td><td>pokazuje tablicę z numerami</td></tr><tr><td><code>mapfile -t a &lt; plik</code></td><td><code>-t</code></td><td>wczytuje plik, linijka = element, bez znaków nowej linii</td></tr><tr><td><code>mapfile -t a &lt; &lt;(cmd)</code></td><td><code>&lt; &lt;( )</code></td><td>wczytuje wynik komendy</td></tr><tr><td><code>read -r -a a</code></td><td><code>-a</code></td><td>dzieli jedną linijkę na elementy według <code>IFS</code></td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>Wydaje się oczywiste: wynik komendy przez rurę prosto do <code>mapfile</code>.</p><div class="kod"><pre><code>cat serwery.txt | mapfile -t z_rury
+echo &quot;Z rury: ${#z_rury[@]}&quot;</code></pre></div><div class="kod"><pre><code>Z rury: 0</code></pre></div><p>Zero. Żadnego błędu, tablica pusta. Dlaczego? Każdy kawałek rury działa w osobnym procesie, w podpowłoce. <code>mapfile</code> grzecznie wypełnił tablicę, tylko że w swoim procesie. Jak ten się skończył, tablica poszła razem z nim do kosza. To jak zostawienie zakupów w sąsiednim sklepie.</p><p>ShellCheck to wyłapie:</p><div class="kod"><pre><code>SC2030 (info): Modification of z_rury is local (to subshell caused by pipeline).</code></pre></div><p>Naprawa: zamiast rury podstawienie procesu.</p><div class="kod"><pre><code>mapfile -t serwery &lt; &lt;(cat serwery.txt)</code></pre></div><p>A najlepiej, gdy to plik, po prostu <code>mapfile -t serwery &lt; serwery.txt</code>.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>w skrypcie można też włączyć <code>shopt -s lastpipe</code>. Wtedy ostatni element rury działa w głównym procesie i <code>cat plik | mapfile -t z</code> zadziała. Ale tylko w skrypcie, gdzie kontrola zadań jest wyłączona, w interaktywnym terminalu już nie.</p></aside><p>Drugi klasyk, krótko: brak <code>[@]</code>.</p><div class="kod"><pre><code>serwery=(web01 web02 db01)
+echo &quot;$serwery&quot;
+echo &quot;${#serwery}&quot;</code></pre></div><div class="kod"><pre><code>web01
+5</code></pre></div><p>Sama nazwa tablicy to tylko pierwsza przegródka. A <code>${#serwery}</code> to nie liczba serwerów, tylko długość słowa <code>web01</code>. Pięć liter. Raport powie, że masz pięć serwerów, i będzie się mylił do pierwszego audytu.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><ol><li>Wczytaj <code>mapfile</code>-em do tablicy nazwy wszystkich kont z <code>/etc/passwd</code> (pierwsza kolumna, podpowiedź: <code>cut -d: -f1</code>). Wypisz, ile jest kont, które jest pierwsze, a które ostatnie.</li><li>W pętli wypisz tylko konta, których nazwa zaczyna się na „s”, razem z numerem porządkowym liczonym od 1.</li></ol><p>Rozwiązanie znajdziesz pod spodem.</p><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><p>Zadanie: wczytać konta z <code>/etc/passwd</code> do tablicy, podać ich liczbę, pierwsze i ostatnie, a potem wypisać z numerem te na „s”.</p><div class="kod"><pre><code>#!/bin/bash
+mapfile -t konta &lt; &lt;(cut -d: -f1 /etc/passwd)
+echo &quot;Kont: ${#konta[@]}&quot;
+echo &quot;Pierwsze: ${konta[0]}&quot;
+echo &quot;Ostatnie: ${konta[-1]}&quot;
+for i in &quot;${!konta[@]}&quot;; do
+    if [[ ${konta[i]} == s* ]]; then
+        echo &quot;$((i + 1)). ${konta[i]}&quot;
+    fi
+done</code></pre></div><div class="kod"><pre><code>Kont: 34
+Pierwsze: root
+Ostatnie: eryk
+4. sys
+5. sync
+19. systemd-network
+20. systemd-timesync
+23. systemd-resolve
+26. syslog
+33. sshd
+...</code></pre></div><p>U mnie, na świeżym Ubuntu Server, wyszły 34 konta. U Ciebie liczba i numery mogą być inne, bo prawie każdy zainstalowany pakiet usługi dokłada własne konto. Pierwsze zawsze będzie <code>root</code>, bo on wszedł do budynku pierwszy i nikt go nie przesunął.</p><p>Dwie rzeczy. <code>cut -d: -f1</code> bierze pierwszą kolumnę, a <code>&lt; &lt;( )</code> wlewa wynik do <code>mapfile</code> bez rury, więc tablica nie ginie w podpowłoce. A numer porządkowy to <code>i + 1</code>, bo ludzie liczą od jedynki, nawet jeśli Bash nie. [na ekranie: „konto numer 0” przekreślone, „konto numer 1”]</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Tablica numeruje przegródki: zero, jeden, dwa. A co, jeśli chcesz je podpisać nazwami? „web01 → 10.0.0.11”, „db01 → 10.0.0.21”. W następnej lekcji szatnia z nazwiskami, czyli słowniki. I tu użytkownicy Maca muszą już naprawdę zainstalować nowego Basha.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-041.html" rel="prev">← 41. Nożyczki do tekstu</a><a class="btn domyslny zolty" href="lekcja-043.html" rel="next">43. Słowniki →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

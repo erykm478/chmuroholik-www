@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>55. Duży skrypt w porządku — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 55 kursu Linux i Bash od zera do admina: Duży skrypt w porządku. kursant dzieli większy skrypt na części: wspólne funkcje trzyma w bibliotece wczytywanej przez source, buduje skrypt według stałej struktury z funkcją main, pisze w spójnym stylu i zabezpiecza go blokadą flock przed podwójnym ur">
+<meta property="og:title" content="55. Duży skrypt w porządku — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 55 kursu Linux i Bash od zera do admina: Duży skrypt w porządku. kursant dzieli większy skrypt na części: wspólne funkcje trzyma w bibliotece wczytywanej przez source, buduje skrypt według stałej struktury z funkcją main, pisze w spójnym stylu i zabezpiecza go blokadą flock przed podwójnym ur">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 5</span></div>
+      <div class="boczny-tytul"><a href="index.html#m05">Skrypty, które się nie sypią</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-049.html" data-lekcja="49"><span class="znacznik"></span><span class="nr">49</span> Spacje w nazwach plików</a></li><li><a href="lekcja-050.html" data-lekcja="50"><span class="znacznik"></span><span class="nr">50</span> Tryb „zatrzymaj się przy błędzie”</a></li><li><a href="lekcja-051.html" data-lekcja="51"><span class="znacznik"></span><span class="nr">51</span> Sprzątanie po sobie</a></li><li><a href="lekcja-052.html" data-lekcja="52"><span class="znacznik"></span><span class="nr">52</span> Opcje jak w prawdziwych programach</a></li><li><a href="lekcja-053.html" data-lekcja="53"><span class="znacznik"></span><span class="nr">53</span> Szukanie błędów</a></li><li><a href="lekcja-054.html" data-lekcja="54"><span class="znacznik"></span><span class="nr">54</span> Komunikaty, logi i kolory</a></li><li><a href="lekcja-055.html" data-lekcja="55" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">55</span> Duży skrypt w porządku</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="55" data-modul="5" data-tematy="source, biblioteki funkcji, struktura, styl, flock">
+    <div class="belka"><span>Lekcja 55 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m05">Moduł 5</a> › Lekcja 55</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Duży skrypt w porządku</h1>
+      <p class="meta"><span>⏱ ok. 14 min czytania</span><span>· moduł 5: Skrypty, które się nie sypią</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant dzieli większy skrypt na części: wspólne funkcje trzyma w bibliotece wczytywanej przez <code>source</code>, buduje skrypt według stałej struktury z funkcją <code>main</code>, pisze w spójnym stylu i zabezpiecza go blokadą <code>flock</code> przed podwójnym uruchomieniem.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#source-przepis-wczytany-do-wlasnej-kuchni">source: przepis wczytany do własnej kuchni</a></li><li><a href="#biblioteka-jedna-szuflada-na-wspolne-narzedzia">Biblioteka: jedna szuflada na wspólne narzędzia</a></li><li><a href="#skad-skrypt-ma-wiedziec-gdzie-lezy-biblioteka">Skąd skrypt ma wiedzieć, gdzie leży biblioteka</a></li><li><a href="#struktura-plan-biurowca-dla-skryptu">Struktura: plan biurowca dla skryptu</a></li><li><a href="#styl-zeby-dalo-sie-to-czytac-po-roku">Styl: żeby dało się to czytać po roku</a></li><li><a href="#flock-klucz-do-lazienki-na-stacji-benzynowej">flock: klucz do łazienki na stacji benzynowej</a></li><li><a href="#wszystko-razem-raport-sh">Wszystko razem: raport.sh</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga-flag">Ściąga flag</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p class="ekran">folder <code>~/skrypty</code>, w nim siedem plików <code>.sh</code>, w każdym ta sama funkcja <code>blad()</code>, w trzech z nich lekko różna</p><p>Masz siedem skryptów. W każdym są te same funkcje do komunikatów, przeklejone. W zeszłym miesiącu poprawiłeś błąd w jednej kopii. Sześć zostało zepsutych. Którą poprawiłeś? Nie pamiętasz.</p><p>A do tego skrypt raportu odpala budzik co pięć minut. Zwykle kończy się po minucie. Ale dziś serwer był zajęty i jeden przebieg trwał siedem minut. W tym czasie wystartował drugi. Oba pisały do tego samego pliku. Wynik wyglądał jak dwa listy wydrukowane na jednej kartce.</p><p>Dziś robimy z tego porządek: jedna biblioteka zamiast siedmiu kopii, skrypt zbudowany według planu, który zrozumiesz po roku, i klucz do łazienki, który sprawi, że drugi egzemplarz grzecznie poczeka albo zrezygnuje.</p></section><section><h2 id="source-przepis-wczytany-do-wlasnej-kuchni">source: przepis wczytany do własnej kuchni</h2><p>Pamiętasz, że skrypt to przepis, a proces to kucharz, który go realizuje? Kiedy uruchamiasz skrypt przez <code>./skrypt.sh</code> albo <code>bash skrypt.sh</code>, zatrudniasz <strong>nowego kucharza w osobnej kuchni</strong>. On gotuje, sprząta, wychodzi. Wszystko, co zrobił u siebie, zostaje u niego.</p><p><code>source</code> działa inaczej. Bierzesz cudzy przepis i <strong>wykonujesz go sam, we własnej kuchni</strong>. Wszystko, co ten przepis ustawi, zostaje u Ciebie.</p><div class="kod"><pre><code>cat ustawienia.sh</code></pre></div><div class="kod"><pre><code>kolor=niebieski
+cd /tmp</code></pre></div><div class="kod"><pre><code>$ bash ustawienia.sh
+$ echo &quot;kolor=[$kolor], pwd=$PWD&quot;
+kolor=[], pwd=/home/eryk/kurs
+$ source ./ustawienia.sh
+$ echo &quot;kolor=[$kolor], pwd=$PWD&quot;
+kolor=[niebieski], pwd=/tmp</code></pre></div><p>Pierwszy raz: osobny kucharz ustawił zmienną i przeszedł do <code>/tmp</code>, ale u siebie. Ty dalej nie masz zmiennej i stoisz tam, gdzie stałeś. Drugi raz: przepis wykonał się w Twojej powłoce, więc masz i zmienną, i nowy folder.</p><p>Krótsza forma to kropka: <code>. ./ustawienia.sh</code>. Kropka jest ze standardu POSIX i działa nawet w <code>sh</code>, a <code>source</code> to wygodniejsza nazwa z Basha. Robią to samo. I tak, <code>source ~/.bashrc</code> po edycji ustawień to dokładnie ten mechanizm. Wczytujesz nowe ustawienia do już otwartego terminala.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p><code>source plik</code> bez ścieżki najpierw szuka pliku w folderach z <code>PATH</code>, a dopiero potem w bieżącym folderze. Dlatego zawsze pisz ścieżkę, choćby <code>./plik</code>. Inaczej któregoś dnia wczytasz nie ten plik, który myślisz.</p></aside></section><section><h2 id="biblioteka-jedna-szuflada-na-wspolne-narzedzia">Biblioteka: jedna szuflada na wspólne narzędzia</h2><p>Skoro <code>source</code> wczytuje funkcje do Twojej powłoki, to wspólne funkcje można trzymać w jednym pliku i wczytywać je w każdym skrypcie. Taki plik nazywa się <strong>biblioteką</strong>. Jedna szuflada z narzędziami w warsztacie zamiast śrubokręta w każdej kieszeni każdej kurtki.</p><div class="kod"><pre><code># shellcheck shell=bash
+# lib/komunikaty.sh — wspólne komunikaty: info, uwaga, blad, umrzyj
+# Tego pliku się nie uruchamia. Wczytuje się go przez: source lib/komunikaty.sh
+
+# Strażnik: drugi raz nie wczytuj
+[[ -n ${_KOMUNIKATY_ZALADOWANE-} ]] &amp;&amp; return 0
+_KOMUNIKATY_ZALADOWANE=1
+
+if [[ -t 2 &amp;&amp; -z ${NO_COLOR-} ]]; then
+    _CZERWONY=$&#x27;\e[31m&#x27;; _ZOLTY=$&#x27;\e[33m&#x27;; _ZIELONY=$&#x27;\e[32m&#x27;; _RESET=$&#x27;\e[0m&#x27;
+else
+    _CZERWONY=&#x27;&#x27;; _ZOLTY=&#x27;&#x27;; _ZIELONY=&#x27;&#x27;; _RESET=&#x27;&#x27;
+fi
+
+info()  { printf &#x27;%s[ OK ]%s %s\n&#x27; &quot;$_ZIELONY&quot; &quot;$_RESET&quot; &quot;$*&quot; &gt;&amp;2; }
+
+uwaga() {
+    printf &#x27;%s[UWAGA]%s %s\n&#x27; &quot;$_ZOLTY&quot; &quot;$_RESET&quot; &quot;$*&quot; &gt;&amp;2
+    logger -t &quot;${0##*/}&quot; -p user.warning -- &quot;$*&quot; || true
+}
+
+blad() {
+    printf &#x27;%s[BŁĄD]%s %s\n&#x27; &quot;$_CZERWONY&quot; &quot;$_RESET&quot; &quot;$*&quot; &gt;&amp;2
+    logger -t &quot;${0##*/}&quot; -p user.err -- &quot;$*&quot; || true
+}
+
+# umrzyj KOD KOMUNIKAT — wypisz błąd i zakończ skrypt
+umrzyj() {
+    local kod=$1
+    shift
+    blad &quot;$*&quot;
+    exit &quot;$kod&quot;
+}</code></pre></div><p>Kilka zasad dobrej biblioteki:</p><ul><li><strong>Bez shebanga i bez prawa wykonania.</strong> Tego pliku się nie uruchamia, tylko wczytuje. Komentarz <code># shellcheck shell=bash</code> mówi ShellCheckowi, w jakim to języku, skoro brakuje pierwszej linijki z <code>#!</code>.</li><li><strong>Tylko definicje.</strong> Biblioteka niczego nie robi przy wczytaniu, tylko przygotowuje funkcje i zmienne. Nie kasuje plików, nie wypisuje „Witaj!”.</li><li><strong>Strażnik.</strong> Jeśli dwie biblioteki wczytają trzecią, nie chcesz jej ładować dwa razy. Zmienna <code>_KOMUNIKATY_ZALADOWANE</code> to kartka na drzwiach „już tu byłem”. <code>return</code> w pliku wczytanym przez <code>source</code> kończy samo wczytywanie, a nie cały skrypt.</li><li><strong>Podkreślnik dla rzeczy wewnętrznych.</strong> <code>_CZERWONY</code> z podkreślnikiem znaczy „to szczegół biblioteki, nie ruszaj z zewnątrz”. Bash tego nie wymusza, to umowa między ludźmi. Jak kartka „nie dotykać” na kablach w serwerowni.</li><li><strong><code>|| true</code></strong><strong> przy </strong><strong><code>logger</code></strong><strong>.</strong> Na maszynie bez działającego dziennika <code>logger</code> zwróci błąd, a nie chcemy, żeby przez to skrypt z <code>set -e</code> padł w trakcie wypisywania innego błędu.</li></ul><p>Teraz każdy skrypt pisze tylko jedną linijkę, a poprawka w bibliotece od razu działa wszędzie.</p></section><section><h2 id="skad-skrypt-ma-wiedziec-gdzie-lezy-biblioteka">Skąd skrypt ma wiedzieć, gdzie leży biblioteka</h2><p>Pierwszy odruch: <code>source lib/komunikaty.sh</code>. Działa, dopóki uruchamiasz skrypt z jego własnego folderu. Cron odpala skrypty z folderu domowego użytkownika, kolega z <code>/tmp</code>, a wtedy ścieżka <code>lib/...</code> prowadzi donikąd.</p><p>Dlatego skrypt sam ustala, gdzie leży, i od tego miejsca szuka biblioteki:</p><div class="kod"><pre><code>KATALOG_SKRYPTU=$(cd -- &quot;$(dirname -- &quot;${BASH_SOURCE[0]}&quot;)&quot; &amp;&amp; pwd)
+readonly KATALOG_SKRYPTU
+# shellcheck source-path=SCRIPTDIR source=lib/komunikaty.sh
+source &quot;$KATALOG_SKRYPTU/lib/komunikaty.sh&quot;</code></pre></div><p><code>${BASH_SOURCE[0]}</code> to ścieżka do tego pliku, <code>dirname</code> obcina nazwę pliku, a <code>cd</code> i <code>pwd</code> zamieniają to na pełną ścieżkę bez kropek. Skrypt wie, na którym piętrze stoi, niezależnie od tego, z którego piętra go zawołano.</p><p>Czemu przypisanie i <code>readonly</code> w dwóch linijkach? Bo <code>readonly X=$(...)</code> połyka kod wyjścia komendy w środku i gdyby <code>cd</code> się nie udało, nikt by się nie dowiedział. ShellCheck wyłapuje to jako <code>SC2155</code>.</p><p>Komentarz nad <code>source</code> jest dla ShellChecka: mówi, gdzie ma szukać biblioteki, żeby sprawdzić ją razem ze skryptem. Uruchamiasz go wtedy z <code>-x</code>:</p><div class="kod"><pre><code>$ shellcheck -x raport.sh &amp;&amp; echo &quot;czysto&quot;
+czysto</code></pre></div><p>Bez tego komentarza i bez <code>-x</code> dostaniesz informację <code>SC1091: Not following: lib/komunikaty.sh</code>. ShellCheck nie wie, co jest w bibliotece, więc nie sprawdza, czy funkcje istnieją.</p></section><section><h2 id="struktura-plan-biurowca-dla-skryptu">Struktura: plan biurowca dla skryptu</h2><p>Biurowiec ma plan: recepcja na dole, biura wyżej, kotłownia w piwnicy. Duży skrypt też powinien mieć stały plan, ten sam w każdym Twoim skrypcie. Wtedy po roku otwierasz dowolny plik i od razu wiesz, gdzie czego szukać.</p><div class="kod"><pre><code>1. #!/bin/bash
+2. komentarz: co robi, jak używać, jakie kody wyjścia
+3. set -euo pipefail
+4. stałe (WIELKIE_LITERY, readonly)
+5. wczytanie bibliotek
+6. funkcje
+7. main() — główna logika
+8. main &quot;$@&quot;</code></pre></div><p>Najważniejszy pomysł to funkcja <code>main</code> na dole i jej wywołanie w ostatniej linijce. Po co, skoro można pisać komendy luzem?</p><ul><li>Bash czyta plik od góry. Kiedy dojdzie do <code>main &quot;$@&quot;</code>, wszystkie funkcje są już zdefiniowane. Kolejność ich wypisania przestaje mieć znaczenie.</li><li>W funkcji można używać <code>local</code>. Zmienne <code>main</code> nie wyciekają do reszty skryptu.</li><li>Czytelnik od razu widzi: tu są narzędzia, a tu jest to, co skrypt naprawdę robi.</li></ul><p>Przewodnik stylu Google dla skryptów powłoki mówi wprost: jeśli skrypt ma choć jedną funkcję poza główną, ma mieć funkcję <code>main</code>, a ostatnią linijką kodu ma być <code>main &quot;$@&quot;</code>. Ten sam przewodnik ma też radę, którą warto zapamiętać: jeśli skrypt przekracza mniej więcej sto linijek, zastanów się, czy nie powinien być napisany w Pythonie. Bash jest świetny do sklejania komend, ale do wielkiej logiki jest jak scyzoryk do budowy domu.</p></section><section><h2 id="styl-zeby-dalo-sie-to-czytac-po-roku">Styl: żeby dało się to czytać po roku</h2><p>Styl to nie estetyka, tylko szacunek dla osoby, która będzie ten skrypt naprawiać o trzeciej w nocy. Najczęściej to Ty.</p><ul><li><strong>Wcięcia zawsze takie same.</strong> Google zaleca dwie spacje, ja w kursie używam czterech. Ważniejsze od liczby jest to, żeby w całym pliku było tak samo i bez tabulatorów pomieszanych ze spacjami.</li><li><strong>Nazwy mówią, co trzymają.</strong> <code>plik_wyjsciowy</code> zamiast <code>x</code>. Stałe i zmienne środowiskowe WIELKIMI LITERAMI, zwykłe zmienne i funkcje małymi z podkreślnikiem.</li><li><strong><code>local</code></strong><strong> w każdej funkcji.</strong> Zmienna bez <code>local</code> w funkcji jest globalna i potrafi nadpisać coś, czego się nie spodziewasz.</li><li><strong><code>readonly</code></strong><strong> dla stałych.</strong> Jeśli coś ma się nie zmieniać, niech Bash pilnuje, żeby się nie zmieniło.</li><li><strong>Cudzysłowy wokół zmiennych, </strong><strong><code>[[ ]]</code></strong><strong> zamiast </strong><strong><code>[ ]</code></strong><strong>, </strong><strong><code>$( )</code></strong><strong> zamiast odwrotnych apostrofów.</strong> Wszystko to już znasz.</li><li><strong>Komentarz mówi „dlaczego”, a nie „co”.</strong> <code># zwiększ licznik</code> nad <code>licznik=$((licznik + 1))</code> to komentarz dla nikogo. <code># globalna, bo sprząta ją trap po wyjściu z main</code> to komentarz, który ratuje życie.</li><li><strong>ShellCheck na zero.</strong> Każdy skrypt przed wrzuceniem na serwer.</li></ul></section><section><h2 id="flock-klucz-do-lazienki-na-stacji-benzynowej">flock: klucz do łazienki na stacji benzynowej</h2><p>Na stacji benzynowej jest jedna łazienka i jeden klucz, przyczepiony do wielkiej drewnianej łopaty, żeby nikt go nie wyniósł. Kto ma klucz, ten wchodzi. Kto przyjdzie drugi, musi poczekać albo pójść gdzie indziej.</p><p><code>flock</code> to taki klucz dla skryptów. Jest plik blokady, czyli łopata. Pierwszy egzemplarz skryptu bierze na niej blokadę. Drugi próbuje, dostaje odmowę i rezygnuje albo czeka.</p><div class="kod"><pre><code>exec 9&gt; /tmp/raport.lock
+flock -n 9 || umrzyj 75 &quot;Raport już się robi (blokada: /tmp/raport.lock)&quot;</code></pre></div><p>Pierwsza linijka otwiera plik blokady do zapisu pod numerem 9. To numer kolejnego głośnika, takiego jak 1 i 2, tylko naszego własnego. Druga linijka mówi: „weź blokadę na pliku numer 9, a jeśli ktoś już ją ma, nie czekaj (<code>-n</code>), tylko od razu zgłoś porażkę”. Wtedy kończymy się kodem 75, czyli „chwilowy problem, spróbuj później” z poprzedniej lekcji.</p><p>Sprawdzamy. Udajemy długi raport, trzymając blokadę przez 30 sekund, i w tym czasie odpalamy skrypt:</p><div class="kod"><pre><code>flock /tmp/raport.lock sleep 30 &amp;
+./raport.sh</code></pre></div><div class="kod"><pre><code>[BŁĄD] Raport już się robi (blokada: /tmp/raport.lock)
+$ echo $?
+75</code></pre></div><p>Po 30 sekundach blokada znika i skrypt rusza normalnie.</p><p>Zamiast od razu się poddawać, możesz poczekać chwilę: <code>flock -w 10 9</code> czeka najwyżej 10 sekund. Przydaje się, kiedy drugi egzemplarz ma zrobić swoje, tylko nie w tym samym czasie.</p><p>A najlepsze jest to, czego nie musisz robić. <strong>Blokada znika sama</strong>, kiedy proces się kończy. Nawet przy <code>kill -9</code>, nawet przy wyłączeniu prądu w środku pracy. Stary sposób z plikiem PID, w którym skrypt zapisywał „pracuję” i kasował to na końcu, miał wieczny problem: skrypt zabity w połowie zostawiał plik i następny przebieg myślał, że ktoś dalej pracuje. Klucz zostawał w kieszeni kogoś, kto dawno pojechał.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>blokada trzyma się otwartego pliku, a otwarte pliki dziedziczą dzieci. Jeśli skrypt odpalił długi proces potomny i ktoś zabije tylko skrypt, dziecko dalej trzyma deskryptor 9 i blokadę. Sprawdziłem: po <code>kill -9</code> samego skryptu <code>flock -n</code> dalej odmawia, dopóki osierocony <code>sleep</code> żyje. Drugi szczegół: <code>flock</code> to blokada „na honor”. Respektują ją tylko programy, które też pytają o klucz. Zwykły <code>cat &gt; plik</code> przejdzie obok. I trzeci: zamiast <code>/tmp</code> na serwerze lepiej użyć <code>/run/lock</code>, folderu przeznaczonego na blokady, który na Ubuntu jest zapisywalny dla wszystkich i znika przy restarcie.</p></aside><p>W cronie można też owinąć cały skrypt w <code>flock</code> bez zmieniania jego kodu:</p><div class="kod"><pre><code>*/5 * * * * flock -n /run/lock/raport.lock /opt/skrypty/raport.sh</code></pre></div></section><section><h2 id="wszystko-razem-raport-sh">Wszystko razem: raport.sh</h2><div class="kod"><pre><code>raport/
+├── raport.sh
+└── lib/
+    └── komunikaty.sh</code></pre></div><div class="kod"><pre><code>#!/bin/bash
+#
+# raport.sh — zbiera podstawowe informacje o serwerze do jednego pliku.
+# Użycie: raport.sh [-o PLIK] [-h]
+# Kody wyjścia: 0 OK, 64 złe użycie, 73 nie da się zapisać, 75 już działa
+#
+set -euo pipefail
+
+# ---------- stałe ----------
+KATALOG_SKRYPTU=$(cd -- &quot;$(dirname -- &quot;${BASH_SOURCE[0]}&quot;)&quot; &amp;&amp; pwd)
+readonly KATALOG_SKRYPTU
+readonly BLOKADA=/tmp/raport.lock
+TYMCZASOWY=&#x27;&#x27;        # globalna, bo sprząta ją trap po wyjściu z main
+
+# ---------- biblioteki ----------
+# shellcheck source-path=SCRIPTDIR source=lib/komunikaty.sh
+source &quot;$KATALOG_SKRYPTU/lib/komunikaty.sh&quot;
+
+# ---------- funkcje ----------
+pomoc() {
+    cat &lt;&lt;KONIEC
+Użycie: ${0##*/} [-o PLIK] [-h]
+Zbiera nazwę hosta, jądro, procesor, pamięć i dyski do pliku.
+  -o PLIK  gdzie zapisać raport (domyślnie: raport-DATA.txt)
+  -h       ta pomoc
+KONIEC
+}
+
+zbierz() {
+    echo &quot;== Raport z $(hostname), $(date &#x27;+%F %T&#x27;) ==&quot;
+    echo &quot;Jądro:     $(uname -r)&quot;
+    echo &quot;Procesor:  $(LC_ALL=C lscpu | sed -n &#x27;s/^Model name: *//p&#x27;)&quot;
+    echo &quot;Rdzenie:   $(nproc)&quot;
+    echo
+    free -h
+    echo
+    lsblk -o NAME,SIZE,TYPE,MOUNTPOINTS
+}
+
+main() {
+    local plik
+    plik=&quot;raport-$(date +%F).txt&quot;
+
+    local opcja
+    while getopts &quot;:o:h&quot; opcja; do
+        case $opcja in
+            o) plik=$OPTARG ;;
+            h) pomoc; exit 0 ;;
+            :) umrzyj 64 &quot;Opcja -$OPTARG wymaga wartości&quot; ;;
+            &#x27;?&#x27;) umrzyj 64 &quot;Nieznana opcja: -$OPTARG&quot; ;;
+        esac
+    done
+    shift $((OPTIND - 1))
+
+    # Blokada: drugi egzemplarz nie wejdzie
+    exec 9&gt; &quot;$BLOKADA&quot;
+    flock -n 9 || umrzyj 75 &quot;Raport już się robi (blokada: $BLOKADA)&quot;
+
+    # Plik tymczasowy i sprzątaczka
+    TYMCZASOWY=$(mktemp)
+    trap &#x27;rm -f -- &quot;$TYMCZASOWY&quot;&#x27; EXIT
+
+    zbierz &gt; &quot;$TYMCZASOWY&quot;
+    mv -- &quot;$TYMCZASOWY&quot; &quot;$plik&quot; || umrzyj 73 &quot;Nie mogę zapisać: $plik&quot;
+    info &quot;Raport zapisany: $plik&quot;
+}
+
+main &quot;$@&quot;</code></pre></div><p>W <code>zbierz</code> jest <code>LC_ALL=C</code> przed <code>lscpu</code>, bo na systemie z polskimi ustawieniami <code>lscpu</code> potrafi wypisać „Nazwa modelu” zamiast „Model name” i nasz <code>sed</code> nic by nie znalazł. Raport składamy najpierw w pliku tymczasowym, a dopiero gotowy przenosimy pod docelową nazwę. Nikt nigdy nie zobaczy raportu w połowie pisania. Jak kelner, który wynosi danie dopiero po udekorowaniu, a nie podaje surowego kotleta z obietnicą, że reszta zaraz dojdzie.</p><p>Sprawdzamy, i to z zupełnie innego folderu:</p><div class="kod"><pre><code>$ cd /tmp
+$ ~/raport/raport.sh -o /tmp/raport.txt
+[ OK ] Raport zapisany: /tmp/raport.txt
+$ ~/raport/raport.sh -x
+[BŁĄD] Nieznana opcja: -x
+$ echo $?
+64
+$ ~/raport/raport.sh -o /nie/ma/raport.txt
+mv: cannot move &#x27;/tmp/tmp.ohOqlaescS&#x27; to &#x27;/nie/ma/raport.txt&#x27;: No such file or directory
+[BŁĄD] Nie mogę zapisać: /nie/ma/raport.txt
+$ echo $?
+73
+$ head -4 /tmp/raport.txt
+== Raport z vm, 2026-11-03 16:41:19 ==
+Jądro:     6.8.0-48-generic
+Procesor:  Intel(R) Xeon(R) Processor @ 2.10GHz
+Rdzenie:   2</code></pre></div><p>Po nieudanym <code>mv</code> w <code>/tmp</code> nie zostaje żaden plik tymczasowy, bo sprzątaczka z <code>trap</code> zrobiła swoje.</p></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p><code>./skrypt.sh</code> i <code>bash skrypt.sh</code> tworzą nowy proces. Jądro kopiuje Twoją powłokę, w kopii uruchamia Basha i ten nowy Bash czyta plik. Kiedy skończy, proces znika razem ze wszystkimi swoimi zmiennymi i swoim bieżącym folderem.</p><p><code>source</code> nie tworzy żadnego procesu. Twój Bash otwiera plik i czyta z niego komendy dokładnie tak, jakbyś wpisywał je ręcznie, jedna po drugiej. Dlatego zmienne, funkcje, <code>cd</code>, a nawet <code>exit</code> działają u Ciebie. Uwaga: <code>exit</code> w pliku wczytanym przez <code>source</code> zamyka Twój terminal. Stąd w bibliotekach <code>return</code>, a nie <code>exit</code>.</p><p><code>flock</code> korzysta z wywołania systemowego <code>flock</code> o tej samej nazwie. Jądro przypina blokadę do otwartego pliku, a nie do nazwy na dysku. Kiedy ostatni proces, który ma ten plik otwarty, go zamknie albo umrze, jądro samo zdejmuje blokadę. Nie ma tu żadnego zapisu na dysku, który mógłby zostać po awarii. Sam plik <code>/tmp/raport.lock</code> zostaje, pusty, i to normalne. To łopata, nie klucz. Klucz trzyma jądro.</p></section><section><h2 id="sciaga-flag">Ściąga flag</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga</th><th>Co robi</th></tr><tr><td><code>source PLIK</code> / <code>. PLIK</code></td><td>—</td><td>wykonuje plik w bieżącej powłoce</td></tr><tr><td><code>return</code></td><td><code>N</code></td><td>kończy funkcję albo wczytywanie pliku przez <code>source</code></td></tr><tr><td><code>${BASH_SOURCE[0]}</code></td><td>—</td><td>ścieżka do pliku, w którym jest ta linijka</td></tr><tr><td><code>readonly</code></td><td><code>NAZWA</code></td><td>stała, której nie da się zmienić</td></tr><tr><td><code>local</code></td><td><code>NAZWA</code></td><td>zmienna widoczna tylko w funkcji</td></tr><tr><td><code>shellcheck</code></td><td><code>-x</code></td><td>sprawdza też pliki wczytywane przez <code>source</code></td></tr><tr><td><code># shellcheck</code></td><td><code>source=</code> / <code>source-path=SCRIPTDIR</code></td><td>podpowiedź, gdzie leży biblioteka</td></tr><tr><td><code># shellcheck</code></td><td><code>shell=bash</code></td><td>język pliku bez shebanga</td></tr><tr><td><code>flock</code></td><td><code>-n</code></td><td>nie czekaj, od razu porażka, gdy zajęte</td></tr><tr><td><code>flock</code></td><td><code>-w SEK</code></td><td>czekaj najwyżej tyle sekund</td></tr><tr><td><code>flock</code></td><td><code>-E KOD</code></td><td>kod wyjścia przy zajętej blokadzie (domyślnie 1)</td></tr><tr><td><code>flock</code></td><td><code>-s</code></td><td>blokada współdzielona (wielu czytelników naraz)</td></tr><tr><td><code>flock</code></td><td><code>PLIK KOMENDA</code></td><td>uruchamia komendę pod blokadą, wygodne w cronie</td></tr><tr><td><code>exec</code></td><td><code>9&gt; PLIK</code></td><td>otwiera plik pod numerem 9 na cały skrypt</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>Wersja tego skryptu sprzed poprawki miała w <code>main</code> takie linijki:</p><div class="kod"><pre><code>    local tymczasowy
+    tymczasowy=$(mktemp)
+    trap &#x27;rm -f -- &quot;$tymczasowy&quot;&#x27; EXIT</code></pre></div><p>Wygląda porządnie. <code>local</code>, cudzysłowy, sprzątaczka. ShellCheck: czysto. Uruchamiamy:</p><div class="kod"><pre><code>$ ./raport.sh -o /tmp/raport.txt
+[ OK ] Raport zapisany: /tmp/raport.txt
+./raport.sh: line 1: tymczasowy: unbound variable
+$ echo $?
+1</code></pre></div><p>Raport zapisany, a skrypt kończy się błędem. Cron wyśle maila „coś poszło nie tak”, monitoring zapali się na czerwono, a wszystko jest w porządku. Najgorszy rodzaj błędu, bo uczy ludzi ignorować alarmy.</p><p>Dlaczego? Pułapka <code>EXIT</code> odpala się na samym końcu skryptu, już <strong>po</strong> wyjściu z <code>main</code>. A wtedy zmiennej lokalnej <code>tymczasowy</code> już nie ma. Sprzątaczka przychodzi po imprezie z listą „posprzątać pokój Kowalskiego”, a Kowalski się wymeldował i pokoju o tej nazwie już nie ma. A <code>set -u</code> każe krzyczeć przy każdej nieistniejącej zmiennej.</p><p>Naprawa: zmienna, której używa <code>trap</code> na <code>EXIT</code>, musi być globalna. Deklarujemy ją na górze z pustą wartością i w <code>main</code> tylko przypisujemy, bez <code>local</code>. Dokładnie tak jest w wersji powyżej i dlatego przy tej zmiennej stoi komentarz „dlaczego”.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><p>Przerób skrypt z funkcją <code>kopia</code> na porządne narzędzie: <code>set -euo pipefail</code>, <code>trap</code> sprzątający pliki tymczasowe, opcje <code>-d FOLDER</code> (gdzie kopiować) i <code>-h</code> (pomoc) przez <code>getopts</code>, komunikaty błędów na stderr, blokada <code>flock</code> przed podwójnym uruchomieniem, czysty wynik w ShellChecku.</p><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><p>Zadanie było konkretne: z małej funkcji <code>kopia</code> zrobić narzędzie, któremu nie wstyd dać koledze. Oto moja wersja:</p><div class="kod"><pre><code>#!/usr/bin/env bash
+# kopia.sh — robi kopię pliku z dzisiejszą datą w nazwie
+set -euo pipefail
+
+readonly PROG=${0##*/}
+readonly BLOKADA=/tmp/kopia.lock
+cel=.
+tmp=
+
+blad()  { printf &#x27;%s: BŁĄD: %s\n&#x27; &quot;$PROG&quot; &quot;$*&quot; &gt;&amp;2; }
+
+pomoc() {
+    cat &lt;&lt;KONIEC
+Użycie: $PROG [-d FOLDER] PLIK...
+Robi kopię każdego PLIKU z dzisiejszą datą w nazwie.
+  -d FOLDER   gdzie zapisać kopie (domyślnie bieżący folder)
+  -h          ta pomoc
+KONIEC
+}
+
+sprzataj() {
+    if [[ -n $tmp ]]; then
+        rm -f -- &quot;$tmp&quot;
+    fi
+}
+trap sprzataj EXIT
+
+kopia() {
+    local plik=$1 nazwa
+    if [[ ! -f $plik ]]; then
+        blad &quot;nie ma pliku: $plik&quot;
+        return 1
+    fi
+    nazwa=&quot;$cel/${plik##*/}.$(date +%F)&quot;
+    tmp=$(mktemp &quot;$cel/.kopia.XXXXXX&quot;)
+    if ! cp -p -- &quot;$plik&quot; &quot;$tmp&quot;; then
+        blad &quot;nie udało się skopiować: $plik&quot;
+        return 1
+    fi
+    mv -- &quot;$tmp&quot; &quot;$nazwa&quot;
+    tmp=
+    echo &quot;Zrobione: $nazwa&quot;
+}
+
+main() {
+    local opcja plik kod
+    while getopts &#x27;:d:h&#x27; opcja; do
+        case $opcja in
+            d) cel=$OPTARG ;;
+            h) pomoc; exit 0 ;;
+            :) blad &quot;opcja -$OPTARG wymaga argumentu&quot;; pomoc &gt;&amp;2; exit 2 ;;
+            *) blad &quot;nieznana opcja: -$OPTARG&quot;; pomoc &gt;&amp;2; exit 2 ;;
+        esac
+    done
+    shift $((OPTIND - 1))
+
+    if (( $# == 0 )); then
+        blad &quot;podaj co najmniej jeden plik&quot;
+        pomoc &gt;&amp;2
+        exit 2
+    fi
+    if [[ ! -d $cel ]]; then
+        blad &quot;nie ma folderu: $cel&quot;
+        exit 1
+    fi
+
+    exec 9&gt;&quot;$BLOKADA&quot;
+    if ! flock -n 9; then
+        blad &quot;kopia już działa w innym oknie&quot;
+        exit 1
+    fi
+
+    kod=0
+    for plik in &quot;$@&quot;; do
+        kopia &quot;$plik&quot; || kod=1
+    done
+    return &quot;$kod&quot;
+}
+
+main &quot;$@&quot;</code></pre></div><p>Przejdźmy po kolei. <code>set -euo pipefail</code> to nasz kierowca, który staje przy pierwszej kontrolce. <code>trap sprzataj EXIT</code> to sprzątaczka na koniec imprezy: cokolwiek się stanie, wychodząc, zabierze plik tymczasowy. A po co w ogóle plik tymczasowy? Bo kopiujemy najpierw do <code>.kopia.XXXXXX</code>, a dopiero na końcu zmieniamy nazwę. Jeśli ktoś przerwie skrypt w połowie kopiowania dużego pliku, nie zostanie pół kopii udającej całą. Zostanie nic. A „nic” jest uczciwsze niż „pół”.</p><p><code>getopts &#x27;:d:h&#x27;</code> czyta opcje: dwukropek po <code>d</code> znaczy „ta opcja chce argumentu”, dwukropek na początku znaczy „błędy zgłaszam sam, po polsku”. Błędy idą przez <code>&gt;&amp;2</code>, czyli drugim głośnikiem. <code>flock -n 9</code> zakłada blokadę na pliku <code>/tmp/kopia.lock</code>, a <code>-n</code> znaczy: nie czekaj w kolejce, tylko od razu powiedz, że zajęte. Wszystko jest w funkcji <code>main</code>, bo tak wygląda porządny duży skrypt z poprzedniej lekcji.</p><p>Sprawdzamy:</p><div class="kod"><pre><code>shellcheck kopia.sh &amp;&amp; echo &quot;czysto&quot;
+./kopia.sh -d kopie notatki.txt nie_ma.txt; echo &quot;kod=$?&quot;
+./kopia.sh -d; echo &quot;kod=$?&quot;
+flock /tmp/kopia.lock sleep 3 &amp;
+./kopia.sh notatki.txt; echo &quot;kod=$?&quot;</code></pre></div><div class="kod"><pre><code>czysto
+Zrobione: kopie/notatki.txt.2026-11-03
+kopia.sh: BŁĄD: nie ma pliku: nie_ma.txt
+kod=1
+kopia.sh: BŁĄD: opcja -d wymaga argumentu
+Użycie: kopia.sh [-d FOLDER] PLIK...
+...
+kod=2
+kopia.sh: BŁĄD: kopia już działa w innym oknie
+kod=1</code></pre></div><p>Trzecia próba to symulacja: <code>flock ... sleep 3</code> trzyma blokadę przez trzy sekundy, udając drugie uruchomienie. Testowałem też zabicie skryptu w trakcie kopiowania pliku półtoragigabajtowego: plik <code>.kopia.…</code> był w folderze, po <code>kill</code> zniknął. Sprzątaczka zadziałała, choć nikt jej nie podziękował. Jak zwykle.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>dwie pułapki, na które wpadłem przy pisaniu. Po pierwsze, <code>set -e</code> NIE działa wewnątrz funkcji wywołanej jako <code>kopia &quot;$plik&quot; || kod=1</code>. Bash wyłącza go dla wszystkiego, co stoi przed <code>||</code>. Dlatego w <code>kopia</code> każdy ważny krok ma własne <code>if !</code>. Po drugie, ShellCheck 0.11 przy skrypcie kończącym się gołym <code>exit</code> zgłaszał SC2329, czyli „funkcja <code>sprzataj</code> nigdy nie jest wywołana”, choć wywołuje ją <code>trap</code>. Struktura z <code>main &quot;$@&quot;</code> na końcu ten fałszywy alarm usuwa.</p></aside></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Na tym kończymy moduł o skryptach. Twoje skrypty już nie sypią się od spacji, nie zostawiają śmieci, mówią, co się stało, i nie wchodzą sobie w drogę. W następnym module schodzimy piętro niżej, do dysków. Pierwsza lekcja: ile miejsca naprawdę zostało, co zjada dysk i dlaczego czasem dysk jest pełny, a <code>du</code> uparcie twierdzi, że nic tam nie ma.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-054.html" rel="prev">← 54. Komunikaty, logi i kolory</a><a class="btn domyslny zolty" href="lekcja-056.html" rel="next">56. Dyski i miejsce →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

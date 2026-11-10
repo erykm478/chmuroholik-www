@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>33. Skrypt, który przyjmuje polecenia — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 33 kursu Linux i Bash od zera do admina: Skrypt, który przyjmuje polecenia. kursant pisze skrypty, które dostają dane w linijce wywołania (./skrypt.sh ania /etc), używa $1, $#, &quot;$@&quot;, $0 i shift i wie, czemu &quot;$@&quot; prawie zawsze wygrywa z $*.">
+<meta property="og:title" content="33. Skrypt, który przyjmuje polecenia — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 33 kursu Linux i Bash od zera do admina: Skrypt, który przyjmuje polecenia. kursant pisze skrypty, które dostają dane w linijce wywołania (./skrypt.sh ania /etc), używa $1, $#, &quot;$@&quot;, $0 i shift i wie, czemu &quot;$@&quot; prawie zawsze wygrywa z $*.">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 3</span></div>
+      <div class="boczny-tytul"><a href="index.html#m03">Pisanie skryptów</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-031.html" data-lekcja="31"><span class="znacznik"></span><span class="nr">31</span> Twój pierwszy skrypt</a></li><li><a href="lekcja-032.html" data-lekcja="32"><span class="znacznik"></span><span class="nr">32</span> Zmienne i cudzysłowy</a></li><li><a href="lekcja-033.html" data-lekcja="33" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">33</span> Skrypt, który przyjmuje polecenia</a></li><li><a href="lekcja-034.html" data-lekcja="34"><span class="znacznik"></span><span class="nr">34</span> Udało się czy nie?</a></li><li><a href="lekcja-035.html" data-lekcja="35"><span class="znacznik"></span><span class="nr">35</span> Jeśli… to…</a></li><li><a href="lekcja-036.html" data-lekcja="36"><span class="znacznik"></span><span class="nr">36</span> Wybór z menu</a></li><li><a href="lekcja-037.html" data-lekcja="37"><span class="znacznik"></span><span class="nr">37</span> Pętle</a></li><li><a href="lekcja-038.html" data-lekcja="38"><span class="znacznik"></span><span class="nr">38</span> Bash umie liczyć (trochę)</a></li><li><a href="lekcja-039.html" data-lekcja="39"><span class="znacznik"></span><span class="nr">39</span> Wynik komendy w zmiennej</a></li><li><a href="lekcja-040.html" data-lekcja="40"><span class="znacznik"></span><span class="nr">40</span> Funkcje</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="33" data-modul="3" data-tematy="$1 …, $#, &quot;$@&quot; kontra $*, $0, shift">
+    <div class="belka"><span>Lekcja 33 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m03">Moduł 3</a> › Lekcja 33</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Skrypt, który przyjmuje polecenia</h1>
+      <p class="meta"><span>⏱ ok. 9 min czytania</span><span>· moduł 3: Pisanie skryptów</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant pisze skrypty, które dostają dane w linijce wywołania (<code>./skrypt.sh ania /etc</code>), używa <code>$1</code>, <code>$#</code>, <code>&quot;$@&quot;</code>, <code>$0</code> i <code>shift</code> i wie, czemu <code>&quot;$@&quot;</code> prawie zawsze wygrywa z <code>$*</code>.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#argumenty-czyli-numerki-w-kolejce">Argumenty, czyli numerki w kolejce</a></li><li><a href="#0-czyli-jak-sie-nazywam">$0, czyli jak się nazywam</a></li><li><a href="#dziesiaty-w-kolejce-czyli-10">Dziesiąty w kolejce, czyli ${10}</a></li><li><a href="#kontra-wszyscy-naraz">&quot;$@&quot; kontra $*: wszyscy naraz</a></li><li><a href="#shift-czyli-nastepny-prosze">shift, czyli „następny proszę”</a></li><li><a href="#skrypt-z-prawdziwego-zycia">Skrypt z prawdziwego życia</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga-flag">Ściąga flag</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p class="ekran">dwa terminale obok siebie. W lewym skrypt pyta „Które konto?”, „Który folder?”, a kursor mruga. W prawym jedna linijka <code>./kto_to.sh ania</code> i od razu wynik</p><p><code>read</code> z poprzedniej lekcji jest miły, ale ma jedną wadę: ktoś musi siedzieć przy klawiaturze. A skrypty admina najczęściej odpala nie człowiek, tylko budzik, czyli cron, inny skrypt albo narzędzie do automatyzacji. Budzik nie odpowie na pytanie „Jak masz na imię?”. Budzik umie tylko dzwonić.</p><p>Wszystkie prawdziwe komendy dostają dane od razu: <code>ls -l /etc</code>, <code>cp a.txt b.txt</code>, <code>useradd ania</code>. Dziś nasze skrypty będą działać dokładnie tak samo.</p></section><section><h2 id="argumenty-czyli-numerki-w-kolejce">Argumenty, czyli numerki w kolejce</h2><p>Wyobraź sobie okienko w urzędzie i kolejkę ludzi z numerkami. Urzędnik nie pyta „Kim pan jest?”. Woła: „Numer jeden!”, „Numer dwa!”. Tak samo skrypt widzi słowa podane po swojej nazwie. Pierwsze słowo siedzi w <code>$1</code>, drugie w <code>$2</code>, trzecie w <code>$3</code>. Fachowo to argumenty pozycyjne, bo liczy się ich pozycja.</p><div class="kod"><pre><code>#!/bin/bash
+# argumenty.sh - pokazuje, co skrypt dostał w linijce
+echo &quot;Nazwa skryptu (\$0): $0&quot;
+echo &quot;Pierwszy (\$1): $1&quot;
+echo &quot;Drugi (\$2): $2&quot;
+echo &quot;Ile ich jest (\$#): $#&quot;
+echo &quot;Wszystkie (\&quot;\$@\&quot;):&quot;
+printf &#x27;  [%s]\n&#x27; &quot;$@&quot;</code></pre></div><p><code>\$</code> w tekście już znasz: to dolar dosłownie, żebyśmy widzieli nazwę zmiennej obok jej wartości. <code>printf &#x27;  [%s]\n&#x27;</code> wypisuje każdy argument w osobnej linijce, w nawiasach kwadratowych, żeby było widać, gdzie się zaczyna i kończy. Więcej o <code>printf</code> będzie w lekcji o ładnym wypisywaniu, na razie traktuj go jak lupę.</p><div class="kod"><pre><code>./argumenty.sh ania &quot;Jan Kowalski&quot; trzeci</code></pre></div><div class="kod"><pre><code>Nazwa skryptu ($0): ./argumenty.sh
+Pierwszy ($1): ania
+Drugi ($2): Jan Kowalski
+Ile ich jest ($#): 3
+Wszystkie (&quot;$@&quot;):
+  [ania]
+  [Jan Kowalski]
+  [trzeci]</code></pre></div><p>Zobacz na „Jan Kowalski”. W cudzysłowie to jeden argument, choć ma spację. Koperta działa też tutaj: co jest w jednej kopercie, jest jednym numerkiem w kolejce.</p><p>A co, jak nic nie podasz?</p><div class="kod"><pre><code>Nazwa skryptu ($0): ./argumenty.sh
+Pierwszy ($1): 
+Drugi ($2): 
+Ile ich jest ($#): 0
+Wszystkie (&quot;$@&quot;):
+  []</code></pre></div><p>Puste pudełka i zero. Bash nie protestuje, nie pyta. Sprawdzanie, czy użytkownik coś podał, to Twoja robota. Za dwa lekcje zrobimy to porządnie. Te puste nawiasy na końcu to żart <code>printf</code>, który wypisuje swój wzór przynajmniej raz, nawet bez danych.</p></section><section><h2 id="0-czyli-jak-sie-nazywam">$0, czyli jak się nazywam</h2><p><code>$0</code> to nazwa, pod jaką skrypt został wywołany. Nie to, jak się nazywa plik, tylko to, co wpisałeś:</p><div class="kod"><pre><code>./argumenty.sh           -&gt;  $0 = ./argumenty.sh
+bash argumenty.sh        -&gt;  $0 = argumenty.sh
+/home/eryk/argumenty.sh  -&gt;  $0 = /home/eryk/argumenty.sh</code></pre></div><p>Po co to? Najczęściej do instrukcji obsługi: <code>echo &quot;Użycie: $0 LOGIN&quot;</code>. Skrypt sam się przedstawia, nawet jeśli ktoś zmieni mu nazwę. Jak pracownik, który ma imię na plakietce, a nie wytatuowane na czole.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>samą nazwę pliku bez ścieżki daje <code>${0##*/}</code>. Ta sztuczka to obcinanie tekstu, które poznamy w lekcji „Nożyczki do tekstu”.</p></aside></section><section><h2 id="dziesiaty-w-kolejce-czyli-10">Dziesiąty w kolejce, czyli ${10}</h2><p>Numerki jednocyfrowe można pisać bez klamr. Od dziesiątego klamry są obowiązkowe:</p><div class="kod"><pre><code>bash -c &#x27;echo &quot;$10 / ${10}&quot;&#x27; x 1 2 3 4 5 6 7 8 9 DZIESIATY</code></pre></div><div class="kod"><pre><code>10 / DZIESIATY</code></pre></div><p><code>$10</code> Bash czyta jako <code>$1</code> i doklejone zero. Pierwszym argumentem była jedynka, więc wyszło „10”. Dopiero <code>${10}</code> to naprawdę dziesiąty. Klamry z poprzedniej lekcji wracają jak bumerang. A jeśli Twój skrypt ma dziesięć argumentów pozycyjnych, to i tak nikt nie zapamięta, który jest który. Wtedy przydają się opcje typu <code>-d FOLDER</code>, które zrobimy przy <code>getopts</code>.</p><p><code>bash -c &#x27;polecenie&#x27; x a b</code> to przy okazji świetny sposób na szybkie testy: słowo po poleceniu idzie do <code>$0</code>, a kolejne do <code>$1</code>, <code>$2</code> i dalej.</p></section><section><h2 id="kontra-wszyscy-naraz">&quot;$@&quot; kontra $*: wszyscy naraz</h2><p>Czasem chcesz wziąć wszystkie argumenty naraz i przekazać dalej. Są na to dwa zapisy, <code>$@</code> i <code>$*</code>, i różnica między nimi to klasyczne pytanie z rozmów kwalifikacyjnych.</p><div class="kod"><pre><code>#!/bin/bash
+# gwiazdka_vs_malpa.sh - $* kontra &quot;$@&quot; kontra &quot;$*&quot;
+echo &#x27;Bez cudzysłowu $*:&#x27;
+# shellcheck disable=SC2048,SC2086  # celowo zły przykład
+printf &#x27;  [%s]\n&#x27; $*
+echo &#x27;W cudzysłowie &quot;$*&quot;:&#x27;
+printf &#x27;  [%s]\n&#x27; &quot;$*&quot;
+echo &#x27;W cudzysłowie &quot;$@&quot;:&#x27;
+printf &#x27;  [%s]\n&#x27; &quot;$@&quot;</code></pre></div><div class="kod"><pre><code>./gwiazdka_vs_malpa.sh &quot;moje notatki.txt&quot; raport.txt</code></pre></div><div class="kod"><pre><code>Bez cudzysłowu $*:
+  [moje]
+  [notatki.txt]
+  [raport.txt]
+W cudzysłowie &quot;$*&quot;:
+  [moje notatki.txt raport.txt]
+W cudzysłowie &quot;$@&quot;:
+  [moje notatki.txt]
+  [raport.txt]</code></pre></div><p>Porządkujemy na przykładzie listuów. Masz dwie koperty: „moje notatki.txt” i „raport.txt”.</p><p><code>$*</code> bez cudzysłowu rozrywa wszystkie koperty i sypie słowa luzem. Zrobiły się trzy kawałki, a „moje notatki.txt” przestało istnieć. To ta sama mina co w poprzedniej lekcji.</p><p><code>&quot;$*&quot;</code> wkłada wszystko do jednej wielkiej koperty. Jeden argument, słowa sklejone spacjami. Przydaje się, kiedy chcesz zrobić z argumentów jedno zdanie, na przykład do logu.</p><p><code>&quot;$@&quot;</code> przekazuje każdą kopertę osobno i nienaruszoną. Dokładnie tyle argumentów, ile użytkownik podał, dokładnie takich, jakie podał. To jest to, czego chcesz w dziewięćdziesięciu dziewięciu procentach przypadków.</p><p>Zasada na karteczkę: przekazujesz argumenty dalej? <code>&quot;$@&quot;</code>, z cudzysłowem. Na przykład nakładka na <code>ls</code>, która zawsze pokazuje szczegóły:</p><div class="kod"><pre><code>#!/bin/bash
+# ll.sh - ls -lh z dowolnymi argumentami
+ls -lh &quot;$@&quot;</code></pre></div><p>Co użytkownik poda, to <code>ls</code> dostanie. Zero, jeden czy dziesięć plików, ze spacjami czy bez.</p></section><section><h2 id="shift-czyli-nastepny-prosze">shift, czyli „następny proszę”</h2><p><code>shift</code> to urzędnik, który obsłużył numer jeden i woła „następny”. Pierwszy argument znika, a wszyscy przesuwają się o jedno miejsce do przodu. Dawny <code>$2</code> staje się <code>$1</code>, dawny <code>$3</code> staje się <code>$2</code>, a <code>$#</code> maleje o jeden.</p><div class="kod"><pre><code>#!/bin/bash
+# przesun.sh - pokazuje działanie shift
+echo &quot;Na początku: $# argumentów, pierwszy to $1&quot;
+shift
+echo &quot;Po shift:    $# argumentów, pierwszy to $1&quot;
+shift 2
+echo &quot;Po shift 2:  $# argumentów, pierwszy to $1&quot;
+echo &quot;Zostało: $*&quot;</code></pre></div><div class="kod"><pre><code>./przesun.sh a b c d e</code></pre></div><div class="kod"><pre><code>Na początku: 5 argumentów, pierwszy to a
+Po shift:    4 argumentów, pierwszy to b
+Po shift 2:  2 argumentów, pierwszy to d
+Zostało: d e</code></pre></div><p><code>shift 2</code> przesuwa o dwa. A tutaj <code>$*</code> w cudzysłowie jest w porządku, bo robimy z reszty jedno zdanie do wyświetlenia.</p><p>Po co to? Typowy wzorzec: pierwszy argument jest specjalny, a reszta to lista. Na przykład <code>./wyslij.sh adres@firma.pl plik1 plik2 plik3</code>. Zapisujesz <code>$1</code> do zmiennej <code>adres</code>, robisz <code>shift</code> i w <code>&quot;$@&quot;</code> masz już same pliki. Czysto, bez liczenia pozycji.</p><p>A gdybyś zrobił <code>shift 5</code>, a argumenty są tylko dwa? Nic się nie przesuwa, a <code>shift</code> kończy się kodem 1, czyli kciukiem w dół. Co to dokładnie znaczy, zobaczysz w następnej lekcji.</p></section><section><h2 id="skrypt-z-prawdziwego-zycia">Skrypt z prawdziwego życia</h2><div class="kod"><pre><code>#!/bin/bash
+# kto_to.sh - pokazuje informacje o koncie podanym jako argument
+echo &quot;=== Konto: $1 ===&quot;
+getent passwd &quot;$1&quot;
+id &quot;$1&quot;</code></pre></div><div class="kod"><pre><code>./kto_to.sh root</code></pre></div><div class="kod"><pre><code>=== Konto: root ===
+root:x:0:0:root:/root:/bin/bash
+uid=0(root) gid=0(root) groups=0(root)</code></pre></div><p><code>getent passwd</code> pokazuje linijkę konta z bazy użytkowników, a <code>id</code> jego numer i grupy. Działa i na Ubuntu, i na RHEL-u, i nie obchodzi go, czy konto jest lokalne, czy z serwera katalogowego.</p><p>A teraz bez argumentu:</p><div class="kod"><pre><code>=== Konto:  ===
+id: &#x27;&#x27;: no such user: No such file or directory</code></pre></div><p>Skrypt nie zrozumiał, że czegoś brakuje, tylko przekazał pustkę dalej. <code>id</code> dostał puste słowo i się obraził. To właśnie temat dwóch następnych lekcji: jak skrypt ma się dowiedzieć, że coś poszło źle, i jak ma na to zareagować.</p></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p>Pamiętasz z lekcji 31, że jądro uruchamia skrypt jako <code>/bin/bash ./skrypt.sh</code>? Teraz pełny obraz: wywołanie <code>./kto_to.sh root</code> zamienia się w</p><div class="kod"><pre><code>/bin/bash ./kto_to.sh root</code></pre></div><p>Nowy Bash bierze pierwsze słowo po swojej nazwie jako plik do czytania, wpisuje je do <code>$0</code>, a wszystko, co jest dalej, układa w ponumerowaną listę: <code>$1</code>, <code>$2</code> i tak dalej. <code>$#</code> to po prostu długość tej listy.</p><p>Najważniejsze: dzielenie na argumenty robi Twój Bash w terminalu, jeszcze zanim skrypt wystartuje. Dlatego <code>&quot;Jan Kowalski&quot;</code> przyjechało jako jeden argument. Cudzysłowy zostały zdjęte po drodze, skrypt dostał czyste <code>Jan Kowalski</code> w jednym pudełku. Skrypt nigdy nie widzi cudzysłowów, które wpisałeś. Widzi tylko ich efekt.</p><p>A <code>&quot;$@&quot;</code> jest wyjątkiem od zasady „cudzysłów robi jedną przesyłkę”. To jedyne miejsce, gdzie cudzysłów daje wiele słów: każdy argument w osobnej kopercie. Bash ma na to specjalną regułę, bo inaczej nie dałoby się bezpiecznie przekazywać argumentów dalej.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p><code>set -- a b c</code> nadpisuje argumenty pozycyjne bieżącego skryptu, jakbyś wywołał go z <code>a b c</code>. Przydaje się w testach. A <code>&quot;$*&quot;</code> skleja argumenty pierwszym znakiem zmiennej <code>IFS</code>, który domyślnie jest spacją. Wrócimy do <code>IFS</code> w lekcji o spacjach w nazwach plików.</p></aside></section><section><h2 id="sciaga-flag">Ściąga flag</h2><div class="tabela"><table><tr><th>Zapis</th><th>Co zawiera</th><th>Uwagi</th></tr><tr><td><code>$0</code></td><td>nazwa, pod którą wywołano skrypt</td><td>do komunikatów „Użycie: $0 …”</td></tr><tr><td><code>$1</code> … <code>$9</code></td><td>kolejne argumenty</td><td>puste, jeśli ich nie podano</td></tr><tr><td><code>${10}</code></td><td>dziesiąty i dalsze</td><td>bez klamr <code>$10</code> to <code>$1</code> + „0”</td></tr><tr><td><code>$#</code></td><td>liczba argumentów</td><td>nie liczy <code>$0</code></td></tr><tr><td><code>&quot;$@&quot;</code></td><td>wszystkie, każdy osobno</td><td>prawie zawsze ten</td></tr><tr><td><code>&quot;$*&quot;</code></td><td>wszystkie jako jeden napis</td><td>do logów i komunikatów</td></tr><tr><td><code>$*</code> / <code>$@</code> bez cudzysłowu</td><td>wszystkie, pocięte na słowa</td><td>mina, unikaj</td></tr><tr><td><code>shift</code></td><td>przesuwa argumenty o 1</td><td><code>$#</code> maleje</td></tr><tr><td><code>shift N</code></td><td>przesuwa o N</td><td>gdy N &gt; <code>$#</code>, nic nie robi i zwraca 1</td></tr><tr><td><code>set --</code></td><td><code>a b c</code></td><td>ustawia nowe argumenty</td></tr><tr><td><code>bash -c &#x27;…&#x27;</code></td><td><code>x a b</code></td><td>szybki test: <code>$0=x</code>, <code>$1=a</code>, <code>$2=b</code></td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>Piszesz nakładkę na kopiowanie:</p><div class="kod"><pre><code>#!/bin/bash
+# zla_kopia.sh - celowo zły przykład
+cp $1 $2</code></pre></div><div class="kod"><pre><code>./zla_kopia.sh &quot;moje notatki.txt&quot; kopia.txt</code></pre></div><div class="kod"><pre><code>cp: target &#x27;kopia.txt&#x27;: No such file or directory</code></pre></div><p>Dziwny komunikat, prawda? Plik źródłowy istnieje, a <code>cp</code> narzeka na cel, który dopiero miał powstać. Ale <code>$1</code> bez cudzysłowu zostało pocięte na <code>moje</code> i <code>notatki.txt</code>, więc <code>cp</code> dostał trzy argumenty: <code>moje</code>, <code>notatki.txt</code> i <code>kopia.txt</code>. A kiedy <code>cp</code> dostaje więcej niż dwa, zakłada, że ostatni jest folderem, do którego ma wrzucić resztę. Folderu <code>kopia.txt</code> nie ma. A jeśli plik <code>kopia.txt</code> akurat istnieje, usłyszysz <code>Not a directory</code>. Komunikat jest prawdziwy, tylko odpowiada na zupełnie inne pytanie, niż zadałeś.</p><p>Naprawa: <code>cp -- &quot;$1&quot; &quot;$2&quot;</code>. Cudzysłowy, wiadomo. A podwójny myślnik mówi <code>cp</code>, że dalej są już tylko nazwy plików, a nie opcje. Bez niego plik nazwany <code>-r</code> zostałby wzięty za opcję. Tak, ktoś kiedyś nazwie tak plik. Zawsze ktoś nazwie.</p><p>ShellCheck oczywiście wytknie SC2086 przy obu zmiennych. Ten przykład jest zły specjalnie.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><p>Napisz skrypt <code>przedstaw.sh</code>, który jako pierwszy argument dostaje imię, a dalej dowolną liczbę zainteresowań. Skrypt zapisuje imię do zmiennej, robi <code>shift</code>, a potem wypisuje zdanie z imieniem i liczbą zainteresowań oraz każde zainteresowanie w osobnej linijce, w nawiasach kwadratowych. Wywołaj go tak:</p><div class="kod"><pre><code>./przedstaw.sh Ania rower &quot;gotowanie zup&quot; Linux</code></pre></div><p>„Gotowanie zup” ma się pojawić w jednych nawiasach. Sprawdź ShellCheckiem.</p><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><div class="kod"><pre><code>#!/bin/bash
+# przedstaw.sh - imię i lista zainteresowań z argumentów
+imie=$1
+shift
+echo &quot;Nazywam się $imie i mam $# zainteresowania:&quot;
+printf &#x27;  [%s]\n&#x27; &quot;$@&quot;</code></pre></div><div class="kod"><pre><code>./przedstaw.sh Ania rower &quot;gotowanie zup&quot; Linux</code></pre></div><div class="kod"><pre><code>Nazywam się Ania i mam 3 zainteresowania:
+  [rower]
+  [gotowanie zup]
+  [Linux]</code></pre></div><p>Imię ląduje w pudełku, zanim <code>shift</code> wyrzuci je z kolejki. Odwrotna kolejność to klasyk: najpierw <code>shift</code>, potem <code>imie=$1</code> i nagle Ania nazywa się „rower”. <code>$#</code> po <code>shift</code> liczy już tylko zainteresowania, a <code>&quot;$@&quot;</code> trzyma „gotowanie zup” w jednej kopercie. Gramatyka „3 zainteresowania” przy pięciu się posypie, ale polska odmiana liczebników to temat na osobny kurs. Dla zaawansowanych.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Nasz <code>kto_to.sh</code> bez argumentu wypisał bzdury i udał, że wszystko gra. W następnej lekcji nauczymy się, jak każda komenda mówi „udało się” albo „nie udało się”: kody wyjścia, <code>$?</code>, <code>exit</code> i dwa magiczne znaczki <code>&amp;&amp;</code> i <code>||</code>.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-032.html" rel="prev">← 32. Zmienne i cudzysłowy</a><a class="btn domyslny zolty" href="lekcja-034.html" rel="next">34. Udało się czy nie? →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

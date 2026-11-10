@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>37. Pętle — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 37 kursu Linux i Bash od zera do admina: Pętle. kursant każe skryptowi powtarzać robotę pętlami for, while i until, steruje nimi przez break i continue i bezpiecznie czyta plik linijka po linijce przez while IFS= read -r.">
+<meta property="og:title" content="37. Pętle — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 37 kursu Linux i Bash od zera do admina: Pętle. kursant każe skryptowi powtarzać robotę pętlami for, while i until, steruje nimi przez break i continue i bezpiecznie czyta plik linijka po linijce przez while IFS= read -r.">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 3</span></div>
+      <div class="boczny-tytul"><a href="index.html#m03">Pisanie skryptów</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-031.html" data-lekcja="31"><span class="znacznik"></span><span class="nr">31</span> Twój pierwszy skrypt</a></li><li><a href="lekcja-032.html" data-lekcja="32"><span class="znacznik"></span><span class="nr">32</span> Zmienne i cudzysłowy</a></li><li><a href="lekcja-033.html" data-lekcja="33"><span class="znacznik"></span><span class="nr">33</span> Skrypt, który przyjmuje polecenia</a></li><li><a href="lekcja-034.html" data-lekcja="34"><span class="znacznik"></span><span class="nr">34</span> Udało się czy nie?</a></li><li><a href="lekcja-035.html" data-lekcja="35"><span class="znacznik"></span><span class="nr">35</span> Jeśli… to…</a></li><li><a href="lekcja-036.html" data-lekcja="36"><span class="znacznik"></span><span class="nr">36</span> Wybór z menu</a></li><li><a href="lekcja-037.html" data-lekcja="37" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">37</span> Pętle</a></li><li><a href="lekcja-038.html" data-lekcja="38"><span class="znacznik"></span><span class="nr">38</span> Bash umie liczyć (trochę)</a></li><li><a href="lekcja-039.html" data-lekcja="39"><span class="znacznik"></span><span class="nr">39</span> Wynik komendy w zmiennej</a></li><li><a href="lekcja-040.html" data-lekcja="40"><span class="znacznik"></span><span class="nr">40</span> Funkcje</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="37" data-modul="3" data-tematy="for (lista, zakres, styl C), while, until, break, continue, while IFS= read -r">
+    <div class="belka"><span>Lekcja 37 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m03">Moduł 3</a> › Lekcja 37</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Pętle</h1>
+      <p class="meta"><span>⏱ ok. 12 min czytania</span><span>· moduł 3: Pisanie skryptów</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant każe skryptowi powtarzać robotę pętlami <code>for</code>, <code>while</code> i <code>until</code>, steruje nimi przez <code>break</code> i <code>continue</code> i bezpiecznie czyta plik linijka po linijce przez <code>while IFS= read -r</code>.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#for-czyli-tasma-przy-kasie">for, czyli taśma przy kasie</a></li><li><a href="#zakresy-i-liczenie">Zakresy i liczenie</a></li><li><a href="#while-czyli-dopoki">while, czyli „dopóki”</a></li><li><a href="#until-czyli-az">until, czyli „aż”</a></li><li><a href="#break-i-continue-hamulec-i-nastepny-prosze">break i continue: hamulec i „następny proszę”</a></li><li><a href="#while-ifs-read-r-czyli-czytanie-pliku-linijka-po-l">while IFS= read -r, czyli czytanie pliku linijka po linijce</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga-flag">Ściąga flag</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p class="ekran">folder z 500 plikami <code>zdjecie_001.JPG</code> … <code>zdjecie_500.JPG</code></p><p>Szef przychodzi z pendrive’em: „Tu jest pięćset zdjęć z imprezy firmowej. Trzeba każde przerzucić do folderu i zmienić końcówkę na małe litery, bo strona ich nie widzi”.</p><p>Możesz to zrobić pięćset razy ręcznie. Po trzydziestym zaczniesz się mylić, po setnym zaczniesz kwestionować swoje wybory życiowe.</p><p>Albo napiszesz trzy linijki, które powiedzą komputerowi: „dla każdego pliku zrób to samo”. Komputer się nie nudzi, nie myli i nie idzie na kawę. Dziś pętle, czyli najważniejsza rzecz, jaka odróżnia skrypt od listy komend.</p></section><section><h2 id="for-czyli-tasma-przy-kasie">for, czyli taśma przy kasie</h2><p>Wyobraź sobie taśmę przy kasie w Biedronce. Wykładasz zakupy, a kasjerka bierze po jednej rzeczy i robi z każdą to samo: skanuje, odkłada. Mleko, skan. Chleb, skan. Bułki, skan, skan, skan. Kiedy taśma jest pusta, koniec.</p><p>Pętla <code>for</code> robi dokładnie to. Dostaje listę, bierze po jednym elemencie, wkłada go do pudełka ze zmienną i wykonuje te same komendy.</p><div class="kod"><pre><code>for owoc in jabłko gruszka &quot;czerwona porzeczka&quot;; do
+    echo &quot;Myję: $owoc&quot;
+done</code></pre></div><div class="kod"><pre><code>Myję: jabłko
+Myję: gruszka
+Myję: czerwona porzeczka</code></pre></div><p><code>for owoc in ...</code> to: „po kolei wkładaj do pudełka <code>owoc</code> każdą rzecz z listy”. Między <code>do</code> i <code>done</code> jest to, co kasjerka robi z każdą rzeczą. Zauważ, że „czerwona porzeczka” w kopercie przeszła jako jedna rzecz. Bez cudzysłowu dostałbyś osobno „czerwona” i osobno „porzeczka”. Smacznego.</p><p>Najważniejsze zastosowanie dla admina: pętla po plikach.</p><div class="kod"><pre><code>for plik in *.log; do
+    echo &quot;Znalazłem: $plik&quot;
+done</code></pre></div><p>Gwiazdka rozwija się w listę plików, a pętla jedzie po każdym. Tak właśnie załatwisz te pięćset zdjęć z haka.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>jeśli żaden plik nie pasuje, Bash zostawia wzorzec bez zmian i pętla wykona się raz ze zmienną równą dosłownie <code>*.log</code>. Sprawdziłem: w pustym folderze wypisze „Znalazłem: *.log”. Ratunek to <code>shopt -s nullglob</code> na początku skryptu, wtedy niepasujący wzorzec znika i pętla nie wykona się ani razu. Albo <code>[ -e &quot;$plik&quot; ] || continue</code> na początku pętli.</p></aside></section><section><h2 id="zakresy-i-liczenie">Zakresy i liczenie</h2><p>Często nie masz listy, tylko chcesz coś zrobić pięć razy. Pamiętasz nawiasy klamrowe z lekcji o wzorcach?</p><div class="kod"><pre><code>for i in {1..5}; do echo -n &quot;$i &quot;; done; echo
+echo {01..10}
+echo {0..20..5}
+echo {5..1}</code></pre></div><div class="kod"><pre><code>1 2 3 4 5
+01 02 03 04 05 06 07 08 09 10
+0 5 10 15 20
+5 4 3 2 1</code></pre></div><p><code>{1..5}</code> to od jednego do pięciu. <code>{01..10}</code> dokłada zera z przodu, żeby pliki <code>kopia_01</code> i <code>kopia_10</code> ładnie się sortowały. <code>{0..20..5}</code> liczy co pięć. <code>{5..1}</code> liczy w tył, jak przed startem rakiety.</p><p>Jest też trzecia postać, znana programistom z języka C:</p><div class="kod"><pre><code>for ((i = 1; i &lt;= 3; i++)); do
+    echo &quot;Okrążenie $i&quot;
+done</code></pre></div><div class="kod"><pre><code>Okrążenie 1
+Okrążenie 2
+Okrążenie 3</code></pre></div><p>W podwójnych nawiasach są trzy kawałki oddzielone średnikami. Start: <code>i = 1</code>. Warunek: kręć, dopóki <code>i &lt;= 3</code>. Krok: po każdym okrążeniu <code>i++</code>, czyli dodaj jeden. Jak bieganie na stadionie: zaczynasz na linii, biegasz, dopóki trener nie powie stop, i po każdym okrążeniu ktoś dopisuje kreskę na tablicy. Więcej o tych podwójnych nawiasach w następnej lekcji, bo to jest kalkulator Basha.</p></section><section><h2 id="while-czyli-dopoki">while, czyli „dopóki”</h2><p><code>for</code> jest dobry, kiedy wiesz, ile tego jest. A co, jeśli nie wiesz? Czekasz, aż ktoś skończy, aż plik się pojawi, aż serwer wstanie?</p><p>Wyobraź sobie, że stoisz pod drzwiami łazienki rano, w mieszkaniu z czterema współlokatorami. Co chwilę pukasz: zajęte? Zajęte. Czekasz. Pukasz. Zajęte. Dopóki zajęte, czekasz. To jest <code>while</code>.</p><div class="kod"><pre><code>#!/bin/bash
+# czekaj.sh — czeka, aż pojawi się plik /tmp/gotowe
+
+while [ ! -f /tmp/gotowe ]; do
+    echo &quot;Jeszcze nie ma, czekam...&quot;
+    sleep 1
+done
+echo &quot;Jest! Jedziemy dalej.&quot;</code></pre></div><p class="ekran">w drugim oknie tmux po trzech sekundach wpisuję <code>touch /tmp/gotowe</code></p><div class="kod"><pre><code>Jeszcze nie ma, czekam...
+Jeszcze nie ma, czekam...
+Jeszcze nie ma, czekam...
+Jest! Jedziemy dalej.</code></pre></div><p><code>while</code> przed każdym okrążeniem sprawdza warunek. Warunek to ten sam bramkarz <code>[ ]</code> co w <code>if</code>. Dopóki mówi „prawda”, czyli kciuk w górę, pętla się kręci. Kiedy powie „fałsz”, wychodzimy.</p><p>I ważne: <code>sleep 1</code>. Bez niego skrypt pyta tysiące razy na sekundę i grzeje procesor. Jak współlokator, który nie puka, tylko wali w drzwi bez przerwy. Formalnie to też czekanie, ale nikt go potem nie lubi.</p><p>Czasem chcesz kręcić się w nieskończoność, na przykład w skrypcie, który co minutę coś sprawdza:</p><div class="kod"><pre><code>while true; do
+    date
+    sleep 60
+done</code></pre></div><p><code>true</code> to komenda, która zawsze kończy się kciukiem w górę, więc ta pętla nie skończy się sama. Zatrzymasz ją Ctrl+C albo <code>break</code> w środku.</p></section><section><h2 id="until-czyli-az">until, czyli „aż”</h2><p><code>until</code> to <code>while</code> na odwrót. Kręci się, dopóki warunek jest fałszywy, czyli „aż się uda”. Czyta się to naturalniej, kiedy próbujesz czegoś do skutku. Jak dzwonienie na infolinię: dzwoń, aż ktoś odbierze.</p><div class="kod"><pre><code>#!/bin/bash
+# until.sh — próbuje, aż się uda
+
+until mkdir /tmp/blokada 2&gt;/dev/null; do
+    echo &quot;Ktoś inny pracuje, czekam...&quot;
+    sleep 1
+done
+echo &quot;Mam blokadę, robię swoje&quot;
+rmdir /tmp/blokada</code></pre></div><div class="kod"><pre><code>Ktoś inny pracuje, czekam...
+Ktoś inny pracuje, czekam...
+Ktoś inny pracuje, czekam...
+Mam blokadę, robię swoje</code></pre></div><p>Tu warunkiem nie jest bramkarz <code>[ ]</code>, tylko zwykła komenda. <code>mkdir</code> uda się tylko wtedy, gdy folderu jeszcze nie ma. Jeśli ktoś inny już go założył, dostajesz kciuk w dół i czekasz. To jest stara sztuczka adminów: folder jako kartka „zajęte” na drzwiach. Porządniejszą wersję, <code>flock</code>, poznamy w module o pisaniu solidnych skryptów.</p><p>W <code>while</code> i <code>until</code> po słowie kluczowym może stać dowolna komenda. Pętla patrzy tylko na jej kod wyjścia. Kciuk w górę albo w dół, nic więcej jej nie obchodzi.</p></section><section><h2 id="break-i-continue-hamulec-i-nastepny-prosze">break i continue: hamulec i „następny proszę”</h2><p>Kasjerka może zrobić jeszcze dwie rzeczy. Może odsunąć jakiś produkt i powiedzieć „to nie nasze, następny”. To jest <code>continue</code>: pomiń resztę tego okrążenia i weź następny element. I może zamknąć kasę w połowie, bo ogłoszono ewakuację. To jest <code>break</code>: wyjdź z pętli natychmiast.</p><div class="kod"><pre><code>#!/bin/bash
+# wdrozenie.sh — udaje aktualizację kilku serwerów
+
+for serwer in web1 web2 baza1 web3 web4; do
+    if [ -f /tmp/STOP ]; then
+        echo &quot;Znalazłem /tmp/STOP, przerywam wdrożenie&quot;
+        break
+    fi
+    if [ &quot;$serwer&quot; = &quot;baza1&quot; ]; then
+        echo &quot;Pomijam $serwer, bazy nie ruszamy w piątek&quot;
+        continue
+    fi
+    echo &quot;Aktualizuję $serwer&quot;
+    sleep 1
+done
+echo &quot;Koniec pętli&quot;</code></pre></div><p class="ekran">w trakcie działania w drugim oknie <code>touch /tmp/STOP</code></p><div class="kod"><pre><code>Aktualizuję web1
+Aktualizuję web2
+Pomijam baza1, bazy nie ruszamy w piątek
+Aktualizuję web3
+Znalazłem /tmp/STOP, przerywam wdrożenie
+Koniec pętli</code></pre></div><p>Ten plik <code>/tmp/STOP</code> to prawdziwy wzorzec z życia. Skrypt, który robi coś długo i niebezpiecznie, sprawdza przed każdym krokiem, czy ktoś nie wcisnął czerwonego guzika. A czerwony guzik to pusty plik. Tani, prosty i działa nawet wtedy, gdy nie masz dostępu do terminala, w którym skrypt chodzi.</p><p>I zauważ: <code>break</code> wyskakuje tylko z pętli. <code>echo &quot;Koniec pętli&quot;</code> wykonało się normalnie. To nie jest <code>exit</code>, który kończy cały skrypt.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>przy pętlach w pętlach <code>break 2</code> wychodzi z dwóch poziomów naraz, a <code>continue 2</code> przeskakuje do następnego okrążenia pętli zewnętrznej.</p></aside></section><section><h2 id="while-ifs-read-r-czyli-czytanie-pliku-linijka-po-l">while IFS= read -r, czyli czytanie pliku linijka po linijce</h2><p>To jest najważniejszy wzór w tej lekcji. Admin non stop dostaje listy: serwerów, użytkowników, adresów. I musi coś zrobić z każdą linijką.</p><p>Mamy plik <code>uzytkownicy.txt</code> od działu kadr:</p><div class="kod"><pre><code># login;imię i nazwisko
+anowak;Anna Nowak
+jkowalski;Jan Kowalski
+
+pwisniewska;Paula Wiśniewska</code></pre></div><div class="kod"><pre><code>#!/bin/bash
+# konta.sh — pokazuje, jakie konta by założył (na sucho)
+
+while IFS=&#x27;;&#x27; read -r login nazwa; do
+    case &quot;$login&quot; in
+        &quot;&quot;|\#*) continue ;;
+    esac
+    echo &quot;useradd -m -c \&quot;$nazwa\&quot; $login&quot;
+done &lt; uzytkownicy.txt</code></pre></div><div class="kod"><pre><code>useradd -m -c &quot;Anna Nowak&quot; anowak
+useradd -m -c &quot;Jan Kowalski&quot; jkowalski
+useradd -m -c &quot;Paula Wiśniewska&quot; pwisniewska</code></pre></div><p>Rozbieramy od końca, bo tam jest najważniejsze. <code>done &lt; uzytkownicy.txt</code> podpina plik pod wejście całej pętli. To przekierowanie, które już znasz, tylko na końcu <code>done</code>.</p><p><code>read</code> czyta jedną linijkę i wkłada ją do zmiennych. Kiedy plik się skończy, <code>read</code> daje kciuk w dół i <code>while</code> kończy pętlę. Elegancko, bez liczenia linijek.</p><p><code>IFS=&#x27;;&#x27;</code> mówi, czym są oddzielone kolumny. Pierwsza kolumna ląduje w <code>login</code>, reszta w <code>nazwa</code>. To jak <code>cut -d&#x27;;&#x27;</code>, tylko od razu do zmiennych.</p><p><code>-r</code> mówi: nie ruszaj ukośników. Bez niego <code>read</code> traktuje <code>\</code> jako znak specjalny i po cichu go zjada.</p><p>A <code>case</code> z poprzedniej lekcji pomija puste linijki i komentarze z <code>#</code>. Ukośnik przed <code>#</code> jest po to, żeby Bash nie pomyślał, że tu zaczyna się komentarz w samym skrypcie.</p><p>I na koniec, uwaga, bo to ważne: skrypt tylko wypisuje komendy, nie zakłada kont. To się nazywa „na sucho”. Zawsze, kiedy pętla ma zrobić coś nieodwracalnego na wielu rzeczach naraz, najpierw uruchom ją z <code>echo</code> przed komendą i przeczytaj, co by zrobiła. Pętla myli się tak samo szybko, jak pracuje. Jeśli chcesz się pobawić naprawdę, to tylko na maszynie wirtualnej.</p><p>Dlaczego <code>IFS=</code> w wersji bez kolumn? Porównaj na pliku z wcięciem i ukośnikiem:</p><div class="kod"><pre><code>while read linia; do echo &quot;[$linia]&quot;; done &lt; dziwne.txt
+while IFS= read -r linia; do echo &quot;[$linia]&quot;; done &lt; dziwne.txt</code></pre></div><div class="kod"><pre><code>[wciętetz ukośnikiem]
+[   wcięte\tz ukośnikiem]</code></pre></div><p>Pierwsza wersja zjadła spacje z przodu i ukośnik. Druga oddała linijkę co do znaku. Dlatego zapamiętaj całą formułkę, nie kawałki: <code>while IFS= read -r linia</code>. Jak „Dzień dobry, poproszę” w urzędzie. Niby można bez, ale efekty są gorsze.</p></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p><code>for</code>, <code>while</code>, <code>until</code>, <code>do</code>, <code>done</code>, <code>break</code>, <code>continue</code> — to wszystko urządza sam Bash, bez uruchamiania osobnych programów. Urzędnik czyta całą pętlę od <code>for</code> do <code>done</code>, zanim wykona cokolwiek. Dlatego błąd składni na końcu pętli zatrzymuje też jej początek.</p><p>W <code>for</code> lista jest gotowa, zanim ruszy pierwsze okrążenie. Bash najpierw rozwija gwiazdki i nawiasy, robi z tego listę słów, a dopiero potem jedzie. Jeśli w trakcie pętli ktoś doda nowy plik <code>.log</code>, pętla go nie zobaczy. Kasjerka nie skanuje rzeczy, które ktoś położył na taśmie po tym, jak powiedziała „to wszystko?”.</p><p>W <code>while</code> warunek jest sprawdzany na nowo przed każdym okrążeniem. To komenda jak każda inna, uruchamiana od nowa za każdym razem.</p><p>A <code>while read ... done &lt; plik</code>? Bash otwiera plik raz, przed pętlą, i podpina go pod wejście numer zero całej pętli. Każde <code>read</code> czyta z niego kolejny kawałek, aż do znaku nowej linii. Plik nie jest wczytywany do pamięci w całości, więc tym samym wzorem przeczytasz i dziesięć linijek, i dziesięć milionów.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p><code>read</code> bez nazwy zmiennej wkłada linijkę do <code>REPLY</code>. Uważaj na komendy wewnątrz takiej pętli, które same czytają z wejścia, na przykład <code>ssh</code>: zjedzą resztę pliku i pętla zrobi jedno okrążenie. Ratunek to <code>ssh -n</code> albo <code>&lt; /dev/null</code> przy tej komendzie.</p></aside></section><section><h2 id="sciaga-flag">Ściąga flag</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga / element</th><th>Co robi</th></tr><tr><td><code>for</code></td><td><code>for x in a b c</code></td><td>po kolei każdy element listy</td></tr><tr><td><code>for</code></td><td><code>for f in *.log</code></td><td>po kolei każdy pasujący plik</td></tr><tr><td><code>for</code></td><td><code>{1..10}</code> / <code>{01..10}</code> / <code>{0..20..5}</code></td><td>zakres / z zerami / co 5</td></tr><tr><td><code>for</code></td><td><code>for ((i=0; i&lt;10; i++))</code></td><td>licznik w stylu C</td></tr><tr><td><code>while</code></td><td><code>while WARUNEK</code></td><td>kręć, dopóki prawda</td></tr><tr><td><code>while</code></td><td><code>while true</code></td><td>kręć w nieskończoność</td></tr><tr><td><code>until</code></td><td><code>until WARUNEK</code></td><td>kręć, aż będzie prawda</td></tr><tr><td><code>break</code></td><td><code>break</code> / <code>break 2</code></td><td>wyjdź z pętli / z dwóch pętli</td></tr><tr><td><code>continue</code></td><td><code>continue</code></td><td>pomiń resztę okrążenia</td></tr><tr><td><code>read</code></td><td><code>-r</code></td><td>nie zjadaj ukośników</td></tr><tr><td><code>read</code></td><td><code>IFS=</code></td><td>nie obcinaj spacji z brzegów</td></tr><tr><td><code>read</code></td><td><code>IFS=&#x27;;&#x27;</code></td><td>podziel linijkę na kolumny po <code>;</code></td></tr><tr><td><code>shopt</code></td><td><code>-s nullglob</code></td><td>wzorzec bez trafień znika z listy</td></tr><tr><td><code>done</code></td><td><code>done &lt; plik</code></td><td>podepnij plik pod wejście pętli</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>Chcesz zrobić tyle okrążeń, ile jest w zmiennej:</p><div class="kod"><pre><code>n=3
+for i in {1..$n}; do
+    echo &quot;$i&quot;
+done</code></pre></div><div class="kod"><pre><code>{1..3}</code></pre></div><p>Jedna linijka z dziwnym napisem zamiast trzech liczb. Bez żadnego błędu. Dlaczego? Bo Bash rozwija nawiasy klamrowe jako pierwsze, zanim podstawi zmienne. W chwili, gdy patrzy na nawiasy, widzi <code>{1..$n}</code>, a to nie wygląda na zakres, więc zostawia to w spokoju. Potem podstawia <code>$n</code> i wychodzi <code>{1..3}</code>, ale na nawiasy jest już za późno. Jak kucharz, który najpierw piecze ciasto, a dopiero potem czyta, ile ma być jajek.</p><p>Naprawa: pętla w stylu C, która rozumie zmienne.</p><div class="kod"><pre><code>n=3
+for ((i = 1; i &lt;= n; i++)); do
+    echo &quot;$i&quot;
+done</code></pre></div><p>Drugi klasyk: plik, który nie ma znaku nowej linii na końcu, bo ktoś go zapisał w edytorze z Windowsa albo wygenerował programem. W pliku są trzy linijki: „pierwsza”, „druga”, „trzecia”, a pętla wypisuje:</p><div class="kod"><pre><code>Mam: pierwsza
+Mam: druga</code></pre></div><p>Trzecia znikła. <code>read</code> ją przeczytał, ale skoro nie trafił na koniec linii, tylko na koniec pliku, zwrócił kciuk w dół i <code>while</code> zakończył pętlę bez tej linijki. Naprawa:</p><div class="kod"><pre><code>while IFS= read -r linia || [ -n &quot;$linia&quot; ]; do
+    echo &quot;Mam: $linia&quot;
+done &lt; bez_konca.txt</code></pre></div><p>„Kręć, jeśli <code>read</code> się udał, albo jeśli coś jednak przeczytał”. Brzydkie, ale ratuje ostatnią linijkę, która zwykle jest tą najważniejszą, bo Murphy.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><ol><li>Napisz skrypt <code>porzadki.sh</code>, który dostaje folder jako argument i dla każdego pliku <code>.log</code> w tym folderze wypisuje nazwę i liczbę linijek (<code>wc -l &lt; plik</code>). Puste pliki ma pomijać przez <code>continue</code>. Jeśli w trakcie pracy pojawi się plik <code>/tmp/STOP</code>, ma przerwać przez <code>break</code>. Bez argumentu: instrukcja i kod 1.</li><li>Zrób plik <code>serwery.txt</code> z kilkoma nazwami serwerów, pustą linijką i komentarzem zaczynającym się od <code>#</code>. Napisz pętlę <code>while IFS= read -r</code>, która dla każdego serwera wypisze „sprawdzam: NAZWA”, a puste linijki i komentarze pominie.</li><li>Bonus: odliczanie od 5 do 1 co sekundę pętlą w stylu C, a na końcu „Start!”.</li></ol><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><p>Część pierwsza:</p><div class="kod"><pre><code>#!/bin/bash
+# porzadki.sh — liczy linijki w plikach .log z podanego folderu
+
+if [ $# -eq 0 ]; then
+    echo &quot;Użycie: $0 FOLDER&quot;
+    exit 1
+fi
+
+for plik in &quot;$1&quot;/*.log; do
+    if [ -f /tmp/STOP ]; then
+        echo &quot;Jest /tmp/STOP, przerywam&quot;
+        break
+    fi
+    if [ ! -s &quot;$plik&quot; ]; then
+        continue
+    fi
+    echo -n &quot;$plik: &quot;
+    wc -l &lt; &quot;$plik&quot;
+done</code></pre></div><div class="kod"><pre><code>logi/app.log: 3
+logi/web.log: 1</code></pre></div><p>W folderze były trzy pliki, ale <code>pusty.log</code> został pominięty. <code>-s</code> znaczy „istnieje i nie jest pusty”, a wykrzyknik odwraca odpowiedź. Bonus za darmo: jeśli folder nie ma żadnego <code>.log</code>, wzorzec zostaje dosłownie <code>logi/*.log</code>, a <code>-s</code> mówi, że takiego pliku nie ma, więc pętla grzecznie go pomija. Przypadkiem napisałeś kuloodporny kod. Zdarza się najlepszym.</p><p>Część druga:</p><div class="kod"><pre><code>#!/bin/bash
+# serwery.sh — czyta listę serwerów, pomija puste linijki i komentarze
+
+while IFS= read -r serwer; do
+    case &quot;$serwer&quot; in
+        &quot;&quot;|\#*) continue ;;
+    esac
+    echo &quot;sprawdzam: $serwer&quot;
+done &lt; serwery.txt</code></pre></div><div class="kod"><pre><code>sprawdzam: web1.firma.pl
+sprawdzam: baza1.firma.pl
+sprawdzam: test1.firma.pl</code></pre></div><p>I bonus:</p><div class="kod"><pre><code>#!/bin/bash
+for ((i = 5; i &gt;= 1; i--)); do
+    echo &quot;$i...&quot;
+    sleep 1
+done
+echo &quot;Start!&quot;</code></pre></div><p>Rakieta poszła. Jeśli Twoja odliczała w górę, to nie rakieta, tylko winda.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>W pętli w stylu C pojawiło się <code>i++</code> w podwójnych nawiasach. W następnej lekcji sprawdzimy, ile Bash umie policzyć: dodawanie, dzielenie, reszta z dzielenia i losowanie liczb. I dlaczego <code>7 / 2</code> to w Bashu 3, a matematycy płaczą po raz drugi w tym kursie.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-036.html" rel="prev">← 36. Wybór z menu</a><a class="btn domyslny zolty" href="lekcja-038.html" rel="next">38. Bash umie liczyć (trochę) →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

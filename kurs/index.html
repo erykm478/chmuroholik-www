@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kurs Linux i Bash od zera do admina | Chmuroholik</title>
+<meta name="description" content="Darmowy kurs po polsku: 117 lekcji od pierwszego otwarcia terminala do pracy administratora serwerów Linux. Bash, skrypty, sieć, bezpieczeństwo, Ansible i przygotowanie do rozmowy.">
+<meta property="og:title" content="Kurs Linux i Bash od zera do admina | Chmuroholik">
+<meta property="og:description" content="Darmowy kurs po polsku: 117 lekcji od pierwszego otwarcia terminala do pracy administratora serwerów Linux. Bash, skrypty, sieć, bezpieczeństwo, Ansible i przygotowanie do rozmowy.">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="kurs">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html" class="aktywny">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<main id="tresc">
+<header class="pulpit-kursu">
+  <div class="okno duze hero-kursu">
+    <div class="belka"><span>Kurs.app</span></div>
+    <div class="tresc hero-tresc">
+      <div class="hero-ikona" data-sprite="terminal"></div>
+      <div>
+        <p class="nadtytul">Darmowy kurs od Chmuroholika</p>
+        <h1>Linux i Bash<br>od zera do admina</h1>
+        <p class="lead">Od pierwszego otwarcia terminala do samodzielnej pracy administratora serwerów. Bez znajomości programowania na starcie.</p>
+        <div class="liczby">
+          <div><b>117</b><small>lekcji</small></div>
+          <div><b>14</b><small>modułów</small></div>
+          <div><b>~22 h</b><small>czytania</small></div>
+          <div><b id="procent">0%</b><small>Twój postęp</small></div>
+        </div>
+        <div class="akcje">
+          <a class="btn domyslny zolty" id="kontynuuj" href="lekcja-001.html">▶ Zacznij od lekcji 1</a>
+          <a class="btn" href="#moduly">Zobacz program</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+<section class="kontener">
+  <div class="okno pojaw">
+    <div class="belka"><span>Czytaj mnie.txt</span></div>
+    <div class="tresc proza"><p>2026-11-03 · Eryk</p><h2>Jak działa ta seria</h2><p>Kurs prowadzi od pierwszego otwarcia terminala do samodzielnej pracy administratora serwerów Linux. Kto skończy całość, umie postawić, skonfigurować, zabezpieczyć, monitorować i naprawić serwer oraz automatyzować go skryptami w Bashu, Gitem i Ansible. Seria ma 117 lekcji po 10–15 minut, razem około 24–30 godzin. Wszystko jest w tym jednym dokumencie: ta zakładka to plan, a pełne scenariusze są w zakładkach modułów.</p><p><strong>Czego sam kurs nie da.</strong> Zakres pokrywa wymagania egzaminów RHCSA i LFCS i wystarcza na stanowisko Junior Linux Administrator. Ale admina robi praktyka, nie oglądanie. Do kursu trzeba doliczyć około 150–300 godzin własnego laboratorium: 3–5 maszyn wirtualnych (Rocky lub Alma Linux i Ubuntu), na których psujesz i naprawiasz to, co w lekcjach. Do tego egzaminy próbne na czas i jeden publiczny projekt w Gicie jako portfolio. Oferty na poziom mid wymagają jeszcze 2–3 lat doświadczenia oraz podstaw Pythona i chmury. Mówimy o tym otwarcie w pierwszym i ostatniej lekcji.</p><p>Zakres sprawdziliśmy z czterech stron:</p><ul><li>wymagania egzaminów administratorskich: Red Hat RHCSA EX200 (dziś oparty na RHEL 10), Linux Foundation LFCS, LPIC-1 i CompTIA Linux+ XK0-006;</li><li>listy codziennych komend adminów: Red Hat Enable Sysadmin, Opensource.com, dokumentacja Ubuntu Server;</li><li>dziesięć zestawień pytań z rozmów rekrutacyjnych na admina Linuksa;</li><li>polskie oferty pracy na stanowisko administratora Linuksa z justjoin.it i praca.pl.</li></ul><p>Wszystko, czego wymagają egzaminy RHCSA i LFCS albo o co pytają co najmniej dwa zestawienia pytań, ma w kursu swój lekcja. Środowisko graficzne, drukarki i dostępność z LPIC-1 pomijamy, bo admin serwerów ich nie używa.</p><ul><li><strong>Stały schemat lekcji:</strong> hak (scena z życia albo „zobacz, co dziś zbudujemy”) → jedno nowe pojęcie, najpierw obraz, potem nazwa → pokaz w terminalu krok po kroku → „Jak to działa pod spodem” (co naprawdę robi system, gdy wpisujesz komendę) → „Ściąga flag” (tabela najważniejszych opcji z wyjaśnieniem każdej) → typowy błąd i jak go naprawić → zadanie dla kursanta → zapowiedź następnego.</li><li><strong>Każda lekcja działa sam:</strong> na początku jedno zdanie przypomnienia, a nie „w poprzedniej lekcji”.</li><li><strong>Zadanie domowe na końcu każdej lekcji,</strong> z rozwiązaniem na początku następnego. To naturalny powód, żeby obejrzeć dalej.</li><li><strong>Weryfikacja:</strong> każda komenda i każdy skrypt z tego dokumentu zostały uruchomione w prawdziwym Bashu 5.2 i sprawdzone narzędziem ShellCheck, które wyłapuje typowe błędy w skryptach. Przy komendach, które na macOS działają inaczej, jest dopisek [macOS].</li><li><strong>Oznaczenia:</strong> [na ekranie: …] to grafika albo nagranie terminala, [dla zaawansowanych] to smaczek na jedno zdanie, i  jak zwykle.</li><li><strong>Na jakim systemie nagrywać:</strong> terminal na Linuksie (np. Ubuntu w maszynie wirtualnej). Na macOS domyślna powłoka to zsh, a wbudowany Bash jest bardzo stary (3.2), więc kursantom z Maca w lekcji 1 pokazujemy, jak zainstalować nowy albo jak użyć Linuksa w okienku.</li></ul></div>
+  </div>
+</section>
+<section class="kontener" id="moduly">
+  <div class="naglowek"><h2>PROGRAM KURSU</h2>
+    <label class="szukaj"><span class="sr">Szukaj lekcji</span><input type="search" id="szukaj" placeholder="Szukaj: grep, ssh, cron…"></label>
+  </div>
+  <p class="brak" id="brak" hidden>Nic nie znalazłem. Spróbuj innej komendy.</p>
+  <div class="moduly">
+<section class="okno modul pojaw" id="m00" data-modul="0">
+  <div class="belka"><span>Moduł 0</span></div>
+  <div class="modul-glowa">
+    <div class="modul-ikona" data-sprite="chmura"></div>
+    <div>
+      <h3>Pierwsze kroki</h3>
+      <p class="po-nim">Po nim: nie boisz się terminala</p>
+      <p class="meta">4 lekcji · ok. 1 h czytania</p>
+    </div>
+    <div class="pasek-modulu" aria-hidden="true"><i></i></div>
+  </div>
+  <details class="lekcje-modulu" open><summary>Lekcje</summary><ol class="lista-lekcji duza"><li><a href="lekcja-001.html" data-lekcja="1"><span class="znacznik"></span><span class="nr">1</span><span class="t">Czarne okienko, którego nie trzeba się bać</span><span class="tematy">terminal i Bash, otwieranie na Linuksie, Macu i Windowsie, budowa komendy</span></a></li><li><a href="lekcja-002.html" data-lekcja="2"><span class="znacznik"></span><span class="nr">2</span><span class="t">Gdzie ja jestem? Chodzenie po folderach</span><span class="tematy">pwd, ls (-l, -a, -h), cd, ścieżki, ~, ., .., Tab, historia</span></a></li><li><a href="lekcja-003.html" data-lekcja="3"><span class="znacznik"></span><span class="nr">3</span><span class="t">Tworzenie, kopiowanie i kasowanie</span><span class="tematy">mkdir -p, touch, cp -r, mv, rm (-r, -i, -f), cat, less, head, tail</span></a></li><li><a href="lekcja-004.html" data-lekcja="4"><span class="znacznik"></span><span class="nr">4</span><span class="t">Jak nie zgubić się nigdy więcej</span><span class="tematy">man, --help, help, type, which, man -k</span></a></li></ol></details>
+</section>
+<section class="okno modul pojaw" id="m01" data-modul="1">
+  <div class="belka"><span>Moduł 1</span></div>
+  <div class="modul-glowa">
+    <div class="modul-ikona" data-sprite="komputer"></div>
+    <div>
+      <h3>Praca w powłoce</h3>
+      <p class="po-nim">Po nim: terminal jest szybszy niż myszka</p>
+      <p class="meta">14 lekcji · ok. 2 h czytania</p>
+    </div>
+    <div class="pasek-modulu" aria-hidden="true"><i></i></div>
+  </div>
+  <details class="lekcje-modulu"><summary>Lekcje</summary><ol class="lista-lekcji duza"><li><a href="lekcja-005.html" data-lekcja="5"><span class="znacznik"></span><span class="nr">5</span><span class="t">Gwiazdka, która robi robotę za ciebie</span><span class="tematy">*, ?, [...], {a,b}, {1..10}</span></a></li><li><a href="lekcja-006.html" data-lekcja="6"><span class="znacznik"></span><span class="nr">6</span><span class="t">Gdzie idzie wynik komendy</span><span class="tematy">&gt;, &gt;&gt;, &lt;, 2&gt;, 2&gt;&amp;1, &amp;&gt;, /dev/null, deskryptory</span></a></li><li><a href="lekcja-007.html" data-lekcja="7"><span class="znacznik"></span><span class="nr">7</span><span class="t">Rura i narzędzia do tekstu</span><span class="tematy">|, grep (-i, -v, -c, -n, -r), sort (-n, -r, -k, -t), uniq -c, wc, cut, tr, tee</span></a></li><li><a href="lekcja-008.html" data-lekcja="8"><span class="znacznik"></span><span class="nr">8</span><span class="t">Mapa Linuksa: co leży w którym folderze</span><span class="tematy">standard FHS: /, /bin, /sbin, /usr, /etc, /home, /root, /var, /tmp, /opt, /srv, /boot, /dev, /proc, /sys, /run, /mnt, /media; „wszystko jest plikiem”; czemu /bin to dziś skrót do /usr/bin</span></a></li><li><a href="lekcja-009.html" data-lekcja="9"><span class="znacznik"></span><span class="nr">9</span><span class="t">Co to jest powłoka i jakie są</span><span class="tematy">sh, Bash, zsh, fish, dash, ksh, csh; /etc/shells, echo $SHELL, chsh -s; czemu skrypty systemowe pisze się pod sh; zsh na Macu</span></a></li><li><a href="lekcja-010.html" data-lekcja="10"><span class="znacznik"></span><span class="nr">10</span><span class="t">Jak Bash czyta twoją komendę</span><span class="tematy">kolejność: słowa, aliasy, rozwinięcia (klamry, tylda, zmienne, $( ), arytmetyka, dzielenie na słowa, wzorce, usuwanie cudzysłowów), przekierowania; szukanie komendy: funkcja, wbudowana, PATH; fork i exec; kod 127</span></a></li><li><a href="lekcja-011.html" data-lekcja="11"><span class="znacznik"></span><span class="nr">11</span><span class="t">nano: edytor, z którego da się wyjść</span><span class="tematy">nano, skróty Ctrl+O, Ctrl+X, Ctrl+W, Ctrl+K, -l, edycja plików konfiguracyjnych z sudo</span></a></li><li><a href="lekcja-012.html" data-lekcja="12"><span class="znacznik"></span><span class="nr">12</span><span class="t">vi i vim bez paniki</span><span class="tematy">tryby (normalny, wstawiania, komend), i, a, o, Esc, :w, :q, :wq, :q!, dd, yy, p, u, /szukaj, n, :%s/a/b/g, :set number, vimtutor; czemu vi jest na każdym serwerze</span></a></li><li><a href="lekcja-013.html" data-lekcja="13"><span class="znacznik"></span><span class="nr">13</span><span class="t">Midnight Commander i inne menedżery plików</span><span class="tematy">mc, dwa panele, F3 podgląd, F4 edycja (mcedit), F5 kopiuj, F6 przenieś, F7 folder, F8 usuń, F10 wyjście; praca na zdalnym serwerze przez mc; ranger, nnn, lf, yazi, vifm</span></a></li><li><a href="lekcja-014.html" data-lekcja="14"><span class="znacznik"></span><span class="nr">14</span><span class="t">Linki: skróty, które nie są skrótami</span><span class="tematy">i-węzeł (inode), ls -i, stat, ln (twardy), ln -s (symboliczny), co się dzieje po usunięciu oryginału, readlink -f</span></a></li><li><a href="lekcja-015.html" data-lekcja="15"><span class="znacznik"></span><span class="nr">15</span><span class="t">Kto może czytać twój plik</span><span class="tematy">ls -l od środka, chmod (litery i cyfry), chown, chgrp, umask</span></a></li><li><a href="lekcja-016.html" data-lekcja="16"><span class="znacznik"></span><span class="nr">16</span><span class="t">Uprawnienia specjalne i ACL</span><span class="tematy">SUID, SGID, sticky bit (/tmp), find -perm, getfacl, setfacl (-m, -x, -d), lsattr, chattr +i</span></a></li><li><a href="lekcja-017.html" data-lekcja="17"><span class="znacznik"></span><span class="nr">17</span><span class="t">Ustawienia Basha pod siebie</span><span class="tematy">zmienne środowiskowe, env, export, PATH, .bashrc kontra .bash_profile, /etc/profile, aliasy, PS1, HISTSIZE, HISTCONTROL</span></a></li><li><a href="lekcja-018.html" data-lekcja="18"><span class="znacznik"></span><span class="nr">18</span><span class="t">tmux: terminal, który przeżyje rozłączenie</span><span class="tematy">sesje, okna, panele, tmux new -s, attach, odłączenie (Ctrl+B D), ls; czemu długie prace na serwerze odpala się w tmux; screen</span></a></li></ol></details>
+</section>
+<section class="okno modul pojaw" id="m02" data-modul="2">
+  <div class="belka"><span>Moduł 2</span></div>
+  <div class="modul-glowa">
+    <div class="modul-ikona" data-sprite="zebatka"></div>
+    <div>
+      <h3>Procesy i jak działa system</h3>
+      <p class="po-nim">Po nim: rozumiesz, co się dzieje w środku</p>
+      <p class="meta">12 lekcji · ok. 2 h czytania</p>
+    </div>
+    <div class="pasek-modulu" aria-hidden="true"><i></i></div>
+  </div>
+  <details class="lekcje-modulu"><summary>Lekcje</summary><ol class="lista-lekcji duza"><li><a href="lekcja-019.html" data-lekcja="19"><span class="znacznik"></span><span class="nr">19</span><span class="t">Co to jest proces? ps od środka</span><span class="tematy">program a proces, PID, PPID, fork i exec, ps aux, ps -ef, kolumny, --sort, -o, pgrep, pstree, /proc/PID</span></a></li><li><a href="lekcja-020.html" data-lekcja="20"><span class="znacznik"></span><span class="nr">20</span><span class="t">Rodzaje procesów</span><span class="tematy">pierwszoplanowe i w tle, demony, procesy jądra, wątki, PID 1, sieroty, zombie, stany R, S, D, T, Z</span></a></li><li><a href="lekcja-021.html" data-lekcja="21"><span class="znacznik"></span><span class="nr">21</span><span class="t">top: co ten ekran w ogóle mówi</span><span class="tematy">load average, CPU us, sy, wa, st, pamięć, VIRT, RES, SHR, klawisze, top -b -n 1 w skryptach</span></a></li><li><a href="lekcja-022.html" data-lekcja="22"><span class="znacznik"></span><span class="nr">22</span><span class="t">htop: top dla ludzi</span><span class="tematy">instalacja, paski, drzewo, filtr, sortowanie, zabijanie, F-klawisze, konfiguracja; btop i glances w skrócie</span></a></li><li><a href="lekcja-023.html" data-lekcja="23"><span class="znacznik"></span><span class="nr">23</span><span class="t">Sygnały i zabijanie procesów</span><span class="tematy">kill, kill -l, SIGTERM kontra SIGKILL, SIGHUP, SIGINT, killall, pkill</span></a></li><li><a href="lekcja-024.html" data-lekcja="24"><span class="znacznik"></span><span class="nr">24</span><span class="t">Programy w tle</span><span class="tematy">&amp;, jobs, fg, bg, Ctrl+Z, Ctrl+C, nohup, disown</span></a></li><li><a href="lekcja-025.html" data-lekcja="25"><span class="znacznik"></span><span class="nr">25</span><span class="t">Priorytety, limity i profile tuned</span><span class="tematy">nice, renice, ionice, ulimit, /etc/security/limits.conf, cgroups w skrócie, tuned-adm (list, active, recommend, profile)</span></a></li><li><a href="lekcja-026.html" data-lekcja="26"><span class="znacznik"></span><span class="nr">26</span><span class="t">Pamięć, obciążenie i dysk pod presją</span><span class="tematy">free -h, uptime, vmstat, iostat -x, iotop, pidstat, /proc/meminfo, swap, OOM killer</span></a></li><li><a href="lekcja-027.html" data-lekcja="27"><span class="znacznik"></span><span class="nr">27</span><span class="t">Jak Linux startuje</span><span class="tematy">BIOS/UEFI → GRUB → jądro → initramfs → PID 1; SysV init i Upstart jako historia; systemd i targety, get-default, set-default, isolate; /etc/default/grub, grub2-mkconfig, grubby (--update-kernel, --args, --set-default)</span></a></li><li><a href="lekcja-028.html" data-lekcja="28"><span class="znacznik"></span><span class="nr">28</span><span class="t">systemd i usługi</span><span class="tematy">jednostki, systemctl (status, start, stop, restart, reload, enable --now, disable, mask, is-active, list-units --failed, daemon-reload), własna usługa ze skryptu</span></a></li><li><a href="lekcja-029.html" data-lekcja="29"><span class="znacznik"></span><span class="nr">29</span><span class="t">Logi</span><span class="tematy">/var/log, journalctl (-u, -f, -b, -p err, --since), trwały dziennik, rsyslog, logrotate, dmesg, logger</span></a></li><li><a href="lekcja-030.html" data-lekcja="30"><span class="znacznik"></span><span class="nr">30</span><span class="t">Sprzęt, jądro i udev</span><span class="tematy">uname -a, lscpu, lsblk, lspci, lsusb, dmidecode, lsmod, modprobe, sysctl, udevadm</span></a></li></ol></details>
+</section>
+<section class="okno modul pojaw" id="m03" data-modul="3">
+  <div class="belka"><span>Moduł 3</span></div>
+  <div class="modul-glowa">
+    <div class="modul-ikona" data-sprite="ksiazka"></div>
+    <div>
+      <h3>Pisanie skryptów</h3>
+      <p class="po-nim">Po nim: piszesz własne programy w Bashu</p>
+      <p class="meta">10 lekcji · ok. 1.5 h czytania</p>
+    </div>
+    <div class="pasek-modulu" aria-hidden="true"><i></i></div>
+  </div>
+  <details class="lekcje-modulu"><summary>Lekcje</summary><ol class="lista-lekcji duza"><li><a href="lekcja-031.html" data-lekcja="31"><span class="znacznik"></span><span class="nr">31</span><span class="t">Twój pierwszy skrypt</span><span class="tematy">plik, #!, chmod +x, ./skrypt, bash skrypt, komentarze, co się dzieje przy uruchomieniu</span></a></li><li><a href="lekcja-032.html" data-lekcja="32"><span class="znacznik"></span><span class="nr">32</span><span class="t">Zmienne i cudzysłowy</span><span class="tematy">przypisanie, $zmienna, ${zmienna}, &quot;...&quot; kontra &#x27;...&#x27;, read (-p, -s, -r)</span></a></li><li><a href="lekcja-033.html" data-lekcja="33"><span class="znacznik"></span><span class="nr">33</span><span class="t">Skrypt, który przyjmuje polecenia</span><span class="tematy">$1 …, $#, &quot;$@&quot; kontra $*, $0, shift</span></a></li><li><a href="lekcja-034.html" data-lekcja="34"><span class="znacznik"></span><span class="nr">34</span><span class="t">Udało się czy nie?</span><span class="tematy">kod wyjścia, $?, exit, &amp;&amp;, ||, true, false</span></a></li><li><a href="lekcja-035.html" data-lekcja="35"><span class="znacznik"></span><span class="nr">35</span><span class="t">Jeśli… to…</span><span class="tematy">if, elif, else, test, [ ], [[ ]], -eq, -lt, -z, -n, -f, -d, -e, -r, -x</span></a></li><li><a href="lekcja-036.html" data-lekcja="36"><span class="znacznik"></span><span class="nr">36</span><span class="t">Wybór z menu</span><span class="tematy">case, wzorce, select</span></a></li><li><a href="lekcja-037.html" data-lekcja="37"><span class="znacznik"></span><span class="nr">37</span><span class="t">Pętle</span><span class="tematy">for (lista, zakres, styl C), while, until, break, continue, while IFS= read -r</span></a></li><li><a href="lekcja-038.html" data-lekcja="38"><span class="znacznik"></span><span class="nr">38</span><span class="t">Bash umie liczyć (trochę)</span><span class="tematy">$(( )), (( )), let, liczby całkowite, bc, RANDOM</span></a></li><li><a href="lekcja-039.html" data-lekcja="39"><span class="znacznik"></span><span class="nr">39</span><span class="t">Wynik komendy w zmiennej</span><span class="tematy">$( ), stare odwrotne apostrofy, &lt;( )</span></a></li><li><a href="lekcja-040.html" data-lekcja="40"><span class="znacznik"></span><span class="nr">40</span><span class="t">Funkcje</span><span class="tematy">definicja, argumenty, local, return kontra echo, zakres zmiennych</span></a></li></ol></details>
+</section>
+<section class="okno modul pojaw" id="m04" data-modul="4">
+  <div class="belka"><span>Moduł 4</span></div>
+  <div class="modul-glowa">
+    <div class="modul-ikona" data-sprite="tabela"></div>
+    <div>
+      <h3>Napisy, listy i przetwarzanie danych</h3>
+      
+      <p class="meta">8 lekcji · ok. 1.5 h czytania</p>
+    </div>
+    <div class="pasek-modulu" aria-hidden="true"><i></i></div>
+  </div>
+  <details class="lekcje-modulu"><summary>Lekcje</summary><ol class="lista-lekcji duza"><li><a href="lekcja-041.html" data-lekcja="41"><span class="znacznik"></span><span class="nr">41</span><span class="t">Nożyczki do tekstu</span><span class="tematy">${#v}, ${v:0:3}, ${v#}, ${v%}, ${v/a/b}, ${v^^}, ${v:-domyślnie}</span></a></li><li><a href="lekcja-042.html" data-lekcja="42"><span class="znacznik"></span><span class="nr">42</span><span class="t">Listy (tablice)</span><span class="tematy">tworzenie, dodawanie, ${a[@]}, ${#a[@]}, pętle po tablicach, mapfile</span></a></li><li><a href="lekcja-043.html" data-lekcja="43"><span class="znacznik"></span><span class="nr">43</span><span class="t">Słowniki</span><span class="tematy">declare -A, klucze i wartości [macOS: wymaga nowego Basha]</span></a></li><li><a href="lekcja-044.html" data-lekcja="44"><span class="znacznik"></span><span class="nr">44</span><span class="t">Ładne wypisywanie i długie teksty</span><span class="tematy">printf z formatami, here-doc, here-string</span></a></li><li><a href="lekcja-045.html" data-lekcja="45"><span class="znacznik"></span><span class="nr">45</span><span class="t">Wyrażenia regularne</span><span class="tematy">grep -E, grep -o, [[ =~ ]], BASH_REMATCH</span></a></li><li><a href="lekcja-046.html" data-lekcja="46"><span class="znacznik"></span><span class="nr">46</span><span class="t">sed od podstaw</span><span class="tematy">s///, flagi g i i, -i, -n z p, usuwanie linii, adresy, edycja plików konfiguracyjnych</span></a></li><li><a href="lekcja-047.html" data-lekcja="47"><span class="znacznik"></span><span class="nr">47</span><span class="t">awk od podstaw</span><span class="tematy">kolumny, -F, warunki, sumy, NR, NF, raporty</span></a></li><li><a href="lekcja-048.html" data-lekcja="48"><span class="znacznik"></span><span class="nr">48</span><span class="t">Znajdź wszystko</span><span class="tematy">find (-name, -type, -mtime, -size, -user, -perm, -exec, -delete), xargs, -print0, locate</span></a></li></ol></details>
+</section>
+<section class="okno modul pojaw" id="m05" data-modul="5">
+  <div class="belka"><span>Moduł 5</span></div>
+  <div class="modul-glowa">
+    <div class="modul-ikona" data-sprite="tarcza"></div>
+    <div>
+      <h3>Skrypty, które się nie sypią</h3>
+      
+      <p class="meta">7 lekcji · ok. 1.5 h czytania</p>
+    </div>
+    <div class="pasek-modulu" aria-hidden="true"><i></i></div>
+  </div>
+  <details class="lekcje-modulu"><summary>Lekcje</summary><ol class="lista-lekcji duza"><li><a href="lekcja-049.html" data-lekcja="49"><span class="znacznik"></span><span class="nr">49</span><span class="t">Spacje w nazwach plików</span><span class="tematy">cytowanie, IFS, bezpieczne pętle po plikach, nullglob</span></a></li><li><a href="lekcja-050.html" data-lekcja="50"><span class="znacznik"></span><span class="nr">50</span><span class="t">Tryb „zatrzymaj się przy błędzie”</span><span class="tematy">set -e, set -u, set -o pipefail i ich pułapki</span></a></li><li><a href="lekcja-051.html" data-lekcja="51"><span class="znacznik"></span><span class="nr">51</span><span class="t">Sprzątanie po sobie</span><span class="tematy">trap, sygnały w skryptach, mktemp</span></a></li><li><a href="lekcja-052.html" data-lekcja="52"><span class="znacznik"></span><span class="nr">52</span><span class="t">Opcje jak w prawdziwych programach</span><span class="tematy">getopts, --help, sprawdzanie danych</span></a></li><li><a href="lekcja-053.html" data-lekcja="53"><span class="znacznik"></span><span class="nr">53</span><span class="t">Szukanie błędów</span><span class="tematy">bash -n, bash -x, set -x, PS4, ShellCheck, strace w skrócie</span></a></li><li><a href="lekcja-054.html" data-lekcja="54"><span class="znacznik"></span><span class="nr">54</span><span class="t">Komunikaty, logi i kolory</span><span class="tematy">stdout kontra stderr w skryptach, logger, kolory, konwencje kodów wyjścia</span></a></li><li><a href="lekcja-055.html" data-lekcja="55"><span class="znacznik"></span><span class="nr">55</span><span class="t">Duży skrypt w porządku</span><span class="tematy">source, biblioteki funkcji, struktura, styl, flock</span></a></li></ol></details>
+</section>
+<section class="okno modul pojaw" id="m06" data-modul="6">
+  <div class="belka"><span>Moduł 6</span></div>
+  <div class="modul-glowa">
+    <div class="modul-ikona" data-sprite="dysk"></div>
+    <div>
+      <h3>Dyski i systemy plików</h3>
+      
+      <p class="meta">8 lekcji · ok. 1.5 h czytania</p>
+    </div>
+    <div class="pasek-modulu" aria-hidden="true"><i></i></div>
+  </div>
+  <details class="lekcje-modulu"><summary>Lekcje</summary><ol class="lista-lekcji duza"><li><a href="lekcja-056.html" data-lekcja="56"><span class="znacznik"></span><span class="nr">56</span><span class="t">Dyski i miejsce</span><span class="tematy">df -h, df -i, du -sh, du --max-depth, ncdu, lsblk, blkid; „dysk pełny, a du pokazuje mniej” (lsof +L1)</span></a></li><li><a href="lekcja-057.html" data-lekcja="57"><span class="znacznik"></span><span class="nr">57</span><span class="t">Co to jest system plików</span><span class="tematy">ext4, XFS, Btrfs, VFAT, i-węzły, księgowanie, mkfs.ext4, mkfs.xfs, mkfs.vfat, fsck, xfs_repair, tune2fs</span></a></li><li><a href="lekcja-058.html" data-lekcja="58"><span class="znacznik"></span><span class="nr">58</span><span class="t">Partycje</span><span class="tematy">MBR kontra GPT, fdisk, gdisk, parted, partprobe</span></a></li><li><a href="lekcja-059.html" data-lekcja="59"><span class="znacznik"></span><span class="nr">59</span><span class="t">Montowanie</span><span class="tematy">mount, umount, „device is busy”, findmnt, /etc/fstab, UUID, defaults, noatime, nofail, mount -a</span></a></li><li><a href="lekcja-060.html" data-lekcja="60"><span class="znacznik"></span><span class="nr">60</span><span class="t">Swap</span><span class="tematy">plik i partycja wymiany, mkswap, swapon, swapoff, vm.swappiness</span></a></li><li><a href="lekcja-061.html" data-lekcja="61"><span class="znacznik"></span><span class="nr">61</span><span class="t">LVM i szyfrowanie dysków</span><span class="tematy">PV, VG, LV, pvcreate, vgcreate, lvcreate, lvextend --resizefs, pvs, vgs, lvs, migawki; LUKS: cryptsetup luksFormat, open, /etc/crypttab</span></a></li><li><a href="lekcja-062.html" data-lekcja="62"><span class="znacznik"></span><span class="nr">62</span><span class="t">RAID i zdrowie dysków</span><span class="tematy">poziomy 0, 1, 5, 10, mdadm (--create, --fail, --remove, --add), /proc/mdstat, smartctl -a</span></a></li><li><a href="lekcja-063.html" data-lekcja="63"><span class="znacznik"></span><span class="nr">63</span><span class="t">Dyski przez sieć</span><span class="tematy">NFS (exportfs, mount -t nfs), Samba i CIFS, autofs, iSCSI w skrócie (iscsiadm)</span></a></li></ol></details>
+</section>
+<section class="okno modul pojaw" id="m07" data-modul="7">
+  <div class="belka"><span>Moduł 7</span></div>
+  <div class="modul-glowa">
+    <div class="modul-ikona" data-sprite="paczka"></div>
+    <div>
+      <h3>Pakiety i oprogramowanie</h3>
+      
+      <p class="meta">4 lekcji · ok. 1 h czytania</p>
+    </div>
+    <div class="pasek-modulu" aria-hidden="true"><i></i></div>
+  </div>
+  <details class="lekcje-modulu"><summary>Lekcje</summary><ol class="lista-lekcji duza"><li><a href="lekcja-064.html" data-lekcja="64"><span class="znacznik"></span><span class="nr">64</span><span class="t">Menedżery pakietów: sklep z aplikacjami dla serwera</span><span class="tematy">pakiet, repozytorium, zależności, podpisy; Debian i Ubuntu (apt, dpkg), Red Hat, Fedora, Rocky, Alma (dnf, yum, rpm), SUSE (zypper), Arch (pacman), Alpine (apk)</span></a></li><li><a href="lekcja-065.html" data-lekcja="65"><span class="znacznik"></span><span class="nr">65</span><span class="t">apt i dpkg z bliska</span><span class="tematy">update, upgrade, full-upgrade, install, remove, purge, autoremove, search, show, apt-cache policy, apt-mark hold, /etc/apt/sources.list.d, dpkg -l, -L, -S, -i, unattended-upgrades</span></a></li><li><a href="lekcja-066.html" data-lekcja="66"><span class="znacznik"></span><span class="nr">66</span><span class="t">dnf, rpm i repozytoria</span><span class="tematy">install, remove, update, search, provides, info, history i history undo, repolist, pliki .repo w /etc/yum.repos.d, config-manager --add-repo, lokalne repozytorium z ISO, EPEL, updateinfo --security, needs-restarting -r, subscription-manager; rpm -qa, -qi, -ql, -qf, -V</span></a></li><li><a href="lekcja-067.html" data-lekcja="67"><span class="znacznik"></span><span class="nr">67</span><span class="t">Programy spoza repozytorium</span><span class="tematy">Flatpak (remote-add, install, uninstall), Snap, AppImage, pobrane .deb i .rpm, kompilacja ze źródeł, /usr/local, /opt, biblioteki: ldd, ldconfig, /etc/ld.so.conf.d</span></a></li></ol></details>
+</section>
+<section class="okno modul pojaw" id="m08" data-modul="8">
+  <div class="belka"><span>Moduł 8</span></div>
+  <div class="modul-glowa">
+    <div class="modul-ikona" data-sprite="globus"></div>
+    <div>
+      <h3>Sieć</h3>
+      
+      <p class="meta">10 lekcji · ok. 2 h czytania</p>
+    </div>
+    <div class="pasek-modulu" aria-hidden="true"><i></i></div>
+  </div>
+  <details class="lekcje-modulu"><summary>Lekcje</summary><ol class="lista-lekcji duza"><li><a href="lekcja-068.html" data-lekcja="68"><span class="znacznik"></span><span class="nr">68</span><span class="t">Sieć w piętnaście minut</span><span class="tematy">adres IP, maska, brama, DNS, DHCP, port, TCP kontra UDP, IPv4 kontra IPv6, adresy prywatne</span></a></li><li><a href="lekcja-069.html" data-lekcja="69"><span class="znacznik"></span><span class="nr">69</span><span class="t">ip: adresy, trasy, interfejsy</span><span class="tematy">ip a, ip link, ip r, ip n; czemu ifconfig i netstat to przeszłość</span></a></li><li><a href="lekcja-070.html" data-lekcja="70"><span class="znacznik"></span><span class="nr">70</span><span class="t">Konfiguracja sieci na stałe</span><span class="tematy">netplan (netplan try, apply), NetworkManager i nmcli (con show, con mod, con up), nmtui, stały adres IP, hostnamectl, /etc/hosts, /etc/resolv.conf, resolvectl</span></a></li><li><a href="lekcja-071.html" data-lekcja="71"><span class="znacznik"></span><span class="nr">71</span><span class="t">Diagnostyka sieci i DNS</span><span class="tematy">ping -c, traceroute, tracepath, mtr, dig (+short, +trace, -x), rekordy A, AAAA, CNAME, MX, PTR, TXT, TTL, host, nslookup, curl -I -v, wget, nc -zv</span></a></li><li><a href="lekcja-072.html" data-lekcja="72"><span class="znacznik"></span><span class="nr">72</span><span class="t">Porty: kto słucha i dlaczego</span><span class="tematy">ss -tulpn, lsof -i :80, fuser, /etc/services, 127.0.0.1 kontra 0.0.0.0</span></a></li><li><a href="lekcja-073.html" data-lekcja="73"><span class="znacznik"></span><span class="nr">73</span><span class="t">Otwieranie i zamykanie portów</span><span class="tematy">ufw (allow 80/tcp, deny, status verbose, enable), firewalld (firewall-cmd --add-service, --add-port, --permanent, --reload, --list-all, strefy), nftables, iptables</span></a></li><li><a href="lekcja-074.html" data-lekcja="74"><span class="znacznik"></span><span class="nr">74</span><span class="t">Routing, NAT, przekierowanie portów, bonding i mostki</span><span class="tematy">ip route add, trasy w nmcli, net.ipv4.ip_forward, firewall-cmd --add-masquerade, --add-forward-port, NAT w nftables, bonding i mostek w nmcli</span></a></li><li><a href="lekcja-075.html" data-lekcja="75"><span class="znacznik"></span><span class="nr">75</span><span class="t">Podglądanie ruchu</span><span class="tematy">tcpdump (-i, -n, port, host, -w, -r), Wireshark w skrócie</span></a></li><li><a href="lekcja-076.html" data-lekcja="76"><span class="znacznik"></span><span class="nr">76</span><span class="t">SSH od środka</span><span class="tematy">ssh, ssh-keygen -t ed25519, ssh-copy-id, ~/.ssh/config, authorized_keys i uprawnienia, sshd_config, scp, sftp, tunele -L, -R, -J</span></a></li><li><a href="lekcja-077.html" data-lekcja="77"><span class="znacznik"></span><span class="nr">77</span><span class="t">Archiwa i kopiowanie przez sieć</span><span class="tematy">tar (-czf, -xzf, -tzf, -j, -J, -C), gzip, bzip2, xz, zip, rsync (-a, -v, -z, --delete, -n)</span></a></li></ol></details>
+</section>
+<section class="okno modul pojaw" id="m09" data-modul="9">
+  <div class="belka"><span>Moduł 9</span></div>
+  <div class="modul-glowa">
+    <div class="modul-ikona" data-sprite="klodka"></div>
+    <div>
+      <h3>Użytkownicy i bezpieczeństwo</h3>
+      
+      <p class="meta">9 lekcji · ok. 1.5 h czytania</p>
+    </div>
+    <div class="pasek-modulu" aria-hidden="true"><i></i></div>
+  </div>
+  <details class="lekcje-modulu"><summary>Lekcje</summary><ol class="lista-lekcji duza"><li><a href="lekcja-078.html" data-lekcja="78"><span class="znacznik"></span><span class="nr">78</span><span class="t">Użytkownicy i grupy</span><span class="tematy">useradd -m -s, usermod -aG, userdel -r, passwd, chage, groupadd, gpasswd, id, getent, /etc/passwd, /etc/shadow, /etc/group, /etc/skel, /etc/login.defs</span></a></li><li><a href="lekcja-079.html" data-lekcja="79"><span class="znacznik"></span><span class="nr">79</span><span class="t">sudo i root</span><span class="tematy">sudo -i, sudo -l, su -, visudo, /etc/sudoers.d, zasada najmniejszych uprawnień</span></a></li><li><a href="lekcja-080.html" data-lekcja="80"><span class="znacznik"></span><span class="nr">80</span><span class="t">Kto się logował</span><span class="tematy">who, w, last, lastb, /var/log/auth.log i /var/log/secure, PAM, faillock, blokowanie kont</span></a></li><li><a href="lekcja-081.html" data-lekcja="81"><span class="znacznik"></span><span class="nr">81</span><span class="t">Konta z jednego miejsca: LDAP i Active Directory</span><span class="tematy">/etc/nsswitch.conf, getent, SSSD, sssd.conf, authselect, realm discover, realm join, ldapsearch, automatyczne katalogi domowe</span></a></li><li><a href="lekcja-082.html" data-lekcja="82"><span class="znacznik"></span><span class="nr">82</span><span class="t">SELinux bez strachu</span><span class="tematy">tryby, getenforce, setenforce, ls -Z, ps -Z, restorecon -Rv, semanage fcontext, semanage port, getsebool, setsebool -P, czytanie odmów</span></a></li><li><a href="lekcja-083.html" data-lekcja="83"><span class="znacznik"></span><span class="nr">83</span><span class="t">AppArmor</span><span class="tematy">profile, aa-status, aa-enforce, aa-complain</span></a></li><li><a href="lekcja-084.html" data-lekcja="84"><span class="znacznik"></span><span class="nr">84</span><span class="t">Utwardzanie serwera</span><span class="tematy">aktualizacje, wyłączanie usług, fail2ban, SSH na klucze, auditd, audyt: lynis, OpenSCAP (oscap), AIDE</span></a></li><li><a href="lekcja-085.html" data-lekcja="85"><span class="znacznik"></span><span class="nr">85</span><span class="t">Certyfikaty i szyfrowanie</span><span class="tematy">jak działa HTTPS, openssl s_client, openssl x509 -noout -dates, klucz i CSR, certbot, gpg, sha256sum -c</span></a></li><li><a href="lekcja-086.html" data-lekcja="86"><span class="znacznik"></span><span class="nr">86</span><span class="t">Czas i język systemu</span><span class="tematy">timedatectl, chrony, chronyc tracking, chronyc sources, hwclock, localectl, locale, LANG</span></a></li></ol></details>
+</section>
+<section class="okno modul pojaw" id="m10" data-modul="10">
+  <div class="belka"><span>Moduł 10</span></div>
+  <div class="modul-glowa">
+    <div class="modul-ikona" data-sprite="serwer"></div>
+    <div>
+      <h3>Usługi i serwery</h3>
+      
+      <p class="meta">14 lekcji · ok. 3 h czytania</p>
+    </div>
+    <div class="pasek-modulu" aria-hidden="true"><i></i></div>
+  </div>
+  <details class="lekcje-modulu"><summary>Lekcje</summary><ol class="lista-lekcji duza"><li><a href="lekcja-087.html" data-lekcja="87"><span class="znacznik"></span><span class="nr">87</span><span class="t">Zadania o wyznaczonej godzinie i powiadomienia</span><span class="tematy">cron, crontab -e, -l, składnia, /etc/cron.d, MAILTO, „działa ręcznie, a z crona nie”, at, atq, atrm, timery systemd, powiadomienia mailem (/etc/aliases, Postfix jako klient wysyłający)</span></a></li><li><a href="lekcja-088.html" data-lekcja="88"><span class="znacznik"></span><span class="nr">88</span><span class="t">Apache: instalacja</span><span class="tematy">apt install apache2, dnf install httpd, systemctl enable --now, otwarcie portu 80, pierwsza strona w /var/www/html</span></a></li><li><a href="lekcja-089.html" data-lekcja="89"><span class="znacznik"></span><span class="nr">89</span><span class="t">Apache: konfiguracja</span><span class="tematy">/etc/apache2, sites-available, a2ensite, a2enmod; /etc/httpd/conf/httpd.conf, conf.d; VirtualHost, DocumentRoot, apachectl configtest, logi, .htaccess, mod_rewrite</span></a></li><li><a href="lekcja-090.html" data-lekcja="90"><span class="znacznik"></span><span class="nr">90</span><span class="t">Apache z HTTPS</span><span class="tematy">certbot --apache, przekierowanie z 80 na 443, kontekst SELinux httpd_sys_content_t</span></a></li><li><a href="lekcja-091.html" data-lekcja="91"><span class="znacznik"></span><span class="nr">91</span><span class="t">Nginx, reverse proxy i rozkładanie ruchu</span><span class="tematy">bloki server, nginx -t, proxy_pass, upstream, metody rozkładania, HAProxy (frontend, backend, haproxy -c)</span></a></li><li><a href="lekcja-092.html" data-lekcja="92"><span class="znacznik"></span><span class="nr">92</span><span class="t">Bazy danych dla admina</span><span class="tematy">MariaDB i PostgreSQL: instalacja, zabezpieczenie, użytkownik i baza, mysqldump, pg_dump</span></a></li><li><a href="lekcja-093.html" data-lekcja="93"><span class="znacznik"></span><span class="nr">93</span><span class="t">Stos LAMP od zera</span><span class="tematy">Apache, MariaDB i PHP razem, PHP-FPM, pierwsza aplikacja</span></a></li><li><a href="lekcja-094.html" data-lekcja="94"><span class="znacznik"></span><span class="nr">94</span><span class="t">Kontenery, część 1</span><span class="tematy">Docker i Podman: obraz, kontener, run, ps, logs, exec, -p, -v, sieci</span></a></li><li><a href="lekcja-095.html" data-lekcja="95"><span class="znacznik"></span><span class="nr">95</span><span class="t">Kontenery, część 2</span><span class="tematy">Containerfile, build, compose, Podman bez roota, kontener jako usługa systemd (Quadlet), :Z przy SELinux</span></a></li><li><a href="lekcja-096.html" data-lekcja="96"><span class="znacznik"></span><span class="nr">96</span><span class="t">Maszyny wirtualne: KVM i libvirt</span><span class="tematy">virt-install, virsh (list, start, shutdown, console, snapshot-create-as), qemu-img, sieć NAT kontra mostek, cloud-init</span></a></li><li><a href="lekcja-097.html" data-lekcja="97"><span class="znacznik"></span><span class="nr">97</span><span class="t">Monitorowanie</span><span class="tematy">sar (sysstat), progi i alarmy, Zabbix z agentem, Netdata, Prometheus z node_exporter w skrócie</span></a></li><li><a href="lekcja-098.html" data-lekcja="98"><span class="znacznik"></span><span class="nr">98</span><span class="t">Kopie zapasowe na serio</span><span class="tematy">zasada 3-2-1, pełna, przyrostowa, różnicowa, rsync, tar, borg i restic, test odtwarzania</span></a></li><li><a href="lekcja-099.html" data-lekcja="99"><span class="znacznik"></span><span class="nr">99</span><span class="t">Gdy serwer nie wstaje</span><span class="tematy">rescue.target, emergency.target, edycja wpisu w GRUB, rd.break, reset hasła roota, fsck przy starcie, kernel panic, błąd w fstab</span></a></li><li><a href="lekcja-100.html" data-lekcja="100"><span class="znacznik"></span><span class="nr">100</span><span class="t">Metoda rozwiązywania problemów</span><span class="tematy">serwer wolny, CPU 100%, brak pamięci, pełny dysk, pełne i-węzły, usługa nie wstaje, brak SSH, strona nie działa; zgłoszenie, zmiana, dokumentacja, raport po awarii</span></a></li></ol></details>
+</section>
+<section class="okno modul pojaw" id="m11" data-modul="11">
+  <div class="belka"><span>Moduł 11</span></div>
+  <div class="modul-glowa">
+    <div class="modul-ikona" data-sprite="robot"></div>
+    <div>
+      <h3>Automatyzacja: Git, Ansible i Bash w pracy admina</h3>
+      
+      <p class="meta">5 lekcji · ok. 1 h czytania</p>
+    </div>
+    <div class="pasek-modulu" aria-hidden="true"><i></i></div>
+  </div>
+  <details class="lekcje-modulu"><summary>Lekcje</summary><ol class="lista-lekcji duza"><li><a href="lekcja-101.html" data-lekcja="101"><span class="znacznik"></span><span class="nr">101</span><span class="t">Git dla admina</span><span class="tematy">git init, clone, add, commit, log, diff, branch, merge, pull, push, .gitignore, klucz SSH do GitLaba i GitHuba, skrypty w repozytorium, etckeeper</span></a></li><li><a href="lekcja-102.html" data-lekcja="102"><span class="znacznik"></span><span class="nr">102</span><span class="t">Wiele serwerów naraz</span><span class="tematy">pętla po serwerach przez SSH, ~/.ssh/config, równoległe uruchamianie</span></a></li><li><a href="lekcja-103.html" data-lekcja="103"><span class="znacznik"></span><span class="nr">103</span><span class="t">Ansible w praktyce</span><span class="tematy">inwentarz, ansible -m ping, shell, copy, playbook, moduły apt, dnf, service, template, lineinfile, user, firewalld, handlery, zmienne, ansible-vault, --check --diff</span></a></li><li><a href="lekcja-104.html" data-lekcja="104"><span class="znacznik"></span><span class="nr">104</span><span class="t">Instalacja i konfiguracja ze skryptu</span><span class="tematy">apt i dnf bez pytań, DEBIAN_FRONTEND=noninteractive, idempotencja, edycja konfiguracji sed</span></a></li><li><a href="lekcja-105.html" data-lekcja="105"><span class="znacznik"></span><span class="nr">105</span><span class="t">Bezpieczne skrypty</span><span class="tematy">hasła i sekrety, rm -rf w skryptach, czemu nie eval, uprawnienia skryptów</span></a></li></ol></details>
+</section>
+<section class="okno modul pojaw" id="m12" data-modul="12">
+  <div class="belka"><span>Moduł 12</span></div>
+  <div class="modul-glowa">
+    <div class="modul-ikona" data-sprite="krawat"></div>
+    <div>
+      <h3>Rozmowa rekrutacyjna</h3>
+      
+      <p class="meta">4 lekcji · ok. 1 h czytania</p>
+    </div>
+    <div class="pasek-modulu" aria-hidden="true"><i></i></div>
+  </div>
+  <details class="lekcje-modulu"><summary>Lekcje</summary><ol class="lista-lekcji duza"><li><a href="lekcja-106.html" data-lekcja="106"><span class="znacznik"></span><span class="nr">106</span><span class="t">Pytania rekrutacyjne: pliki i uprawnienia</span><span class="tematy">link twardy kontra symboliczny, i-węzeł, FHS, chmod 750, SUID, SGID, sticky bit, find, grep, sed, awk, przekierowania</span></a></li><li><a href="lekcja-107.html" data-lekcja="107"><span class="znacznik"></span><span class="nr">107</span><span class="t">Pytania rekrutacyjne: procesy, start systemu, dyski</span><span class="tematy">zombie i sieroty, kill -15 kontra -9, load average, OOM killer, start systemu, init kontra systemd, swap, fstab, LVM, df kontra du</span></a></li><li><a href="lekcja-108.html" data-lekcja="108"><span class="znacznik"></span><span class="nr">108</span><span class="t">Pytania rekrutacyjne: sieć i bezpieczeństwo</span><span class="tematy">DNS, TCP kontra UDP, który proces słucha na porcie, zapora, SSH „dalej pyta o hasło”, utwardzanie, SELinux kontra AppArmor, ulimit</span></a></li><li><a href="lekcja-109.html" data-lekcja="109"><span class="znacznik"></span><span class="nr">109</span><span class="t">Pytania rekrutacyjne: scenariusze</span><span class="tematy">„serwer jest wolny”, „dysk pełny”, „nie mogę się zalogować”, „z crona nie działa”, „co się dzieje, gdy wpisujesz komendę”, bomba fork; jak odpowiadać na głos</span></a></li></ol></details>
+</section>
+<section class="okno modul pojaw" id="m13" data-modul="13">
+  <div class="belka"><span>Moduł 13</span></div>
+  <div class="modul-glowa">
+    <div class="modul-ikona" data-sprite="puchar"></div>
+    <div>
+      <h3>Projekty końcowe</h3>
+      <p class="po-nim">Po nim: masz portfolio</p>
+      <p class="meta">8 lekcji · ok. 2.5 h czytania</p>
+    </div>
+    <div class="pasek-modulu" aria-hidden="true"><i></i></div>
+  </div>
+  <details class="lekcje-modulu"><summary>Lekcje</summary><ol class="lista-lekcji duza"><li><a href="lekcja-110.html" data-lekcja="110"><span class="znacznik"></span><span class="nr">110</span><span class="t">Projekt 1: nowy serwer w dziesięć minut</span><span class="tematy">skrypt przygotowujący nowy serwer: użytkownik, SSH na klucze, zapora, aktualizacje, fail2ban</span></a></li><li><a href="lekcja-111.html" data-lekcja="111"><span class="znacznik"></span><span class="nr">111</span><span class="t">Projekt 2: dwie strony na Apache z HTTPS</span><span class="tematy">serwer WWW z dwiema stronami na Apache i HTTPS</span></a></li><li><a href="lekcja-112.html" data-lekcja="112"><span class="znacznik"></span><span class="nr">112</span><span class="t">Projekt 3: kopie zapasowe, które naprawdę da się odtworzyć</span><span class="tematy">system kopii zapasowych z rotacją, raportem i testem odtwarzania</span></a></li><li><a href="lekcja-113.html" data-lekcja="113"><span class="znacznik"></span><span class="nr">113</span><span class="t">Projekt 4: monitor, który krzyczy raz, a nie co pięć minut</span><span class="tematy">monitor dysku, pamięci i usług z powiadomieniem mailem</span></a></li><li><a href="lekcja-114.html" data-lekcja="114"><span class="znacznik"></span><span class="nr">114</span><span class="t">Projekt 5: analizator logów z raportem dziennym</span><span class="tematy">analizator logów z raportem dziennym</span></a></li><li><a href="lekcja-115.html" data-lekcja="115"><span class="znacznik"></span><span class="nr">115</span><span class="t">Projekt 6: LAMP na trzech maszynach z Ansible, wszystko w Git</span><span class="tematy">Ansible: stos LAMP na trzech maszynach wirtualnych, wszystko w repozytorium Git</span></a></li><li><a href="lekcja-116.html" data-lekcja="116"><span class="znacznik"></span><span class="nr">116</span><span class="t">Egzamin próbny: 20 zadań, dwie godziny, zero podpowiedzi</span><span class="tematy">zadania w stylu egzaminów RHCSA i LFCS na czas</span></a></li><li><a href="lekcja-117.html" data-lekcja="117"><span class="znacznik"></span><span class="nr">117</span><span class="t">Co dalej: certyfikaty, laboratorium domowe i pierwsza praca</span><span class="tematy">certyfikaty (RHCSA, LFCS, LPIC-1, CompTIA Linux+), laboratorium domowe, Python, chmura, Kubernetes, jak szukać pierwszej pracy</span></a></li></ol></details>
+</section></div>
+</section>
+<section class="kontener" id="odznaki-sekcja">
+  <div class="naglowek"><h2>ODZNAKI</h2><span class="etykieta" id="poziom-opis">zbieraj XP i odznaki za ukończone lekcje</span></div>
+  <div class="okno"><div class="belka"><span>Gablota.app</span></div><div class="tresc"><div class="xp-pasek"><span id="xp-tekst">0 XP</span><div class="xp"><i id="xp-i"></i></div><span id="xp-nast"></span></div><div class="odznaki" id="odznaki"></div></div></div>
+</section>
+<section class="kontener" id="analogie">
+  <div class="naglowek"><h2>ANALOGIE</h2><span class="etykieta">jedno pojęcie, jedno porównanie</span></div>
+  <div class="okno pojaw"><div class="belka"><span>Słowniczek obrazkowy</span></div><div class="tresc proza"><p>Jedna analogia na jedno pojęcie, ta sama przez wszystkie lekcje. Przy każdym nowej lekcji powtarzamy ją jednym zdaniem dla nowych kursantów.</p><div class="tabela"><table><tr><th>Pojęcie</th><th>Analogia</th><th>Pierwszy raz</th></tr><tr><td>Terminal i Bash</td><td>okienko w urzędzie i urzędnik za szybą: piszesz wniosek, urzędnik go wykonuje</td><td>lekcja 1</td></tr><tr><td>Komenda</td><td>wniosek do urzędnika: co zrobić i z czym</td><td>lekcja 1</td></tr><tr><td>Folder i ścieżka</td><td>budynek z piętrami i pokojami, ścieżka to adres pokoju</td><td>lekcja 2</td></tr><tr><td>Przekierowanie</td><td>dwa głośniki: odpowiedź do segregatora, skargi do osobnej teczki</td><td>lekcja 6</td></tr><tr><td>Rura (<code>|</code>)</td><td>taśma w fabryce: jeden pracownik podaje drugiemu</td><td>lekcja 7</td></tr><tr><td>Struktura katalogów (FHS)</td><td>plan biurowca: recepcja, archiwum, magazyn, kotłownia, zawsze w tym samym miejscu</td><td>lekcja 8</td></tr><tr><td>Różne powłoki</td><td>urzędnicy z różnych urzędów: prawie ten sam język, inny akcent</td><td>lekcja 9</td></tr><tr><td>vi i jego tryby</td><td>pianino z pedałem: te same klawisze grają inaczej zależnie od trybu</td><td>lekcja 12</td></tr><tr><td>Link symboliczny i twardy</td><td>kartka „przeprowadziłem się pod adres X” kontra drugie drzwi do tego samego mieszkania</td><td>lekcja 14</td></tr><tr><td>Uprawnienia</td><td>klucze do pokojów: kto może wejść, kto może przestawiać meble</td><td>lekcja 15</td></tr><tr><td>Proces</td><td>kucharz realizujący jedno zamówienie (program to przepis, proces to gotowanie)</td><td>lekcja 19</td></tr><tr><td>Zombie</td><td>gość wyszedł, a jego rachunek wisi, bo kelner (rodzic) go nie zamknął</td><td>lekcja 20</td></tr><tr><td>Sygnał</td><td>grzeczna prośba o zamknięcie lokalu (SIGTERM) kontra wyłączenie prądu w budynku (SIGKILL)</td><td>lekcja 23</td></tr><tr><td>systemd i PID 1</td><td>kierownik zmiany, który otwiera zakład i pilnuje każdej maszyny</td><td>lekcja 27</td></tr><tr><td>Skrypt</td><td>przepis kulinarny wykonywany krok po kroku</td><td>lekcja 31</td></tr><tr><td>Zmienna</td><td>pudełko z napisem, do którego coś wkładasz</td><td>lekcja 32</td></tr><tr><td>Cudzysłowy</td><td>koperta, która trzyma kartki razem</td><td>lekcja 32</td></tr><tr><td>Kod wyjścia</td><td>kciuk w górę albo w dół</td><td>lekcja 34</td></tr><tr><td>Warunek <code>if</code></td><td>bramkarz w klubie</td><td>lekcja 35</td></tr><tr><td>Pętla</td><td>taśma przy kasie: to samo dla każdego produktu</td><td>lekcja 37</td></tr><tr><td>Funkcja</td><td>przycisk w windzie</td><td>lekcja 40</td></tr><tr><td>Tablica</td><td>szuflada z ponumerowanymi przegródkami</td><td>lekcja 42</td></tr><tr><td>Tablica asocjacyjna</td><td>szafka w szatni z nazwiskami</td><td>lekcja 43</td></tr><tr><td><code>set -e</code></td><td>kierowca, który staje przy pierwszej kontrolce</td><td>lekcja 50</td></tr><tr><td><code>trap</code></td><td>sprzątaczka, która przychodzi zawsze na koniec imprezy</td><td>lekcja 51</td></tr><tr><td>Montowanie</td><td>podłączenie nowego skrzydła budynku do korytarza</td><td>lekcja 59</td></tr><tr><td>LVM</td><td>regały na kółkach zamiast burzenia ścian</td><td>lekcja 61</td></tr><tr><td>Menedżer pakietów</td><td>hurtownia z kurierem, który dowozi też wszystko, czego zamówienie potrzebuje</td><td>lekcja 64</td></tr><tr><td>Port</td><td>numer okienka w urzędzie: ten sam budynek, różne sprawy</td><td>lekcja 68</td></tr><tr><td>Zapora</td><td>ochroniarz na bramie z listą okienek</td><td>lekcja 73</td></tr><tr><td>Klucz SSH</td><td>kłódka u Ciebie na drzwiach serwera, kluczyk w Twojej kieszeni</td><td>lekcja 76</td></tr><tr><td>Cron</td><td>budzik nastawiony na godzinę</td><td>lekcja 87</td></tr><tr><td>Serwer WWW</td><td>recepcja hotelu, która po nazwisku gościa (domenie) wie, do którego pokoju go skierować</td><td>lekcja 88</td></tr><tr><td>Kontener</td><td>gotowy kontener mieszkalny na budowie: wszystko w środku, stawiasz i działa</td><td>lekcja 94</td></tr><tr><td>Ansible</td><td>lista zakupów dla całej ekipy: opisujesz, jak ma być, a nie, co klikać</td><td>lekcja 103</td></tr></table></div><p>Te analogie są pod laika. Technik dostaje dokładne nazwy i smaczki w [dla zaawansowanych] i na ekranie.</p></div></div>
+</section>
+</main>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

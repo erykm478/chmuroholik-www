@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>65. apt i dpkg z bliska — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 65 kursu Linux i Bash od zera do admina: apt i dpkg z bliska. kursant bezpiecznie aktualizuje Ubuntu, instaluje, usuwa i czyści pakiety, sprawdza, skąd pochodzi plik, blokuje wersję pakietu i włącza automatyczne łatki bezpieczeństwa.">
+<meta property="og:title" content="65. apt i dpkg z bliska — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 65 kursu Linux i Bash od zera do admina: apt i dpkg z bliska. kursant bezpiecznie aktualizuje Ubuntu, instaluje, usuwa i czyści pakiety, sprawdza, skąd pochodzi plik, blokuje wersję pakietu i włącza automatyczne łatki bezpieczeństwa.">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 7</span></div>
+      <div class="boczny-tytul"><a href="index.html#m07">Pakiety i oprogramowanie</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-064.html" data-lekcja="64"><span class="znacznik"></span><span class="nr">64</span> Menedżery pakietów: sklep z aplikacjami dla serwera</a></li><li><a href="lekcja-065.html" data-lekcja="65" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">65</span> apt i dpkg z bliska</a></li><li><a href="lekcja-066.html" data-lekcja="66"><span class="znacznik"></span><span class="nr">66</span> dnf, rpm i repozytoria</a></li><li><a href="lekcja-067.html" data-lekcja="67"><span class="znacznik"></span><span class="nr">67</span> Programy spoza repozytorium</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="65" data-modul="7" data-tematy="update, upgrade, full-upgrade, install, remove, purge, autoremove, search, show, apt-cache policy, apt-mark hold, /etc/apt/sources.list.d, dpkg -l, -L, -S, -i, unattended-upgrades">
+    <div class="belka"><span>Lekcja 65 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m07">Moduł 7</a> › Lekcja 65</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>apt i dpkg z bliska</h1>
+      <p class="meta"><span>⏱ ok. 11 min czytania</span><span>· moduł 7: Pakiety i oprogramowanie</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant bezpiecznie aktualizuje Ubuntu, instaluje, usuwa i czyści pakiety, sprawdza, skąd pochodzi plik, blokuje wersję pakietu i włącza automatyczne łatki bezpieczeństwa.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#trzy-slowa-ktore-wszyscy-myla-update-upgrade-full-">Trzy słowa, które wszyscy mylą: update, upgrade, full-upgrade</a></li><li><a href="#instalowanie-i-szukanie">Instalowanie i szukanie</a></li><li><a href="#usuwanie-remove-purge-autoremove">Usuwanie: remove, purge, autoremove</a></li><li><a href="#ktora-wersja-przyjedzie-apt-cache-policy">Która wersja przyjedzie: apt-cache policy</a></li><li><a href="#blokowanie-wersji-apt-mark-hold">Blokowanie wersji: apt-mark hold</a></li><li><a href="#hurtownie-etc-apt-sources-list-d">Hurtownie: /etc/apt/sources.list.d</a></li><li><a href="#magazynier-od-kuchni-dpkg-l-l-s-i">Magazynier od kuchni: dpkg -l, -L, -S, -i</a></li><li><a href="#automatyczne-latki-unattended-upgrades">Automatyczne łatki: unattended-upgrades</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga-flag">Ściąga flag</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p class="ekran">terminal, po <code>apt list --upgradable</code> przewija się długa lista</p><p>Dostajesz w spadku serwer. Nikt go nie aktualizował od półtora roku. Poprzedni admin zostawił karteczkę: „działa, nie ruszać”. Wpisujesz jedną komendę i widzisz trzysta pakietów do aktualizacji, w tym kilkadziesiąt łatek bezpieczeństwa.</p><p>Ruszać czy nie ruszać? Ruszać. Ale z głową. Dziś poznasz zaplecze hurtowni na Ubuntu: jak aktualizować, żeby nic nie wyleciało, jak usuwać, żeby nie zostawiać śmieci, jak przytrzymać pakiet w starej wersji i jak sprawić, żeby łatki bezpieczeństwa instalowały się same, zanim ktoś znowu napisze karteczkę.</p></section><section><h2 id="trzy-slowa-ktore-wszyscy-myla-update-upgrade-full-">Trzy słowa, które wszyscy mylą: update, upgrade, full-upgrade</h2><p>Wracamy do hurtowni.</p><p><code>apt update</code> to pobranie nowego katalogu. Nic się w systemie nie zmienia. Dowiadujesz się tylko, co jest nowego na stanie.</p><p><code>apt upgrade</code> to wymiana mebli na nowsze modele. Ważna zasada: nigdy niczego nie wyrzuca. Jeśli nowy model szafy wymaga nowych kołków, dowiezie kołki. Ale jeśli wymiana wymagałaby wyniesienia czegokolwiek z mieszkania, to tej wymiany nie zrobi i zostawi mebel w starej wersji.</p><p><code>apt full-upgrade</code> robi to samo, ale wolno mu wyrzucić stary mebel, jeśli bez tego całość się nie złoży. Potrzebne rzadziej, ale na przykład przy większych zmianach w bibliotekach.</p><p>Bezpieczna kolejność na serwerze:</p><div class="kod"><pre><code>sudo apt update
+apt list --upgradable
+sudo apt upgrade</code></pre></div><p>Środkowa komenda to podgląd: lista pakietów, dla których jest nowsza wersja. Patrzysz, zanim podpiszesz zamówienie. A <code>apt upgrade</code> i tak przed startem pokaże, co zrobi, i zapyta „Do you want to continue?”. Czytaj to, zanim wciśniesz Enter. Szczególnie przy <code>full-upgrade</code>, bo tam może stać lista „REMOVED”.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>dokumentacja <code>apt</code> mówi wprost, że to narzędzie dla człowieka i jego zachowanie może się zmieniać między wersjami. W skryptach używaj <code>apt-get</code> i <code>apt-cache</code>, które mają stabilny interfejs. Dlatego w skryptach i w Dockerfile&#x27;ach widzisz <code>apt-get install -y</code>.</p></aside><p>[RHEL] Na Red Hacie nie ma podziału na update i upgrade. <code>dnf upgrade</code> sam odświeża katalog, gdy jest za stary, i od razu aktualizuje. Szczegóły w następnej lekcji.</p></section><section><h2 id="instalowanie-i-szukanie">Instalowanie i szukanie</h2><p>Szukanie po nazwie i opisie:</p><div class="kod"><pre><code>apt search --names-only &#x27;^cowsay&#x27;</code></pre></div><div class="kod"><pre><code>cowsay/noble 3.03+dfsg2-8 all
+  configurable talking cow
+
+cowsay-off/noble 3.03+dfsg2-8 all
+  configurable talking cow (offensive cows)</code></pre></div><p>Bez <code>--names-only</code> apt przeszuka też opisy i dostaniesz pół hurtowni. <code>^</code> to znany z wyrażeń regularnych początek tekstu.</p><p>Etykietę już znasz: <code>apt show cowsay</code>. Instalacja:</p><div class="kod"><pre><code>sudo apt install cowsay
+/usr/games/cowsay Muuu</code></pre></div><div class="kod"><pre><code> ______
+&lt; Muuu &gt;
+ ------
+        \   ^__^
+         \  (oo)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||</code></pre></div><p>Czemu pełna ścieżka? Bo gry, a krowa ma sekcję „games”, lądują w <code>/usr/games</code>. Na zwykłym koncie Ubuntu ten folder jest w PATH, ale nie zawsze dla roota. Jeśli <code>cowsay</code> mówi „command not found”, a pakiet się zainstalował, to krowa nie uciekła, tylko stoi w innej oborze.</p></section><section><h2 id="usuwanie-remove-purge-autoremove">Usuwanie: remove, purge, autoremove</h2><p>Trzy różne poziomy sprzątania.</p><p>Do pokazu potrzebuję pakietu, który ma pliki ustawień w <code>/etc</code>. Mały serwer FTP, vsftpd, nada się idealnie. Najpierw zobaczmy, co przywiózł. To pytanie do magazyniera:</p><div class="kod"><pre><code>sudo apt install vsftpd
+dpkg -L vsftpd | head</code></pre></div><div class="kod"><pre><code>/.
+/etc
+/etc/ftpusers
+/etc/init.d
+/etc/init.d/vsftpd
+/etc/logrotate.d
+/etc/logrotate.d/vsftpd
+/etc/pam.d
+/etc/pam.d/vsftpd
+/etc/vsftpd.conf</code></pre></div><p><code>dpkg -L</code> to lista plików z kartonu. Zmieniam coś w <code>/etc/vsftpd.conf</code>, jak każdy admin, i usuwam pakiet:</p><div class="kod"><pre><code>sudo apt remove vsftpd
+dpkg -l vsftpd | tail -1</code></pre></div><div class="kod"><pre><code>rc  vsftpd         3.0.5-0ubuntu3.1 amd64        lightweight, efficient FTP server written for security</code></pre></div><p><code>rc</code> znaczy: usunięty (removed), ale zostały pliki ustawień (config-files). Program zniknął, a <code>/etc/vsftpd.conf</code> z moją zmianą dalej leży. To celowe. Jak zainstalujesz go ponownie, Twoje ustawienia wrócą. Meble wyniesione, tapety zostały.</p><p>Żeby zedrzeć też tapety:</p><div class="kod"><pre><code>sudo apt purge vsftpd</code></pre></div><div class="kod"><pre><code>Purging configuration files for vsftpd (3.0.5-0ubuntu3.1) ...</code></pre></div><p>Teraz <code>/etc/vsftpd.conf</code> nie istnieje. Purge możesz zrobić od razu zamiast remove albo później, na pakiecie, który już jest w stanie <code>rc</code>.</p><p>A pudła po meblach? Przy usuwaniu apt pokazał coś takiego:</p><div class="kod"><pre><code>The following package was automatically installed and is no longer required:
+  libtext-charwidth-perl</code></pre></div><p>To kołki od krowy, którą kiedyś usunąłem. Pakiety zainstalowane automatycznie jako zależność zostają po usunięciu programu, który ich potrzebował. Sprząta się je osobno:</p><div class="kod"><pre><code>sudo apt autoremove</code></pre></div><div class="kod"><pre><code>The following packages will be REMOVED:
+  libtext-charwidth-perl
+0 upgraded, 0 newly installed, 1 to remove and 0 not upgraded.</code></pre></div><p>Zawsze przeczytaj listę przed potwierdzeniem. Jeśli kiedyś ktoś zainstalował coś ważnego tylko jako zależność, a potem usunął program główny, <code>autoremove</code> też to wyniesie.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>apt pamięta, które pakiety zamówiłeś sam, a które przyjechały jako kołki. <code>apt-mark showmanual</code> i <code>apt-mark showauto</code> pokazują obie listy, a <code>apt-mark manual nazwa</code> przenosi pakiet na listę „moje, nie ruszać”.</p></aside></section><section><h2 id="ktora-wersja-przyjedzie-apt-cache-policy">Która wersja przyjedzie: apt-cache policy</h2><p>Czasem ten sam pakiet jest w dwóch działach hurtowni w różnych wersjach. Kto wygrywa?</p><div class="kod"><pre><code>apt-cache policy tree</code></pre></div><div class="kod"><pre><code>tree:
+  Installed: (none)
+  Candidate: 2.1.1-2ubuntu3.24.04.2
+  Version table:
+     2.1.1-2ubuntu3.24.04.2 500
+        500 http://archive.ubuntu.com/ubuntu noble-updates/universe amd64 Packages
+     2.1.1-2ubuntu3 500
+        500 http://archive.ubuntu.com/ubuntu noble/universe amd64 Packages</code></pre></div><p><code>Installed</code> to wersja, którą masz. <code>Candidate</code> to wersja, którą apt zainstaluje. Pod spodem wszystkie dostępne wersje i skąd pochodzą. Liczba 500 to priorytet. Przy równych priorytetach wygrywa nowsza wersja. Ta komenda jest pierwszą rzeczą, którą wpisujesz, kiedy pytasz „czemu apt instaluje mi nie tę wersję”.</p></section><section><h2 id="blokowanie-wersji-apt-mark-hold">Blokowanie wersji: apt-mark hold</h2><p>Masz aplikację, która działa tylko z jedną wersją jakiegoś pakietu. Albo wiesz, że nowa wersja ma błąd. Chcesz, żeby <code>apt upgrade</code> omijał ten pakiet szerokim łukiem. To jest naklejka „NIE RUSZAĆ” na meblu.</p><div class="kod"><pre><code>sudo apt-mark hold tree
+apt-mark showhold
+sudo apt-mark unhold tree</code></pre></div><div class="kod"><pre><code>tree set on hold.
+tree
+Canceled hold on tree.</code></pre></div><p>Pakiet na hold nie zostanie zaktualizowany przy <code>apt upgrade</code>. I to jest zarówno zaleta, jak i pułapka. Naklejka nie odpada sama. Pakiet zablokowany „na tydzień” potrafi wisieć trzy lata bez łatek bezpieczeństwa. Zapisuj sobie, co i dlaczego blokujesz.</p><p>[RHEL] Na Red Hacie to samo robi wtyczka <code>versionlock</code>: <code>dnf versionlock add nazwa</code>.</p></section><section><h2 id="hurtownie-etc-apt-sources-list-d">Hurtownie: /etc/apt/sources.list.d</h2><p>Widziałeś już plik <code>ubuntu.sources</code>. Każda dodatkowa hurtownia dostaje w tym folderze własny plik. Na przykład tak wygląda wpis repozytorium Dockera dodany według jego oficjalnej instrukcji:</p><div class="kod"><pre><code>cat /etc/apt/sources.list.d/docker.list</code></pre></div><div class="kod"><pre><code>deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu   noble stable</code></pre></div><p>To starszy, jednolinijkowy format, który wciąż działa obok nowego <code>.sources</code>. Najważniejsze jest <code>signed-by</code>: ta hurtownia jest sprawdzana tylko swoim kluczem, który leży w <code>/etc/apt/keyrings/</code>. Każda hurtownia ma własną plombę.</p><p>A sam plik <code>/etc/apt/sources.list</code> na Ubuntu 24.04 jest już tylko drogowskazem:</p><div class="kod"><pre><code># Ubuntu sources have moved to the /etc/apt/sources.list.d/ubuntu.sources
+# file, which uses the deb822 format. Use deb822-formatted .sources files
+# to manage package sources in the /etc/apt/sources.list.d/ directory.</code></pre></div><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>stara komenda <code>apt-key</code> jest wycofywana. Sama to mówi: „Warning: apt-key is deprecated”. Problem z nią był taki, że klucz dodany przez <code>apt-key</code> był zaufany dla wszystkich hurtowni naraz. Jeden klucz do wszystkich drzwi w budynku.</p></aside><p>Po każdej zmianie w tym folderze: <code>sudo apt update</code>.</p></section><section><h2 id="magazynier-od-kuchni-dpkg-l-l-s-i">Magazynier od kuchni: dpkg -l, -L, -S, -i</h2><p>Cztery pytania, które zadajesz bezpośrednio <code>dpkg</code>.</p><p><code>dpkg -l</code> to spis inwentarza. Pierwsze dwie litery to stan: <code>ii</code> zainstalowany, <code>rc</code> usunięty, ale zostały ustawienia, <code>iU</code> rozpakowany, ale nieskonfigurowany. To ostatnie widzisz, kiedy coś poszło nie tak.</p><p><code>dpkg -L pakiet</code> to lista plików z kartonu. Już znasz.</p><p><code>dpkg -S plik</code> to pytanie odwrotne: z którego kartonu jest ten plik?</p><div class="kod"><pre><code>dpkg -S /usr/bin/ls</code></pre></div><div class="kod"><pre><code>coreutils: /usr/bin/ls</code></pre></div><p><code>ls</code> należy do pakietu coreutils, czyli podstawowych narzędzi GNU. Działa tylko dla plików z zainstalowanych pakietów.</p><p><code>dpkg -i plik.deb</code> to wniesienie kartonu, który przyniosłeś sam, z pominięciem kierownika. Pobiorę sobie paczkę z krową na dysk i spróbuję:</p><div class="kod"><pre><code>apt download cowsay
+sudo dpkg -i cowsay_3.03+dfsg2-8_all.deb</code></pre></div><div class="kod"><pre><code>dpkg: dependency problems prevent configuration of cowsay:
+ cowsay depends on libtext-charwidth-perl; however:
+  Package libtext-charwidth-perl is not installed.
+
+dpkg: error processing package cowsay (--install):
+ dependency problems - leaving unconfigured</code></pre></div><p>Magazynier wniósł karton, rozpakował i stanął. Kołków nie ma, a po kołki nie pojedzie, bo to nie jego robota. Pakiet zostaje w stanie <code>iU</code>. Ratunek to zawołanie kierownika:</p><div class="kod"><pre><code>sudo apt -f install</code></pre></div><div class="kod"><pre><code>Correcting dependencies... Done
+The following NEW packages will be installed:
+  libtext-charwidth-perl</code></pre></div><p><code>-f</code> to „fix broken”, napraw zepsute. Apt dowozi brakujące zależności i kończy konfigurację. W lekcji o programach spoza repozytorium pokażę wygodniejszy sposób na pobrane pliki <code>.deb</code>.</p></section><section><h2 id="automatyczne-latki-unattended-upgrades">Automatyczne łatki: unattended-upgrades</h2><p>Na Ubuntu Server pakiet <code>unattended-upgrades</code> jest instalowany domyślnie i od razu włączone jest automatyczne instalowanie łatek bezpieczeństwa. Sprawdźmy, co dokładnie robi. Dwa pliki w <code>/etc/apt/apt.conf.d/</code>:</p><div class="kod"><pre><code>cat /etc/apt/apt.conf.d/20auto-upgrades</code></pre></div><div class="kod"><pre><code>APT::Periodic::Update-Package-Lists &quot;1&quot;;
+APT::Periodic::Unattended-Upgrade &quot;1&quot;;</code></pre></div><p>Ten mówi „czy i jak często”: codziennie odśwież katalog i codziennie zainstaluj łatki. Jedynka to liczba dni. Drugi plik, <code>50unattended-upgrades</code>, mówi „co”:</p><div class="kod"><pre><code>Unattended-Upgrade::Allowed-Origins {
+	&quot;${distro_id}:${distro_codename}&quot;;
+	&quot;${distro_id}:${distro_codename}-security&quot;;
+	&quot;${distro_id}ESMApps:${distro_codename}-apps-security&quot;;
+	&quot;${distro_id}ESM:${distro_codename}-infra-security&quot;;
+};</code></pre></div><p>Czyli automatem lecą łatki bezpieczeństwa, a zwykłe poprawki z <code>-updates</code> domyślnie nie. W tym pliku jest też czarna lista pakietów, których automat ma nie dotykać, i opcja <code>Automatic-Reboot</code>, domyślnie wyłączona. Serwer nie zrestartuje się sam o trzeciej w nocy, chyba że mu na to pozwolisz.</p><p>Próba generalna:</p><div class="kod"><pre><code>sudo unattended-upgrade -v --dry-run</code></pre></div><div class="kod"><pre><code>Starting unattended upgrades script
+Allowed origins are: o=Ubuntu,a=noble, o=Ubuntu,a=noble-security, o=UbuntuESMApps,a=noble-apps-security, o=UbuntuESM,a=noble-infra-security
+No packages found that can be upgraded unattended and no pending auto-removals</code></pre></div><p>Co robił automat, sprawdzisz w <code>/var/log/unattended-upgrades/</code>. A uruchamiają go dwa budziki systemd: <code>apt-daily.timer</code> i <code>apt-daily-upgrade.timer</code>. To właśnie one zajmują magazyn chwilę po starcie serwera, o czym był typowy błąd w poprzedniej lekcji.</p><p>[RHEL] Na Red Hacie odpowiednikiem jest pakiet <code>dnf-automatic</code>.</p></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p>Co robi <code>apt upgrade</code> krok po kroku? Porównuje wersje zainstalowane z bazy <code>dpkg</code> (plik <code>/var/lib/dpkg/status</code>) z kandydatami z katalogu w <code>/var/lib/apt/lists/</code>. Dla każdego pakietu, gdzie kandydat jest nowszy, układa plan. Rozwiązuje zależności tak, żeby nic nie usuwać. Pobiera pliki <code>.deb</code> i woła <code>dpkg</code> z całą paczką naraz.</p><p><code>dpkg</code> przy aktualizacji robi coś sprytnego z plikami ustawień. Jeśli nie zmieniłeś pliku z <code>/etc</code>, podmienia go na nowy. Jeśli zmieniłeś, a autor pakietu też go zmienił, zatrzymuje się i pyta, co zrobić: zostawić Twoją wersję, wziąć nową czy pokazać różnice. Dlatego pliki ustawień są w pakiecie oznaczone jako <code>conffiles</code>. Lista leży obok spisu plików:</p><div class="kod"><pre><code>cat /var/lib/dpkg/info/vsftpd.conffiles</code></pre></div><div class="kod"><pre><code>/etc/ftpusers
+/etc/init.d/vsftpd
+/etc/logrotate.d/vsftpd
+/etc/pam.d/vsftpd
+/etc/vsftpd.conf</code></pre></div><p>I właśnie te pliki zostają po <code>remove</code>, a znikają po <code>purge</code>.</p><p>Historię wszystkich operacji apt zapisuje w <code>/var/log/apt/history.log</code>, a dpkg w <code>/var/log/dpkg.log</code>. Kto, kiedy, jaką komendą. Przyda się w zadaniu z lekcji 67.</p></section><section><h2 id="sciaga-flag">Ściąga flag</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga</th><th>Co robi</th></tr><tr><td>apt</td><td>update</td><td>pobiera nowy katalog, nic nie instaluje</td></tr><tr><td>apt</td><td>upgrade</td><td>aktualizuje, nigdy nie usuwa pakietów</td></tr><tr><td>apt</td><td>full-upgrade</td><td>aktualizuje, może usuwać pakiety</td></tr><tr><td>apt</td><td>list --upgradable</td><td>lista pakietów do aktualizacji</td></tr><tr><td>apt</td><td>install / remove X</td><td>instaluje / usuwa (ustawienia zostają)</td></tr><tr><td>apt</td><td>purge X</td><td>usuwa razem z ustawieniami</td></tr><tr><td>apt</td><td>autoremove</td><td>usuwa niepotrzebne zależności</td></tr><tr><td>apt</td><td>-f install</td><td>naprawia brakujące zależności</td></tr><tr><td>apt</td><td>search --names-only X</td><td>szuka tylko w nazwach</td></tr><tr><td>apt-cache</td><td>policy X</td><td>wersje dostępne i kandydat</td></tr><tr><td>apt-mark</td><td>hold / unhold / showhold</td><td>blokuje / odblokowuje / pokazuje blokady</td></tr><tr><td>dpkg</td><td>-l</td><td>spis pakietów ze stanem (ii, rc, iU)</td></tr><tr><td>dpkg</td><td>-L X</td><td>pliki pakietu</td></tr><tr><td>dpkg</td><td>-S plik</td><td>do którego pakietu należy plik</td></tr><tr><td>dpkg</td><td>-i plik.deb</td><td>instaluje plik bez rozwiązywania zależności</td></tr><tr><td>dpkg</td><td>--configure -a</td><td>kończy przerwaną instalację</td></tr><tr><td>unattended-upgrade</td><td>-v --dry-run</td><td>próba automatycznych łatek</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>Chcesz sprawdzić, z którego pakietu jest <code>ls</code>. Pamiętasz z lekcji, że leży w <code>/bin</code>, więc:</p><div class="kod"><pre><code>dpkg -S /bin/ls</code></pre></div><div class="kod"><pre><code>dpkg-query: no path found matching pattern /bin/ls</code></pre></div><p>Jak to, nie ma? Przecież <code>ls</code> działa!</p><p>Pamiętasz z lekcji 8, że na nowym Ubuntu <code>/bin</code> to już nie prawdziwy folder, tylko drogowskaz do <code>/usr/bin</code>? Plik fizycznie leży w <code>/usr/bin/ls</code> i pod tą ścieżką zapisał go magazynier. <code>dpkg</code> nie podąża za drogowskazami, porównuje ścieżki dosłownie. Rozwiązanie: pytaj o prawdziwą ścieżkę. Jeśli nie wiesz, jaka jest, zapytaj system:</p><div class="kod"><pre><code>dpkg -S &quot;$(readlink -f /bin/ls)&quot;</code></pre></div><div class="kod"><pre><code>coreutils: /usr/bin/ls</code></pre></div><p><code>readlink -f</code> przechodzi przez wszystkie drogowskazy i podaje prawdziwy adres. Ten sam trik zadziała, gdy plik jest dowiązaniem symbolicznym do czegoś w innym pakiecie.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><p>Na Ubuntu w maszynie wirtualnej:</p><ol><li>Zainstaluj pakiet <code>sl</code> i sprawdź, jakie pliki przywiózł.</li><li>Sprawdź, do którego pakietu należy <code>/usr/bin/apt</code>.</li><li>Zablokuj aktualizacje pakietu <code>sl</code>, pokaż listę blokad i odblokuj.</li><li>Usuń <code>sl</code> razem z ustawieniami i posprzątaj niepotrzebne zależności.</li><li>Sprawdź próbą generalną, co zrobiłby automat łatek bezpieczeństwa.</li></ol><p>Jeśli masz tylko RHEL, poczekaj: w następnej lekcji zrobisz to samo dnf-em.</p><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><p>Zadanie było na Ubuntu. Lokomotywa na start:</p><div class="kod"><pre><code>sudo apt install sl
+dpkg -L sl | grep bin
+dpkg -S /usr/bin/apt</code></pre></div><div class="kod"><pre><code>/usr/games/sl
+apt: /usr/bin/apt</code></pre></div><p><code>sl</code> to „steam locomotive”, czyli parowóz. Powstał jako kara za literówkę: chciałeś wpisać <code>ls</code>, wpisałeś <code>sl</code>, i przez ekran przejeżdża pociąg, którego nie da się zatrzymać. Edukacja przez traumę. A <code>/usr/bin/apt</code> należy do pakietu <code>apt</code>. Kierownik hurtowni też jest kartonem w hurtowni. Incepcja.</p><p>Blokada i sprzątanie:</p><div class="kod"><pre><code>sudo apt-mark hold sl
+apt-mark showhold
+sudo apt-mark unhold sl
+sudo apt purge sl
+sudo apt autoremove
+sudo unattended-upgrade -v --dry-run</code></pre></div><div class="kod"><pre><code>sl set on hold.
+sl
+Canceled hold on sl.</code></pre></div><p><code>sl</code> nie ma plików ustawień, więc purge niczego dodatkowego nie zdziera, ale nawyk zostaje. A <code>autoremove</code> po lokomotywie nie ma czego sprzątać, bo <code>sl</code> nie przywiózł żadnych nowych kołków. Wszystko, czego potrzebował, już było w systemie.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>W następnej lekcji przesiadamy się do Red Hata. <code>dnf</code> i <code>rpm</code>: historia operacji z cofaniem jednym poleceniem, pliki <code>.repo</code>, lokalne repozytorium z płyty ISO, EPEL, łatki bezpieczeństwa i sprawdzanie, czy po aktualizacji trzeba zrestartować serwer.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-064.html" rel="prev">← 64. Menedżery pakietów: sklep z aplikacjami dla serwera</a><a class="btn domyslny zolty" href="lekcja-066.html" rel="next">66. dnf, rpm i repozytoria →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

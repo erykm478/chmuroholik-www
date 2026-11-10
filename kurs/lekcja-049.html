@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>49. Spacje w nazwach plików — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 49 kursu Linux i Bash od zera do admina: Spacje w nazwach plików. kursant pisze skrypty i pętle, które nie wykładają się na plikach ze spacją, myślnikiem na początku ani nawet znakiem nowej linii w nazwie, i wie, kiedy użyć cudzysłowu, IFS, find -print0 i nullglob.">
+<meta property="og:title" content="49. Spacje w nazwach plików — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 49 kursu Linux i Bash od zera do admina: Spacje w nazwach plików. kursant pisze skrypty i pętle, które nie wykładają się na plikach ze spacją, myślnikiem na początku ani nawet znakiem nowej linii w nazwie, i wie, kiedy użyć cudzysłowu, IFS, find -print0 i nullglob.">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 5</span></div>
+      <div class="boczny-tytul"><a href="index.html#m05">Skrypty, które się nie sypią</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-049.html" data-lekcja="49" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">49</span> Spacje w nazwach plików</a></li><li><a href="lekcja-050.html" data-lekcja="50"><span class="znacznik"></span><span class="nr">50</span> Tryb „zatrzymaj się przy błędzie”</a></li><li><a href="lekcja-051.html" data-lekcja="51"><span class="znacznik"></span><span class="nr">51</span> Sprzątanie po sobie</a></li><li><a href="lekcja-052.html" data-lekcja="52"><span class="znacznik"></span><span class="nr">52</span> Opcje jak w prawdziwych programach</a></li><li><a href="lekcja-053.html" data-lekcja="53"><span class="znacznik"></span><span class="nr">53</span> Szukanie błędów</a></li><li><a href="lekcja-054.html" data-lekcja="54"><span class="znacznik"></span><span class="nr">54</span> Komunikaty, logi i kolory</a></li><li><a href="lekcja-055.html" data-lekcja="55"><span class="znacznik"></span><span class="nr">55</span> Duży skrypt w porządku</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="49" data-modul="5" data-tematy="cytowanie, IFS, bezpieczne pętle po plikach, nullglob">
+    <div class="belka"><span>Lekcja 49 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m05">Moduł 5</a> › Lekcja 49</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Spacje w nazwach plików</h1>
+      <p class="meta"><span>⏱ ok. 12 min czytania</span><span>· moduł 5: Skrypty, które się nie sypią</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant pisze skrypty i pętle, które nie wykładają się na plikach ze spacją, myślnikiem na początku ani nawet znakiem nowej linii w nazwie, i wie, kiedy użyć cudzysłowu, <code>IFS</code>, <code>find -print0</code> i <code>nullglob</code>.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#jak-bash-tnie-slowa">Jak Bash tnie słowa</a></li><li><a href="#cudzyslow-czyli-koperta">Cudzysłów, czyli koperta</a></li><li><a href="#ifs-czyli-ktorymi-nozyczkami">IFS, czyli którymi nożyczkami</a></li><li><a href="#najgorsze-nazwy-swiata">Najgorsze nazwy świata</a></li><li><a href="#myslnik-na-poczatku">Myślnik na początku</a></li><li><a href="#bezpieczne-petle-po-plikach">Bezpieczne pętle po plikach</a></li><li><a href="#nullglob-czyli-gdy-nie-ma-czego-szukac">nullglob, czyli gdy nie ma czego szukać</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga-flag">Ściąga flag</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p>Skrypt backupu działał rok. Codziennie o drugiej w nocy, zero błędów, admin spał spokojnie. Aż księgowa założyła folder <code>Faktury 2026</code>. Ze spacją. Bo czemu nie, przecież w Windowsie wszyscy tak robią.</p><p>Skrypt zobaczył spację i uznał, że to dwa foldery: <code>Faktury</code> i <code>2026</code>. Żadnego nie znalazł, wypisał błąd do logu, którego nikt nie czytał, i poszedł dalej. Przez trzy miesiące.</p><p>Spacja w nazwie pliku to dla Basha jak „Jan Maria Kowalski” w formularzu z jednym polem na imię. Dziś nauczysz się pisać skrypty, które nie robią z Jana Marii trzech różnych ludzi.</p></section><section><h2 id="jak-bash-tnie-slowa">Jak Bash tnie słowa</h2><p>Przypomnij sobie urzędnika z okienka. Dostaje od ciebie kartkę z poleceniem i zanim cokolwiek zrobi, tnie ją nożyczkami na słowa. Tnie w każdym miejscu, gdzie jest spacja, tabulator albo nowa linia. Pierwsze słowo to komenda, reszta to argumenty.</p><p>To cięcie nazywa się <strong>dzielenie na słowa</strong>, po angielsku word splitting. I tu jest haczyk: urzędnik tnie nie tylko to, co wpisałeś, ale też to, co wyszło ze zmiennej albo z <code>$( )</code>, jeśli nie jest w cudzysłowie.</p><p>Mała pokazówka. Folder z dwoma plikami:</p><div class="kod"><pre><code>touch &quot;raport 2026.txt&quot; notatki.txt
+ls</code></pre></div><div class="kod"><pre><code>notatki.txt
+raport 2026.txt</code></pre></div><p>Klasyk z internetu, pętla po wyniku <code>ls</code>:</p><div class="kod"><pre><code>for f in $(ls); do echo &quot;[$f]&quot;; done</code></pre></div><div class="kod"><pre><code>[notatki.txt]
+[raport]
+[2026.txt]</code></pre></div><p>Nawiasy kwadratowe dodałem, żeby było widać, gdzie każde „słowo” się zaczyna i kończy. Dwa pliki, trzy kawałki. <code>raport 2026.txt</code> został pocięty na pół, bo wynik <code>$(ls)</code> to po prostu tekst, a tekst urzędnik tnie.</p><p>A teraz to samo, tylko gwiazdką:</p><div class="kod"><pre><code>for f in *; do echo &quot;[$f]&quot;; done</code></pre></div><div class="kod"><pre><code>[notatki.txt]
+[raport 2026.txt]</code></pre></div><p>Idealnie. Gwiazdka nie produkuje tekstu do pocięcia, tylko gotową listę nazw. Każda nazwa to osobna, nienaruszalna pozycja. Zapamiętaj: <strong>po plikach chodzisz gwiazdką, nigdy po wyniku </strong><strong><code>ls</code></strong>. <code>ls</code> jest dla ludzi, nie dla skryptów.</p></section><section><h2 id="cudzyslow-czyli-koperta">Cudzysłów, czyli koperta</h2><p>Kiedy to cięcie robi prawdziwą krzywdę? Kiedy zmienna z nazwą pliku trafia do komendy bez cudzysłowu.</p><p class="ekran">dwa pliki: <code>stare ważne.txt</code> i <code>ważne.txt</code></p><p>Mamy dwa pliki: <code>stare ważne.txt</code>, który chcemy usunąć, i <code>ważne.txt</code>, którego za nic nie chcemy stracić.</p><div class="kod"><pre><code>f=&quot;stare ważne.txt&quot;
+rm $f
+ls -1</code></pre></div><div class="kod"><pre><code>rm: cannot remove &#x27;stare&#x27;: No such file or directory
+stare ważne.txt</code></pre></div><p>Przeczytaj to jeszcze raz. Plik, który miał zniknąć, dalej jest. A <code>ważne.txt</code> zniknął. Urzędnik pociął <code>stare ważne.txt</code> na <code>stare</code> i <code>ważne.txt</code>, dostał dwa polecenia usunięcia, pierwszego pliku nie znalazł, a drugi usunął bez mrugnięcia okiem. Błąd na ekranie dotyczy tego, co się NIE stało. O tym, co się stało, nikt cię nie poinformował.</p><p>Lekarstwo znasz z lekcji o zmiennych: cudzysłów, czyli koperta. Wszystko, co jest w kopercie, urzędnik bierze w całości, bez nożyczek.</p><div class="kod"><pre><code>rm &quot;$f&quot;</code></pre></div><p>ShellCheck łapie to od ręki:</p><div class="kod"><pre><code>In zly.sh line 3:
+rm $f
+   ^-- SC2086 (info): Double quote to prevent globbing and word splitting.
+
+Did you mean:
+rm &quot;$f&quot;</code></pre></div><p>Zwróć uwagę na słowo „globbing”. Zmienna bez cudzysłowu ma dwa problemy, nie jeden. Najpierw jest cięta na słowa, a potem każde słowo jest jeszcze sprawdzane, czy nie jest wzorcem z gwiazdką. Jeśli ktoś nazwie plik <code>*</code>, a ty zrobisz <code>rm $f</code>… Tak, Linux pozwala nazwać plik gwiazdką. Linux pozwala na bardzo dużo rzeczy.</p><p>Zasada na całe życie: <strong>każde </strong><strong><code>$zmienna</code></strong><strong>, </strong><strong><code>$(komenda)</code></strong><strong>, </strong><strong><code>$1</code></strong><strong> i </strong><strong><code>${tablica[@]}</code></strong><strong> w cudzysłowie, chyba że masz konkretny powód.</strong> Dla tablic forma <code>&quot;${pliki[@]}&quot;</code> daje każdy element osobno i nienaruszony, a to dokładnie to, czego chcesz. To samo, co <code>&quot;$@&quot;</code> z lekcji o argumentach.</p></section><section><h2 id="ifs-czyli-ktorymi-nozyczkami">IFS, czyli którymi nożyczkami</h2><p>Gdzie Bash trzyma informację, w których miejscach ciąć? W zmiennej o nazwie <code>IFS</code>, od Internal Field Separator, wewnętrzny separator pól. Zajrzyjmy:</p><div class="kod"><pre><code>printf &#x27;%q\n&#x27; &quot;$IFS&quot;</code></pre></div><div class="kod"><pre><code>$&#x27; \t\n&#x27;</code></pre></div><p>Spacja, tabulator, nowa linia. Trzy ostrza nożyczek. <code>printf &#x27;%q&#x27;</code> pokazuje niewidzialne znaki tak, żeby było je widać.</p><p><code>IFS</code> przydaje się sam w sobie, najczęściej z <code>read</code>. Pamiętasz <code>/etc/passwd</code>? Pola rozdzielone dwukropkiem. Podmieniasz nożyczki tylko na czas jednej komendy:</p><div class="kod"><pre><code>IFS=: read -r user _ uid _ _ home shell &lt;&lt;&lt; &quot;root:x:0:0:root:/root:/bin/bash&quot;
+echo &quot;user=$user uid=$uid home=$home shell=$shell&quot;</code></pre></div><div class="kod"><pre><code>user=root uid=0 home=/root shell=/bin/bash</code></pre></div><p><code>_</code> to umowna nazwa na „to pole mnie nie obchodzi”. A <code>IFS=:</code> przed <code>read</code> działa tylko dla tego jednego <code>read</code>. Po nim <code>IFS</code> wraca do normy.</p><p>Druga sztuczka: <code>IFS=</code> pusty. Wtedy <code>read</code> nie obcina spacji na początku i końcu linii:</p><div class="kod"><pre><code>linia=&quot;  Jan Kowalski  &quot;
+read -r a &lt;&lt;&lt; &quot;$linia&quot;; echo &quot;[$a]&quot;
+IFS= read -r a &lt;&lt;&lt; &quot;$linia&quot;; echo &quot;[$a]&quot;</code></pre></div><div class="kod"><pre><code>[Jan Kowalski]
+[  Jan Kowalski  ]</code></pre></div><p>Dlatego od lekcji o pętlach piszę zawsze <code>while IFS= read -r linia</code>. <code>IFS=</code> zostawia spacje w spokoju, <code>-r</code> zostawia w spokoju backslashe. Czytasz linijkę dokładnie taką, jaka jest.</p><p>Popularny trik z internetu to <code>IFS=$&#x27;\n&#x27;</code> na górze skryptu, żeby ciąć tylko na nowej linii. Działa… połowicznie. Po pierwsze, psuje każdą inną pętlę w skrypcie, która liczy na cięcie po spacji: <code>for n in $dane</code> z <code>dane=&quot;1 2 3&quot;</code> nagle daje jedno słowo <code>1 2 3</code>. Po drugie, nie ratuje przed plikiem z nową linią w nazwie. Bo tak, to też jest dozwolone.</p></section><section><h2 id="najgorsze-nazwy-swiata">Najgorsze nazwy świata</h2><p class="ekran">folder <code>zdjecia</code>, a w nim pliki, które wyglądają jak sabotaż</p><p>Zróbmy folder testowy z nazwami, które spotkasz prędzej czy później. Zrób go u siebie, przyda się w zadaniu:</p><div class="kod"><pre><code>mkdir -p &quot;zdjecia/wakacje 2026&quot;
+cd zdjecia
+touch zwykle.jpg &quot;wakacje 2026/plaża o zachodzie.jpg&quot;
+touch $&#x27;nowa\nlinia.jpg&#x27;
+touch -- -dziwne.jpg
+ls</code></pre></div><div class="kod"><pre><code>-dziwne.jpg
+&#x27;nowa&#x27;$&#x27;\n&#x27;&#x27;linia.jpg&#x27;
+&#x27;wakacje 2026&#x27;
+zwykle.jpg</code></pre></div><p><code>$&#x27;nowa\nlinia.jpg&#x27;</code> to sposób Basha na wpisanie prawdziwego znaku nowej linii. <code>ls</code> w terminalu pokazuje taką nazwę w cudzysłowach, żebyś wiedział, że coś tu jest nie tak. A <code>--</code> przy <code>touch</code> to znak „koniec opcji, dalej są już tylko nazwy”. Bez tego <code>touch</code> uznałby <code>-dziwne.jpg</code> za zestaw opcji i odmówił współpracy.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>w nazwie pliku w Linuksie może być każdy bajt oprócz <code>/</code> (separator folderów) i bajtu zerowego. Bajtu zerowego nie da się nawet przekazać komendzie jako argumentu, bo programy w C kończą na nim napis. Dlatego to jedyny w stu procentach bezpieczny separator nazw.</p></aside></section><section><h2 id="myslnik-na-poczatku">Myślnik na początku</h2><p>Zanim przejdziemy do pętli, ta jedna jest zdradliwa. W folderze leżą <code>a.txt</code>, <code>b.txt</code> i plik o nazwie <code>-l</code>:</p><div class="kod"><pre><code>ls *</code></pre></div><div class="kod"><pre><code>-rw-r--r-- 1 root root 2 Nov  3 22:09 a.txt
+-rw-r--r-- 1 root root 0 Nov  3 22:09 b.txt</code></pre></div><p>Gwiazdka rozwinęła się do <code>-l a.txt b.txt</code>, a <code>ls</code> przeczytał <code>-l</code> jako opcję „długi format”. Plik <code>-l</code> zniknął z listy, za to dostaliśmy szczegóły. Tu niewinnie. Teraz wyobraź sobie plik o nazwie <code>-rf</code> i komendę <code>rm *</code>. Nie wyobrażaj sobie zbyt długo.</p><p>Dwa lekarstwa: <code>--</code> albo <code>./</code> przed gwiazdką.</p><div class="kod"><pre><code>ls -- *
+ls ./*</code></pre></div><div class="kod"><pre><code>-l
+a.txt
+b.txt
+./-l
+./a.txt
+./b.txt</code></pre></div><p><code>./*</code> jest jeszcze lepsze, bo działa z każdym programem, także z takim, który nie zna <code>--</code>. Nazwa zaczyna się od kropki, a nie od myślnika, więc żaden program nie weźmie jej za opcję.</p></section><section><h2 id="bezpieczne-petle-po-plikach">Bezpieczne pętle po plikach</h2><p>Teraz zdjęcia, także w podfolderach. Pierwsze, co przychodzi do głowy:</p><div class="kod"><pre><code>for f in $(find . -name &#x27;*.jpg&#x27;); do echo &quot;[$f]&quot;; done</code></pre></div><div class="kod"><pre><code>[./zwykle.jpg]
+[./nowa]
+[linia.jpg]
+[./-dziwne.jpg]
+[./wakacje]
+[2026/plaża]
+[o]
+[zachodzie.jpg]</code></pre></div><p>Cztery pliki, osiem kawałków. Plaża o zachodzie słońca rozpadła się na cztery części jak źle zapakowany talerz.</p><p>Poprawny sposób składa się z trzech części, które znasz osobno:</p><div class="kod"><pre><code>while IFS= read -r -d &#x27;&#x27; f; do
+    printf &#x27;[%s]\n&#x27; &quot;$f&quot;
+done &lt; &lt;(find . -name &#x27;*.jpg&#x27; -print0)</code></pre></div><div class="kod"><pre><code>[./zwykle.jpg]
+[./nowa
+linia.jpg]
+[./-dziwne.jpg]
+[./wakacje 2026/plaża o zachodzie.jpg]</code></pre></div><p>Cztery pliki, cztery wyniki, nawet ten z nową linią. Rozbierzmy to:</p><ul><li><code>find -print0</code> kończy każdą nazwę bajtem zerowym zamiast nowej linii. Jedynym znakiem, którego w nazwie być nie może.</li><li><code>read -d &#x27;&#x27;</code> czyta do bajtu zerowego, a nie do końca linii.</li><li><code>IFS=</code> i <code>-r</code> zostawiają nazwę nietkniętą.</li><li><code>&lt; &lt;( )</code> to podstawianie procesu z lekcji 39. I to nie jest ozdobnik.</li></ul><p>Bo zobacz, co się dzieje, kiedy ten sam <code>find</code> podasz rurą i chcesz policzyć pliki:</p><div class="kod"><pre><code>n=0
+find . -name &#x27;*.jpg&#x27; -print0 | while IFS= read -r -d &#x27;&#x27; f; do n=$((n+1)); done
+echo &quot;znaleziono: $n&quot;</code></pre></div><div class="kod"><pre><code>znaleziono: 0</code></pre></div><p>Zero. Pętla liczyła poprawnie, ale za rurą działa w osobnej podpowłoce. To jak liczenie paczek na taśmie w sąsiedniej hali: naliczyłeś cztery, wychodzisz, a tablica w twojej hali dalej pokazuje zero. Z <code>&lt; &lt;(find …)</code> pętla zostaje w głównej hali i licznik przeżywa.</p><p>Są jeszcze dwa bezpieczne sposoby, gdy nie potrzebujesz pętli:</p><div class="kod"><pre><code>find . -name &#x27;*.jpg&#x27; -exec ls -l {} +
+find . -name &#x27;*.jpg&#x27; -print0 | xargs -0 ls -l</code></pre></div><div class="kod"><pre><code>-rw-r--r-- 1 root root    0 Nov  3 22:09 ./-dziwne.jpg
+-rw-r--r-- 1 root root    0 Nov  3 22:09 ./nowa
+linia.jpg
+-rw-r--r-- 1 root root  300 Nov  3 22:09 ./wakacje 2026/plaża o zachodzie.jpg
+-rw-r--r-- 1 root root 1200 Nov  3 22:09 ./zwykle.jpg</code></pre></div><p>A jeśli chcesz mieć wszystko w tablicy:</p><div class="kod"><pre><code>mapfile -d &#x27;&#x27; -t pliki &lt; &lt;(find . -name &#x27;*.jpg&#x27; -print0)
+echo &quot;${#pliki[@]}&quot;</code></pre></div><div class="kod"><pre><code>4</code></pre></div><p class="ekran">macOS: systemowy Bash 3.2 nie ma <code>mapfile</code>. Pętla z <code>read -r -d &#x27;&#x27;</code> działa wszędzie.</p></section><section><h2 id="nullglob-czyli-gdy-nie-ma-czego-szukac">nullglob, czyli gdy nie ma czego szukać</h2><p>Ostatnia pułapka. Folder, w którym nie ma żadnego <code>.png</code>:</p><div class="kod"><pre><code>for f in *.png; do echo &quot;przetwarzam: [$f]&quot;; done</code></pre></div><div class="kod"><pre><code>przetwarzam: [*.png]</code></pre></div><p>Kiedy wzorzec niczego nie znajdzie, Bash zostawia go… dosłownie. Skrypt próbuje przetworzyć plik o nazwie <code>*.png</code>. Jak kelner, który na pytanie „co jest na deser?” przynosi kartkę z napisem „deser”.</p><p>Włączasz opcję <code>nullglob</code> i pusty wzorzec znika:</p><div class="kod"><pre><code>shopt -s nullglob
+for f in *.png; do echo &quot;przetwarzam: [$f]&quot;; done
+pliki=(*.png)
+echo &quot;liczba png: ${#pliki[@]}&quot;</code></pre></div><div class="kod"><pre><code>liczba png: 0</code></pre></div><p>Pętla nie wykonała się ani razu i dobrze. A tablica z gwiazdki to najprostszy sposób, żeby sprawdzić, czy jakieś pliki w ogóle są.</p><p>Ale uwaga, <code>nullglob</code> też ma ciemną stronę:</p><div class="kod"><pre><code>shopt -s nullglob
+ls *.png</code></pre></div><div class="kod"><pre><code>-dziwne.jpg
+nowa
+linia.jpg
+wakacje 2026
+zwykle.jpg</code></pre></div><p>Wzorzec zniknął, <code>ls</code> dostał zero argumentów, więc wypisał cały folder. Z <code>ls</code> to śmieszne. Z <code>rm -- *.bak</code>… już mniej, bo <code>rm</code> bez argumentów tylko marudzi, ale inne programy bez argumentów potrafią wziąć „wszystko”. Dlatego <code>nullglob</code> włączaj świadomie, najlepiej tylko na czas pętli, a potem <code>shopt -u nullglob</code>.</p><p>Jest też <code>failglob</code>: pusty wzorzec to błąd i komenda się nie wykona.</p><div class="kod"><pre><code>glob.sh: line 16: no match: *.png</code></pre></div><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p><code>shopt -s dotglob</code> sprawia, że <code>*</code> łapie też pliki ukryte, zaczynające się od kropki. Domyślnie ich nie łapie, co przy kopiowaniu folderu gwiazdką gubi <code>.htaccess</code> i <code>.env</code>. A potem jest niespodzianka na produkcji.</p></aside></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p>Bash rozbiera każdą linijkę w ustalonej kolejności. Najpierw rozwija nawiasy klamrowe, tyldę, zmienne, <code>$( )</code> i arytmetykę. <strong>Potem</strong> tnie wyniki tych rozwinięć na słowa według <code>IFS</code>, ale tylko te, które nie są w cudzysłowie. <strong>Potem</strong> rozwija gwiazdki i znaki zapytania. Na końcu usuwa cudzysłowy i odpala program.</p><p>Z tej kolejności wynika wszystko, co dziś widziałeś. Tekst wpisany ręcznie jest cięty przy wczytywaniu linijki, ale wynik zmiennej i <code>$( )</code> jest cięty jeszcze raz, chyba że siedzi w kopercie. Gwiazdka jest rozwijana po cięciu, więc nazwy z gwiazdki nie są już cięte. Dlatego <code>for f in *</code> jest bezpieczne, a <code>for f in $(ls)</code> nie.</p><p>I jeszcze jedno: sam program, <code>rm</code> czy <code>ls</code>, nigdy nie widzi ani cudzysłowów, ani gwiazdki. Dostaje od jądra gotową listę argumentów, każdy jako osobny napis zakończony bajtem zerowym. O wszystkim decyduje urzędnik przy okienku, zanim przekaże sprawę dalej.</p></section><section><h2 id="sciaga-flag">Ściąga flag</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga</th><th>Co robi</th></tr><tr><td><code>&quot;$zmienna&quot;</code></td><td>—</td><td>koperta: bez cięcia na słowa i bez rozwijania gwiazdek</td></tr><tr><td><code>&quot;${tab[@]}&quot;</code></td><td>—</td><td>każdy element tablicy osobno i w całości</td></tr><tr><td><code>IFS=: read -r a b</code></td><td><code>IFS=</code></td><td>nożyczki tylko dla tej jednej komendy</td></tr><tr><td><code>read</code></td><td><code>-r</code></td><td>nie rusza backslashy</td></tr><tr><td><code>read</code></td><td><code>-d &#x27;&#x27;</code></td><td>czyta do bajtu zerowego zamiast do nowej linii</td></tr><tr><td><code>find</code></td><td><code>-print0</code></td><td>nazwy rozdzielone bajtem zerowym</td></tr><tr><td><code>find</code></td><td><code>-exec … {} +</code></td><td>podaje wiele plików naraz, bezpiecznie</td></tr><tr><td><code>xargs</code></td><td><code>-0</code></td><td>czyta nazwy rozdzielone bajtem zerowym</td></tr><tr><td><code>mapfile</code></td><td><code>-d &#x27;&#x27; -t</code></td><td>wczytuje nazwy z <code>-print0</code> do tablicy</td></tr><tr><td><code>rm</code>, <code>ls</code>, <code>cp</code></td><td><code>--</code></td><td>koniec opcji, dalej tylko nazwy</td></tr><tr><td><code>shopt</code></td><td><code>-s nullglob</code></td><td>pusty wzorzec znika</td></tr><tr><td><code>shopt</code></td><td><code>-s failglob</code></td><td>pusty wzorzec to błąd</td></tr><tr><td><code>shopt</code></td><td><code>-s dotglob</code></td><td><code>*</code> łapie też pliki z kropką</td></tr><tr><td><code>printf</code></td><td><code>%q</code></td><td>pokazuje niewidzialne znaki</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>Kopiowanie w pętli bez cudzysłowu:</p><div class="kod"><pre><code>for f in *.txt; do cp $f /backup/; done</code></pre></div><div class="kod"><pre><code>cp: cannot stat &#x27;raport&#x27;: No such file or directory
+cp: cannot stat &#x27;2026.txt&#x27;: No such file or directory</code></pre></div><p>Pętla jest dobra, bo idzie gwiazdką. Ale w środku <code>$f</code> bez koperty i urzędnik znowu bierze nożyczki. Komunikat <code>cannot stat &#x27;raport&#x27;</code> z kawałkiem nazwy to zawsze ten sam objaw: gdzieś brakuje cudzysłowu.</p><p>Naprawa: <code>cp -- &quot;$f&quot; /backup/</code>. I od razu przepuść skrypt przez ShellCheck, bo jeśli brakuje cudzysłowu w jednym miejscu, to zwykle brakuje go w pięciu.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><p>Zrób u siebie folder <code>zdjecia</code> z najgorszymi nazwami świata, komendami z lekcji. Wrzuć do dwóch plików trochę danych, na przykład <code>head -c 1200 /dev/urandom &gt; zdjecia/zwykle.jpg</code>. Potem napisz skrypt <code>policz_jpg.sh</code>, który dostaje folder jako argument (domyślnie bieżący), znajduje wszystkie pliki <code>.jpg</code> także w podfolderach, wypisuje każdy w nawiasach kwadratowych z rozmiarem w bajtach, a na końcu podaje liczbę plików i łączny rozmiar. Nie może się pomylić na żadnej nazwie. ShellCheck ma milczeć.</p><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><div class="kod"><pre><code>#!/bin/bash
+# policz_jpg.sh FOLDER — liczy pliki .jpg, odporny na dziwne nazwy
+folder=${1:-.}
+licznik=0
+suma=0
+while IFS= read -r -d &#x27;&#x27; plik; do
+    rozmiar=$(stat -c %s -- &quot;$plik&quot;)
+    printf &#x27;[%s] %s B\n&#x27; &quot;$plik&quot; &quot;$rozmiar&quot;
+    licznik=$((licznik + 1))
+    suma=$((suma + rozmiar))
+done &lt; &lt;(find &quot;$folder&quot; -type f -iname &#x27;*.jpg&#x27; -print0)
+echo &quot;Plików: $licznik, razem: $suma B&quot;</code></pre></div><div class="kod"><pre><code>[zdjecia/zwykle.jpg] 1200 B
+[zdjecia/nowa
+linia.jpg] 0 B
+[zdjecia/-dziwne.jpg] 0 B
+[zdjecia/wakacje 2026/plaża o zachodzie.jpg] 300 B
+Plików: 4, razem: 1500 B</code></pre></div><p>Cztery pliki, żaden nie pocięty, ShellCheck milczy. <code>-print0</code> z <code>read -d &#x27;&#x27;</code> niesie nazwy, <code>&lt; &lt;( )</code> ratuje liczniki przed podpowłoką, <code>${1:-.}</code> daje bieżący folder, gdy nie podasz żadnego. <code>-iname</code> łapie też <code>ZDJECIE.JPG</code> z telefonu, który krzyczy wielkimi literami. <code>stat -c %s</code> podaje rozmiar w bajtach, a <code>--</code> chroni przed <code>-dziwne.jpg</code>, chociaż tu ścieżka i tak zaczyna się od nazwy folderu.</p><p class="ekran">macOS: <code>stat</code> jest z rodziny BSD i rozmiar daje <code>stat -f %z</code>.</p><p>Jeśli twoja wersja wypisała <code>Plików: 0</code>, to pewnie dałeś <code>find … | while</code>. Licznik został w sąsiedniej hali.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Twój skrypt już nie boi się spacji. Ale co zrobi, jeśli w połowie jedna komenda się wysypie? Domyślnie: nic, pojedzie dalej, jakby nigdy nic. W następnej lekcji włączymy tryb „zatrzymaj się przy błędzie”, czyli <code>set -e</code>, <code>set -u</code> i <code>pipefail</code>, i zobaczymy na żywo, gdzie każdy z nich potrafi cię oszukać.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-048.html" rel="prev">← 48. Znajdź wszystko</a><a class="btn domyslny zolty" href="lekcja-050.html" rel="next">50. Tryb „zatrzymaj się przy błędzie” →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

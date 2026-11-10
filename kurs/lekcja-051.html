@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>51. Sprzątanie po sobie — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 51 kursu Linux i Bash od zera do admina: Sprzątanie po sobie. kursant używa trap, żeby skrypt zawsze po sobie sprzątał, także po błędzie i po Ctrl+C, rozumie podstawowe sygnały i robi bezpieczne pliki tymczasowe przez mktemp.">
+<meta property="og:title" content="51. Sprzątanie po sobie — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 51 kursu Linux i Bash od zera do admina: Sprzątanie po sobie. kursant używa trap, żeby skrypt zawsze po sobie sprzątał, także po błędzie i po Ctrl+C, rozumie podstawowe sygnały i robi bezpieczne pliki tymczasowe przez mktemp.">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 5</span></div>
+      <div class="boczny-tytul"><a href="index.html#m05">Skrypty, które się nie sypią</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-049.html" data-lekcja="49"><span class="znacznik"></span><span class="nr">49</span> Spacje w nazwach plików</a></li><li><a href="lekcja-050.html" data-lekcja="50"><span class="znacznik"></span><span class="nr">50</span> Tryb „zatrzymaj się przy błędzie”</a></li><li><a href="lekcja-051.html" data-lekcja="51" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">51</span> Sprzątanie po sobie</a></li><li><a href="lekcja-052.html" data-lekcja="52"><span class="znacznik"></span><span class="nr">52</span> Opcje jak w prawdziwych programach</a></li><li><a href="lekcja-053.html" data-lekcja="53"><span class="znacznik"></span><span class="nr">53</span> Szukanie błędów</a></li><li><a href="lekcja-054.html" data-lekcja="54"><span class="znacznik"></span><span class="nr">54</span> Komunikaty, logi i kolory</a></li><li><a href="lekcja-055.html" data-lekcja="55"><span class="znacznik"></span><span class="nr">55</span> Duży skrypt w porządku</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="51" data-modul="5" data-tematy="trap, sygnały w skryptach, mktemp">
+    <div class="belka"><span>Lekcja 51 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m05">Moduł 5</a> › Lekcja 51</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Sprzątanie po sobie</h1>
+      <p class="meta"><span>⏱ ok. 12 min czytania</span><span>· moduł 5: Skrypty, które się nie sypią</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant używa <code>trap</code>, żeby skrypt zawsze po sobie sprzątał, także po błędzie i po Ctrl+C, rozumie podstawowe sygnały i robi bezpieczne pliki tymczasowe przez <code>mktemp</code>.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#trap-czyli-sprzataczka-na-koniec-imprezy">trap, czyli sprzątaczka na koniec imprezy</a></li><li><a href="#sygnaly-czyli-kto-puka-do-drzwi">Sygnały, czyli kto puka do drzwi</a></li><li><a href="#ctrl-c-sprzataczka-wchodzi">Ctrl+C: sprzątaczka wchodzi</a></li><li><a href="#pulapka-sprzataczka-ktora-nie-zamyka-drzwi">Pułapka: sprzątaczka, która nie zamyka drzwi</a></li><li><a href="#pulapka-sprzataczka-czeka-az-kucharz-skonczy">Pułapka: sprzątaczka czeka, aż kucharz skończy</a></li><li><a href="#na-co-sprzataczka-nie-ma-rady">Na co sprzątaczka nie ma rady</a></li><li><a href="#inne-pulapki-do-lapania">Inne pułapki do łapania</a></li><li><a href="#mktemp-czyli-bezpieczny-pokoj-na-chwile">mktemp, czyli bezpieczny pokój na chwilę</a></li><li><a href="#wszystko-razem-raport-ktory-nigdy-nie-zostawia-pol">Wszystko razem: raport, który nigdy nie zostawia połówek</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga-flag">Ściąga flag</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p class="ekran"><code>ls /tmp</code> na serwerze, kilkaset plików <code>raport.1234</code>, <code>raport.1235</code>, <code>kopia_tmp</code>, <code>kopia_tmp2</code>…</p><p>Wchodzisz na serwer, który ktoś utrzymywał przed tobą. <code>ls /tmp</code>. Czterysta plików. <code>raport.48213</code>, <code>dump_tmp</code>, <code>dump_tmp_NOWY</code>, <code>test</code>. Każdy skrypt, który kiedyś się wysypał albo ktoś go przerwał Ctrl+C, zostawił tu swoje śmieci. Część zajmuje gigabajty. Część ma w środku hasła do bazy.</p><p>To jak impreza, po której nikt nie posprzątał, a gospodarz od pół roku udaje, że kuchnia tak wygląda z założenia.</p><p>Dziś zatrudnimy sprzątaczkę, która przychodzi na koniec imprezy zawsze. Czy impreza skończyła się normalnie, czy wybuchła awantura, czy przyjechała policja. Prawie zawsze. Na jedną sytuację nie ma rady i też ją dziś zobaczymy.</p></section><section><h2 id="trap-czyli-sprzataczka-na-koniec-imprezy">trap, czyli sprzątaczka na koniec imprezy</h2><p><code>trap</code> to komenda, która mówi Bashowi: „kiedy wydarzy się X, zrób Y”. Najważniejsze „X” to <code>EXIT</code>, czyli moment, w którym skrypt się kończy. Jakkolwiek się kończy.</p><div class="kod"><pre><code>#!/bin/bash
+set -euo pipefail
+tmp=$(mktemp)
+sprzataj() {
+    echo &quot;Sprzątaczka: usuwam $tmp&quot;
+    rm -f -- &quot;$tmp&quot;
+}
+trap sprzataj EXIT
+echo &quot;Pracuję na: $tmp&quot;
+ls -l &quot;$tmp&quot;
+cp /nie/ma/pliku &quot;$tmp&quot;
+echo &quot;tu już nie dojdę&quot;</code></pre></div><div class="kod"><pre><code>Pracuję na: /tmp/tmp.E9lakmysVp
+-rw------- 1 root root 0 Nov  3 22:16 /tmp/tmp.E9lakmysVp
+cp: cannot stat &#x27;/nie/ma/pliku&#x27;: No such file or directory
+Sprzątaczka: usuwam /tmp/tmp.E9lakmysVp
+kod: 1</code></pre></div><p><code>cp</code> się wysypał, <code>set -e</code> zatrzymał skrypt, a mimo to sprzątaczka weszła i posprzątała. I zauważ: kod wyjścia dalej jest 1, sprzątanie go nie zamazało. Plik w <code>/tmp</code> zniknął.</p><p>Składnia: <code>trap &#x27;co zrobić&#x27; KIEDY</code>. Co zrobić to komenda albo nazwa funkcji. Polecam funkcję, bo sprzątanie lubi rosnąć. A <code>trap</code> ustawiasz <strong>zaraz po</strong> stworzeniu tego, co trzeba sprzątać. Nie na końcu skryptu, bo na koniec skrypt może nigdy nie dojść.</p></section><section><h2 id="sygnaly-czyli-kto-puka-do-drzwi">Sygnały, czyli kto puka do drzwi</h2><p>Skąd skrypt wie, że ktoś nacisnął Ctrl+C? Dostaje sygnał. Znasz je z lekcji o procesach: SIGTERM to grzeczna prośba o zamknięcie lokalu, SIGKILL to wyłączenie prądu. Pełna lista:</p><div class="kod"><pre><code>kill -l</code></pre></div><div class="kod"><pre><code> 1) SIGHUP	 2) SIGINT	 3) SIGQUIT	 4) SIGILL	 5) SIGTRAP
+ 6) SIGABRT	 7) SIGBUS	 8) SIGFPE	 9) SIGKILL	10) SIGUSR1
+11) SIGSEGV	12) SIGUSR2	13) SIGPIPE	14) SIGALRM	15) SIGTERM
+...</code></pre></div><p>W skryptach liczą się głównie cztery:</p><ul><li><strong>SIGINT (2)</strong> — Ctrl+C w terminalu. „Przerwij, proszę.”</li><li><strong>SIGTERM (15)</strong> — domyślny sygnał komendy <code>kill</code> i to, co wysyła systemd przy zatrzymywaniu usługi. „Zamykamy lokal.”</li><li><strong>SIGHUP (1)</strong> — rozłączył się terminal, na przykład padło połączenie SSH. „Klient wyszedł.”</li><li><strong>SIGKILL (9)</strong> — wyłączenie prądu. Nie da się go złapać, zablokować ani na niego zareagować.</li></ul><p>Pamiętasz wzór z poprzedniej lekcji? Proces zabity sygnałem kończy się kodem 128 plus numer sygnału. Ctrl+C to 130, <code>kill</code> to 143, <code>kill -9</code> to 137. Jak zobaczysz takie liczby w logu, od razu wiesz, kto zgasił światło.</p></section><section><h2 id="ctrl-c-sprzataczka-wchodzi">Ctrl+C: sprzątaczka wchodzi</h2><div class="kod"><pre><code>#!/bin/bash
+set -euo pipefail
+tmp=$(mktemp)
+trap &#x27;echo &quot;Sprzątaczka: usuwam $tmp&quot;; rm -f -- &quot;$tmp&quot;&#x27; EXIT
+echo &quot;Liczę... (naciśnij Ctrl+C)&quot;
+sleep 1000</code></pre></div><div class="kod"><pre><code>Liczę... (naciśnij Ctrl+C)
+^CSprzątaczka: usuwam /tmp/tmp.RbJECjvFpN</code></pre></div><p>Działa. W Bashu pułapka na <code>EXIT</code> odpala się także wtedy, gdy skrypt ginie od Ctrl+C albo od zwykłego <code>kill</code>. [dla zaawansowanych: to zachowanie Basha. Inne powłoki, na przykład <code>dash</code>, przy śmierci od sygnału pułapki <code>EXIT</code> nie odpalą. Jeśli kiedyś piszesz pod <code>#!/bin/sh</code>, łap sygnały jawnie.]</p></section><section><h2 id="pulapka-sprzataczka-ktora-nie-zamyka-drzwi">Pułapka: sprzątaczka, która nie zamyka drzwi</h2><p>A teraz coś, co często widać w skryptach z internetu. Ktoś chce mieć pewność i łapie wszystko naraz:</p><div class="kod"><pre><code>#!/bin/bash
+sprzataj() {
+    echo &quot;Sprzątaczka sprząta&quot;
+}
+trap sprzataj EXIT INT TERM
+echo &quot;Krok 1&quot;
+sleep 1000
+echo &quot;Krok 2: a ja dalej działam!&quot;</code></pre></div><div class="kod"><pre><code>Krok 1
+^CSprzątaczka sprząta
+Krok 2: a ja dalej działam!
+Sprzątaczka sprząta</code></pre></div><p>Nacisnąłeś Ctrl+C. Sprzątaczka posprzątała. A potem impreza… trwa dalej. Skrypt poszedł do kroku 2, już bez plików tymczasowych, które przed chwilą usunięto. Na koniec sprzątaczka przyszła drugi raz. I kod wyjścia 0, jakby nic się nie stało.</p><p>Dlaczego? Bo kiedy złapiesz sygnał, przejmujesz za niego odpowiedzialność. Bash mówi: „Dobra, sam to obsłużysz”, i po obsłudze wraca do pracy. Jeśli chcesz, żeby skrypt się zakończył, musisz sam napisać <code>exit</code>.</p><p>Porządny wzór wygląda tak:</p><div class="kod"><pre><code>trap sprzataj EXIT
+trap &#x27;echo &quot;Przerwano.&quot; &gt;&amp;2; exit 130&#x27; INT
+trap &#x27;echo &quot;Zakończono z zewnątrz.&quot; &gt;&amp;2; exit 143&#x27; TERM</code></pre></div><p>Sprzątanie siedzi tylko w <code>EXIT</code>. Pułapki na sygnały robią tylko jedno: kończą skrypt z właściwym kodem. A <code>exit</code> sam uruchomi <code>EXIT</code>, więc sprzątaczka przychodzi dokładnie raz.</p></section><section><h2 id="pulapka-sprzataczka-czeka-az-kucharz-skonczy">Pułapka: sprzątaczka czeka, aż kucharz skończy</h2><p>Druga zaskakująca rzecz. Skrypt odpala długi program, a my wysyłamy mu <code>kill</code> z innego terminala:</p><div class="kod"><pre><code>#!/bin/bash
+set -euo pipefail
+trap &#x27;echo &quot;Sprzątaczka sprząta&quot;&#x27; EXIT
+trap &#x27;echo &quot;Dostałem TERM&quot;; exit 143&#x27; TERM
+sleep 5</code></pre></div><div class="kod"><pre><code>Dostałem TERM
+Sprzątaczka sprząta
+kod: 143 po 5s</code></pre></div><p>Pięć sekund. <code>kill</code> przyszedł po pół sekundy, a skrypt zareagował dopiero, kiedy <code>sleep</code> skończył. Bash, który czeka na program na pierwszym planie, odkłada obsługę złapanego sygnału na później. Jak kierownik, który nie przerwie kucharzowi w połowie smażenia, tylko poczeka, aż ten zdejmie patelnię. Przy <code>sleep 5</code> to drobiazg. Przy <code>rsync</code> na godzinę już nie.</p><p>Rozwiązanie: odpal długi program w tle i czekaj na niego komendą <code>wait</code>. <code>wait</code> daje się przerwać od razu:</p><div class="kod"><pre><code>sleep 5 &amp;
+wait $!</code></pre></div><div class="kod"><pre><code>Dostałem TERM
+Sprzątaczka sprząta
+kod: 143 po 0s</code></pre></div><p>Zero sekund. Tylko pamiętaj, że wtedy program w tle dalej sobie działa, więc w sprzątaniu warto go zatrzymać: zapisz <code>pid=$!</code> i w funkcji sprzątającej zrób <code>kill &quot;$pid&quot; 2&gt;/dev/null || true</code>.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>przy Ctrl+C w terminalu problemu nie ma, bo sygnał dostaje cała grupa procesów na pierwszym planie, czyli i Bash, i <code>sleep</code>. Opóźnienie widać przy <code>kill</code> wysłanym tylko do procesu skryptu, na przykład przez systemd albo cron.</p></aside></section><section><h2 id="na-co-sprzataczka-nie-ma-rady">Na co sprzątaczka nie ma rady</h2><div class="kod"><pre><code>#!/bin/bash
+tmp=$(mktemp)
+trap &#x27;rm -f -- &quot;$tmp&quot;&#x27; EXIT
+echo &quot;$tmp&quot;
+sleep 1000</code></pre></div><p>Zabijamy go z innego terminala przez <code>kill -9</code>:</p><div class="kod"><pre><code>kod: 137
+-rw------- 1 root root 0 Nov  3 22:19 /tmp/tmp.M1DWG1OOrF</code></pre></div><p>Plik został. SIGKILL to wyłączenie prądu w całym lokalu. Nikt nie ma szansy niczego posprzątać, bo jądro po prostu usuwa proces z listy. Dlatego <code>kill -9</code> to ostateczność, a nie pierwsze, co wpisujesz. Najpierw grzeczna prośba, SIGTERM, i daj procesowi chwilę na sprzątanie.</p><p>Na takie przypadki zostaje ostatnia linia obrony: <code>/tmp</code> czyszczony przy restarcie i przez systemowe sprzątanie starych plików. I to, żeby śmieci miały rozpoznawalne nazwy. O tym za chwilę.</p></section><section><h2 id="inne-pulapki-do-lapania">Inne pułapki do łapania</h2><p><code>ERR</code> odpala się przy każdej komendzie, która zawiodła. Świetne do diagnozy, bo powie, gdzie dokładnie umarł skrypt:</p><div class="kod"><pre><code>#!/bin/bash
+set -Eeuo pipefail
+trap &#x27;echo &quot;BŁĄD: linia $LINENO, komenda: $BASH_COMMAND, kod: $?&quot; &gt;&amp;2&#x27; ERR
+kopiuj() {
+    cp /nie/ma/pliku /tmp/
+}
+echo &quot;start&quot;
+kopiuj</code></pre></div><div class="kod"><pre><code>start
+cp: cannot stat &#x27;/nie/ma/pliku&#x27;: No such file or directory
+BŁĄD: linia 5, komenda: cp /nie/ma/pliku /tmp/, kod: 1</code></pre></div><p>To <code>-E</code> w <code>set -Eeuo</code> sprawia, że pułapka <code>ERR</code> działa też wewnątrz funkcji. Bez niego błąd w <code>kopiuj</code> przeszedłby bez komunikatu. To jest odpowiedź na „cichą śmierć” z poprzedniej lekcji.</p><p>Do tego trzy drobiazgi:</p><div class="kod"><pre><code>trap -p          # pokaż ustawione pułapki
+trap &#x27;&#x27; INT      # ignoruj Ctrl+C (pusty napis)
+trap - INT       # przywróć domyślne zachowanie</code></pre></div><div class="kod"><pre><code>trap -- &#x27;echo bye&#x27; EXIT
+trap -- &#x27;&#x27; SIGINT</code></pre></div><p><code>trap &#x27;&#x27; INT</code> przydaje się w krytycznym momencie, na przykład kiedy podmieniasz plik konfiguracyjny i przerwanie w połowie byłoby gorsze niż dokończenie. Tylko nie zapomnij potem przywrócić.</p></section><section><h2 id="mktemp-czyli-bezpieczny-pokoj-na-chwile">mktemp, czyli bezpieczny pokój na chwilę</h2><p>Teraz skąd brać pliki tymczasowe. Stara szkoła:</p><div class="kod"><pre><code>tmp=/tmp/raport.$$</code></pre></div><p><code>$$</code> to numer procesu, więc wychodzi coś jak <code>/tmp/raport.23025</code>. Problem: ten numer da się przewidzieć. <code>/tmp</code> to biurko na korytarzu, każdy może tam coś położyć. Jeśli złośliwy użytkownik zawczasu położy tam pod tą nazwą dowiązanie do ważnego pliku, twój skrypt uruchomiony jako root może ten ważny plik nadpisać. [dla zaawansowanych: nowoczesne jądra mają osobne zabezpieczenia przed takimi sztuczkami w folderach typu <code>/tmp</code> (<code>fs.protected_symlinks</code>), ale nie pisz skryptów, które liczą na to, że ktoś inny je uratuje.]</p><p><code>mktemp</code> tworzy plik o losowej nazwie, z prawami tylko dla ciebie, i robi to atomowo: albo plik powstał nowy i jest twój, albo komenda zwraca błąd.</p><div class="kod"><pre><code>mktemp
+mktemp -d
+mktemp /tmp/kopia.XXXXXX.sql
+ls -ld &quot;$(mktemp -d)&quot;</code></pre></div><div class="kod"><pre><code>/tmp/tmp.jTltpBPq3k
+/tmp/tmp.aiKW7KIygc
+/tmp/kopia.ixSTyu.sql
+drwx------ 2 root root 4096 Nov  3 22:19 /tmp/tmp.biuGykoVIC</code></pre></div><ul><li>Bez argumentów: plik w <code>/tmp</code> o nazwie <code>tmp.</code> i dziesięć losowych znaków.</li><li><code>-d</code>: folder zamiast pliku. Zwykle wygodniejszy: jeden folder na wszystkie robocze pliki, jedno <code>rm -rf</code> przy sprzątaniu.</li><li>Własny wzór z iksami: iksy zamieniają się na losowe znaki. Muszą być co najmniej trzy. Dawaj nazwę skryptu na początek, żeby wiedzieć, czyje śmieci leżą w <code>/tmp</code>, jeśli jednak zostaną.</li><li>Plik dostaje prawa <code>-rw-------</code>, a folder <code>drwx------</code>. Nikt poza tobą nie zajrzy.</li></ul><div class="kod"><pre><code>mktemp: too few X&#x27;s in template &#x27;/tmp/zle.XX&#x27;</code></pre></div><p>Jak ustawisz zmienną <code>TMPDIR</code>, <code>mktemp</code> utworzy plik tam zamiast w <code>/tmp</code>. Przydaje się, gdy <code>/tmp</code> jest mały, a ty pracujesz na dużych plikach.</p><p class="ekran">macOS: <code>mktemp</code> też jest, ale z rodziny BSD, a zmienna <code>TMPDIR</code> wskazuje tam zwykle osobny folder użytkownika zamiast <code>/tmp</code>. Proste <code>mktemp</code> i <code>mktemp -d</code> działają na obu systemach.</p></section><section><h2 id="wszystko-razem-raport-ktory-nigdy-nie-zostawia-pol">Wszystko razem: raport, który nigdy nie zostawia połówek</h2><p>Pamiętasz zepsuty plik <code>kopia.sql.gz</code> z poprzedniej lekcji? 20 bajtów nicości, które wyglądały jak backup. Dziś zrobimy to porządnie. Skrypt zbiera stan serwera do pliku, a plik wynikowy albo powstaje cały, albo wcale.</p><div class="kod"><pre><code>#!/bin/bash
+# raport.sh PLIK — zbiera stan serwera do pliku, nigdy nie zostawia połówek
+set -euo pipefail
+
+cel=${1:?Użycie: $0 PLIK_WYNIKOWY}
+robocze=$(mktemp -d)
+gotowy=$(mktemp &quot;${cel}.XXXXXX&quot;)
+
+sprzataj() {
+    rm -rf -- &quot;$robocze&quot;
+    rm -f -- &quot;$gotowy&quot;
+}
+trap sprzataj EXIT
+trap &#x27;echo &quot;Przerwano.&quot; &gt;&amp;2; exit 130&#x27; INT
+trap &#x27;echo &quot;Zakończono z zewnątrz.&quot; &gt;&amp;2; exit 143&#x27; TERM
+
+df -h / &gt; &quot;$robocze/dyski.txt&quot;
+free -h &gt; &quot;$robocze/pamiec.txt&quot;
+uptime &gt; &quot;$robocze/obciazenie.txt&quot;
+sleep 3   # udajemy długą, ciężką pracę
+
+cat &quot;$robocze&quot;/*.txt &gt; &quot;$gotowy&quot;
+chmod 644 -- &quot;$gotowy&quot;   # mktemp daje 600, raport ma być do czytania
+mv -- &quot;$gotowy&quot; &quot;$cel&quot;
+echo &quot;Raport gotowy: $cel&quot;</code></pre></div><p>Normalne uruchomienie:</p><div class="kod"><pre><code>Raport gotowy: wyniki/raport.txt
+-rw-r--r-- 1 root root 357 Nov  3 22:20 raport.txt</code></pre></div><p>A teraz Ctrl+C w trakcie:</p><div class="kod"><pre><code>^CPrzerwano.
+kod: 130
+$ ls wyniki/
+$ ls /tmp | grep -c &#x27;^tmp\.&#x27;
+0</code></pre></div><p>Nic. Ani połówki raportu, ani śmieci w <code>/tmp</code>. Kluczowy jest trik z ostatnimi linijkami: piszemy do pliku tymczasowego <strong>obok</strong> celu, a na końcu robimy <code>mv</code>. Zmiana nazwy w obrębie jednego systemu plików to dla jądra jedna operacja. Ktoś, kto czyta <code>raport.txt</code>, widzi albo stary raport, albo nowy. Nigdy pół na pół. Jak podmiana kelnera przy stoliku: gość widzi jednego albo drugiego, a nie dwóch kelnerów zrośniętych w połowie.</p><p>Dlaczego „obok celu”, a nie w <code>/tmp</code>? Bo <code>/tmp</code> często jest na innym systemie plików, a <code>mv</code> między systemami plików to w rzeczywistości kopiowanie i kasowanie. Już nie jedna operacja.</p></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p>Sygnał to krótka wiadomość od jądra do procesu: numer i nic więcej. Każdy proces ma tabelkę, w której jądro sprawdza, co z danym sygnałem zrobić: domyślna akcja (zwykle śmierć), ignorowanie albo wywołanie funkcji programu. <code>trap</code> wpisuje do tej tabelki „wywołaj Basha”. SIGKILL i SIGSTOP nie mają w tabelce miejsca do edycji. Jądro obsługuje je samo i proces nawet nie wie, co go trafiło.</p><p>Bash, kiedy dostanie złapany sygnał, tylko zapisuje sobie „przyszedł SIGTERM”. Właściwą pułapkę uruchamia w bezpiecznym momencie, między komendami. Dlatego czeka, aż <code>sleep</code> na pierwszym planie skończy. <code>wait</code> jest wyjątkiem i daje się przerwać od razu.</p><p><code>EXIT</code> nie jest prawdziwym sygnałem. To umowna nazwa Basha na „zaraz kończę”. Bash odpala tę pułapkę przy <code>exit</code>, przy końcu skryptu, przy zatrzymaniu przez <code>set -e</code> i przy śmierci od sygnału, który da się złapać.</p><p>A jeszcze jedno: sygnały ignorowane w chwili startu powłoki nie dadzą się w niej złapać. Skrypt odpalony w tle z nieinteraktywnej powłoki dostaje Ctrl+C ustawione na „ignoruj” i żaden <code>trap</code> tego nie zmieni. Kiedy testujesz pułapki, testuj w prawdziwym terminalu.</p></section><section><h2 id="sciaga-flag">Ściąga flag</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga</th><th>Co robi</th></tr><tr><td><code>trap &#x27;cmd&#x27; EXIT</code></td><td>—</td><td>uruchamia <code>cmd</code> przy każdym zakończeniu skryptu</td></tr><tr><td><code>trap &#x27;cmd&#x27; INT TERM</code></td><td>—</td><td>łapie Ctrl+C i <code>kill</code>; pamiętaj o <code>exit</code> w środku</td></tr><tr><td><code>trap &#x27;cmd&#x27; ERR</code></td><td>—</td><td>uruchamia <code>cmd</code> przy komendzie, która zawiodła</td></tr><tr><td><code>set</code></td><td><code>-E</code></td><td>pułapka <code>ERR</code> działa też w funkcjach</td></tr><tr><td><code>trap</code></td><td><code>-p</code></td><td>pokazuje ustawione pułapki</td></tr><tr><td><code>trap &#x27;&#x27; INT</code></td><td>—</td><td>ignoruje sygnał</td></tr><tr><td><code>trap - INT</code></td><td>—</td><td>przywraca domyślne zachowanie</td></tr><tr><td><code>kill</code></td><td><code>-l</code></td><td>lista sygnałów z numerami</td></tr><tr><td><code>wait</code></td><td><code>$!</code></td><td>czeka na ostatni proces w tle, daje się przerwać</td></tr><tr><td><code>mktemp</code></td><td>(brak)</td><td>bezpieczny plik w <code>/tmp</code>, prawa 600</td></tr><tr><td><code>mktemp</code></td><td><code>-d</code></td><td>bezpieczny folder, prawa 700</td></tr><tr><td><code>mktemp</code></td><td><code>wzór.XXXXXX</code></td><td>własna nazwa, min. 3 iksy</td></tr><tr><td><code>mktemp</code></td><td><code>-p FOLDER</code></td><td>tworzy w podanym folderze</td></tr><tr><td><code>$LINENO</code>, <code>$BASH_COMMAND</code></td><td>—</td><td>numer linii i treść komendy (przydatne w <code>ERR</code>)</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>Raport powstaje, ale nikt poza rootem nie może go przeczytać:</p><div class="kod"><pre><code>$ cat /srv/raporty/raport.txt
+cat: /srv/raporty/raport.txt: Permission denied
+$ ls -l /srv/raporty/raport.txt
+-rw------- 1 root root 5 Nov  3 22:22 /srv/raporty/raport.txt</code></pre></div><p>Dlaczego: plik powstał przez <code>mktemp</code>, a <code>mktemp</code> daje prawa tylko właścicielowi. <code>mv</code> zachowuje prawa, więc plik docelowy też jest <code>600</code>. Klasyczny objaw w praktyce: serwer WWW zwraca błąd 403 dla pliku, który „przecież tam jest”.</p><p>Naprawa: przed <code>mv</code> ustaw prawa świadomie, <code>chmod 644 -- &quot;$gotowy&quot;</code>. Tak jak w skrypcie wyżej.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><p>Napisz skrypt <code>kopia_logow.sh</code>, który:</p><ol><li>tworzy folder tymczasowy przez <code>mktemp -d</code>,</li><li>kopiuje do niego <code>/var/log</code> (<code>cp -r</code>, błędy o braku uprawnień możesz wyciszyć),</li><li>czeka 10 sekund (<code>sleep 10</code>, udajemy ciężką pracę),</li><li>wypisuje, ile plików skopiował i ile zajmują (<code>find … | wc -l</code>, <code>du -sh</code>),</li><li>zawsze sprząta swój folder tymczasowy,</li><li>po Ctrl+C wypisuje „Przerwano” na stderr i kończy się kodem 130, a po <code>kill</code> kodem 143.</li></ol><p>Sprawdź trzy rzeczy: normalne uruchomienie, Ctrl+C w trakcie <code>sleep</code> i <code>kill</code> z drugiego terminala. Po każdej próbie zajrzyj do <code>/tmp</code>, czy nic nie zostało. ShellCheck ma milczeć.</p><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><div class="kod"><pre><code>#!/bin/bash
+# kopia_logow.sh — kopiuje /var/log do folderu tymczasowego, liczy i sprząta
+set -euo pipefail
+
+robocze=$(mktemp -d /tmp/kopia_logow.XXXXXX)
+pid=&quot;&quot;
+
+sprzataj() {
+    if [[ -n $pid ]]; then
+        kill &quot;$pid&quot; 2&gt;/dev/null || true
+    fi
+    rm -rf -- &quot;$robocze&quot;
+}
+trap sprzataj EXIT
+trap &#x27;echo &quot;Przerwano.&quot; &gt;&amp;2; exit 130&#x27; INT
+trap &#x27;echo &quot;Zakończono z zewnątrz.&quot; &gt;&amp;2; exit 143&#x27; TERM
+
+cp -r /var/log &quot;$robocze/&quot; 2&gt;/dev/null || true
+sleep 10 &amp;
+pid=$!
+wait &quot;$pid&quot;
+pid=&quot;&quot;
+
+pliki=$(find &quot;$robocze&quot; -type f | wc -l)
+rozmiar=$(du -sh &quot;$robocze&quot; | cut -f1)
+echo &quot;Skopiowano plików: $pliki, razem: $rozmiar&quot;</code></pre></div><p>Trzy próby:</p><div class="kod"><pre><code>$ ./kopia_logow.sh
+Skopiowano plików: 60, razem: 6.0M
+kod: 0
+$ ./kopia_logow.sh
+^CPrzerwano.
+kod: 130
+$ ./kopia_logow.sh      # a z drugiego terminala: kill PID
+Zakończono z zewnątrz.
+kod: 143
+$ ls /tmp | grep -c kopia_logow
+0</code></pre></div><p>Za każdym razem <code>/tmp</code> czysty. Trzy szczegóły warte uwagi. <code>mktemp</code> z nazwą skryptu we wzorze, więc gdyby coś jednak zostało, wiadomo czyje. <code>sleep</code> w tle z <code>wait</code>, żeby <code>kill</code> z zewnątrz zadziałał od razu, a nie po dziesięciu sekundach. I <code>|| true</code> przy <code>cp</code>, bo jako zwykły użytkownik nie przeczytasz części logów i <code>cp</code> zwróci błąd, a nam wystarczy to, co się dało skopiować. To świadoma decyzja, a nie zamiatanie pod dywan. No, trochę zamiatanie. Ale świadome.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Nasze skrypty są już odporne na spacje, błędy i przerwania. Ale ciągle przyjmują argumenty jak w latach siedemdziesiątych: po kolei, bez nazw, bez pomocy. W następnej lekcji nauczymy je opcji jak w prawdziwych programach: <code>-v</code>, <code>-d FOLDER</code>, <code>-h</code> i <code>--help</code>, przez <code>getopts</code>, ze sprawdzaniem, czy użytkownik podał coś sensownego.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-050.html" rel="prev">← 50. Tryb „zatrzymaj się przy błędzie”</a><a class="btn domyslny zolty" href="lekcja-052.html" rel="next">52. Opcje jak w prawdziwych programach →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

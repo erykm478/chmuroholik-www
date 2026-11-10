@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>52. Opcje jak w prawdziwych programach — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 52 kursu Linux i Bash od zera do admina: Opcje jak w prawdziwych programach. kursant dodaje do swoich skryptów opcje w stylu -v, -d FOLDER, -h i --help przez getopts, pisze porządny ekran pomocy i sprawdza dane od użytkownika, zanim skrypt cokolwiek zrobi.">
+<meta property="og:title" content="52. Opcje jak w prawdziwych programach — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 52 kursu Linux i Bash od zera do admina: Opcje jak w prawdziwych programach. kursant dodaje do swoich skryptów opcje w stylu -v, -d FOLDER, -h i --help przez getopts, pisze porządny ekran pomocy i sprawdza dane od użytkownika, zanim skrypt cokolwiek zrobi.">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 5</span></div>
+      <div class="boczny-tytul"><a href="index.html#m05">Skrypty, które się nie sypią</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-049.html" data-lekcja="49"><span class="znacznik"></span><span class="nr">49</span> Spacje w nazwach plików</a></li><li><a href="lekcja-050.html" data-lekcja="50"><span class="znacznik"></span><span class="nr">50</span> Tryb „zatrzymaj się przy błędzie”</a></li><li><a href="lekcja-051.html" data-lekcja="51"><span class="znacznik"></span><span class="nr">51</span> Sprzątanie po sobie</a></li><li><a href="lekcja-052.html" data-lekcja="52" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">52</span> Opcje jak w prawdziwych programach</a></li><li><a href="lekcja-053.html" data-lekcja="53"><span class="znacznik"></span><span class="nr">53</span> Szukanie błędów</a></li><li><a href="lekcja-054.html" data-lekcja="54"><span class="znacznik"></span><span class="nr">54</span> Komunikaty, logi i kolory</a></li><li><a href="lekcja-055.html" data-lekcja="55"><span class="znacznik"></span><span class="nr">55</span> Duży skrypt w porządku</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="52" data-modul="5" data-tematy="getopts, --help, sprawdzanie danych">
+    <div class="belka"><span>Lekcja 52 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m05">Moduł 5</a> › Lekcja 52</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Opcje jak w prawdziwych programach</h1>
+      <p class="meta"><span>⏱ ok. 13 min czytania</span><span>· moduł 5: Skrypty, które się nie sypią</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant dodaje do swoich skryptów opcje w stylu <code>-v</code>, <code>-d FOLDER</code>, <code>-h</code> i <code>--help</code> przez <code>getopts</code>, pisze porządny ekran pomocy i sprawdza dane od użytkownika, zanim skrypt cokolwiek zrobi.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#argumenty-po-kolei-kontra-opcje">Argumenty po kolei kontra opcje</a></li><li><a href="#getopts-krok-po-kroku">getopts krok po kroku</a></li><li><a href="#gdy-uzytkownik-poda-bzdure">Gdy użytkownik poda bzdurę</a></li><li><a href="#dwie-pulapki-getopts">Dwie pułapki getopts</a></li><li><a href="#ekran-pomocy">Ekran pomocy</a></li><li><a href="#sprawdzanie-danych">Sprawdzanie danych</a></li><li><a href="#cale-narzedzie">Całe narzędzie</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga-flag">Ściąga flag</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p class="ekran"><code>ls --help</code>, długa ściana opcji przewija się przez ekran</p><p>Wpisz <code>ls --help</code>. Albo <code>grep --help</code>. Każdy porządny program zachowuje się tak samo: ma opcje z myślnikiem, ma pomoc, a jak wpiszesz bzdurę, mówi dokładnie, co jest nie tak.</p><div class="kod"><pre><code>$ ls --zle
+ls: unrecognized option &#x27;--zle&#x27;
+Try &#x27;ls --help&#x27; for more information.</code></pre></div><p>A nasze skrypty? <code>./skrypt.sh /var/log 30 tak</code>. Co to jest „tak”? Co znaczy 30? A jak zamienisz kolejność, to skrypt usunie pliki z folderu „30” starsze niż „/var/log” dni? Za pół roku nawet ty nie będziesz pamiętał, który argument był który. Twój kolega na pewno nie, i zadzwoni do ciebie w niedzielę.</p><p>Dziś skrypt dostanie opcje jak prawdziwy program. Na koniec będziemy mieli narzędzie, które sprząta stare pliki, domyślnie niczego nie kasuje, a zapytane o pomoc odpowiada jak dobrze wychowany urzędnik.</p></section><section><h2 id="argumenty-po-kolei-kontra-opcje">Argumenty po kolei kontra opcje</h2><p>Argumenty pozycyjne, <code>$1</code>, <code>$2</code>, <code>$3</code>, to jak formularz, w którym nie ma podpisanych pól. Musisz pamiętać, że w trzeciej kratce wpisuje się PESEL, a w piątej nazwisko panieńskie matki. Pomylisz kratki i wniosek idzie do kosza. Albo gorzej, zostaje rozpatrzony.</p><p>Opcje to formularz z podpisami przy polach: <code>-d</code> to folder, <code>-n</code> to liczba dni. Kolejność nie ma znaczenia, część pól jest nieobowiązkowa, a do części wpisujesz wartość.</p><p>Umowa w świecie Uniksa wygląda tak:</p><ul><li><code>-v</code> — przełącznik, włączony albo nie.</li><li><code>-d FOLDER</code> — opcja z wartością.</li><li><code>-vu</code> — kilka przełączników sklejonych razem, to samo co <code>-v -u</code>.</li><li><code>--</code> — koniec opcji, dalej są już zwykłe argumenty.</li><li><code>-h</code> i <code>--help</code> — pomoc.</li></ul><p>Do czytania tego w Bashu jest wbudowana komenda <code>getopts</code>.</p></section><section><h2 id="getopts-krok-po-kroku">getopts krok po kroku</h2><p><code>getopts</code> to urzędnik, który bierze z kupki argumentów po jednej opcji naraz. Wołasz go w pętli <code>while</code>. Za każdym razem mówi, jaką opcję znalazł, a jeśli opcja ma wartość, kładzie ją do zmiennej <code>OPTARG</code>. Kiedy dojdzie do czegoś, co nie zaczyna się od myślnika, kończy.</p><div class="kod"><pre><code>#!/bin/bash
+while getopts &quot;vd:&quot; opcja; do
+    echo &quot;opcja=$opcja OPTARG=${OPTARG:-} OPTIND=$OPTIND&quot;
+done
+shift $((OPTIND - 1))
+echo &quot;zostało argumentów: $# -&gt; $*&quot;</code></pre></div><p>Napis <code>&quot;vd:&quot;</code> to spis dozwolonych opcji. Każda litera to opcja. Dwukropek <strong>po</strong> literze znaczy: „ta opcja wymaga wartości”. Czyli <code>v</code> to przełącznik, a <code>d:</code> to opcja z wartością.</p><div class="kod"><pre><code>./demo1.sh -v -d /tmp plik1 plik2</code></pre></div><div class="kod"><pre><code>opcja=v OPTARG= OPTIND=2
+opcja=d OPTARG=/tmp OPTIND=4
+zostało argumentów: 2 -&gt; plik1 plik2</code></pre></div><p><code>OPTIND</code> to numer następnej kartki do przeczytania. Po pętli <code>shift $((OPTIND - 1))</code> zrzuca ze stosu wszystkie przeczytane opcje i zostają same zwykłe argumenty, czyli pliki. Znasz <code>shift</code> z lekcji o argumentach. Tu przesuwa o tyle, ile trzeba, jednym ruchem.</p><p>Sklejanie też działa:</p><div class="kod"><pre><code>./demo1.sh -vd/tmp plik1</code></pre></div><div class="kod"><pre><code>opcja=v OPTARG= OPTIND=1
+opcja=d OPTARG=/tmp OPTIND=2
+zostało argumentów: 1 -&gt; plik1</code></pre></div><p><code>-vd/tmp</code> to dla <code>getopts</code> <code>-v</code> i <code>-d /tmp</code>. Zauważ, że po <code>v</code> <code>OPTIND</code> dalej wynosi 1, bo urzędnik jeszcze nie skończył tej kartki.</p><p>A to ważne: opcje muszą być <strong>przed</strong> zwykłymi argumentami.</p><div class="kod"><pre><code>./demo1.sh plik1 -v</code></pre></div><div class="kod"><pre><code>zostało argumentów: 2 -&gt; plik1 -v</code></pre></div><p><code>getopts</code> zobaczył <code>plik1</code>, uznał, że opcje się skończyły, i poszedł do domu. <code>-v</code> zostało zwykłym argumentem. [dla zaawansowanych: programy GNU, jak <code>ls</code>, przestawiają argumenty i przyjmują opcje także na końcu. <code>getopts</code> w Bashu trzyma się starszej, POSIX-owej zasady: pierwszy argument bez myślnika kończy opcje.]</p></section><section><h2 id="gdy-uzytkownik-poda-bzdure">Gdy użytkownik poda bzdurę</h2><p>Domyślnie <code>getopts</code> sam wypisuje błędy po angielsku:</p><div class="kod"><pre><code>demo1.sh: illegal option -- x
+demo1.sh: option requires an argument -- d</code></pre></div><p>Działa, ale wygląda jak komunikat z lat osiemdziesiątych. Lepiej przejąć obsługę błędów. Robi się to dwukropkiem na <strong>początku</strong> spisu opcji: <code>&quot;:vd:&quot;</code>. To tak zwany tryb cichy. <code>getopts</code> przestaje sam krzyczeć i zamiast tego zostawia ci znaki:</p><ul><li><code>?</code> w zmiennej opcji i nieznaną literę w <code>OPTARG</code>, kiedy opcji nie ma na liście,</li><li><code>:</code> w zmiennej opcji i literę w <code>OPTARG</code>, kiedy opcji brakuje wartości.</li></ul><p>Klasyczna obsługa to <code>case</code> z lekcji o menu:</p><div class="kod"><pre><code>#!/bin/bash
+while getopts &quot;:vd:&quot; opcja; do
+    case $opcja in
+        v) echo &quot;gadatliwie&quot; ;;
+        d) echo &quot;folder: $OPTARG&quot; ;;
+        :) echo &quot;Opcja -$OPTARG wymaga wartości.&quot; &gt;&amp;2; exit 2 ;;
+        \?) echo &quot;Nieznana opcja: -$OPTARG&quot; &gt;&amp;2; exit 2 ;;
+    esac
+done</code></pre></div><div class="kod"><pre><code>$ ./demo2.sh -x
+Nieznana opcja: -x
+kod 2
+$ ./demo2.sh -d
+Opcja -d wymaga wartości.
+kod 2</code></pre></div><p><code>\?</code> ma backslash, bo sam <code>?</code> w <code>case</code> to wzorzec „dowolny jeden znak” i złapałby wszystko. Kod 2 to umowa: błąd w sposobie użycia. Zobacz, co zwracają porządne programy, kiedy podasz złą opcję:</p><div class="kod"><pre><code>$ bash -c &#x27;cd -Z&#x27;
+bash: line 1: cd: -Z: invalid option
+cd: usage: cd [-L|[-P [-e]] [-@]] [dir]
+cd kod 2
+ls kod 2
+grep kod 2</code></pre></div><p>Wszystkie dwójki. Jest się kogo trzymać. Konwencjom kodów wyjścia poświęcimy kawałek lekcji 54.</p></section><section><h2 id="dwie-pulapki-getopts">Dwie pułapki getopts</h2><p>Pierwsza: opcja z wartością zjada wszystko, co stoi po niej.</p><div class="kod"><pre><code>$ ./demo2.sh -d -v
+folder: -v
+kod 0</code></pre></div><p>Użytkownik zapomniał podać folderu, a <code>getopts</code> uznał, że folder nazywa się <code>-v</code>. Skrypt poszedł dalej. Dlatego wartości trzeba potem sprawdzić, o tym za chwilę.</p><p>Druga: <code>getopts</code> nie zna długich opcji.</p><div class="kod"><pre><code>$ ./demo2.sh --help
+Nieznana opcja: --
+kod 2</code></pre></div><p>Dla <code>getopts</code> <code>--help</code> to opcja o nazwie <code>-</code>, a za nią sklejone <code>h</code>, <code>e</code>, <code>l</code>, <code>p</code>. Pierwszy minus jest nieznany, więc koniec. Długie opcje trzeba obsłużyć ręcznie. Dla samego <code>--help</code> wystarczy prosta pętla przed <code>getopts</code>:</p><div class="kod"><pre><code>for arg in &quot;$@&quot;; do
+    if [[ $arg == &quot;--help&quot; ]]; then
+        pomoc
+        exit 0
+    fi
+done</code></pre></div><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>na Linuksie jest też zewnętrzny program <code>getopt</code>, bez „s” na końcu, z pakietu util-linux. Obsługuje długie opcje: <code>getopt -o d:n:uvh --long folder:,dni:,help -- &quot;$@&quot;</code>. Wersja na macOS i w BSD tego nie potrafi, więc skrypt z nim nie jest przenośny. Do kursu wystarczy <code>getopts</code>.</p></aside></section><section><h2 id="ekran-pomocy">Ekran pomocy</h2><p>Pomoc piszemy jako funkcję z here-dokiem z lekcji 44. To najwygodniejszy sposób na kilkanaście linijek tekstu:</p><div class="kod"><pre><code>PROGRAM=${0##*/}
+
+pomoc() {
+    cat &lt;&lt;KONIEC
+Użycie: $PROGRAM -d FOLDER [-n DNI] [-u] [-v]
+
+Wypisuje pliki w FOLDERZE starsze niż DNI dni.
+Domyślnie niczego nie usuwa.
+
+Opcje:
+  -d FOLDER   gdzie szukać (wymagane)
+  -n DNI      ile dni (domyślnie: 30)
+  -u          naprawdę usuń znalezione pliki
+  -v          pokaż rozmiar i datę każdego pliku
+  -h, --help  ta pomoc
+KONIEC
+}</code></pre></div><p><code>${0##*/}</code> to nożyczki z lekcji 41: obcinają ścieżkę i zostaje sama nazwa skryptu, bez <code>./</code> czy <code>/usr/local/bin/</code>. Nawiasy kwadratowe w linijce „Użycie” to umowa: w kwadratowych to, co nieobowiązkowe. WIELKIE litery to miejsce na twoją wartość. Ta sama umowa, co w <code>man</code> i w każdym <code>--help</code>.</p><p>Jeszcze jedna zasada: pomoc, o którą ktoś <strong>poprosił</strong>, idzie na standardowe wyjście i kończy się kodem 0. Komunikat o <strong>błędzie</strong> idzie na wyjście błędów i kończy się kodem 2. Ktoś, kto zrobi <code>./stare.sh --help | less</code>, chce przewijać pomoc, a nie dostać ją rozlaną po ekranie.</p></section><section><h2 id="sprawdzanie-danych">Sprawdzanie danych</h2><p>Pamiętasz bramkarza z lekcji o <code>if</code>? Teraz stawiamy całą ochronę przy wejściu. Zasada: <strong>sprawdź wszystko, zanim zrobisz cokolwiek</strong>. Skrypt, który usunie połowę plików, a potem odkryje, że liczba dni była bez sensu, jest gorszy niż skrypt, który od razu odmówi.</p><div class="kod"><pre><code>blad() {
+    echo &quot;$PROGRAM: $1&quot; &gt;&amp;2
+    echo &quot;Spróbuj: $PROGRAM -h&quot; &gt;&amp;2
+    exit 2
+}
+
+(( $# == 0 )) || blad &quot;niepotrzebne argumenty: $*&quot;
+[[ -n $folder ]] || blad &quot;brak wymaganej opcji -d FOLDER&quot;
+[[ -d $folder ]] || blad &quot;nie ma takiego folderu: $folder&quot;
+[[ $dni =~ ^[0-9]+$ ]] || blad &quot;-n musi być liczbą całkowitą, a jest: $dni&quot;
+dni=$((10#$dni))   # 08 to osiem, a nie błąd w systemie ósemkowym
+(( dni &gt;= 1 )) || blad &quot;-n musi być co najmniej 1&quot;</code></pre></div><p>Każda linijka to jeden bramkarz: „sprawdzam, a jak nie pasuje, wylatujesz”. Wzór <code>^[0-9]+$</code> to wyrażenie regularne z lekcji 45: od początku do końca same cyfry, co najmniej jedna. Bez minusów, bez przecinków, bez „trzydzieści”.</p><p>Co robi <code>10#</code>, wyjaśnię w typowym błędzie. Bo ta linijka powstała dokładnie z tego błędu.</p></section><section><h2 id="cale-narzedzie">Całe narzędzie</h2><div class="kod"><pre><code>#!/bin/bash
+# stare.sh — wypisuje (albo usuwa) pliki starsze niż N dni
+set -euo pipefail
+
+PROGRAM=${0##*/}
+folder=&quot;&quot;
+dni=30
+usuwaj=0
+gadatliwie=0
+
+pomoc() {
+    cat &lt;&lt;KONIEC
+Użycie: $PROGRAM -d FOLDER [-n DNI] [-u] [-v]
+
+Wypisuje pliki w FOLDERZE starsze niż DNI dni.
+Domyślnie niczego nie usuwa.
+
+Opcje:
+  -d FOLDER   gdzie szukać (wymagane)
+  -n DNI      ile dni (domyślnie: 30)
+  -u          naprawdę usuń znalezione pliki
+  -v          pokaż rozmiar i datę każdego pliku
+  -h, --help  ta pomoc
+KONIEC
+}
+
+blad() {
+    echo &quot;$PROGRAM: $1&quot; &gt;&amp;2
+    echo &quot;Spróbuj: $PROGRAM -h&quot; &gt;&amp;2
+    exit 2
+}
+
+# --help nie jest dla getopts, łapiemy je ręcznie
+for arg in &quot;$@&quot;; do
+    if [[ $arg == &quot;--help&quot; ]]; then
+        pomoc
+        exit 0
+    fi
+done
+
+while getopts &quot;:d:n:uvh&quot; opcja; do
+    case $opcja in
+        d) folder=$OPTARG ;;
+        n) dni=$OPTARG ;;
+        u) usuwaj=1 ;;
+        v) gadatliwie=1 ;;
+        h) pomoc; exit 0 ;;
+        :) blad &quot;opcja -$OPTARG wymaga wartości&quot; ;;
+        \?) blad &quot;nieznana opcja -$OPTARG&quot; ;;
+    esac
+done
+shift $((OPTIND - 1))
+
+# sprawdzanie danych
+(( $# == 0 )) || blad &quot;niepotrzebne argumenty: $*&quot;
+[[ -n $folder ]] || blad &quot;brak wymaganej opcji -d FOLDER&quot;
+[[ -d $folder ]] || blad &quot;nie ma takiego folderu: $folder&quot;
+[[ $dni =~ ^[0-9]+$ ]] || blad &quot;-n musi być liczbą całkowitą, a jest: $dni&quot;
+dni=$((10#$dni))   # 08 to osiem, a nie błąd w systemie ósemkowym
+(( dni &gt;= 1 )) || blad &quot;-n musi być co najmniej 1&quot;
+
+licznik=0
+while IFS= read -r -d &#x27;&#x27; plik; do
+    if (( gadatliwie )); then
+        printf &#x27;%s  %8s B  %s\n&#x27; &quot;$(date -r &quot;$plik&quot; +%F)&quot; &quot;$(stat -c %s -- &quot;$plik&quot;)&quot; &quot;$plik&quot;
+    else
+        printf &#x27;%s\n&#x27; &quot;$plik&quot;
+    fi
+    if (( usuwaj )); then
+        rm -f -- &quot;$plik&quot;
+    fi
+    licznik=$((licznik + 1))
+done &lt; &lt;(find &quot;$folder&quot; -type f -mtime +&quot;$dni&quot; -print0)
+
+if (( usuwaj )); then
+    echo &quot;Usunięto plików: $licznik&quot;
+else
+    echo &quot;Znaleziono plików: $licznik (nic nie usunięto, dodaj -u)&quot;
+fi</code></pre></div><p>Zbiera wszystko z modułu: <code>set -euo pipefail</code>, pętlę z <code>-print0</code> odporną na spacje, cudzysłowy, <code>--</code> przed nazwami plików. ShellCheck: cisza.</p><p>Zwróć uwagę na projekt: <strong>niebezpieczna akcja wymaga jawnej opcji</strong>. Bez <code>-u</code> skrypt tylko pokazuje. Dokładnie tak, jak w rozwiązaniu zadania z lekcji 49: najpierw patrzysz, potem kasujesz. Teraz ta ostrożność jest wbudowana w narzędzie.</p><p class="ekran">ostrzeżenie: „Opcję <code>-u</code> testuj najpierw na folderze ze śmieciami testowymi albo na maszynie wirtualnej.”</p><p>Przygotowałem folder testowy <code>smietnik</code> z plikami w różnym wieku, także w podfolderze ze spacją. Uruchamiamy:</p><div class="kod"><pre><code>$ ./stare.sh -d smietnik
+smietnik/duzy.log
+smietnik/a.log
+smietnik/stare logi/b c.log
+Znaleziono plików: 3 (nic nie usunięto, dodaj -u)
+
+$ ./stare.sh -vd smietnik
+2026-07-26      2048 B  smietnik/duzy.log
+2026-09-24         0 B  smietnik/a.log
+2026-09-24         0 B  smietnik/stare logi/b c.log
+Znaleziono plików: 3 (nic nie usunięto, dodaj -u)
+
+$ ./stare.sh -u -d smietnik -n 60
+smietnik/duzy.log
+Usunięto plików: 1</code></pre></div><p>A teraz próbujemy go zepsuć:</p><div class="kod"><pre><code>$ ./stare.sh
+stare.sh: brak wymaganej opcji -d FOLDER
+Spróbuj: stare.sh -h
+$ ./stare.sh -d /nie/ma
+stare.sh: nie ma takiego folderu: /nie/ma
+Spróbuj: stare.sh -h
+$ ./stare.sh -d smietnik -n trzydzieści
+stare.sh: -n musi być liczbą całkowitą, a jest: trzydzieści
+Spróbuj: stare.sh -h
+$ ./stare.sh -d smietnik -x
+stare.sh: nieznana opcja -x
+Spróbuj: stare.sh -h
+$ ./stare.sh -d smietnik extra
+stare.sh: niepotrzebne argumenty: extra
+Spróbuj: stare.sh -h</code></pre></div><p>Za każdym razem kod 2, komunikat mówi dokładnie, co nie tak, i podpowiada, gdzie szukać pomocy. Nie usunięto ani jednego pliku. Tak wygląda skrypt, który można dać koledze.</p></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p><code>getopts</code> to komenda wbudowana w Basha, a nie osobny program. Musi taka być, bo zmienia stan powłoki: ustawia zmienną opcji, <code>OPTARG</code> i <code>OPTIND</code>. Osobny program nie mógłby zmienić zmiennych Basha, tak jak kucharz w kuchni nie przestawi ci krzeseł na sali.</p><p>Przy każdym wywołaniu <code>getopts</code> patrzy na argument numer <code>OPTIND</code>. Jeśli zaczyna się od myślnika, bierze kolejną literę i szuka jej w spisie. Jeśli po literze w spisie stoi dwukropek, wartością jest reszta tej samej kartki (<code>-d/tmp</code>) albo cała następna kartka (<code>-d /tmp</code>). Kiedy kartka się skończy, <code>OPTIND</code> rośnie o jeden. Kiedy trafi na argument bez myślnika albo na <code>--</code>, zwraca kod różny od zera i pętla <code>while</code> się kończy.</p><p><code>OPTIND</code> na starcie skryptu wynosi 1. Jeśli używasz <code>getopts</code> w funkcji, zadeklaruj w niej <code>local OPTIND</code>. Inaczej drugie wywołanie funkcji zacznie czytać od miejsca, w którym skończyło pierwsze, i nic nie znajdzie.</p></section><section><h2 id="sciaga-flag">Ściąga flag</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga</th><th>Co robi</th></tr><tr><td><code>getopts &quot;vd:&quot; opcja</code></td><td>—</td><td><code>v</code> przełącznik, <code>d:</code> opcja z wartością</td></tr><tr><td><code>getopts &quot;:vd:&quot; opcja</code></td><td><code>:</code> na początku</td><td>tryb cichy: sam obsługujesz błędy</td></tr><tr><td><code>$OPTARG</code></td><td>—</td><td>wartość opcji albo litera błędnej opcji</td></tr><tr><td><code>$OPTIND</code></td><td>—</td><td>numer następnego argumentu do przeczytania</td></tr><tr><td><code>shift $((OPTIND - 1))</code></td><td>—</td><td>zostawia same zwykłe argumenty</td></tr><tr><td><code>case</code></td><td><code>\?)</code></td><td>nieznana opcja (w trybie cichym)</td></tr><tr><td><code>case</code></td><td><code>:)</code></td><td>brak wartości opcji (w trybie cichym)</td></tr><tr><td><code>local OPTIND</code></td><td>—</td><td><code>getopts</code> w funkcji bez śmieci z poprzedniego wywołania</td></tr><tr><td><code>${0##*/}</code></td><td>—</td><td>sama nazwa skryptu do komunikatów</td></tr><tr><td><code>$((10#$n))</code></td><td>—</td><td>liczba dziesiętna, nawet z zerem na początku</td></tr><tr><td><code>exit</code></td><td><code>0</code> / <code>2</code></td><td>pomoc na życzenie / błąd użycia</td></tr><tr><td><code>getopt</code></td><td><code>--long</code></td><td>zewnętrzny program GNU z długimi opcjami (nieprzenośny)</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>Użytkownik podaje <code>-n 08</code>, bo przecież „osiem dni” można zapisać z zerem, jak w kalendarzu:</p><div class="kod"><pre><code>$ ./stare.sh -d smietnik -n 08
+stare.sh: line 59: ((: 08: value too great for base (error token is &quot;08&quot;)
+stare.sh: -n musi być co najmniej 1
+Spróbuj: stare.sh -h</code></pre></div><p>Bash w arytmetyce traktuje liczbę z zerem na początku jako liczbę w systemie ósemkowym. A w systemie ósemkowym cyfry 8 nie ma. Jak próba zapłacenia w Biedronce banknotem 8 złotych. Wyrażenie się wywala, <code>(( ))</code> zwraca porażkę i bramkarz wyrzuca użytkownika z kompletnie mylącym komunikatem „co najmniej 1”. Przy <code>-n 07</code> byłoby jeszcze podstępniej: wszystko by zadziałało, bo 7 ósemkowo to też 7. Błąd czekałby do pierwszego <code>08</code> albo <code>09</code>.</p><p>Naprawa: po sprawdzeniu, że są same cyfry, wymuś system dziesiętny: <code>dni=$((10#$dni))</code>. <code>10#</code> znaczy „czytaj to dziesiętnie”. Ten sam problem trafia skrypty, które biorą godzinę albo dzień miesiąca z <code>date +%H</code> czy <code>date +%d</code>, bo tam zera na początku są zawsze.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><p>Dopisz do skryptu <code>sprawdz.sh</code> z lekcji 35 opcje <code>-v</code> (pokazuje dodatkowo rozmiar i właściciela) i <code>-h</code> (pomoc) przez <code>getopts</code>.</p><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><div class="kod"><pre><code>#!/bin/bash
+# sprawdz.sh — mówi, czy ścieżka to plik, folder, czy nic
+
+uzycie() {
+    echo &quot;Użycie: $0 [-v] [-h] ŚCIEŻKA&quot;
+    echo &quot;  -v  pokaż też rozmiar i właściciela&quot;
+    echo &quot;  -h  ta pomoc&quot;
+}
+
+gadatliwy=0
+while getopts &quot;:vh&quot; opcja; do
+    case &quot;$opcja&quot; in
+        v) gadatliwy=1 ;;
+        h) uzycie; exit 0 ;;
+        &#x27;?&#x27;) echo &quot;Nieznana opcja: -$OPTARG&quot; &gt;&amp;2; uzycie &gt;&amp;2; exit 1 ;;
+    esac
+done
+shift $((OPTIND - 1))
+
+if [[ $# -ne 1 ]]; then
+    uzycie &gt;&amp;2
+    exit 1
+fi
+
+sciezka=$1
+if [[ -f &quot;$sciezka&quot; ]]; then
+    echo &quot;$sciezka to plik&quot;
+elif [[ -d &quot;$sciezka&quot; ]]; then
+    echo &quot;$sciezka to folder&quot;
+else
+    echo &quot;$sciezka nie istnieje&quot;
+    exit 1
+fi
+
+if (( gadatliwy )); then
+    stat -c &#x27;rozmiar: %s B, właściciel: %U&#x27; -- &quot;$sciezka&quot;
+fi</code></pre></div><div class="kod"><pre><code>$ ./sprawdz.sh -v /etc/hostname
+/etc/hostname to plik
+rozmiar: 3 B, właściciel: root
+$ ./sprawdz.sh -x /etc
+Nieznana opcja: -x
+Użycie: ./sprawdz.sh [-v] [-h] ŚCIEŻKA
+  -v  pokaż też rozmiar i właściciela
+  -h  ta pomoc</code></pre></div><p>Dwie linijki robią tu całą robotę. <code>getopts &quot;:vh&quot;</code> mówi: znam opcje <code>v</code> i <code>h</code>, a dwukropek na początku znaczy „błędy zgłaszam sam, po swojemu”. A <code>shift $((OPTIND - 1))</code> zdejmuje z taśmy wszystkie przerobione opcje, więc po nim <code>$1</code> to już ścieżka, a nie <code>-v</code>. Bez tego <code>shift</code> skrypt sprawdzałby, czy istnieje plik o nazwie <code>-v</code>, i uczciwie odpowiadał, że nie istnieje. Technicznie prawda, praktycznie bezużyteczne.</p><p><code>stat -c</code> wyciąga z pliku dokładnie te pola, które chcesz: <code>%s</code> to rozmiar w bajtach, <code>%U</code> to nazwa właściciela. A <code>--</code> przed ścieżką mówi „tu kończą się opcje”, na wypadek gdyby ktoś nazwał plik <code>-v</code>. Zawsze znajdzie się ktoś taki.</p><p class="ekran">macOS: tamtejszy <code>stat</code> jest z rodziny BSD i zamiast <code>-c</code> ma <code>-f</code> z innymi literkami. Na Linuksie i w kursie używamy wersji GNU.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Nasze skrypty mają już opcje, pomoc i bramkarzy. Ale prędzej czy później któryś i tak zrobi coś dziwnego, a ty nie będziesz wiedział, w której linijce. W następnej lekcji szukamy błędów jak detektyw: <code>bash -n</code>, <code>bash -x</code>, <code>set -x</code> z własnym <code>PS4</code>, ShellCheck na serio i krótki rzut oka na <code>strace</code>, czyli podsłuchiwanie, o co program prosi jądro.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-051.html" rel="prev">← 51. Sprzątanie po sobie</a><a class="btn domyslny zolty" href="lekcja-053.html" rel="next">53. Szukanie błędów →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

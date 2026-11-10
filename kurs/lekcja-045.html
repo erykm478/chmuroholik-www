@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>45. Wyrażenia regularne — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 45 kursu Linux i Bash od zera do admina: Wyrażenia regularne. kursant pisze proste wyrażenia regularne, wycina nimi z logów konkretne kawałki (grep -E, grep -o) i sprawdza dane w skrypcie przez [[ =~ ]] z tablicą BASH_REMATCH.">
+<meta property="og:title" content="45. Wyrażenia regularne — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 45 kursu Linux i Bash od zera do admina: Wyrażenia regularne. kursant pisze proste wyrażenia regularne, wycina nimi z logów konkretne kawałki (grep -E, grep -o) i sprawdza dane w skrypcie przez [[ =~ ]] z tablicą BASH_REMATCH.">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 4</span></div>
+      <div class="boczny-tytul"><a href="index.html#m04">Napisy, listy i przetwarzanie danych</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-041.html" data-lekcja="41"><span class="znacznik"></span><span class="nr">41</span> Nożyczki do tekstu</a></li><li><a href="lekcja-042.html" data-lekcja="42"><span class="znacznik"></span><span class="nr">42</span> Listy (tablice)</a></li><li><a href="lekcja-043.html" data-lekcja="43"><span class="znacznik"></span><span class="nr">43</span> Słowniki</a></li><li><a href="lekcja-044.html" data-lekcja="44"><span class="znacznik"></span><span class="nr">44</span> Ładne wypisywanie i długie teksty</a></li><li><a href="lekcja-045.html" data-lekcja="45" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">45</span> Wyrażenia regularne</a></li><li><a href="lekcja-046.html" data-lekcja="46"><span class="znacznik"></span><span class="nr">46</span> sed od podstaw</a></li><li><a href="lekcja-047.html" data-lekcja="47"><span class="znacznik"></span><span class="nr">47</span> awk od podstaw</a></li><li><a href="lekcja-048.html" data-lekcja="48"><span class="znacznik"></span><span class="nr">48</span> Znajdź wszystko</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="45" data-modul="4" data-tematy="grep -E, grep -o, [[ =~ ]], BASH_REMATCH">
+    <div class="belka"><span>Lekcja 45 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m04">Moduł 4</a> › Lekcja 45</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Wyrażenia regularne</h1>
+      <p class="meta"><span>⏱ ok. 11 min czytania</span><span>· moduł 4: Napisy, listy i przetwarzanie danych</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant pisze proste wyrażenia regularne, wycina nimi z logów konkretne kawałki (<code>grep -E</code>, <code>grep -o</code>) i sprawdza dane w skrypcie przez <code>[[ =~ ]]</code> z tablicą <code>BASH_REMATCH</code>.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#list-gonczy-zamiast-nazwiska">List gończy zamiast nazwiska</a></li><li><a href="#kropka-dowolny-znak">Kropka: dowolny znak</a></li><li><a href="#kotwice-i">Kotwice: ^ i $</a></li><li><a href="#nawiasy-kwadratowe-jeden-z-listy">Nawiasy kwadratowe: jeden z listy</a></li><li><a href="#ile-razy-i">Ile razy: *, +, ? i {}</a></li><li><a href="#alternatywa-i-grupy-i">Alternatywa i grupy: | i ()</a></li><li><a href="#grep-o-nozyczki-zamiast-zakreslacza">grep -o: nożyczki zamiast zakreślacza</a></li><li><a href="#regex-w-bashu-i-bash-rematch">Regex w Bashu: [[ =~ ]] i BASH_REMATCH</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga-flag">Ściąga flag</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p class="ekran">plik <code>/var/log/auth.log</code>, tysiące linijek „Failed password” przewijają się w nieskończoność</p><p>Poniedziałek, ósma rano. Na serwerze przez noc ktoś próbował się zalogować dwa tysiące razy. Szef pyta: „Kto nas atakuje? Z jakich adresów i ile razy?”.</p><p>Adresy IP są w środku linijek, raz tu, raz tam. <code>cut</code> nie pomoże, bo kolumny się rozjeżdżają. Ale jest taka linijka:</p><div class="kod"><pre><code>grep &#x27;Failed&#x27; auth.log | grep -oE &#x27;[0-9]{1,3}(\.[0-9]{1,3}){3}&#x27; | sort | uniq -c | sort -rn</code></pre></div><div class="kod"><pre><code>      3 203.0.113.45
+      2 198.51.100.7
+      1 192.0.2.10</code></pre></div><p>Wiem. Ten środek wygląda, jakby kot przeszedł po klawiaturze. Dziś nauczysz się czytać kocie ślady. Za piętnaście minut ta linijka będzie dla Ciebie tak oczywista, jak przepis na jajecznicę.</p><p>Ćwiczymy na małym pliku. Prawdziwy log jest w <code>/var/log/auth.log</code> [Ubuntu] albo w <code>/var/log/secure</code> [RHEL] i czyta się go przez <code>sudo</code>. Zrób sobie plik <code>auth.log</code> z takimi linijkami:</p><div class="kod"><pre><code>Nov  3 02:14:07 serwer sshd[1201]: Failed password for root from 203.0.113.45 port 51122 ssh2
+Nov  3 02:14:09 serwer sshd[1201]: Failed password for root from 203.0.113.45 port 51122 ssh2
+Nov  3 02:15:31 serwer sshd[1207]: Failed password for invalid user admin from 198.51.100.7 port 40022 ssh2
+Nov  3 02:15:33 serwer sshd[1207]: Failed password for invalid user admin from 198.51.100.7 port 40022 ssh2
+Nov  3 02:16:02 serwer sshd[1213]: Failed password for root from 203.0.113.45 port 51190 ssh2
+Nov  3 07:58:12 serwer sshd[1450]: Accepted publickey for eryk from 192.0.2.10 port 50544 ssh2
+Nov  3 08:01:44 serwer sshd[1462]: Failed password for eryk from 192.0.2.10 port 50601 ssh2
+Nov  3 08:01:50 serwer sshd[1462]: Accepted password for eryk from 192.0.2.10 port 50601 ssh2</code></pre></div></section><section><h2 id="list-gonczy-zamiast-nazwiska">List gończy zamiast nazwiska</h2><p>Zwykłe szukanie to szukanie Jana Kowalskiego. Znasz nazwisko, wołasz po nazwisku.</p><p>Ale co, jeśli nie znasz nazwiska? Wtedy policja wiesza list gończy: „wysoki, wąsy, czapka z daszkiem, ostatnio widziany w Biedronce”. To nie jest konkretny człowiek. To opis, do którego pasuje wielu ludzi.</p><p>To jest wyrażenie regularne. Po angielsku regular expression, w skrócie regex. Opis tekstu zamiast samego tekstu. „Od jednej do trzech cyfr, kropka, i tak cztery razy” to list gończy na adres IP.</p><p>Uwaga, pułapka. Pamiętasz gwiazdkę z lekcji 5? Tamta gwiazdka to glob: działa na nazwach plików i rozwija ją Bash. W regeksach te same znaczki znaczą co innego. To jak „pilot” w samolocie i „pilot” od telewizora. Słowo to samo, a nie chcesz ich pomylić.</p><p>Wzór zawsze wkładamy w apostrofy. To nasza koperta: Bash nie zagląda do środka, nie rozwija gwiazdek ani dolarów, tylko oddaje całość grepowi.</p></section><section><h2 id="kropka-dowolny-znak">Kropka: dowolny znak</h2><div class="kod"><pre><code>printf &#x27;kot\nkit\nkat\nk.t\nkoty\nkt\n&#x27; &gt; slowa.txt
+grep &#x27;k.t&#x27; slowa.txt</code></pre></div><div class="kod"><pre><code>kot
+kit
+kat
+k.t
+koty</code></pre></div><p>Kropka znaczy „dowolny jeden znak”. Joker w kartach. Dlatego pasuje kot, kit, kat, a nawet <code>k.t</code>. Pasuje też <code>koty</code>, bo grep szuka wzoru w dowolnym miejscu linijki, a „kot” siedzi w „koty”. Nie pasuje <code>kt</code>, bo między k i t musi być dokładnie jeden znak, a nie zero.</p><p>A jeśli chcesz prawdziwą kropkę? Stawiasz przed nią ukośnik wsteczny:</p><div class="kod"><pre><code>grep &#x27;k\.t&#x27; slowa.txt</code></pre></div><div class="kod"><pre><code>k.t</code></pre></div><p>Ukośnik mówi: „następny znak traktuj dosłownie, nie jako joker”. W haku to właśnie <code>\.</code> między liczbami adresu IP.</p></section><section><h2 id="kotwice-i">Kotwice: ^ i $</h2><p><code>^</code> to początek linijki, <code>$</code> to koniec. Jak kotwica, która przybija wzór do brzegu.</p><div class="kod"><pre><code>grep &#x27;^kot$&#x27; slowa.txt</code></pre></div><div class="kod"><pre><code>kot</code></pre></div><p>Teraz tylko sam kot. Bez kotów, bez kotletów.</p><p>Najbardziej adminowe zastosowanie: plik konfiguracyjny bez komentarzy i pustych linijek. Plik <code>/etc/login.defs</code> ma u mnie 395 linijek, a ustawień jest w nim 37. Reszta to komentarze. Jak umowa z bankiem: trzy zdania treści i cztery strony gwiazdek.</p><div class="kod"><pre><code>grep -Ev &#x27;^[[:space:]]*(#|$)&#x27; /etc/login.defs</code></pre></div><div class="kod"><pre><code>MAIL_DIR        /var/mail
+FAILLOG_ENAB		yes
+LOG_UNKFAIL_ENAB	no
+LOG_OK_LOGINS		no
+...</code></pre></div><p>Czytamy od lewej: początek linijki, potem dowolnie dużo białych znaków, potem albo krzyżyk, albo od razu koniec linijki. <code>-v</code> odwraca: pokaż wszystko, co NIE jest komentarzem ani pustką. Zapamiętaj tę linijkę, użyjesz jej setki razy.</p></section><section><h2 id="nawiasy-kwadratowe-jeden-z-listy">Nawiasy kwadratowe: jeden z listy</h2><div class="kod"><pre><code>grep &#x27;k[ao]t&#x27; slowa.txt</code></pre></div><div class="kod"><pre><code>kot
+kat
+koty</code></pre></div><p><code>[ao]</code> to „dokładnie jeden znak: a albo o”. Jak bramkarz z listą gości. Z daszkiem w środku, <code>[^o]</code>, lista się odwraca: „jeden znak, byle nie o”.</p><p>Zakresy: <code>[0-9]</code> to cyfra, <code>[a-z]</code> mała litera. A tu ważna rzecz dla nas. <code>[a-z]</code> nie zna polskich liter. Do tego są klasy w podwójnych nawiasach:</p><div class="kod"><pre><code>echo &#x27;Łódź Kraków&#x27; | grep -oE &#x27;[[:upper:]][[:lower:]]+&#x27;</code></pre></div><div class="kod"><pre><code>Łódź
+Kraków</code></pre></div><p><code>[[:digit:]]</code> to cyfra, <code>[[:alpha:]]</code> litera, <code>[[:space:]]</code> biały znak, <code>[[:upper:]]</code> i <code>[[:lower:]]</code> wielka i mała litera. Z ustawionym językiem UTF-8 łapią też Ł i ó. Wyglądają jak emotka z dwoma parami okularów, ale działają wszędzie: w grepie, sedzie, awku i na Macu.</p></section><section><h2 id="ile-razy-i">Ile razy: *, +, ? i {}</h2><p>Plik <code>gol.txt</code> to komentarz sportowy: <code>gol</code>, <code>gool</code>, <code>gooool</code> i smutne <code>gl</code>.</p><div class="kod"><pre><code>grep -E &#x27;go+l&#x27; gol.txt</code></pre></div><div class="kod"><pre><code>gol
+gool
+gooool</code></pre></div><p>Te znaczki zawsze mówią coś o znaku, który stoi tuż przed nimi:</p><ul><li><code>o*</code> to zero lub więcej o. Pasuje nawet <code>gl</code>.</li><li><code>o+</code> to jedno lub więcej.</li><li><code>o?</code> to zero albo jedno: <code>gol</code> i <code>gl</code>.</li><li><code>o{3,}</code> to co najmniej trzy. Tylko prawdziwy komentator: <code>gooool</code>.</li><li><code>{1,3}</code> to od jednego do trzech. W haku <code>[0-9]{1,3}</code> to „od jednej do trzech cyfr”.</li></ul><p>A co to za <code>-E</code>? Grep ma dwa dialekty. Podstawowy, BRE, i rozszerzony, ERE. W podstawowym plus, pytajnik, klamry, nawiasy okrągłe i pionowa kreska są zwykłymi znakami:</p><div class="kod"><pre><code>grep &#x27;go+l&#x27; gol.txt; echo &quot;kod: $?&quot;</code></pre></div><div class="kod"><pre><code>kod: 1</code></pre></div><p>Nic nie znalazł, bo szukał dosłownie napisu „go+l”. W podstawowym dialekcie trzeba by pisać <code>go\+l</code>, a adres IP wyglądałby tak: <code>[0-9]\{1,3\}\(\.[0-9]\{1,3\}\)\{3\}</code>. To już nie kot na klawiaturze, to całe schronisko. Dlatego moja rada: zawsze <code>grep -E</code>. Stare <code>egrep</code> to to samo, ale dziś pisze się <code>grep -E</code>.</p></section><section><h2 id="alternatywa-i-grupy-i">Alternatywa i grupy: | i ()</h2><p>Pionowa kreska w regeksie to „albo”. Uwaga, w apostrofach to nie jest rura, bo koperta chroni ją przed Bashem.</p><div class="kod"><pre><code>grep -oE &#x27;(Accepted|Failed) (password|publickey)&#x27; auth.log | sort | uniq -c</code></pre></div><div class="kod"><pre><code>      1 Accepted password
+      1 Accepted publickey
+      6 Failed password</code></pre></div><p>Nawiasy okrągłe robią grupę. Grupa to paczka, na którą możesz nałożyć licznik. W haku <code>(\.[0-9]{1,3}){3}</code> znaczy: „kropka i od jednej do trzech cyfr, i to wszystko trzy razy”.</p></section><section><h2 id="grep-o-nozyczki-zamiast-zakreslacza">grep -o: nożyczki zamiast zakreślacza</h2><p>Zwykły grep to zakreślacz: pokazuje całą linijkę, w której coś znalazł. <code>-o</code> to nożyczki: wycina tylko pasujący kawałek, każdy w osobnej linijce. Jeśli w jednej linijce są trzy pasujące kawałki, dostajesz trzy linijki.</p><p>Rozbierzmy hak:</p><ol><li><code>grep &#x27;Failed&#x27; auth.log</code> zostawia tylko nieudane logowania.</li><li><code>grep -oE &#x27;[0-9]{1,3}(\.[0-9]{1,3}){3}&#x27;</code> wycina z nich same adresy IP.</li><li><code>sort | uniq -c | sort -rn</code> to nasza znana trójka z lekcji 7: ranking.</li></ol><p>Ten sam trik na maile:</p><div class="kod"><pre><code>grep -oE &#x27;[[:alnum:]._-]+@[[:alnum:].-]+\.[a-z]+&#x27; maile.txt</code></pre></div><div class="kod"><pre><code>eryk@miquido.com
+ania@example.org
+biuro@example.org</code></pre></div><p>Uczciwie: ten wzór na IP złapie też <code>999.999.999.999</code>. List gończy to nie badanie DNA. Do wyciągania adresów z logu wystarczy. Do sprawdzania, czy ktoś wpisał poprawny adres, potrzebujesz czegoś ostrzejszego.</p></section><section><h2 id="regex-w-bashu-i-bash-rematch">Regex w Bashu: [[ =~ ]] i BASH_REMATCH</h2><p>Grep szuka w plikach. A czasem chcesz sprawdzić jedną zmienną w skrypcie: „czy to wygląda jak data?”. Do tego jest nasz bramkarz <code>if</code> z listem gończym w ręku: operator <code>=~</code> w podwójnych nawiasach kwadratowych.</p><div class="kod"><pre><code>#!/bin/bash
+data=&quot;2026-11-03&quot;
+wzor=&#x27;^([0-9]{4})-([0-9]{2})-([0-9]{2})$&#x27;
+if [[ $data =~ $wzor ]]; then
+    echo &quot;rok=${BASH_REMATCH[1]} mies=${BASH_REMATCH[2]} dzien=${BASH_REMATCH[3]}&quot;
+fi</code></pre></div><div class="kod"><pre><code>rok=2026 mies=11 dzien=03</code></pre></div><p>Bash używa tu dialektu rozszerzonego, tego samego co <code>grep -E</code>. A po udanym dopasowaniu wypełnia tablicę <code>BASH_REMATCH</code>. Szuflada z przegródkami z lekcji 42: przegródka 0 to cały dopasowany kawałek, przegródka 1 to pierwsza grupa w nawiasach, 2 to druga i tak dalej.</p><p>Dwie zasady, które oszczędzą Ci godzinę płaczu:</p><ul><li>Wzór trzymaj w zmiennej, a w <code>[[ ]]</code> pisz <code>$wzor</code> bez cudzysłowów.</li><li>Prawej strony <code>=~</code> nie bierz w cudzysłów. Cudzysłów zamienia list gończy w dosłowny napis.</li></ul><p>A teraz prawdziwa robota. Skrypt, który czyta log i liczy nieudane próby na każdy adres. Użyjemy słownika z lekcji 43, czyli szatni z nazwiskami:</p><div class="kod"><pre><code>#!/bin/bash
+# Liczy nieudane logowania SSH per adres IP
+plik=${1:-auth.log}
+wzor=&#x27;Failed password for (invalid user )?([^ ]+) from ([0-9.]+)&#x27;
+declare -A proby
+
+while IFS= read -r linia; do
+    if [[ $linia =~ $wzor ]]; then
+        ip=${BASH_REMATCH[3]}
+        (( proby[$ip]++ ))
+    fi
+done &lt; &quot;$plik&quot;
+
+for ip in &quot;${!proby[@]}&quot;; do
+    printf &#x27;%-16s %3d\n&#x27; &quot;$ip&quot; &quot;${proby[$ip]}&quot;
+done</code></pre></div><div class="kod"><pre><code>198.51.100.7       2
+192.0.2.10         1
+203.0.113.45       3</code></pre></div><p>Grupa <code>(invalid user )?</code> jest opcjonalna, więc łapie i <code>for root</code>, i <code>for invalid user admin</code>. <code>[^ ]+</code> to „ciąg znaków bez spacji”, czyli nazwa użytkownika. Kolejność adresów jest losowa, bo szatnia nie układa wieszaków alfabetycznie. Jak chcesz ranking, dorzuć na końcu <code>| sort -k2 -rn</code>.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p><code>(( proby[$ip]++ ))</code> zwraca kod 1, kiedy stara wartość była zero. Przy <code>set -e</code> z lekcji 50 skrypt by się na tym wyłożył. Bezpieczniej: <code>(( ++proby[$ip] ))</code> albo <code>proby[$ip]=$(( ${proby[$ip]:-0} + 1 ))</code>.</p></aside></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p>Grep nie czyta wzoru za każdym razem od nowa. Najpierw kompiluje go w automat, czyli maszynę stanów. Wyobraź sobie planszę do gry: każdy znak tekstu przesuwa pionek na inne pole. Jeśli pionek dojdzie do mety, linijka pasuje. Dzięki temu grep przelatuje gigabajty logów, nie cofając się co chwilę.</p><p>Bash nie ma własnego silnika regeksów. Do <code>=~</code> woła funkcje <code>regcomp</code> i <code>regexec</code> z biblioteki systemowej, czyli tej samej, z której korzystają inne programy w C. Dlatego to, co działa w <code>[[ =~ ]]</code>, zależy trochę od systemu. <code>\d</code> na cyfrę z innych języków programowania tu nie istnieje. Pisz <code>[0-9]</code> albo <code>[[:digit:]]</code> i śpij spokojnie.</p><p>Kod wyjścia: 0, kiedy pasuje, 1, kiedy nie pasuje, i 2, kiedy sam wzór jest zepsuty, na przykład niezamknięty nawias.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>operator <code>=~</code> pojawił się w Bashu 3.0, a od 3.2 cytowanie wzoru wymusza dopasowanie dosłowne. GNU grep ma jeszcze trzeci dialekt, <code>grep -P</code>, czyli wyrażenia w stylu Perla z <code>\d</code> i innymi wygodami.</p></aside><p>[macOS] Grep na Macu to inna implementacja niż na Linuksie. <code>-E</code>, <code>-o</code>, <code>-w</code> i klasy <code>[[:digit:]]</code> działają tak samo, ale nie ma <code>-P</code>. Jeśli przepis z internetu ma <code>grep -P</code>, na Macu zainstaluj GNU grep z Homebrew (<code>brew install grep</code>, komenda nazywa się wtedy <code>ggrep</code>). <code>[[ =~ ]]</code> i <code>BASH_REMATCH</code> działają nawet w starym Bashu 3.2 z Maca.</p></section><section><h2 id="sciaga-flag">Ściąga flag</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga / zapis</th><th>Co robi</th></tr><tr><td>grep</td><td><code>-E</code></td><td>rozszerzone regeksy: plus, pytajnik, klamry, nawiasy i „albo” działają bez ukośników</td></tr><tr><td>grep</td><td><code>-o</code></td><td>wypisuje tylko pasujące kawałki, każdy w osobnej linijce</td></tr><tr><td>grep</td><td><code>-v</code></td><td>odwraca: linijki, które NIE pasują</td></tr><tr><td>grep</td><td><code>-i</code></td><td>ignoruje wielkość liter</td></tr><tr><td>grep</td><td><code>-w</code></td><td>dopasowuje całe słowa</td></tr><tr><td>grep</td><td><code>-c</code></td><td>liczy pasujące linijki</td></tr><tr><td>grep</td><td><code>-P</code></td><td>wyrażenia w stylu Perla (tylko GNU grep)</td></tr><tr><td>regex</td><td><code>.</code></td><td>dowolny jeden znak</td></tr><tr><td>regex</td><td><code>^</code> / <code>$</code></td><td>początek / koniec linijki</td></tr><tr><td>regex</td><td></td><td>jeden z / żaden z tych znaków</td></tr><tr><td>regex</td><td></td><td>cyfra / litera / biały znak</td></tr><tr><td>regex</td><td><code>*</code> / <code>+</code> / <code>?</code></td><td>0 lub więcej / 1 lub więcej / 0 albo 1</td></tr><tr><td>regex</td><td><code>{n}</code> / <code>{n,m}</code> / <code>{n,}</code></td><td>dokładnie n / od n do m / co najmniej n</td></tr><tr><td>regex</td><td><code>( )</code> i pionowa kreska</td><td>grupa i „albo”</td></tr><tr><td>regex</td><td><code>\.</code></td><td>dosłowna kropka (ukośnik wyłącza specjalne znaczenie)</td></tr><tr><td>Bash</td><td>[[ $x =~ $wzor ]]</td><td>sprawdza zmienną regeksem, kod 0 / 1 / 2</td></tr><tr><td>Bash</td><td><code>${BASH_REMATCH[0]}</code> / <code>[1]</code></td><td>cały dopasowany kawałek / pierwsza grupa</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><div class="kod"><pre><code>x=123
+if [[ $x =~ &quot;^[0-9]+$&quot; ]]; then echo &quot;liczba&quot;; else echo &quot;nie liczba&quot;; fi</code></pre></div><div class="kod"><pre><code>nie liczba</code></pre></div><p>123 to nie liczba? Bash nie zwariował. Cudzysłów po prawej stronie <code>=~</code> mówi: „szukaj dosłownie napisu z daszkiem, nawiasami i dolarem”. Bash szukał w „123” znaczków <code>^[0-9]+$</code> i oczywiście ich nie znalazł. Wysłałeś bramkarzowi zdjęcie listu gończego, a on szuka człowieka, który wygląda jak kartka papieru.</p><p>ShellCheck od razu to widzi:</p><div class="kod"><pre><code>SC2076 (warning): Remove quotes from right-hand side of =~ to match as a regex rather than literally.</code></pre></div><p>Naprawa: wzór do zmiennej, zmienna bez cudzysłowów.</p><div class="kod"><pre><code>wzor=&#x27;^[0-9]+$&#x27;
+if [[ $x =~ $wzor ]]; then echo &quot;liczba&quot;; fi</code></pre></div><p>I drugi klasyk: <code>grep &#x27;go+l&#x27;</code> bez <code>-E</code>. Kod 1, zero wyników, a Ty patrzysz w plik, gdzie stoi wielkie „gooool”. Plus bez <code>-E</code> to zwykły plus.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><ol><li>Z pliku <code>auth.log</code> z tej lekcji (albo z prawdziwego <code>/var/log/auth.log</code> [Ubuntu] lub <code>/var/log/secure</code> [RHEL], przez <code>sudo</code>) wypisz nazwy użytkowników, na które ktoś próbował się zalogować nieudanie, razem z liczbą prób. Od najczęstszego. Jedna linijka z <code>grep -oE</code>.</li><li>Napisz skrypt <code>data.sh</code>, który dostaje jako argument datę w formacie RRRR-MM-DD, sprawdza ją przez <code>[[ =~ ]]</code> i wypisuje „Rok: …, miesiąc: …, dzień: …” z <code>BASH_REMATCH</code>. Przy złym formacie ma wypisać błąd na stderr i zakończyć się kodem 1.</li></ol><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><p>Część pierwsza: kto był celem nieudanych logowań.</p><div class="kod"><pre><code>grep -oE &#x27;Failed password for (invalid user )?[^ ]+&#x27; auth.log | grep -oE &#x27;[^ ]+$&#x27; | sort | uniq -c | sort -rn</code></pre></div><div class="kod"><pre><code>      3 root
+      2 admin
+      1 eryk</code></pre></div><p>Pierwszy grep wycina kawałek od „Failed password for” do nazwy użytkownika. Drugi bierze z niego ostatnie słowo: <code>[^ ]+$</code> to „ciąg znaków bez spacji, a zaraz potem koniec linijki”. Root na pierwszym miejscu. Jak zawsze. Root to najpopularniejszy użytkownik wśród ludzi, którzy nie powinni go znać.</p><p>Część druga, skrypt <code>data.sh</code>:</p><div class="kod"><pre><code>#!/bin/bash
+# Rozbija datę RRRR-MM-DD na części
+wzor=&#x27;^([0-9]{4})-([0-9]{2})-([0-9]{2})$&#x27;
+if [[ $1 =~ $wzor ]]; then
+    echo &quot;Rok: ${BASH_REMATCH[1]}, miesiąc: ${BASH_REMATCH[2]}, dzień: ${BASH_REMATCH[3]}&quot;
+else
+    echo &quot;Błąd: &#x27;$1&#x27; to nie jest data w formacie RRRR-MM-DD&quot; &gt;&amp;2
+    exit 1
+fi</code></pre></div><div class="kod"><pre><code>$ ./data.sh 2026-11-03
+Rok: 2026, miesiąc: 11, dzień: 03
+$ ./data.sh 3.11.2026; echo &quot;kod: $?&quot;
+Błąd: &#x27;3.11.2026&#x27; to nie jest data w formacie RRRR-MM-DD
+kod: 1</code></pre></div><p>Wzór w zmiennej, zmienna bez cudzysłowów, błąd na drugi głośnik przez <code>&gt;&amp;2</code>. Uczciwie: ten skrypt przepuści też <code>2026-13-45</code>. Format się zgadza, kalendarz płacze. Sprawdzanie, czy taki dzień w ogóle istnieje, to już robota dla <code>date -d</code>, a nie dla listu gończego.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Umiesz już znaleźć tekst listem gończym. W następnej lekcji zaczniemy go zmieniać: <code>sed</code>, czyli edytor, który poprawia pliki konfiguracyjne bez otwierania ich, nawet na stu serwerach naraz.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-044.html" rel="prev">← 44. Ładne wypisywanie i długie teksty</a><a class="btn domyslny zolty" href="lekcja-046.html" rel="next">46. sed od podstaw →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

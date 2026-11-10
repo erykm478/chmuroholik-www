@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>5. Gwiazdka, która robi robotę za ciebie — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 5 kursu Linux i Bash od zera do admina: Gwiazdka, która robi robotę za ciebie. kursant używa wzorców nazw (*, ?, [...]) i rozwijania nawiasów ({a,b}, {1..10}), żeby działać na wielu plikach naraz.">
+<meta property="og:title" content="5. Gwiazdka, która robi robotę za ciebie — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 5 kursu Linux i Bash od zera do admina: Gwiazdka, która robi robotę za ciebie. kursant używa wzorców nazw (*, ?, [...]) i rozwijania nawiasów ({a,b}, {1..10}), żeby działać na wielu plikach naraz.">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 1</span></div>
+      <div class="boczny-tytul"><a href="index.html#m01">Praca w powłoce</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-005.html" data-lekcja="5" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">5</span> Gwiazdka, która robi robotę za ciebie</a></li><li><a href="lekcja-006.html" data-lekcja="6"><span class="znacznik"></span><span class="nr">6</span> Gdzie idzie wynik komendy</a></li><li><a href="lekcja-007.html" data-lekcja="7"><span class="znacznik"></span><span class="nr">7</span> Rura i narzędzia do tekstu</a></li><li><a href="lekcja-008.html" data-lekcja="8"><span class="znacznik"></span><span class="nr">8</span> Mapa Linuksa: co leży w którym folderze</a></li><li><a href="lekcja-009.html" data-lekcja="9"><span class="znacznik"></span><span class="nr">9</span> Co to jest powłoka i jakie są</a></li><li><a href="lekcja-010.html" data-lekcja="10"><span class="znacznik"></span><span class="nr">10</span> Jak Bash czyta twoją komendę</a></li><li><a href="lekcja-011.html" data-lekcja="11"><span class="znacznik"></span><span class="nr">11</span> nano: edytor, z którego da się wyjść</a></li><li><a href="lekcja-012.html" data-lekcja="12"><span class="znacznik"></span><span class="nr">12</span> vi i vim bez paniki</a></li><li><a href="lekcja-013.html" data-lekcja="13"><span class="znacznik"></span><span class="nr">13</span> Midnight Commander i inne menedżery plików</a></li><li><a href="lekcja-014.html" data-lekcja="14"><span class="znacznik"></span><span class="nr">14</span> Linki: skróty, które nie są skrótami</a></li><li><a href="lekcja-015.html" data-lekcja="15"><span class="znacznik"></span><span class="nr">15</span> Kto może czytać twój plik</a></li><li><a href="lekcja-016.html" data-lekcja="16"><span class="znacznik"></span><span class="nr">16</span> Uprawnienia specjalne i ACL</a></li><li><a href="lekcja-017.html" data-lekcja="17"><span class="znacznik"></span><span class="nr">17</span> Ustawienia Basha pod siebie</a></li><li><a href="lekcja-018.html" data-lekcja="18"><span class="znacznik"></span><span class="nr">18</span> tmux: terminal, który przeżyje rozłączenie</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="5" data-modul="1" data-tematy="*, ?, [...], {a,b}, {1..10}">
+    <div class="belka"><span>Lekcja 5 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m01">Moduł 1</a> › Lekcja 5</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Gwiazdka, która robi robotę za ciebie</h1>
+      <p class="meta"><span>⏱ ok. 3 min czytania</span><span>· moduł 1: Praca w powłoce</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant używa wzorców nazw (<code>*</code>, <code>?</code>, <code>[...]</code>) i rozwijania nawiasów (<code>{a,b}</code>, <code>{1..10}</code>), żeby działać na wielu plikach naraz.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#gwiazdka-cokolwiek">Gwiazdka: „cokolwiek”</a></li><li><a href="#pytajnik-dokladnie-jeden-znak">Pytajnik: „dokładnie jeden znak”</a></li><li><a href="#nawiasy-kwadratowe-jeden-z-tych">Nawiasy kwadratowe: „jeden z tych”</a></li><li><a href="#najwazniejsza-rzecz-ktora-trzeba-zrozumiec">Najważniejsza rzecz, którą trzeba zrozumieć</a></li><li><a href="#nawiasy-klamrowe-fabryka-nazw">Nawiasy klamrowe: fabryka nazw</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p>Wracasz z wakacji. Masz 800 zdjęć. Nazywają się <code>IMG_4521.jpg</code>, <code>IMG_4522.jpg</code> i tak dalej. Chcesz je wszystkie przenieść do folderu „Chorwacja 2026”.</p><p>Myszką: zaznaczasz, przeciągasz, czekasz, modlisz się, żeby nie upuścić w złym miejscu.</p><p>W terminalu:</p><div class="kod"><pre><code>mv IMG_*.jpg &quot;Chorwacja 2026&quot;/</code></pre></div><p>Jedna linijka. Dziś dowiesz się, co robi ta gwiazdka.</p></section><section><h2 id="gwiazdka-cokolwiek">Gwiazdka: „cokolwiek”</h2><p>Gwiazdka w nazwie pliku znaczy „tu może być cokolwiek, dowolnie długie, nawet nic”.</p><div class="kod"><pre><code>ls *.jpg
+ls raport*
+ls *2026*</code></pre></div><ul><li><code>*.jpg</code> — wszystko, co kończy się na <code>.jpg</code>.</li><li><code>raport*</code> — wszystko, co zaczyna się od „raport”.</li><li><code>*2026*</code> — wszystko, co ma w nazwie „2026” gdziekolwiek.</li></ul><p>To jak szukanie w szatni: „podaj mi wszystkie kurtki, które są czerwone”. Nie musisz znać numerków.</p></section><section><h2 id="pytajnik-dokladnie-jeden-znak">Pytajnik: „dokładnie jeden znak”</h2><div class="kod"><pre><code>ls dane?.csv</code></pre></div><p>Pytajnik to dokładnie jeden dowolny znak. Pasuje <code>dane1.csv</code>, <code>dane2.csv</code>, <code>daneA.csv</code>. Nie pasuje <code>dane10.csv</code>, bo tam są dwa znaki.</p></section><section><h2 id="nawiasy-kwadratowe-jeden-z-tych">Nawiasy kwadratowe: „jeden z tych”</h2><div class="kod"><pre><code>ls dane[12].csv
+ls dane[0-9].csv</code></pre></div><p><code>[12]</code> to jeden znak, ale tylko jedynka albo dwójka. <code>[0-9]</code> to dowolna cyfra. Czyli <code>daneA.csv</code> już nie pasuje.</p></section><section><h2 id="najwazniejsza-rzecz-ktora-trzeba-zrozumiec">Najważniejsza rzecz, którą trzeba zrozumieć</h2><p>To nie komenda rozumie gwiazdkę. To Bash.</p><p>Kiedy wpisujesz <code>ls *.jpg</code>, Bash najpierw sam przegląda folder, zamienia <code>*.jpg</code> na listę pasujących plików, a dopiero potem woła <code>ls</code> z gotową listą. <code>ls</code> nawet nie wie, że była jakaś gwiazdka.</p><p>Jak urzędnik, który dostaje wniosek „wszystkie dokumenty z 2026 roku”, sam idzie do archiwum, wyciąga je i dopiero przekazuje dalej konkretny stos teczek.</p><p>Dlaczego to ważne? Bo tak samo działa z <code>rm</code>, <code>cp</code>, <code>mv</code> i każdą inną komendą. I bo zanim coś usuniesz gwiazdką, możesz zobaczyć, na co się zamieni:</p><div class="kod"><pre><code>echo *.tmp</code></pre></div><p><code>echo</code> po prostu wypisze listę. Dopiero jak lista jest dobra, zamieniasz <code>echo</code> na <code>rm</code>. To jest ten nawyk, który ratuje kariery.</p></section><section><h2 id="nawiasy-klamrowe-fabryka-nazw">Nawiasy klamrowe: fabryka nazw</h2><p>To już co innego. Klamry nie szukają plików, tylko <strong>produkują</strong> napisy.</p><div class="kod"><pre><code>echo plik{A,B,C}.txt
+echo {1..5}
+echo {01..10}
+echo {a..e}</code></pre></div><p>Wynik: <code>plikA.txt plikB.txt plikC.txt</code>, potem cyfry od 1 do 5, potem od 01 do 10 z zerem z przodu, potem litery.</p><p>I teraz magia:</p><div class="kod"><pre><code>mkdir -p projekt/{src,docs,testy}
+touch odcinek_{01..49}.md</code></pre></div><p>Pierwsza linijka robi trzy foldery naraz. Druga robi 49 plików, ponumerowanych ładnie od 01 do 49. Wszystkie lekcje tej kursu, w jednej linijce.</p><p>Gdybyś to robił myszką, skończyłbyś przy lekcji 12 i zaczął się zastanawiać nad sensem życia.</p></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>Wzorzec w cudzysłowie:</p><div class="kod"><pre><code>ls &quot;*.jpg&quot;</code></pre></div><p>Bash odpowie, że nie ma pliku o nazwie <code>*.jpg</code>. Bo cudzysłów mówi Bashowi: „nie ruszaj tego, to dosłowny napis”. Gwiazdka w cudzysłowie to zwykła gwiazdka.</p><p>Zapamiętaj: wzorce poza cudzysłowem, nazwy ze spacjami w cudzysłowie. Jak w przykładzie z hakiem: <code>IMG_*.jpg</code> bez cudzysłowu, a <code>&quot;Chorwacja 2026&quot;</code> z cudzysłowem.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>jeśli wzorzec do niczego nie pasuje, Bash domyślnie przekazuje go dalej dosłownie, z gwiazdką. Zmienia to opcja <code>shopt -s nullglob</code>. Wrócimy do tego w module o solidnych skryptach.</p></aside></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><p>Jedną komendą zrób folder <code>wakacje</code> z podfolderami <code>zdjecia</code>, <code>filmy</code> i <code>dokumenty</code>. Drugą komendą zrób w <code>zdjecia</code> pliki od <code>foto_001.jpg</code> do <code>foto_100.jpg</code>. Trzecią wypisz, bez kasowania, tylko te, których numer kończy się na zero.</p><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><div class="kod"><pre><code>mkdir -p wakacje/{zdjecia,filmy,dokumenty}
+touch wakacje/zdjecia/foto_{001..100}.jpg
+echo wakacje/zdjecia/foto_*0.jpg</code></pre></div><p>Wyjdzie 10 plików: od <code>foto_010</code> do <code>foto_100</code>. Jeśli wyszło Ci 11, to policz jeszcze raz, ja też za pierwszym razem doliczyłem zero.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Następna lekcja: dokąd idzie to, co komenda wypisuje. Bo zamiast na ekran można to wysłać do pliku. I wreszcie zaczniemy pisać do plików naprawdę.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-004.html" rel="prev">← 4. Jak nie zgubić się nigdy więcej</a><a class="btn domyslny zolty" href="lekcja-006.html" rel="next">6. Gdzie idzie wynik komendy →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>4. Jak nie zgubić się nigdy więcej — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 4 kursu Linux i Bash od zera do admina: Jak nie zgubić się nigdy więcej. kursant umie sam sprawdzić, jak działa dowolna komenda i jakie ma opcje.">
+<meta property="og:title" content="4. Jak nie zgubić się nigdy więcej — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 4 kursu Linux i Bash od zera do admina: Jak nie zgubić się nigdy więcej. kursant umie sam sprawdzić, jak działa dowolna komenda i jakie ma opcje.">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 0</span></div>
+      <div class="boczny-tytul"><a href="index.html#m00">Pierwsze kroki</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-001.html" data-lekcja="1"><span class="znacznik"></span><span class="nr">1</span> Czarne okienko, którego nie trzeba się bać</a></li><li><a href="lekcja-002.html" data-lekcja="2"><span class="znacznik"></span><span class="nr">2</span> Gdzie ja jestem? Chodzenie po folderach</a></li><li><a href="lekcja-003.html" data-lekcja="3"><span class="znacznik"></span><span class="nr">3</span> Tworzenie, kopiowanie i kasowanie</a></li><li><a href="lekcja-004.html" data-lekcja="4" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">4</span> Jak nie zgubić się nigdy więcej</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="4" data-modul="0" data-tematy="man, --help, help, type, which, man -k">
+    <div class="belka"><span>Lekcja 4 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m00">Moduł 0</a> › Lekcja 4</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Jak nie zgubić się nigdy więcej</h1>
+      <p class="meta"><span>⏱ ok. 3 min czytania</span><span>· moduł 0: Pierwsze kroki</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant umie sam sprawdzić, jak działa dowolna komenda i jakie ma opcje.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#instrukcja-obslugi-man">Instrukcja obsługi: man</a></li><li><a href="#szybka-sciaga-help">Szybka ściąga: --help</a></li><li><a href="#pomoc-dla-komend-samego-basha-help">Pomoc dla komend samego Basha: help</a></li><li><a href="#co-to-w-ogole-jest-type-i-which">Co to w ogóle jest: type i which</a></li><li><a href="#nie-pamietasz-nazwy-komendy">Nie pamiętasz nazwy komendy</a></li><li><a href="#a-internet-i-czatboty">A internet i czatboty?</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p>Zdradzę Ci tajemnicę adminów.</p><p>Nie pamiętamy. Nikt nie pamięta wszystkich opcji <code>ls</code>, a ma ich kilkadziesiąt. Admin z dwudziestoletnim stażem codziennie sprawdza coś, czego nie pamięta.</p><p>Różnica między początkującym a zawodowcem nie polega na tym, że zawodowiec wszystko wie. Polega na tym, że wie, gdzie w dziesięć sekund sprawdzić.</p><p>Dziś pokażę Ci te miejsca.</p></section><section><h2 id="instrukcja-obslugi-man">Instrukcja obsługi: man</h2><div class="kod"><pre><code>man ls</code></pre></div><p><code>man</code> od „manual”, czyli instrukcja. Otwiera pełną instrukcję komendy. Przewija się jak w <code>less</code>, bo to właśnie <code>less</code>. I wychodzi się tak samo: klawiszem <code>q</code>.</p><p>W środku możesz szukać. Naciśnij ukośnik, wpisz słowo, na przykład <code>hidden</code>, i Enter. Klawisz <code>n</code> skacze do następnego wystąpienia.</p><p>Instrukcje są po angielsku i napisane bardzo technicznie. Jak instrukcja do pralki przetłumaczona przez inżyniera dla innego inżyniera. Nie musisz czytać całości. Szukasz jednej rzeczy i wychodzisz.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>na odchudzonych instalacjach, np. obrazach serwerowych Ubuntu i kontenerach, instrukcje bywają wycięte. Wtedy <code>man</code> mówi, że system został „zminimalizowany”.</p></aside></section><section><h2 id="szybka-sciaga-help">Szybka ściąga: --help</h2><div class="kod"><pre><code>ls --help</code></pre></div><p>Większość komend ma wbudowaną krótką ściągę. Nie otwiera się w osobnym oknie, tylko wypisuje listę opcji. Szybciej niż <code>man</code>, kiedy pamiętasz, czego szukasz, ale nie pamiętasz litery.</p><p class="ekran">wiele komend na macOS nie zna <code>--help</code>, tam zostaje <code>man</code></p></section><section><h2 id="pomoc-dla-komend-samego-basha-help">Pomoc dla komend samego Basha: help</h2><p>I tu ciekawostka, która wyjaśnia więcej, niż się wydaje.</p><p>Spróbuj:</p><div class="kod"><pre><code>man cd</code></pre></div><p>Na wielu systemach <code>man</code> nie znajdzie <code>cd</code>. Dlaczego?</p><p>Bo <code>cd</code> to nie jest osobny program. To umiejętność samego urzędnika, czyli Basha. Tak jak urzędnik nie musi nikogo wołać, żeby przybić pieczątkę, bo ma ją przy sobie.</p><p>Na takie wbudowane komendy jest osobna pomoc:</p><div class="kod"><pre><code>help cd</code></pre></div></section><section><h2 id="co-to-w-ogole-jest-type-i-which">Co to w ogóle jest: type i which</h2><div class="kod"><pre><code>type cd
+type ls
+which ls</code></pre></div><p><code>type</code> mówi, czym jest komenda. Dla <code>cd</code> odpowie, że to komenda wbudowana w Basha. Dla <code>ls</code> pokaże, że to osobny program, i gdzie leży, na przykład <code>/usr/bin/ls</code>.</p><p><code>which</code> pokazuje, gdzie leży program, który się uruchomi.</p><p>Po co to komu? Za kilka lekcji zrobisz własne skróty komend. I kiedyś jakaś komenda zacznie się dziwnie zachowywać. Wtedy <code>type</code> od razu powie Ci, czy to prawdziwy program, czy Twój własny skrót, o którym zapomniałeś.</p></section><section><h2 id="nie-pamietasz-nazwy-komendy">Nie pamiętasz nazwy komendy</h2><div class="kod"><pre><code>man -k kopiuj
+man -k copy</code></pre></div><p><code>man -k</code> szuka słowa w opisach wszystkich instrukcji. Po polsku zwykle nic nie znajdzie, bo instrukcje są po angielsku. Po angielsku pokaże wszystkie komendy, które mają coś wspólnego z kopiowaniem.</p></section><section><h2 id="a-internet-i-czatboty">A internet i czatboty?</h2><p>Oczywiście. Każdy z nich korzysta. Ale jedna zasada, którą powtarzam w tym kursie jak mantrę: <strong>nie wklejaj komendy, której nie rozumiesz.</strong> Zwłaszcza takiej z <code>rm</code>, <code>sudo</code> albo z <code>curl</code> przed rurą.</p><p>Sprawdź w <code>man</code> albo <code>--help</code>, co robi każda opcja. Trzydzieści sekund sprawdzania kontra tydzień odzyskiwania danych. Rachunek jest prosty.</p></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>Utknięcie w <code>man</code> albo <code>less</code>. Ekran pełen tekstu, nic nie działa, Ctrl+C nie pomaga.</p><p>Klawisz <code>q</code>. Zawsze <code>q</code>.</p><p>A jeśli kiedyś przypadkiem otworzysz edytor vim i nie będziesz umiał z niego wyjść: nie jesteś sam. To jeden z najpopularniejszych żartów wśród programistów. Wyjście to klawisz Esc, potem <code>:q!</code> i Enter.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><p>Znajdź w instrukcji <code>ls</code> opcję, która sortuje pliki według rozmiaru, i użyj jej. Potem sprawdź komendą <code>type</code>, czym jest <code>echo</code>. Odpowiedź może Cię zaskoczyć.</p><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><div class="kod"><pre><code>ls -lS
+type echo</code></pre></div><p><code>-S</code> sortuje według rozmiaru, od największego. A <code>type echo</code> mówi, że <code>echo</code> jest wbudowane w Basha. A jeśli wpiszesz <code>type -a echo</code>, zobaczysz, że jest jeszcze drugie <code>echo</code>, osobny program na dysku. Dwa razy to samo, na wszelki wypadek. Linux jak teściowa: lepiej mieć zapas.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Koniec pierwszych kroków. Umiesz otworzyć terminal, chodzić, tworzyć, kasować i szukać pomocy.</p><p>W następnym module terminal zaczyna być szybszy niż myszka. Zaczniemy od gwiazdki, która w jednej linijce zrobi robotę za tysiąc kliknięć.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-003.html" rel="prev">← 3. Tworzenie, kopiowanie i kasowanie</a><a class="btn domyslny zolty" href="lekcja-005.html" rel="next">5. Gwiazdka, która robi robotę za ciebie →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>28. systemd i usługi — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 28 kursu Linux i Bash od zera do admina: systemd i usługi. kursant uruchamia, zatrzymuje, włącza na stałe i blokuje usługi przez systemctl, czyta ich stan i zamienia własny skrypt w usługę, która sama wstaje po awarii.">
+<meta property="og:title" content="28. systemd i usługi — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 28 kursu Linux i Bash od zera do admina: systemd i usługi. kursant uruchamia, zatrzymuje, włącza na stałe i blokuje usługi przez systemctl, czyta ich stan i zamienia własny skrypt w usługę, która sama wstaje po awarii.">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 2</span></div>
+      <div class="boczny-tytul"><a href="index.html#m02">Procesy i jak działa system</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-019.html" data-lekcja="19"><span class="znacznik"></span><span class="nr">19</span> Co to jest proces? ps od środka</a></li><li><a href="lekcja-020.html" data-lekcja="20"><span class="znacznik"></span><span class="nr">20</span> Rodzaje procesów</a></li><li><a href="lekcja-021.html" data-lekcja="21"><span class="znacznik"></span><span class="nr">21</span> top: co ten ekran w ogóle mówi</a></li><li><a href="lekcja-022.html" data-lekcja="22"><span class="znacznik"></span><span class="nr">22</span> htop: top dla ludzi</a></li><li><a href="lekcja-023.html" data-lekcja="23"><span class="znacznik"></span><span class="nr">23</span> Sygnały i zabijanie procesów</a></li><li><a href="lekcja-024.html" data-lekcja="24"><span class="znacznik"></span><span class="nr">24</span> Programy w tle</a></li><li><a href="lekcja-025.html" data-lekcja="25"><span class="znacznik"></span><span class="nr">25</span> Priorytety, limity i profile tuned</a></li><li><a href="lekcja-026.html" data-lekcja="26"><span class="znacznik"></span><span class="nr">26</span> Pamięć, obciążenie i dysk pod presją</a></li><li><a href="lekcja-027.html" data-lekcja="27"><span class="znacznik"></span><span class="nr">27</span> Jak Linux startuje</a></li><li><a href="lekcja-028.html" data-lekcja="28" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">28</span> systemd i usługi</a></li><li><a href="lekcja-029.html" data-lekcja="29"><span class="znacznik"></span><span class="nr">29</span> Logi</a></li><li><a href="lekcja-030.html" data-lekcja="30"><span class="znacznik"></span><span class="nr">30</span> Sprzęt, jądro i udev</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="28" data-modul="2" data-tematy="jednostki, systemctl (status, start, stop, restart, reload, enable --now, disable, mask, is-active, list-units --failed, daemon-reload), własna usługa ze skryptu">
+    <div class="belka"><span>Lekcja 28 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m02">Moduł 2</a> › Lekcja 28</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>systemd i usługi</h1>
+      <p class="meta"><span>⏱ ok. 11 min czytania</span><span>· moduł 2: Procesy i jak działa system</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant uruchamia, zatrzymuje, włącza na stałe i blokuje usługi przez <code>systemctl</code>, czyta ich stan i zamienia własny skrypt w usługę, która sama wstaje po awarii.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#jednostki-karty-pracownikow">Jednostki: karty pracowników</a></li><li><a href="#systemctl-status-karta-pacjenta">systemctl status: karta pacjenta</a></li><li><a href="#start-stop-restart-reload">start, stop, restart, reload</a></li><li><a href="#enable-disable-enable-now">enable, disable, enable --now</a></li><li><a href="#mask-zamurowane-drzwi">mask: zamurowane drzwi</a></li><li><a href="#gdzie-sie-pali-list-units-failed">Gdzie się pali: list-units --failed</a></li><li><a href="#wlasna-usluga-ze-skryptu">Własna usługa ze skryptu</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga-flag">Ściąga flag</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p class="ekran">terminal, skrypt <code>zegarek.sh</code> działa w pętli, ktoś zamyka okno terminala, skrypt znika</p><p>Napisałeś świetny skrypt, który co dziesięć sekund coś sprawdza. Uruchamiasz go w terminalu i… zamykasz laptopa. Skrypt nie żyje. Odpalasz z <code>nohup</code> w tle. Serwer się restartuje w nocy. Skrypt nie żyje. Skrypt wywala się na błędzie o trzeciej w nocy. Skrypt nie żyje, a Ty o tym nie wiesz.</p><p>A teraz pomyśl o <code>sshd</code> albo serwerze WWW. One jakoś działają latami, wstają po restarcie same, a ich logi da się przeczytać. To nie magia, to kierownik zmiany. Dziś nauczymy się z nim rozmawiać, a na koniec zatrudnimy u niego nasz własny skrypt.</p></section><section><h2 id="jednostki-karty-pracownikow">Jednostki: karty pracowników</h2><p>systemd zarządza <strong>jednostkami</strong>, po angielsku units. Jednostka to karta w segregatorze kierownika: kto to jest, co robi, kiedy ma przyjść do pracy i co zrobić, jeśli zasłabł. Typ jednostki poznasz po końcówce nazwy:</p><ul><li><strong>.service</strong> — usługa, czyli program działający w tle: <code>sshd.service</code>, <code>cron.service</code>.</li><li><strong>.target</strong> — grupa jednostek, tryb pracy budynku. Znamy z poprzedniej lekcji.</li><li><strong>.timer</strong> — budzik, czyli nowocześniejszy cron. Wróci w module o automatyzacji.</li><li><strong>.socket</strong>, <strong>.mount</strong>, <strong>.path</strong>, <strong>.device</strong> — gniazdo sieciowe, punkt montowania, obserwowany plik, urządzenie.</li></ul><p>Karty leżą w dwóch miejscach. Te z pakietów w <code>/usr/lib/systemd/system/</code>. Tam nie grzebiesz, bo aktualizacja nadpisze. Twoje własne i Twoje poprawki w <code>/etc/systemd/system/</code>. Jeśli plik o tej samej nazwie jest w obu, wygrywa <code>/etc</code>. Jak w TuneD: wersja admina bije wersję producenta.</p></section><section><h2 id="systemctl-status-karta-pacjenta">systemctl status: karta pacjenta</h2><div class="kod"><pre><code>systemctl status cron</code></pre></div><div class="kod"><pre><code>● cron.service - Regular background program processing daemon
+     Loaded: loaded (/usr/lib/systemd/system/cron.service; enabled; preset: enabled)
+     Active: active (running) since Tue 2026-11-03 21:15:58 UTC; 14s ago
+       Docs: man:cron(8)
+   Main PID: 43 (cron)
+     CGroup: /system.slice/cron.service
+             └─43 /usr/sbin/cron -f -P
+
+Nov 03 21:15:58 serwer systemd[1]: Started cron.service - Regular background program processing daemon.
+Nov 03 21:15:58 serwer cron[43]: (CRON) INFO (pidfile fd = 3)</code></pre></div><p>Czytamy od góry:</p><ul><li><strong>kropka</strong> — zielona to działa, białe kółko to nie działa, czerwony krzyżyk to awaria.</li><li><strong>Loaded</strong> — gdzie leży karta i czy usługa jest <code>enabled</code>, czyli włączona przy starcie, czy <code>disabled</code>.</li><li><strong>Active</strong> — co robi teraz i od kiedy.</li><li><strong>Main PID</strong> — numer głównego procesu.</li><li><strong>CGroup</strong> — wszystkie procesy usługi, czyli jej grupa z lekcji o limitach.</li><li>Na dole ostatnie linijki z jej logów. Dla wielu awarii to wystarczy, żeby wiedzieć, co się stało.</li></ul><p>Końcówkę <code>.service</code> możesz pomijać, <code>systemctl</code> sam ją dopisze.</p><p>[RHEL] [Ubuntu] Uwaga na nazwy, bo dystrybucje się różnią: serwer SSH to na RHEL <code>sshd</code>, na Ubuntu <code>ssh</code>. Cron to na RHEL <code>crond</code>, na Ubuntu <code>cron</code>. Apache to na RHEL <code>httpd</code>, na Ubuntu <code>apache2</code>. Nie wiesz, jak się nazywa? <code>systemctl list-unit-files --type=service | grep -i ssh</code>.</p></section><section><h2 id="start-stop-restart-reload">start, stop, restart, reload</h2><p>Czynności na teraz, do najbliższego restartu:</p><div class="kod"><pre><code>sudo systemctl stop cron
+systemctl is-active cron
+sudo systemctl start cron
+sudo systemctl restart cron</code></pre></div><div class="kod"><pre><code>inactive</code></pre></div><p><code>is-active</code> odpowiada jednym słowem i ustawia kod wyjścia: zero, gdy działa, inny, gdy nie. U mnie po <code>stop</code> wyszło 3. To idealne do skryptów: <code>if systemctl is-active --quiet nginx; then ...</code>. Pamiętasz kciuk w górę i w dół? To właśnie on.</p><p>A co z <code>reload</code>? Restart to wyłączenie lokalu i otwarcie od nowa: wszyscy goście wychodzą. Reload to szepnięcie kelnerom „od teraz nowe menu”, a goście dalej jedzą. Serwer WWW po reload czyta nową konfigurację bez zrywania połączeń. Ale nie każdy program to umie:</p><div class="kod"><pre><code>sudo systemctl reload cron</code></pre></div><div class="kod"><pre><code>Failed to reload cron.service: Job type reload is not applicable for unit cron.service.</code></pre></div><p>Cron nie ma przeładowania, więc systemd odmawia. Jeśli nie wiesz, co umie usługa, jest <code>systemctl reload-or-restart</code>: przeładuje, jeśli się da, a jak nie, zrestartuje.</p></section><section><h2 id="enable-disable-enable-now">enable, disable, enable --now</h2><p><code>start</code> to „przyjdź dziś do pracy”. <code>enable</code> to „wpisuję cię do grafiku na każdy dzień”. To dwie zupełnie różne rzeczy i jedna z najczęstszych pomyłek początkujących: usługa uruchomiona, ale nie włączona, więc po restarcie serwera jej nie ma.</p><div class="kod"><pre><code>sudo systemctl disable --now cron</code></pre></div><div class="kod"><pre><code>Removed &quot;/etc/systemd/system/multi-user.target.wants/cron.service&quot;.</code></pre></div><p>I znów: tylko dowiązanie. <code>enable</code> wkłada skrót do folderu <code>multi-user.target.wants</code>, czyli na listę „te jednostki chce tryb serwerowy”. <code>disable</code> go wyjmuje. A <code>--now</code> robi przy okazji <code>start</code> albo <code>stop</code>, żeby nie pisać dwóch komend:</p><div class="kod"><pre><code>sudo systemctl enable --now cron
+systemctl is-enabled cron</code></pre></div><div class="kod"><pre><code>Created symlink /etc/systemd/system/multi-user.target.wants/cron.service → /usr/lib/systemd/system/cron.service.
+enabled</code></pre></div><p>[Ubuntu] Przy niektórych usługach zobaczysz też „Synchronizing state of cron.service with SysV service script”. To systemd uprzejmie aktualizuje stare skrypty z czasów SysV, które pakiet wciąż ze sobą nosi. Nic z tym nie robisz.</p></section><section><h2 id="mask-zamurowane-drzwi">mask: zamurowane drzwi</h2><p><code>disable</code> znaczy „nie przychodź sam z siebie”. Ale usługę wyłączoną dalej może uruchomić ręcznie ktoś inny albo inna usługa, która jej potrzebuje. Czasem chcesz mieć pewność, że coś nie wstanie nigdy, na przykład dwie zapory sieciowe, które się gryzą. Wtedy zamurowujesz drzwi:</p><div class="kod"><pre><code>sudo systemctl mask cron
+sudo systemctl start cron</code></pre></div><div class="kod"><pre><code>Created symlink /etc/systemd/system/cron.service → /dev/null.
+Failed to start cron.service: Unit cron.service is masked.</code></pre></div><p>Maskowanie to dowiązanie karty do <code>/dev/null</code>, czyli czarnej dziury. Karta w <code>/etc</code> wygrywa z kartą z pakietu, a jest pusta. Nikt nie uruchomi. Odmurowanie: <code>sudo systemctl unmask cron</code>.</p></section><section><h2 id="gdzie-sie-pali-list-units-failed">Gdzie się pali: list-units --failed</h2><p>Po restarcie serwera pierwsze pytanie brzmi: czy wszystko wstało?</p><div class="kod"><pre><code>systemctl list-units --failed</code></pre></div><div class="kod"><pre><code>  UNIT            LOAD   ACTIVE SUB    DESCRIPTION
+● zepsuty.service loaded failed failed Zepsuta usluga
+
+1 loaded units listed.</code></pre></div><p>Pusta lista to dobry dzień. Jest coś? <code>systemctl status</code> tej usługi i czytasz. Po naprawie licznik awarii czyści <code>systemctl reset-failed</code>.</p></section><section><h2 id="wlasna-usluga-ze-skryptu">Własna usługa ze skryptu</h2><p>Czas zatrudnić nasz skrypt. Najpierw sam skrypt, <code>/usr/local/bin/zegarek.sh</code>:</p><div class="kod"><pre><code>#!/bin/bash
+# zegarek.sh - co 10 sekund zapisuje do dziennika, ile jest wolnej pamieci
+while true; do
+    echo &quot;Dostepna pamiec: $(free -m | awk &#x27;/^Mem:/ {print $7}&#x27;) MB&quot;
+    sleep 10
+done</code></pre></div><p>Zauważ: żadnego zapisywania do pliku. Skrypt po prostu pisze na ekran, a systemd sam złapie to do dziennika. <code>/usr/local/bin</code> to w planie biurowca miejsce na programy dopisane przez admina. Nie zapomnij o <code>sudo chmod +x</code>.</p><p>Usługa będzie działać na własnym, osobnym koncie, bez prawa logowania. Root do liczenia pamięci to jak zatrudnienie dyrektora do parzenia kawy:</p><div class="kod"><pre><code>sudo useradd --system --no-create-home --shell /usr/sbin/nologin zegarek</code></pre></div><p>Teraz karta pracownika, <code>/etc/systemd/system/zegarek.service</code>:</p><div class="kod"><pre><code>[Unit]
+Description=Zegarek - co 10 sekund raportuje wolna pamiec
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/zegarek.sh
+Restart=on-failure
+RestartSec=5
+User=zegarek
+LimitNOFILE=4096
+
+[Install]
+WantedBy=multi-user.target</code></pre></div><p>Trzy sekcje:</p><ul><li><strong>[Unit]</strong> — kim jest: opis i kolejność. <code>After=network.target</code> znaczy „przyjdź po tym, jak sieć już jest”. To tylko kolejność, nie wymaganie.</li><li><strong>[Service]</strong> — jak pracuje. <code>ExecStart</code> to pełna ścieżka do programu. <code>Type=simple</code> mówi, że program działa na pierwszym planie i nie ucieka w tło. <code>Restart=on-failure</code> to podnoszenie po awarii, a <code>RestartSec=5</code> to pięć sekund przerwy na oddech. <code>User</code> to konto. A <code>LimitNOFILE</code> to limit otwartych plików, który obiecałem w lekcji o limitach. Pamiętasz, że <code>limits.conf</code> usług nie dotyczy? Właśnie tak się to robi.</li><li><strong>[Install]</strong> — do jakiego grafiku wpisuje ją <code>enable</code>. <code>WantedBy=multi-user.target</code> znaczy: włącz w normalnym trybie serwera.</li></ul><p>Zanim włączysz, sprawdź składnię:</p><div class="kod"><pre><code>systemd-analyze verify /etc/systemd/system/zegarek.service</code></pre></div><p>Cisza znaczy, że jest dobrze. Gdybym wpisał <code>Restart=czasami</code>, dostałbym:</p><div class="kod"><pre><code>zly.service:5: Failed to parse service restart specifier, ignoring: czasami</code></pre></div><p>A gdybym zamiast własnego konta wpisał <code>User=nobody</code>, <code>verify</code> ostrzegłby: „Special user nobody configured, this is not safe!”. Konto <code>nobody</code> jest współdzielone przez różne programy, więc to zły pomysł. Uruchamiamy:</p><div class="kod"><pre><code>sudo systemctl daemon-reload
+sudo systemctl enable --now zegarek
+systemctl status zegarek</code></pre></div><div class="kod"><pre><code>● zegarek.service - Zegarek - co 10 sekund raportuje wolna pamiec
+     Loaded: loaded (/etc/systemd/system/zegarek.service; enabled; preset: enabled)
+     Active: active (running) since Tue 2026-11-03 21:16:33 UTC; 22s ago
+   Main PID: 189 (zegarek.sh)
+     CGroup: /system.slice/zegarek.service
+             ├─189 /bin/bash /usr/local/bin/zegarek.sh
+             └─202 sleep 10
+
+Nov 03 21:16:33 serwer zegarek.sh[189]: Dostepna pamiec: 6962 MB
+Nov 03 21:16:43 serwer zegarek.sh[189]: Dostepna pamiec: 6965 MB</code></pre></div><p><code>daemon-reload</code> to „kierowniku, przeczytaj segregator jeszcze raz”. Bez tego systemd nie wie o nowej karcie ani o zmianach w starej. Jeśli zapomnisz, sam Ci przypomni: „The unit file, source configuration file or drop-ins of zegarek.service changed on disk. Run &#x27;systemctl daemon-reload&#x27; to reload units.”</p><p>Teraz test najważniejszy. Zabijamy główny proces bez litości, sygnałem 9:</p><div class="kod"><pre><code>sudo kill -9 $(systemctl show -p MainPID --value zegarek)
+sleep 6
+journalctl -u zegarek | tail -3</code></pre></div><div class="kod"><pre><code>Nov 03 21:16:59 serwer systemd[1]: zegarek.service: Main process exited, code=killed, status=9/KILL
+Nov 03 21:16:59 serwer systemd[1]: zegarek.service: Failed with result &#x27;signal&#x27;.
+Nov 03 21:17:04 serwer systemd[1]: zegarek.service: Scheduled restart job, restart counter is at 4.</code></pre></div><p>Pięć sekund i kierownik postawił kucharza z powrotem przy kuchence. Licznik restartów mówi, ile razy już musiał. U mnie cztery, bo wcześniej trochę eksperymentowałem. A limit plików? <code>grep &#x27;open files&#x27; /proc/PID/limits</code> pokazuje <code>4096</code>. Działa.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>zamiast edytować kartę z pakietu, robisz nakładkę: <code>sudo systemctl edit nazwa</code> tworzy plik <code>/etc/systemd/system/nazwa.service.d/override.conf</code>, w którym wpisujesz tylko zmienione linijki. <code>systemctl cat nazwa</code> pokazuje kartę razem z nakładkami, a aktualizacja pakietu ich nie ruszy.</p></aside></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p><code>systemctl</code> sam niczego nie uruchamia. To tylko telefon do kierownika: wysyła wiadomość przez szynę D-Bus do procesu numer 1, a ten robi robotę. Dlatego w kontenerze bez systemd <code>systemctl</code> odpowiada błędem, bo nie ma kto odebrać.</p><p>Kiedy systemd uruchamia usługę, tworzy dla niej własną grupę cgroups, ustawia konto, limity i środowisko, a potem odpala <code>ExecStart</code>. Wszystko, co proces wypisze na ekran, trafia nie na ekran, tylko do <code>systemd-journald</code>, czyli dziennika. Kiedy proces umiera, jądro powiadamia rodzica, a rodzicem jest właśnie PID 1. Kierownik od razu wie, że kucharz padł, z jakim kodem i od jakiego sygnału, i decyduje według <code>Restart=</code>. Dzięki grupie wie też, że przy <code>stop</code> ma zamknąć wszystkie procesy usługi, nawet te, które skrypt odpalił po drodze, jak nasz <code>sleep</code>. Żaden nie ucieknie przez tylne drzwi.</p></section><section><h2 id="sciaga-flag">Ściąga flag</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga</th><th>Co robi</th></tr><tr><td>systemctl</td><td>status USŁUGA</td><td>stan, PID, ostatnie logi</td></tr><tr><td>systemctl</td><td>start / stop / restart</td><td>uruchamia / zatrzymuje / restartuje teraz</td></tr><tr><td>systemctl</td><td>reload</td><td>przeładowuje konfigurację bez restartu</td></tr><tr><td>systemctl</td><td>reload-or-restart</td><td>reload, a jak się nie da, restart</td></tr><tr><td>systemctl</td><td>enable / disable</td><td>włącza / wyłącza start przy rozruchu</td></tr><tr><td>systemctl</td><td>enable --now</td><td>włącza i od razu uruchamia</td></tr><tr><td>systemctl</td><td>mask / unmask</td><td>blokuje całkowicie / odblokowuje</td></tr><tr><td>systemctl</td><td>is-active / is-enabled</td><td>jedno słowo i kod wyjścia, do skryptów</td></tr><tr><td>systemctl</td><td>list-units --failed</td><td>jednostki w stanie awarii</td></tr><tr><td>systemctl</td><td>list-unit-files --type=service</td><td>wszystkie usługi i ich stan włączenia</td></tr><tr><td>systemctl</td><td>daemon-reload</td><td>ponownie wczytuje pliki jednostek</td></tr><tr><td>systemctl</td><td>cat / edit</td><td>pokazuje kartę / tworzy nakładkę</td></tr><tr><td>systemctl</td><td>reset-failed</td><td>czyści stan awarii</td></tr><tr><td>systemctl</td><td>show -p WŁAŚCIWOŚĆ --value</td><td>jedna wartość, np. MainPID</td></tr><tr><td>systemd-analyze</td><td>verify PLIK</td><td>sprawdza składnię jednostki</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>Piszesz szybki skrypt, kartkę usługi, <code>daemon-reload</code>, <code>start</code>. I:</p><div class="kod"><pre><code>× zepsuty.service - Zepsuta usluga
+     Loaded: loaded (/etc/systemd/system/zepsuty.service; static)
+     Active: failed (Result: exit-code) since Tue 2026-11-03 21:17:10 UTC; 7ms ago
+    Process: 256 ExecStart=/usr/local/bin/zepsuty.sh (code=exited, status=203/EXEC)</code></pre></div><p><code>203/EXEC</code> to kod systemd, który znaczy: „nie udało mi się nawet uruchomić programu”. Skrypt nie zdążył wykonać ani jednej linijki. Dwie najczęstsze przyczyny. Pierwsza: plik nie ma prawa wykonania, czyli zapomniałeś <code>chmod +x</code>. Druga, podstępniejsza: zrobiłeś <code>chmod +x</code>, a w dzienniku dalej:</p><div class="kod"><pre><code>zepsuty.service: Failed to execute /usr/local/bin/zepsuty.sh: Exec format error</code></pre></div><p>Brakuje pierwszej linijki <code>#!/bin/bash</code>. W terminalu skrypt działał, bo Bash był tak miły, że uruchomił go u siebie. Ale systemd to nie Bash. On pyta jądro, a jądro bez tej linijki nie ma pojęcia, czym ten plik otworzyć. To jak wysłanie przepisu do kuchni bez informacji, czy to po polsku, czy po węgiersku.</p><p>Naprawa: <code>#!/bin/bash</code> na początku, <code>chmod +x</code>, <code>systemctl start</code>, a po wszystkim <code>systemctl reset-failed</code>.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><p>Napisz usługę <code>licznik.service</code>, która uruchamia skrypt <code>/usr/local/bin/licznik.sh</code>. Skrypt co 5 sekund wypisuje kolejną liczbę: 1, 2, 3 i tak dalej. Usługa ma wstawać po każdym zakończeniu, nie tylko po awarii (podpowiedź: inna wartość <code>Restart=</code>). Sprawdź ją <code>systemd-analyze verify</code>, włącz jedną komendą na stałe i od razu, zabij jej główny proces i pokaż, że wstała i liczy od nowa. Na koniec wyłącz ją i zamaskuj.</p><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><p>Skrypt <code>/usr/local/bin/licznik.sh</code>:</p><div class="kod"><pre><code>#!/bin/bash
+# licznik.sh - co 5 sekund wypisuje kolejna liczbe
+n=0
+while true; do
+    n=$((n + 1))
+    echo &quot;$n&quot;
+    sleep 5
+done</code></pre></div><p>Karta <code>/etc/systemd/system/licznik.service</code>:</p><div class="kod"><pre><code>[Unit]
+Description=Licznik - co 5 sekund kolejna liczba
+
+[Service]
+ExecStart=/usr/local/bin/licznik.sh
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target</code></pre></div><p><code>Restart=always</code> podnosi usługę po każdym zakończeniu, nawet grzecznym. Dalej <code>chmod +x</code>, <code>systemd-analyze verify</code>, <code>daemon-reload</code>, <code>enable --now</code> i zabójstwo:</p><div class="kod"><pre><code>sudo kill -9 $(systemctl show -p MainPID --value licznik)
+journalctl -u licznik | tail -4</code></pre></div><div class="kod"><pre><code>Nov 03 21:19:36 serwer systemd[1]: licznik.service: Failed with result &#x27;signal&#x27;.
+Nov 03 21:19:39 serwer systemd[1]: licznik.service: Scheduled restart job, restart counter is at 1.
+Nov 03 21:19:39 serwer systemd[1]: Started licznik.service - Licznik - co 5 sekund kolejna liczba.
+Nov 03 21:19:39 serwer licznik.sh[636]: 1</code></pre></div><p>Wstał i liczy od jedynki. Nowy proces, nowa pamięć. A teraz pułapka, w którą pewnie wpadłeś:</p><div class="kod"><pre><code>sudo systemctl disable --now licznik
+sudo systemctl mask licznik</code></pre></div><div class="kod"><pre><code>Failed to mask unit: File /etc/systemd/system/licznik.service already exists.</code></pre></div><p>Pamiętasz, jak działa maskowanie? Wkłada do <code>/etc/systemd/system</code> dowiązanie do <code>/dev/null</code>. A tam już leży nasza karta. Nie da się zamurować drzwi, które są ścianą nośną. Rozwiązanie: własne jednostki, które chcesz kiedyś maskować, trzymaj w <code>/usr/local/lib/systemd/system/</code>. To też oficjalne miejsce na karty od admina. Przenosisz, <code>daemon-reload</code> i <code>mask</code> działa:</p><div class="kod"><pre><code>Created symlink /etc/systemd/system/licznik.service → /dev/null.
+Failed to start licznik.service: Unit licznik.service is masked.</code></pre></div><p>Jeśli wymyśliłeś to sam, zasłużyłeś na kawę. Jeśli nie — też, bo właśnie się tego nauczyłeś.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Przez cała lekcja zaglądaliśmy do dziennika tylnymi drzwiami. W następnej lekcji wchodzimy frontowymi: <code>journalctl</code>, klasyczne pliki w <code>/var/log</code>, rsyslog, <code>logrotate</code>, czyli kto pilnuje, żeby logi nie zjadły dysku, i jak samemu coś do dziennika napisać.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-027.html" rel="prev">← 27. Jak Linux startuje</a><a class="btn domyslny zolty" href="lekcja-029.html" rel="next">29. Logi →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

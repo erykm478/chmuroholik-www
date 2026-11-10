@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>6. Gdzie idzie wynik komendy — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 6 kursu Linux i Bash od zera do admina: Gdzie idzie wynik komendy. kursant zapisuje wynik komend do plików, dopisuje, oddziela błędy od normalnych wyników i wie, co to /dev/null.">
+<meta property="og:title" content="6. Gdzie idzie wynik komendy — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 6 kursu Linux i Bash od zera do admina: Gdzie idzie wynik komendy. kursant zapisuje wynik komend do plików, dopisuje, oddziela błędy od normalnych wyników i wie, co to /dev/null.">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 1</span></div>
+      <div class="boczny-tytul"><a href="index.html#m01">Praca w powłoce</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-005.html" data-lekcja="5"><span class="znacznik"></span><span class="nr">5</span> Gwiazdka, która robi robotę za ciebie</a></li><li><a href="lekcja-006.html" data-lekcja="6" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">6</span> Gdzie idzie wynik komendy</a></li><li><a href="lekcja-007.html" data-lekcja="7"><span class="znacznik"></span><span class="nr">7</span> Rura i narzędzia do tekstu</a></li><li><a href="lekcja-008.html" data-lekcja="8"><span class="znacznik"></span><span class="nr">8</span> Mapa Linuksa: co leży w którym folderze</a></li><li><a href="lekcja-009.html" data-lekcja="9"><span class="znacznik"></span><span class="nr">9</span> Co to jest powłoka i jakie są</a></li><li><a href="lekcja-010.html" data-lekcja="10"><span class="znacznik"></span><span class="nr">10</span> Jak Bash czyta twoją komendę</a></li><li><a href="lekcja-011.html" data-lekcja="11"><span class="znacznik"></span><span class="nr">11</span> nano: edytor, z którego da się wyjść</a></li><li><a href="lekcja-012.html" data-lekcja="12"><span class="znacznik"></span><span class="nr">12</span> vi i vim bez paniki</a></li><li><a href="lekcja-013.html" data-lekcja="13"><span class="znacznik"></span><span class="nr">13</span> Midnight Commander i inne menedżery plików</a></li><li><a href="lekcja-014.html" data-lekcja="14"><span class="znacznik"></span><span class="nr">14</span> Linki: skróty, które nie są skrótami</a></li><li><a href="lekcja-015.html" data-lekcja="15"><span class="znacznik"></span><span class="nr">15</span> Kto może czytać twój plik</a></li><li><a href="lekcja-016.html" data-lekcja="16"><span class="znacznik"></span><span class="nr">16</span> Uprawnienia specjalne i ACL</a></li><li><a href="lekcja-017.html" data-lekcja="17"><span class="znacznik"></span><span class="nr">17</span> Ustawienia Basha pod siebie</a></li><li><a href="lekcja-018.html" data-lekcja="18"><span class="znacznik"></span><span class="nr">18</span> tmux: terminal, który przeżyje rozłączenie</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="6" data-modul="1" data-tematy="&gt;, &gt;&gt;, &lt;, 2&gt;, 2&gt;&amp;1, &amp;&gt;, /dev/null, deskryptory">
+    <div class="belka"><span>Lekcja 6 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m01">Moduł 1</a> › Lekcja 6</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Gdzie idzie wynik komendy</h1>
+      <p class="meta"><span>⏱ ok. 4 min czytania</span><span>· moduł 1: Praca w powłoce</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant zapisuje wynik komend do plików, dopisuje, oddziela błędy od normalnych wyników i wie, co to <code>/dev/null</code>.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#dwa-glosniki">Dwa głośniki</a></li><li><a href="#zapis-do-pliku">Zapis do pliku: &gt;</a></li><li><a href="#uwaga-nadpisuje">Uwaga: &gt; nadpisuje</a></li><li><a href="#dopisywanie">Dopisywanie: &gt;&gt;</a></li><li><a href="#bledy-osobno-2">Błędy osobno: 2&gt;</a></li><li><a href="#wszystko-do-jednego-pliku">Wszystko do jednego pliku</a></li><li><a href="#czarna-dziura-dev-null">Czarna dziura: /dev/null</a></li><li><a href="#czytanie-z-pliku">Czytanie z pliku: &lt;</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p>Każda komenda, którą do tej pory wpisałeś, wypisywała wynik na ekran. Przeczytałeś, zamknąłeś terminal i wynik przepadł.</p><p>A co, jeśli chcesz go zachować? Listę plików do raportu. Log z nocnej kopii zapasowej. Błędy, żeby rano zobaczyć, co poszło nie tak.</p><p>Dziś nauczysz się kierować to, co komendy mówią, tam, gdzie chcesz.</p></section><section><h2 id="dwa-glosniki">Dwa głośniki</h2><p>Każda komenda ma dwa głośniki.</p><p>Pierwszym mówi normalne rzeczy: listę plików, wynik, odpowiedź. Fachowo: <strong>standardowe wyjście</strong>, w skrócie stdout.</p><p>Drugim krzyczy, kiedy coś poszło nie tak: „nie ma takiego pliku”, „brak uprawnień”. Fachowo: <strong>standardowe wyjście błędów</strong>, w skrócie stderr.</p><p>Na ekranie oba brzmią tak samo, bo oba są podłączone do terminala. Ale Bash pozwala je rozdzielić. I podłączyć każdy w inne miejsce.</p><p>Wracając do urzędu: urzędnik normalną odpowiedź podaje Ci do ręki, a skargi wkłada do osobnej teczki. Ty decydujesz, która teczka idzie do segregatora, a która do kosza.</p></section><section><h2 id="zapis-do-pliku">Zapis do pliku: &gt;</h2><div class="kod"><pre><code>ls &gt; lista.txt</code></pre></div><p>Zamiast na ekran, wynik <code>ls</code> ląduje w pliku <code>lista.txt</code>. Na ekranie nic się nie pojawi. Sprawdź <code>cat lista.txt</code>.</p><p>To jest właśnie prawdziwe pisanie do plików, które obiecałem dwa lekcje temu:</p><div class="kod"><pre><code>echo &quot;Kupić mleko&quot; &gt; zakupy.txt</code></pre></div></section><section><h2 id="uwaga-nadpisuje">Uwaga: &gt; nadpisuje</h2><div class="kod"><pre><code>echo &quot;Kupić chleb&quot; &gt; zakupy.txt
+cat zakupy.txt</code></pre></div><p>Mleka już nie ma. Pojedyncza strzałka <strong>kasuje to, co było w pliku</strong>, i wpisuje nowe. Bez pytania. Jak <code>rm</code>, tylko bardziej podstępne, bo nie wygląda na kasowanie.</p></section><section><h2 id="dopisywanie">Dopisywanie: &gt;&gt;</h2><div class="kod"><pre><code>echo &quot;Kupić mleko&quot; &gt;&gt; zakupy.txt
+echo &quot;Kupić jajka&quot; &gt;&gt; zakupy.txt
+cat zakupy.txt</code></pre></div><p>Podwójna strzałka dopisuje na końcu. Tak działają logi: każde zdarzenie to nowa linijka na końcu pliku.</p><p>Podpowiedź na pamięć: jedna strzałka to jedna kartka, wyrzucasz starą i piszesz nową. Dwie strzałki to zeszyt, dopisujesz na następnej stronie.</p></section><section><h2 id="bledy-osobno-2">Błędy osobno: 2&gt;</h2><div class="kod"><pre><code>ls nie_ma_takiego &gt; wynik.txt</code></pre></div><p>Czemu błąd i tak pojawił się na ekranie? Bo <code>&gt;</code> przekierowuje tylko pierwszy głośnik, ten od normalnych rzeczy. Błędy idą drugim.</p><p>Głośniki mają numery. Normalny to 1, błędy to 2. Więc:</p><div class="kod"><pre><code>ls nie_ma_takiego 2&gt; bledy.txt</code></pre></div><p>Teraz błąd trafił do pliku <code>bledy.txt</code>, a ekran jest czysty.</p></section><section><h2 id="wszystko-do-jednego-pliku">Wszystko do jednego pliku</h2><div class="kod"><pre><code>komenda &gt; wszystko.txt 2&gt;&amp;1</code></pre></div><p>Czytamy: normalne rzeczy do pliku <code>wszystko.txt</code>, a błędy (2) tam, gdzie idą normalne rzeczy (&amp;1). Ten zapis wygląda jak szyfr, ale użyjesz go setki razy, zwłaszcza w skryptach uruchamianych w nocy.</p><p>W Bashu jest też krótsza wersja:</p><div class="kod"><pre><code>komenda &amp;&gt; wszystko.txt</code></pre></div><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>kolejność ma znaczenie. <code>2&gt;&amp;1 &gt; plik</code> nie zadziała tak samo, bo błędy zostaną skierowane tam, gdzie wyjście było w tamtym momencie, czyli na ekran. Bash czyta przekierowania od lewej do prawej.</p></aside></section><section><h2 id="czarna-dziura-dev-null">Czarna dziura: /dev/null</h2><div class="kod"><pre><code>komenda 2&gt; /dev/null</code></pre></div><p><code>/dev/null</code> to specjalny plik, który pożera wszystko, co do niego wyślesz. Nic nie zapisuje, nic nie oddaje. Czarna dziura systemu.</p><p>Po co? Żeby uciszyć komunikaty, które Cię nie interesują. Jak wyciszenie grupy rodzinnej na WhatsAppie. Dalej piszą, ale Ty masz spokój.</p><p>Tylko ostrożnie. Wyciszone błędy to wciąż błędy. W lekcji o IT-horrorach była firma, w której maile o niedziałających backupach lądowały w czarnej dziurze. Skończyło się osiemnastoma godzinami awarii.</p></section><section><h2 id="czytanie-z-pliku">Czytanie z pliku: &lt;</h2><div class="kod"><pre><code>sort &lt; zakupy.txt
+wc -l &lt; zakupy.txt</code></pre></div><p>Strzałka w drugą stronę podaje plik komendzie jako wejście, jakbyś go wpisywał z klawiatury. W praktyce używa się tego rzadziej niż <code>&gt;</code>, ale warto rozpoznać.</p></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><div class="kod"><pre><code>sort zakupy.txt &gt; zakupy.txt</code></pre></div><p>Chcesz posortować plik i zapisać go w tym samym miejscu. Wynik: pusty plik.</p><p>Dlaczego? Bo Bash <strong>najpierw</strong> przygotowuje przekierowanie, czyli czyści <code>zakupy.txt</code>, a <strong>dopiero potem</strong> uruchamia <code>sort</code>. Który dostaje pusty plik i grzecznie go sortuje.</p><p>To jak wyrzucenie garnka z zupą do zlewu, żeby nalać do niego tę samą zupę.</p><p>Rozwiązanie: zapisz do nowego pliku, a potem podmień.</p><div class="kod"><pre><code>sort zakupy.txt &gt; zakupy_posortowane.txt
+mv zakupy_posortowane.txt zakupy.txt</code></pre></div><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p><code>set -o noclobber</code> sprawia, że <code>&gt;</code> odmówi nadpisania istniejącego pliku. Świadome nadpisanie robi się wtedy <code>&gt;|</code>.</p></aside></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><p>Zrób plik <code>dziennik.txt</code>, do którego trzy razy dopiszesz datę i godzinę (komendą <code>date</code>). Potem uruchom <code>ls</code> na jednym pliku, który istnieje, i jednym, który nie istnieje, tak, żeby wynik trafił do <code>ok.txt</code>, a błąd do <code>bledy.txt</code>.</p><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><div class="kod"><pre><code>date &gt;&gt; dziennik.txt
+date &gt;&gt; dziennik.txt
+date &gt;&gt; dziennik.txt
+ls istnieje.txt nie_ma.txt &gt; ok.txt 2&gt; bledy.txt</code></pre></div><p>W <code>dziennik.txt</code> są trzy linijki z datą, bo podwójna strzałka dopisuje. W <code>ok.txt</code> jest nazwa pliku, który istnieje, a w <code>bledy.txt</code> komunikat „No such file or directory”. Jedna komenda, dwa głośniki, dwa pliki. Jeśli w dzienniku masz jedną linijkę, to gdzieś użyłeś pojedynczej strzałki. Witaj w klubie.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Pliki to jedno. Ale co, jeśli wynik jednej komendy chcesz od razu podać drugiej? Bez plików po drodze. Następna lekcja to najważniejszy znak w całym Bashu. Pionowa kreska.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-005.html" rel="prev">← 5. Gwiazdka, która robi robotę za ciebie</a><a class="btn domyslny zolty" href="lekcja-007.html" rel="next">7. Rura i narzędzia do tekstu →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>71. Diagnostyka sieci i DNS — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 71 kursu Linux i Bash od zera do admina: Diagnostyka sieci i DNS. kursant szuka awarii sieci krok po kroku, od kabla do aplikacji, używając ping, traceroute, tracepath, mtr, dig, host, nslookup, curl, wget i nc, i zna najważniejsze rekordy DNS.">
+<meta property="og:title" content="71. Diagnostyka sieci i DNS — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 71 kursu Linux i Bash od zera do admina: Diagnostyka sieci i DNS. kursant szuka awarii sieci krok po kroku, od kabla do aplikacji, używając ping, traceroute, tracepath, mtr, dig, host, nslookup, curl, wget i nc, i zna najważniejsze rekordy DNS.">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 8</span></div>
+      <div class="boczny-tytul"><a href="index.html#m08">Sieć</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-068.html" data-lekcja="68"><span class="znacznik"></span><span class="nr">68</span> Sieć w piętnaście minut</a></li><li><a href="lekcja-069.html" data-lekcja="69"><span class="znacznik"></span><span class="nr">69</span> ip: adresy, trasy, interfejsy</a></li><li><a href="lekcja-070.html" data-lekcja="70"><span class="znacznik"></span><span class="nr">70</span> Konfiguracja sieci na stałe</a></li><li><a href="lekcja-071.html" data-lekcja="71" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">71</span> Diagnostyka sieci i DNS</a></li><li><a href="lekcja-072.html" data-lekcja="72"><span class="znacznik"></span><span class="nr">72</span> Porty: kto słucha i dlaczego</a></li><li><a href="lekcja-073.html" data-lekcja="73"><span class="znacznik"></span><span class="nr">73</span> Otwieranie i zamykanie portów</a></li><li><a href="lekcja-074.html" data-lekcja="74"><span class="znacznik"></span><span class="nr">74</span> Routing, NAT, przekierowanie portów, bonding i mostki</a></li><li><a href="lekcja-075.html" data-lekcja="75"><span class="znacznik"></span><span class="nr">75</span> Podglądanie ruchu</a></li><li><a href="lekcja-076.html" data-lekcja="76"><span class="znacznik"></span><span class="nr">76</span> SSH od środka</a></li><li><a href="lekcja-077.html" data-lekcja="77"><span class="znacznik"></span><span class="nr">77</span> Archiwa i kopiowanie przez sieć</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="71" data-modul="8" data-tematy="ping -c, traceroute, tracepath, mtr, dig (+short, +trace, -x), rekordy A, AAAA, CNAME, MX, PTR, TXT, TTL, host, nslookup, curl -I -v, wget, nc -zv">
+    <div class="belka"><span>Lekcja 71 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m08">Moduł 8</a> › Lekcja 71</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Diagnostyka sieci i DNS</h1>
+      <p class="meta"><span>⏱ ok. 13 min czytania</span><span>· moduł 8: Sieć</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant szuka awarii sieci krok po kroku, od kabla do aplikacji, używając <code>ping</code>, <code>traceroute</code>, <code>tracepath</code>, <code>mtr</code>, <code>dig</code>, <code>host</code>, <code>nslookup</code>, <code>curl</code>, <code>wget</code> i <code>nc</code>, i zna najważniejsze rekordy DNS.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#laboratorium">Laboratorium</a></li><li><a href="#ping-halo-jest-tam-kto">ping — halo, jest tam kto?</a></li><li><a href="#traceroute-tracepath-i-mtr-gdzie-urywa-sie-droga">traceroute, tracepath i mtr — gdzie urywa się droga</a></li><li><a href="#dns-rozmowa-z-biurem-numerow">DNS — rozmowa z biurem numerów</a></li><li><a href="#rekordy-dns-rubryki-w-ksiazce-telefonicznej">Rekordy DNS — rubryki w książce telefonicznej</a></li><li><a href="#host-i-nslookup-kuzyni-diga">host i nslookup — kuzyni diga</a></li><li><a href="#curl-wget-i-nc-gorne-szczeble">curl, wget i nc — górne szczeble</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga-flag">Ściąga flag</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p>„Strona nie działa” to nie diagnoza. To objaw. Jak „boli mnie” u lekarza. Dobry lekarz nie zaczyna od operacji. Zaczyna od pytania, gdzie boli, i sprawdza po kolei: temperatura, ciśnienie, osłuchanie.</p><p>Admin robi to samo, tylko jego stetoskop nazywa się <code>ping</code>. Dziś poznasz drabinę diagnostyczną: idziesz od dołu do góry i zatrzymujesz się na pierwszym szczeblu, który nie działa.</p><ol><li>Kabel i karta: <code>ip -br link</code>. Jest <code>UP</code>?</li><li>Adres: <code>ip -br a</code>. Jest adres i dobra maska?</li><li>Brama: <code>ping</code> do bramy.</li><li>Internet po adresie: <code>ping 1.1.1.1</code>.</li><li>DNS: <code>dig nazwa</code>.</li><li>Port: <code>nc -zv serwer 443</code>.</li><li>Aplikacja: <code>curl -I https://strona</code>.</li></ol><p>Pierwsze dwa szczeble znałeś z lekcji 69. Dziś reszta.</p></section><section><h2 id="laboratorium">Laboratorium</h2><p>Zbudowałem mały internet w pudełku. Komputer <code>dom</code> z adresem <code>192.168.1.10</code>. Domowy <code>ruter</code>. <code>dostawca</code> internetu. I <code>strona</code> z serwerem WWW pod adresem <code>198.51.100.80</code>. Ruter jest też serwerem DNS dla domeny <code>kurs.lab</code>. Wszystkie wyniki poniżej są z tego pudełka. Na Twoim komputerze z prawdziwymi stronami wyglądają tak samo, tylko liczby są większe.</p></section><section><h2 id="ping-halo-jest-tam-kto">ping — halo, jest tam kto?</h2><p>Ping to zawołanie przez płot: „halo?”. Druga strona odkrzykuje. Mierzysz, ile trwało.</p><div class="kod"><pre><code>ping -c 3 198.51.100.80</code></pre></div><div class="kod"><pre><code>PING 198.51.100.80 (198.51.100.80) 56(84) bytes of data.
+64 bytes from 198.51.100.80: icmp_seq=1 ttl=62 time=0.395 ms
+64 bytes from 198.51.100.80: icmp_seq=2 ttl=62 time=0.050 ms
+64 bytes from 198.51.100.80: icmp_seq=3 ttl=62 time=0.048 ms
+
+--- 198.51.100.80 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2049ms
+rtt min/avg/max/mdev = 0.048/0.164/0.395/0.163 ms</code></pre></div><p><code>-c 3</code> znaczy: trzy razy i koniec. Bez tego Linuksowy ping pinguje do śmierci albo do Ctrl+C, co nastąpi pierwsze. <code>time</code> to czas tam i z powrotem. <code>0% packet loss</code> to najpiękniejsze słowa w sieciach.</p><p>A <code>ttl=62</code>? Pakiet startuje z licznikiem, zwykle 64, i każdy ruter po drodze odejmuje jeden. 64 minus 62 to dwa rutery po drodze. Zgadza się: ruter i dostawca.</p><p>Uwaga: brak odpowiedzi na ping nie zawsze znaczy, że serwer leży. Wiele serwerów i zapór celowo ignoruje ping. Jak sąsiad, który jest w domu, ale nie otwiera akwizytorom. Dlatego ping to szczebel, a nie wyrok.</p></section><section><h2 id="traceroute-tracepath-i-mtr-gdzie-urywa-sie-droga">traceroute, tracepath i mtr — gdzie urywa się droga</h2><p>Ping mówi „dochodzi albo nie”. Ale gdzie się gubi? Na to jest traceroute. Pakiet wysyła się z licznikiem 1. Pierwszy ruter odejmuje jeden, ma zero, wyrzuca pakiet i odsyła: „tu umarł pakiet, pozdrawiam, ruter numer jeden”. Potem licznik 2, i tak dalej. Każdy ruter po drodze sam się przedstawia. Sprytne jak śledzenie paczki przez to, że co chwilę celowo ją gubisz.</p><div class="kod"><pre><code>sudo apt install traceroute mtr-tiny   # [Ubuntu]
+sudo dnf install traceroute mtr        # [RHEL]
+traceroute -n 198.51.100.80</code></pre></div><div class="kod"><pre><code>traceroute to 198.51.100.80 (198.51.100.80), 30 hops max, 60 byte packets
+ 1  192.168.1.1  0.229 ms  0.005 ms  0.003 ms
+ 2  203.0.113.1  0.148 ms  0.004 ms  0.003 ms
+ 3  198.51.100.80  0.009 ms  0.005 ms  0.004 ms</code></pre></div><p>Trzy przystanki: mój ruter, dostawca, strona. <code>-n</code> znaczy „nie zamieniaj adresów na nazwy”. Bez tego traceroute dla każdego przystanku pyta DNS i wszystko trwa wieki.</p><p><code>tracepath</code> robi to samo i jest zwykle już zainstalowany, bo należy do pakietu iputils. Działa bez roota i przy okazji mówi, jakie MTU ma trasa:</p><div class="kod"><pre><code>tracepath -n 198.51.100.80</code></pre></div><div class="kod"><pre><code> 1?: [LOCALHOST]                      pmtu 1500
+ 1:  192.168.1.1                                           0.026ms
+ 2:  203.0.113.1                                           0.008ms
+ 3:  198.51.100.80                                         0.052ms reached
+     Resume: pmtu 1500 hops 3 back 3</code></pre></div><p>A <code>mtr</code> to traceroute i ping w jednym, odpalany w kółko. Na żywo pokazuje, na którym przystanku gubią się pakiety. W trybie raportu robi kilka rund i wypisuje tabelkę:</p><div class="kod"><pre><code>mtr -n --report -c 5 198.51.100.80</code></pre></div><div class="kod"><pre><code>HOST: vm                          Loss%   Snt   Last   Avg  Best  Wrst StDev
+  1.|-- 192.168.1.1                0.0%     5    0.0   0.0   0.0   0.0   0.0
+  2.|-- 203.0.113.1                0.0%     5    0.1   0.1   0.0   0.1   0.0
+  3.|-- 198.51.100.80              0.0%     5    0.1   0.1   0.1   0.1   0.0</code></pre></div><p>Teraz psuję laboratorium. Dostawca przestaje przekazywać ruch dalej. Jak to wygląda od strony domu?</p><div class="kod"><pre><code>traceroute to 198.51.100.80 (198.51.100.80), 5 hops max, 60 byte packets
+ 1  192.168.1.1  0.027 ms  0.011 ms  0.003 ms
+ 2  * * *
+ 3  * * *
+
+HOST: vm                          Loss%   Snt   Last   Avg  Best  Wrst StDev
+  1.|-- 192.168.1.1                0.0%     3    0.1   0.1   0.1   0.1   0.0
+  2.|-- ???                       100.0     3    0.0   0.0   0.0   0.0   0.0</code></pre></div><p>Mój ruter odpowiada. Dalej cisza. Problem nie jest u mnie w domu, jest za ruterem. Dzwonię do dostawcy, i to z konkretem, a nie z „NIE DZIAŁA INTERNET!!!”.</p><p>Jedno zastrzeżenie. Gwiazdki na jednym przystanku, a dalej znowu odpowiedzi? To nie awaria. Niektóre rutery po prostu nie przedstawiają się traceroute&#x27;owi. Awaria jest wtedy, gdy od pewnego miejsca gwiazdki są już do końca.</p></section><section><h2 id="dns-rozmowa-z-biurem-numerow">DNS — rozmowa z biurem numerów</h2><p>Pamiętasz biuro numerów z lekcji 68? Dziś uczymy się je przesłuchiwać. Narzędzie numer jeden to <code>dig</code>.</p><div class="kod"><pre><code>sudo apt install dnsutils    # [Ubuntu], dostarcza dig, host i nslookup
+sudo dnf install bind-utils   # [RHEL]
+dig www.kurs.lab</code></pre></div><div class="kod"><pre><code>;; -&gt;&gt;HEADER&lt;&lt;- opcode: QUERY, status: NOERROR, id: 2
+;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+;; QUESTION SECTION:
+;www.kurs.lab.			IN	A
+
+;; ANSWER SECTION:
+www.kurs.lab.		300	IN	A	198.51.100.80
+
+;; Query time: 4 msec
+;; SERVER: 192.168.1.1#53(192.168.1.1) (UDP)</code></pre></div><p>Czytamy od góry. <code>status: NOERROR</code>, czyli biuro znalazło odpowiedź. Sekcja pytania: pytałem o rekord <code>A</code> dla <code>www.kurs.lab</code>. Sekcja odpowiedzi: adres <code>198.51.100.80</code>. Liczba <code>300</code> to TTL. Na dole: kto odpowiadał, <code>192.168.1.1</code>, port 53, przez UDP. Ten UDP to ta pocztówka z lekcji 68.</p><p>Na co dzień wystarcza wersja dla zabieganych:</p><div class="kod"><pre><code>dig +short www.kurs.lab</code></pre></div><div class="kod"><pre><code>198.51.100.80</code></pre></div><p>A chcesz zapytać konkretne biuro, a nie to z <code>/etc/resolv.conf</code>? Dodaj <code>@</code>: <code>dig @9.9.9.9 google.com</code>. Jeśli dwa serwery DNS odpowiadają różnie, właśnie znalazłeś problem.</p></section><section><h2 id="rekordy-dns-rubryki-w-ksiazce-telefonicznej">Rekordy DNS — rubryki w książce telefonicznej</h2><p>Książka telefoniczna ma różne rubryki: numer domowy, komórkowy, adres. DNS też. Typ rekordu podajesz po nazwie.</p><p><strong>A</strong> — adres IPv4. To, co już widziałeś.</p><p><strong>AAAA</strong> — adres IPv6. Cztery A, bo adres jest cztery razy dłuższy. Ktoś w komitecie miał poczucie humoru.</p><div class="kod"><pre><code>dig +short AAAA www.kurs.lab</code></pre></div><div class="kod"><pre><code>2001:db8::80</code></pre></div><p><strong>CNAME</strong> — przezwisko. „Sklep” to tak naprawdę „www”. Biuro odsyła do prawdziwej nazwy, a potem podaje jej adres:</p><div class="kod"><pre><code>dig sklep.kurs.lab +noall +answer</code></pre></div><div class="kod"><pre><code>sklep.kurs.lab.		300	IN	CNAME	www.kurs.lab.
+www.kurs.lab.		300	IN	A	198.51.100.80</code></pre></div><p><strong>MX</strong> — kto odbiera pocztę dla domeny. Liczba to priorytet: mniejsza wygrywa.</p><div class="kod"><pre><code>dig MX kurs.lab +short</code></pre></div><div class="kod"><pre><code>10 poczta.kurs.lab.</code></pre></div><p><strong>TXT</strong> — dowolny tekst. W praktyce: zabezpieczenia poczty (SPF, DKIM, DMARC) i potwierdzanie, że domena należy do Ciebie, kiedy podłączasz ją do Google Workspace albo Microsoftu.</p><div class="kod"><pre><code>dig TXT kurs.lab +short</code></pre></div><div class="kod"><pre><code>&quot;v=spf1 mx -all&quot;</code></pre></div><p><strong>PTR</strong> — odwrotna książka: masz numer, szukasz nazwiska. Pytasz flagą <code>-x</code>:</p><div class="kod"><pre><code>dig -x 198.51.100.80 +short</code></pre></div><div class="kod"><pre><code>www.kurs.lab.</code></pre></div><p>Serwery pocztowe bardzo lubią PTR. Serwer bez poprawnego PTR wysyłający pocztę wygląda jak ktoś, kto dzwoni z zastrzeżonego numeru i mówi „wygrałeś samochód”.</p><p><strong>TTL</strong> — time to live, termin ważności. Te <code>300</code> przy każdym rekordzie to sekundy, przez które inni mogą trzymać odpowiedź w pamięci i nie pytać ponownie. Jak data na jogurcie. Dlatego po zmianie adresu w DNS część świata widzi stary adres, dopóki TTL nie minie. Planujesz przeprowadzkę serwera? Dzień wcześniej zmniejsz TTL.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p><code>dig +trace nazwa</code> nie pyta Twojego biura numerów o gotową odpowiedź. Zaczyna od serwerów głównych, root, i sam idzie w dół: root odsyła do serwerów <code>.com</code>, te do serwerów domeny, a te podają adres. Widzisz całą drogę delegacji, więc od razu wiesz, na którym piętrze ktoś źle wpisał serwery domeny. W moim pudełku bez internetu tego nie pokażę. U siebie spróbuj <code>dig +trace google.com</code>.</p></aside></section><section><h2 id="host-i-nslookup-kuzyni-diga">host i nslookup — kuzyni diga</h2><p><code>host</code> mówi krócej i po ludzku:</p><div class="kod"><pre><code>host www.kurs.lab
+host -t MX kurs.lab
+host 198.51.100.80</code></pre></div><div class="kod"><pre><code>www.kurs.lab has address 198.51.100.80
+www.kurs.lab has IPv6 address 2001:db8::80
+kurs.lab mail is handled by 10 poczta.kurs.lab.
+80.100.51.198.in-addr.arpa domain name pointer www.kurs.lab.</code></pre></div><p><code>nslookup</code> to dziadek, którego znajdziesz też w Windowsie. Dlatego warto go znać: na cudzym laptopie z Windowsem to często jedyne narzędzie DNS pod ręką.</p><div class="kod"><pre><code>nslookup sklep.kurs.lab</code></pre></div><div class="kod"><pre><code>Server:		192.168.1.1
+Address:	192.168.1.1#53
+
+sklep.kurs.lab	canonical name = www.kurs.lab.
+Name:	www.kurs.lab
+Address: 198.51.100.80</code></pre></div></section><section><h2 id="curl-wget-i-nc-gorne-szczeble">curl, wget i nc — górne szczeble</h2><p>Adres jest, DNS działa. Czy usługa odpowiada? <code>nc -zv</code> puka do okienka i nic nie mówi. <code>-z</code> to „tylko sprawdź”, <code>-v</code> to „powiedz, co wyszło”:</p><div class="kod"><pre><code>nc -zv www.kurs.lab 80
+nc -zv www.kurs.lab 22</code></pre></div><div class="kod"><pre><code>Connection to www.kurs.lab (198.51.100.80) 80 port [tcp/http] succeeded!
+nc: connect to www.kurs.lab (198.51.100.80) port 22 (tcp) failed: Connection refused</code></pre></div><p>Port 80 otwarty. Port 22: <code>Connection refused</code>, odmowa. To ważna informacja: serwer żyje i odpowiedział, tylko przy okienku 22 nikt nie siedzi. Porównaj z tym:</p><div class="kod"><pre><code>nc -zv -w 3 198.51.100.80 443</code></pre></div><div class="kod"><pre><code>nc: connect to 198.51.100.80 port 443 (tcp) timed out: Operation now in progress</code></pre></div><p><code>timed out</code> to co innego: nikt nie odpowiedział w ogóle. Zwykle znaczy to, że ochroniarz, czyli zapora, po cichu wyrzuca pukających. Odmowa to zamknięte okienko. Cisza to ochroniarz w drzwiach. Na stronie <code>strona</code> ustawiłem taką cichą regułę na port 443. Zapory to temat lekcji 73.</p><p>[RHEL] <code>nc</code> pochodzi tam z pakietu nmap-ncat i jego komunikaty wyglądają trochę inaczej, ale <code>-zv</code> działa.</p><p>Na samej górze aplikacja. <code>curl -I</code> pyta serwer WWW tylko o nagłówki, bez całej strony:</p><div class="kod"><pre><code>curl -I http://www.kurs.lab/</code></pre></div><div class="kod"><pre><code>HTTP/1.0 200 OK
+Server: SimpleHTTP/0.6 Python/3.13.18
+Content-type: text/html
+Content-Length: 23</code></pre></div><p><code>200 OK</code> to sukces. <code>404</code> to brak strony, <code>301</code> lub <code>302</code> to przekierowanie, <code>500</code> to awaria po stronie serwera. A <code>curl -v</code> pokazuje całą rozmowę krok po kroku:</p><div class="kod"><pre><code>curl -v http://sklep.kurs.lab/</code></pre></div><div class="kod"><pre><code>* Host sklep.kurs.lab:80 was resolved.
+* IPv4: 198.51.100.80
+*   Trying 198.51.100.80:80...
+* Connected to sklep.kurs.lab (198.51.100.80) port 80
+&gt; GET / HTTP/1.1
+&gt; Host: sklep.kurs.lab
+&gt; User-Agent: curl/8.5.0
+&gt; Accept: */*
+&gt;
+&lt; HTTP/1.0 200 OK
+&lt; Server: SimpleHTTP/0.6 Python/3.13.18
+&lt;h1&gt;Sklep kursowy&lt;/h1&gt;</code></pre></div><p>Zobacz, ile szczebli drabiny jest w jednym wyniku. <code>was resolved</code>, czyli DNS działa. <code>Connected</code>, czyli port działa. Linijki z <code>&gt;</code> to, co wysłałeś. Z <code>&lt;</code> to, co przyszło. Przy HTTPS zobaczysz jeszcze rozmowę o certyfikacie. <code>curl -v</code> to najlepszy przyjaciel admina strony.</p><p><code>wget</code> służy głównie do pobierania plików, ale też powie, co się dzieje:</p><div class="kod"><pre><code>wget -O- http://www.kurs.lab/</code></pre></div><div class="kod"><pre><code>Resolving www.kurs.lab (www.kurs.lab)... 198.51.100.80, 2001:db8::80
+Connecting to www.kurs.lab (www.kurs.lab)|198.51.100.80|:80... connected.
+HTTP request sent, awaiting response... 200 OK</code></pre></div><p><code>-O-</code> znaczy „wypisz na ekran zamiast zapisywać do pliku”. W skryptach przydaje się kod wyjścia: dla strony, której nie ma, <code>wget</code> kończy się kodem 8, czyli „serwer odpowiedział błędem”. Kciuk w dół z uzasadnieniem.</p></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p><code>ping</code>, <code>traceroute</code> i <code>mtr</code> używają protokołu ICMP, który służy do wiadomości serwisowych sieci: „odpowiedz”, „nie ma drogi”, „czas życia pakietu minął”. Linuksowy <code>traceroute</code> domyślnie wysyła pakiety UDP, a ICMP-em są odpowiedzi od ruterów. Licznik, który rutery odejmują, to pole TTL w nagłówku IP. To inne TTL niż to w DNS, nazwa ta sama, żebyś nie miał za łatwo.</p><p>I ważna różnica przy DNS. Programy, takie jak <code>ping</code>, <code>curl</code> czy przeglądarka, pytają o nazwy przez system, czyli przez kolejność z <code>/etc/nsswitch.conf</code>: najpierw <code>/etc/hosts</code>, potem DNS. A <code>dig</code>, <code>host</code> i <code>nslookup</code> pytają serwer DNS bezpośrednio i <code>/etc/hosts</code> w ogóle nie czytają. Sprawdzam. Dopisuję do <code>/etc/hosts</code> fałszywy adres dla <code>www.kurs.lab</code>:</p><div class="kod"><pre><code>echo &#x27;192.168.1.1 www.kurs.lab&#x27; | sudo tee -a /etc/hosts
+getent ahostsv4 www.kurs.lab | head -1
+ping -c1 www.kurs.lab | head -1
+dig +short www.kurs.lab</code></pre></div><div class="kod"><pre><code>192.168.1.1     STREAM www.kurs.lab
+PING www.kurs.lab (192.168.1.1) 56(84) bytes of data.
+198.51.100.80</code></pre></div><p>Ping idzie na <code>192.168.1.1</code>, bo słucha notesu. Dig mówi <code>198.51.100.80</code>, bo pyta biuro numerów. Ten sam komputer, ta sama nazwa, dwie odpowiedzi. Jeśli „dig pokazuje dobrze, a strona i tak nie działa”, zajrzyj do <code>/etc/hosts</code>. Ktoś mógł tam zostawić wpis z testów sprzed pół roku.</p></section><section><h2 id="sciaga-flag">Ściąga flag</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga</th><th>Co robi</th></tr><tr><td><code>ping</code></td><td><code>-c N</code></td><td>wyślij N pakietów i skończ</td></tr><tr><td><code>ping</code></td><td><code>-W S</code></td><td>czekaj na odpowiedź najwyżej S sekund</td></tr><tr><td><code>traceroute</code></td><td><code>-n</code></td><td>bez zamiany adresów na nazwy</td></tr><tr><td><code>tracepath</code></td><td><code>-n</code></td><td>jak wyżej, bez roota, pokazuje MTU</td></tr><tr><td><code>mtr</code></td><td><code>-n --report -c N</code></td><td>N rund i tabelka strat na każdym przystanku</td></tr><tr><td><code>dig</code></td><td><code>+short</code></td><td>sama odpowiedź</td></tr><tr><td><code>dig</code></td><td><code>TYP</code> (<code>A</code>, <code>AAAA</code>, <code>MX</code>, <code>TXT</code>, <code>CNAME</code>)</td><td>pytanie o konkretny rekord</td></tr><tr><td><code>dig</code></td><td><code>-x ADRES</code></td><td>rekord PTR, odwrotne pytanie</td></tr><tr><td><code>dig</code></td><td><code>@SERWER</code></td><td>zapytaj konkretny serwer DNS</td></tr><tr><td><code>dig</code></td><td><code>+trace</code></td><td>idź od serwerów głównych w dół</td></tr><tr><td><code>dig</code></td><td><code>+noall +answer</code></td><td>tylko sekcja odpowiedzi</td></tr><tr><td><code>host</code></td><td><code>-t TYP</code></td><td>krótka odpowiedź dla typu rekordu</td></tr><tr><td><code>curl</code></td><td><code>-I</code></td><td>tylko nagłówki</td></tr><tr><td><code>curl</code></td><td><code>-v</code></td><td>cała rozmowa krok po kroku</td></tr><tr><td><code>curl</code></td><td><code>-L</code></td><td>idź za przekierowaniami</td></tr><tr><td><code>wget</code></td><td><code>-O-</code></td><td>wypisz na ekran zamiast do pliku</td></tr><tr><td><code>nc</code></td><td><code>-zv</code> (<code>-w S</code>)</td><td>sprawdź, czy port jest otwarty (z limitem czasu)</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>„Internet nie działa”, a tak naprawdę nie działa tylko DNS. Wyłączyłem w laboratorium serwer DNS na ruterze:</p><div class="kod"><pre><code>ping -c1 www.kurs.lab
+curl http://www.kurs.lab/
+dig www.kurs.lab</code></pre></div><div class="kod"><pre><code>ping: www.kurs.lab: Temporary failure in name resolution
+curl: (6) Could not resolve host: www.kurs.lab
+;; communications error to 192.168.1.1#53: connection refused
+;; no servers could be reached</code></pre></div><p>I szczebel niżej, po samym adresie:</p><div class="kod"><pre><code>ping -c1 198.51.100.80</code></pre></div><div class="kod"><pre><code>64 bytes from 198.51.100.80: icmp_seq=1 ttl=62 time=0.047 ms</code></pre></div><p>Po adresie działa, po nazwie nie. Więc sieć jest w porządku, choruje biuro numerów. <code>Temporary failure in name resolution</code> i <code>Could not resolve host</code> to dwa najczęstsze komunikaty, które zobaczysz w karierze. Oba znaczą to samo: „nie umiem zamienić nazwy na adres”.</p><p>Naprawa: sprawdź, który DNS jest ustawiony (<code>resolvectl status</code> na Ubuntu, <code>/etc/resolv.conf</code> na RHEL), czy odpowiada (<code>dig @ten_serwer nazwa</code>), i czy inny działa (<code>dig @9.9.9.9 nazwa</code>). Jeśli inny działa, zmień DNS w konfiguracji sieci jak w lekcji 70. Nie w <code>/etc/resolv.conf</code>, bo kartkę z lodówki i tak ktoś wyrzuci.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><ol><li>Zrób <code>traceroute -n</code> albo <code>tracepath -n</code> do <code>1.1.1.1</code> i policz, ile przystanków jest między Tobą a internetem. Który przystanek to Twój ruter?</li><li>Sprawdź <code>dig</code>: rekordy <code>A</code> i <code>AAAA</code> dla <code>google.com</code>, rekord <code>MX</code> dla <code>gmail.com</code>, rekordy <code>TXT</code> dla dowolnej domeny firmowej i <code>dig -x 8.8.8.8 +short</code>. Zanotuj TTL.</li><li>Zapytaj o tę samą nazwę dwa razy pod rząd przez swój domyślny DNS. Co się stało z TTL?</li><li>Sprawdź <code>curl -I</code> dla <code>http://google.com</code> i <code>curl -IL</code> dla tego samego adresu. Jakie kody odpowiedzi widzisz i dlaczego?</li><li>Sprawdź <code>nc -zv</code> porty 80, 443 i 22 dowolnej strony. Które są otwarte, które odmawiają, a które milczą?</li></ol><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><p>Pięć punktów, więc po kolei.</p><div class="kod"><pre><code>traceroute -n 1.1.1.1        # albo tracepath -n 1.1.1.1
+dig A google.com +noall +answer
+dig AAAA google.com +short
+dig MX gmail.com +short
+dig TXT twojafirma.pl +short
+dig -x 8.8.8.8 +short</code></pre></div><p>W traceroute pierwszy przystanek to prawie zawsze Twój domowy ruter, ten sam adres, co brama z <code>ip r</code>. Potem kilka przystanków u dostawcy i dalej już internet. Gwiazdki po drodze są normalne, jeśli dalej są odpowiedzi.</p><p>Dla <code>8.8.8.8</code> rekord PTR to <code>dns.google.</code> Google nawet w odwrotnej książce telefonicznej ma ładną nazwę.</p><p>Punkt trzeci był podchwytliwy. Pytasz drugi raz i TTL jest mniejszy. Czemu? Bo za drugim razem odpowiada pamięć podręczna Twojego serwera DNS i pokazuje, ile sekund zostało do końca ważności. Jogurt w lodówce nie odmładza się od tego, że na niego spojrzysz.</p><p>Punkt czwarty: <code>curl -I http://google.com</code> zwraca kod z rodziny 300, czyli przekierowanie, z nagłówkiem <code>Location</code> mówiącym, dokąd iść dalej. Z <code>-L</code> curl idzie za przekierowaniem i na końcu widzisz <code>200</code>. Każdy przystanek ma własny blok nagłówków.</p><p>Punkt piąty: na dużych stronach 80 i 443 zwykle <code>succeeded</code>, a 22 najczęściej milczy aż do <code>timed out</code>. Nie odmawia, tylko milczy. Ochroniarz. O nim w następnej lekcji.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Pukaliśmy do okienek z zewnątrz. W następnej lekcji zaglądamy od środka: które okienka na Twoim serwerze są otwarte, kto w nich siedzi i czy obsługuje wszystkich, czy tylko swoich. <code>ss -tulpn</code>, <code>lsof</code>, <code>fuser</code> i najważniejsza różnica w świecie portów: <code>127.0.0.1</code> kontra <code>0.0.0.0</code>.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-070.html" rel="prev">← 70. Konfiguracja sieci na stałe</a><a class="btn domyslny zolty" href="lekcja-072.html" rel="next">72. Porty: kto słucha i dlaczego →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

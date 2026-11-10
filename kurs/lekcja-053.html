@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>53. Szukanie błędów — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 53 kursu Linux i Bash od zera do admina: Szukanie błędów. kursant szuka błędu w skrypcie metodą, a nie zgadywaniem: sprawdza składnię przez bash -n, śledzi wykonanie przez bash -x i set -x z własnym PS4, przepuszcza skrypt przez ShellCheck, a kiedy to nie wystarcza, podsłuchuje rozmowę progra">
+<meta property="og:title" content="53. Szukanie błędów — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 53 kursu Linux i Bash od zera do admina: Szukanie błędów. kursant szuka błędu w skrypcie metodą, a nie zgadywaniem: sprawdza składnię przez bash -n, śledzi wykonanie przez bash -x i set -x z własnym PS4, przepuszcza skrypt przez ShellCheck, a kiedy to nie wystarcza, podsłuchuje rozmowę progra">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 5</span></div>
+      <div class="boczny-tytul"><a href="index.html#m05">Skrypty, które się nie sypią</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-049.html" data-lekcja="49"><span class="znacznik"></span><span class="nr">49</span> Spacje w nazwach plików</a></li><li><a href="lekcja-050.html" data-lekcja="50"><span class="znacznik"></span><span class="nr">50</span> Tryb „zatrzymaj się przy błędzie”</a></li><li><a href="lekcja-051.html" data-lekcja="51"><span class="znacznik"></span><span class="nr">51</span> Sprzątanie po sobie</a></li><li><a href="lekcja-052.html" data-lekcja="52"><span class="znacznik"></span><span class="nr">52</span> Opcje jak w prawdziwych programach</a></li><li><a href="lekcja-053.html" data-lekcja="53" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">53</span> Szukanie błędów</a></li><li><a href="lekcja-054.html" data-lekcja="54"><span class="znacznik"></span><span class="nr">54</span> Komunikaty, logi i kolory</a></li><li><a href="lekcja-055.html" data-lekcja="55"><span class="znacznik"></span><span class="nr">55</span> Duży skrypt w porządku</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="53" data-modul="5" data-tematy="bash -n, bash -x, set -x, PS4, ShellCheck, strace w skrócie">
+    <div class="belka"><span>Lekcja 53 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m05">Moduł 5</a> › Lekcja 53</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Szukanie błędów</h1>
+      <p class="meta"><span>⏱ ok. 14 min czytania</span><span>· moduł 5: Skrypty, które się nie sypią</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant szuka błędu w skrypcie metodą, a nie zgadywaniem: sprawdza składnię przez <code>bash -n</code>, śledzi wykonanie przez <code>bash -x</code> i <code>set -x</code> z własnym <code>PS4</code>, przepuszcza skrypt przez ShellCheck, a kiedy to nie wystarcza, podsłuchuje rozmowę programu z jądrem przez <code>strace</code>.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#skrypt-do-zepsucia">Skrypt do zepsucia</a></li><li><a href="#bash-n-korektor-ktory-czyta-ale-nie-wykonuje">bash -n: korektor, który czyta, ale nie wykonuje</a></li><li><a href="#bash-x-kamera-nad-ramieniem-urzednika">bash -x: kamera nad ramieniem urzędnika</a></li><li><a href="#set-x-i-set-x-kamera-tylko-na-kawalek">set -x i set +x: kamera tylko na kawałek</a></li><li><a href="#ps4-kamera-z-numerem-linijki">PS4: kamera z numerem linijki</a></li><li><a href="#shellcheck-nadgorliwy-sasiad-ktory-ma-racje">ShellCheck: nadgorliwy sąsiad, który ma rację</a></li><li><a href="#strace-podsluch-rozmowy-z-jadrem">strace: podsłuch rozmowy z jądrem</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga-flag">Ściąga flag</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p>Skrypt działał. U Ciebie na laptopie działał. Kod wyjścia zero, kciuk w górę. A raport pusty.</p><p>Co robi początkujący? Wpatruje się w kod. Czyta go piąty raz. Dopisuje <code>echo &quot;tu jestem&quot;</code> w dwunastu miejscach. Restartuje serwer, na wszelki wypadek. Modli się.</p><p>Co robi admin? Bierze cztery narzędzia i w dwie minuty wie, gdzie jest problem. Korektor, kamera, nadgorliwy sąsiad i podsłuch. Dziś poznasz wszystkie cztery.</p></section><section><h2 id="skrypt-do-zepsucia">Skrypt do zepsucia</h2><p class="ekran">plik <code>raport.sh</code></p><div class="kod"><pre><code>#!/bin/bash
+# raport.sh — liczy pliki .log w folderze i ich linijki
+folder=$1
+licznik=0
+
+if [ ! -d $folder ]; then
+    echo &quot;Nie ma folderu $folder&quot;
+    exit 1
+fi
+
+for plik in &quot;$folder&quot;/*.log; do
+    licznik=$((licznik + 1))
+    linie=$(wc -l &lt; &quot;$plik&quot;)
+    echo &quot;$plik: $linie linii&quot;
+done
+
+echo &quot;Plików: $licznk&quot;</code></pre></div><p>Wygląda niewinnie. Uruchamiamy na folderze <code>Moje logi</code>, ze spacją w nazwie, bo przecież nikt nigdy nie daje spacji w nazwach folderów. Poza wszystkimi.</p><div class="kod"><pre><code>$ ./raport.sh &quot;Moje logi&quot;
+./raport.sh: line 6: [: Moje: binary operator expected
+Moje logi/app.log: 2 linii
+Moje logi/db.log: 1 linii
+Plików: 
+$ echo $?
+0</code></pre></div><p>Dwa błędy, jeden komunikat, kod zero. Idealna zbrodnia. Bierzemy się do śledztwa.</p></section><section><h2 id="bash-n-korektor-ktory-czyta-ale-nie-wykonuje">bash -n: korektor, który czyta, ale nie wykonuje</h2><p>Wyobraź sobie korektora w urzędzie. Bierze Twój wniosek i sprawdza tylko, czy jest po polsku: czy zdania się kończą, czy nawiasy się zamykają. Nie sprawdza, czy masz prawo do zasiłku. Niczego nie podbija, niczego nie wysyła.</p><p>To jest <code>bash -n</code>. Bash czyta skrypt i sprawdza składnię, ale <strong>nie wykonuje</strong> ani jednej komendy. Można go puścić na skrypcie, który kasuje pół serwera, i nic się nie stanie.</p><div class="kod"><pre><code>bash -n literowka.sh
+bash -n cudzyslow.sh</code></pre></div><div class="kod"><pre><code>literowka.sh: line 4: syntax error: unexpected end of file
+cudzyslow.sh: line 3: unexpected EOF while looking for matching `&quot;&#x27;</code></pre></div><p>Pierwszy plik ma <code>if</code> bez <code>fi</code>. Drugi ma cudzysłów otwarty i nigdy niezamknięty, czyli kopertę, do której wsadzono pół skryptu i nikt jej nie zakleił. Zwróć uwagę: Bash zgłasza błąd na <strong>końcu pliku</strong>, a nie tam, gdzie zapomniałeś. On dopiero na końcu orientuje się, że czegoś brakuje. Jak kelner, który dopiero przy rachunku zauważa, że nikt nie zamówił deseru, a w karcie było, że deser obowiązkowy.</p><p>A teraz nasz <code>raport.sh</code>:</p><div class="kod"><pre><code>bash -n raport.sh; echo &quot;kod: $?&quot;</code></pre></div><div class="kod"><pre><code>kod: 0</code></pre></div><p>Czysto. Bo oba błędy są gramatycznie poprawne. Literówka w nazwie zmiennej to dla Basha po prostu inna zmienna. <code>bash -n</code> łapie tylko błędy składni. Dlatego to pierwsze narzędzie, a nie jedyne.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p><code>bash -n</code> to opcja <code>noexec</code>, to samo co <code>set -n</code>. W interaktywnej powłoce Bash ją ignoruje, inaczej po wpisaniu <code>set -n</code> terminal przestałby cokolwiek robić i trzeba by go zamknąć.</p></aside></section><section><h2 id="bash-x-kamera-nad-ramieniem-urzednika">bash -x: kamera nad ramieniem urzędnika</h2><p>Teraz montujemy kamerę nad biurkiem urzędnika. Widzimy każdy wniosek, który bierze do ręki, i to już <strong>po</strong> wypełnieniu: wszystkie zmienne podstawione, gwiazdki rozwinięte, cudzysłowy zdjęte. Dokładnie to, co naprawdę zostanie wykonane.</p><div class="kod"><pre><code>bash -x ./raport.sh &quot;Moje logi&quot;</code></pre></div><div class="kod"><pre><code>+ folder=&#x27;Moje logi&#x27;
++ licznik=0
++ &#x27;[&#x27; &#x27;!&#x27; -d Moje logi &#x27;]&#x27;
+./raport.sh: line 6: [: Moje: binary operator expected
++ for plik in &quot;$folder&quot;/*.log
++ licznik=1
+++ wc -l
++ linie=2
++ echo &#x27;Moje logi/app.log: 2 linii&#x27;
+Moje logi/app.log: 2 linii
++ for plik in &quot;$folder&quot;/*.log
++ licznik=2
+++ wc -l
++ linie=1
++ echo &#x27;Moje logi/db.log: 1 linii&#x27;
+Moje logi/db.log: 1 linii
++ echo &#x27;Plików: &#x27;
+Plików: </code></pre></div><p class="ekran">podświetlona linijka <code>&#x27;[&#x27; &#x27;!&#x27; -d Moje logi &#x27;]&#x27;</code></p><p>Popatrz na trzecią linijkę. Komenda <code>[</code> dostała osobno <code>Moje</code> i osobno <code>logi</code>. To dwa argumenty zamiast jednego, czyli list rozerwany na pół, bo nie był w kopercie. Bash pokazuje to w cudzysłowach: każdy kawałek w apostrofach to jeden argument. A <code>Moje logi</code> jest bez apostrofów, czyli rozsypało się na dwa.</p><p>I zobacz, co się stało dalej: test się wyłożył, ale skrypt nie wyszedł, tylko pojechał dalej. Gdyby folderu w ogóle nie było, dostałbyś to samo, plus kilka błędów z pętli. Bramkarz zemdlał, a impreza trwa.</p><p>Ostatnia linijka: <code>licznik</code> to dwa, a echo wypisało pusto. Kamera pokazuje, że w <code>echo</code> nie było żadnej liczby. Czyli zmienna, którą wypisujemy, jest pusta. Patrzymy w kod: <code>$licznk</code>. Zjedzona literka.</p><p>Jeszcze dwa szczegóły w zapisie z kamery. Plus oznacza „to wykonuję”. Dwa plusy, <code>++</code>, oznaczają „to wykonuję w środku czegoś innego”, tutaj w <code>$( )</code>. Im więcej plusów, tym głębiej w zagnieżdżeniu. A wszystkie linijki z plusami idą na drugi głośnik, czyli stderr. Wynik skryptu leci osobno, więc możesz go nadal przekierować do pliku.</p></section><section><h2 id="set-x-i-set-x-kamera-tylko-na-kawalek">set -x i set +x: kamera tylko na kawałek</h2><p>Skrypt na trzysta linijek z <code>bash -x</code> to powódź. Często chcesz nagrać tylko podejrzany fragment.</p><div class="kod"><pre><code>#!/bin/bash
+echo &quot;To leci normalnie&quot;
+set -x
+wynik=$(( 6 * 7 ))
+echo &quot;Wynik: $wynik&quot;
+set +x
+echo &quot;Znowu cisza&quot;</code></pre></div><div class="kod"><pre><code>To leci normalnie
++ wynik=42
++ echo &#x27;Wynik: 42&#x27;
+Wynik: 42
++ set +x
+Znowu cisza</code></pre></div><p><code>set -x</code> włącza kamerę, <code>set +x</code> wyłącza. Tak, w Bashu minus włącza, a plus wyłącza. Nie pytaj. Ktoś kiedyś tak zdecydował i od tamtej pory wszyscy udajemy, że to logiczne.</p><p>Kamerę można włączyć też w zwykłym terminalu. Świetny sposób, żeby zobaczyć, co Bash robi z Twoją komendą, zanim ją wykona:</p><div class="kod"><pre><code>set -x
+plik=&quot;Moje logi&quot;
+ls $plik
+set +x</code></pre></div><div class="kod"><pre><code>+ plik=&#x27;Moje logi&#x27;
++ ls Moje logi
+ls: cannot access &#x27;Moje&#x27;: No such file or directory
+ls: cannot access &#x27;logi&#x27;: No such file or directory</code></pre></div><p>Lekcja o spacjach w nazwach w jednym obrazku.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>jest jeszcze <code>bash -v</code>, który wypisuje linijki skryptu tak, jak są w pliku, przed rozwinięciem. <code>bash -xv</code> daje obie wersje naraz: „co napisałeś” i „co z tego wyszło”.</p></aside></section><section><h2 id="ps4-kamera-z-numerem-linijki">PS4: kamera z numerem linijki</h2><p>Kamera ma jedną wadę: widzisz, co się dzieje, ale nie wiesz, w której linijce pliku. Ten plusik na początku to zawartość zmiennej <code>PS4</code>. Pamiętasz <code>PS1</code> z lekcji o ustawianiu Basha? To jej kuzynka, tylko od śledzenia.</p><div class="kod"><pre><code>PS4=&#x27;+ ${BASH_SOURCE}:${LINENO}: &#x27;
+set -x</code></pre></div><p>Wstawiamy te dwie linijki na górę <code>raport.sh</code> i odpalamy:</p><div class="kod"><pre><code>+ raport.sh:5: folder=&#x27;Moje logi&#x27;
++ raport.sh:6: licznik=0
++ raport.sh:8: &#x27;[&#x27; &#x27;!&#x27; -d Moje logi &#x27;]&#x27;
+raport.sh: line 8: [: Moje: binary operator expected
++ raport.sh:13: for plik in &quot;$folder&quot;/*.log</code></pre></div><p>Teraz każda linijka mówi: z którego pliku i z której linijki. Przy skrypcie, który wczytuje inne pliki, to jak numer pokoju na nagraniu z monitoringu.</p><p>Uwaga na apostrofy. W pojedynczych cudzysłowach <code>${LINENO}</code> zostaje napisem i Bash rozwija go za każdym razem od nowa, przy każdej komendzie. W podwójnych rozwinąłby się raz, przy przypisaniu, i każda linijka miałaby ten sam numer. Koperta zaklejona kontra koperta otwarta.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>Bash jako root nie bierze <code>PS4</code> ze środowiska, więc <code>PS4=&#x27;...&#x27; bash -x skrypt</code> pod rootem zostawi zwykły plusik. To celowa łatka bezpieczeństwa z Basha 4.4, bo w <code>PS4</code> da się przemycić komendę, która wykona się przy śledzeniu. Rozwiązanie: ustaw <code>PS4</code> w samym skrypcie. A gdy chcesz, żeby zapis z kamery szedł do osobnego pliku, a nie na ekran: <code>exec 5&gt;&gt; slad.log</code> i <code>BASH_XTRACEFD=5</code> przed <code>set -x</code>.</p></aside></section><section><h2 id="shellcheck-nadgorliwy-sasiad-ktory-ma-racje">ShellCheck: nadgorliwy sąsiad, który ma rację</h2><p>Każdy ma takiego sąsiada. Przechodzi obok, rzuca okiem na Twój płot i mówi: „Ten słupek się przewróci przy pierwszym wietrze”. Irytujące. I zwykle ma rację.</p><p>ShellCheck to program, który czyta skrypt i wypisuje wszystko, co wygląda podejrzanie: brak cudzysłowów, literówki w zmiennych, bashizmy w <code>#!/bin/sh</code>, setki typowych pułapek. Niczego nie uruchamia, tylko czyta, jak <code>bash -n</code>, ale zna nie tylko gramatykę, lecz także złe nawyki.</p><p>Instalacja:</p><div class="kod"><pre><code>sudo apt install shellcheck        # [Ubuntu]
+sudo dnf install ShellCheck        # [RHEL] z repozytorium EPEL</code></pre></div><p>[RHEL] Na Red Hacie i pochodnych ShellCheck jest w dodatkowym repozytorium EPEL i nazywa się z wielkich liter. Jak włączyć EPEL, pokażę w lekcji o menedżerach pakietów. Do tego czasu możesz go wypróbować w przeglądarce na shellcheck.net, tylko nie wklejaj tam skryptów z hasłami.</p><div class="kod"><pre><code>shellcheck raport.sh</code></pre></div><div class="kod"><pre><code>In raport.sh line 6:
+if [ ! -d $folder ]; then
+          ^-----^ SC2086 (info): Double quote to prevent globbing and word splitting.
+
+Did you mean:
+if [ ! -d &quot;$folder&quot; ]; then
+
+
+In raport.sh line 17:
+echo &quot;Plików: $licznk&quot;
+              ^-----^ SC2154 (warning): licznk is referenced but not assigned (did you mean &#x27;licznik&#x27;?).</code></pre></div><p>Dwie sekundy. Oba błędy. Z numerem linijki, ze strzałką, z gotową poprawką. A przy drugim jeszcze pyta: „Czy chodziło ci o <code>licznik</code>?”. Lepiej niż autokorekta w telefonie, bo ta by poprawiła na „licznik gazu”.</p><p>Każde ostrzeżenie ma kod, na przykład <code>SC2086</code>. Pod kodem jest strona z wyjaśnieniem: <code>https://www.shellcheck.net/wiki/SC2086</code>. Czytaj je. To najlepszy darmowy kurs pisania skryptów, jaki istnieje, napisany na podstawie błędów milionów ludzi przed Tobą.</p><p>Po poprawkach:</p><div class="kod"><pre><code>$ shellcheck raport.sh &amp;&amp; echo &quot;czysto&quot;
+czysto
+$ ./raport.sh &quot;Moje logi&quot;
+Moje logi/app.log: 2 linii
+Moje logi/db.log: 1 linii
+Plików: 2</code></pre></div><p>Kiedy ShellCheck się myli albo robisz coś celowo, możesz mu powiedzieć „wiem, co robię” komentarzem nad linijką:</p><div class="kod"><pre><code># shellcheck disable=SC2086</code></pre></div><p>Tylko nad tą jedną linijką i tylko z konkretnym kodem. Wyłączanie wszystkiego na górze pliku to jak wyjęcie baterii z czujnika dymu, bo piszczy przy smażeniu.</p><p>Przydatne opcje: <code>-S warning</code> pokazuje tylko ostrzeżenia i błędy, bez drobnych uwag. <code>-x</code> pozwala mu zajrzeć do plików wczytywanych przez <code>source</code>, wrócimy do tego za dwa lekcje. Większość edytorów ma wtyczkę, która podkreśla błędy ShellChecka na bieżąco, w trakcie pisania. Zainstaluj ją dziś.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>ShellCheck jest napisany w Haskellu. Można go puścić w potoku CI na każdym commicie, a z <code>-f gcc</code> albo <code>-f json</code> wypisuje wyniki w formacie dla innych narzędzi.</p></aside></section><section><h2 id="strace-podsluch-rozmowy-z-jadrem">strace: podsłuch rozmowy z jądrem</h2><p>Czasem skrypt jest czysty, kamera nic nie pokazuje, a program i tak zachowuje się dziwnie. Nie widzi pliku, choć plik tam jest. Wisi i nie wiadomo na czym.</p><p>Wtedy podsłuchujemy. Każdy program, żeby cokolwiek zrobić, otworzyć plik, coś zapisać, połączyć się z siecią, musi poprosić jądro. Te prośby nazywają się <strong>wywołaniami systemowymi</strong>, po angielsku system calls, w skrócie syscalle. To jak okienko w urzędzie, tylko jeszcze niżej: okienko między programem a jądrem. <code>strace</code> stoi przy tym okienku i notuje każdą prośbę i każdą odpowiedź.</p><div class="kod"><pre><code>sudo apt install strace     # [Ubuntu]
+sudo dnf install strace     # [RHEL]</code></pre></div><p>Przykład z życia. Skrypt kopii ma czytać ustawienia z pliku, a jeśli pliku nie ma, po cichu bierze domyślne:</p><div class="kod"><pre><code>#!/bin/bash
+cel=/tmp/kopie
+if [[ -r /etc/kopia.conf ]]; then
+    # shellcheck source=/dev/null
+    source /etc/kopia.conf
+fi
+echo &quot;Kopiuję do: $cel&quot;</code></pre></div><p>Kolega przysięga, że wpisał w ustawieniach <code>cel=/srv/kopie</code>. A skrypt uparcie kopiuje do <code>/tmp/kopie</code>. Podsłuchujemy:</p><div class="kod"><pre><code>strace -f -e trace=%file ./kopia_conf.sh 2&gt;&amp;1 | grep kopia</code></pre></div><div class="kod"><pre><code>execve(&quot;./kopia_conf.sh&quot;, [&quot;./kopia_conf.sh&quot;], 0x7ffd34acd788 /* 241 vars */) = 0
+openat(AT_FDCWD, &quot;./kopia_conf.sh&quot;, O_RDONLY) = 3
+faccessat2(AT_FDCWD, &quot;/etc/kopia.conf&quot;, R_OK, AT_EACCESS) = -1 ENOENT (No such file or directory)</code></pre></div><p>Ostatnia linijka: skrypt pyta jądro „czy mogę czytać <code>/etc/kopia.conf</code>?”, a jądro odpowiada <code>ENOENT</code>, czyli „nie ma takiego pliku”. A kolega? Wrzucił plik do <code>/etc/kopia/kopia.conf</code>, do folderu. Zagadka rozwiązana bez czytania ani jednej linijki kodu.</p><p>Jak to czytać: po lewej nazwa wywołania, w nawiasie argumenty, po znaku równości odpowiedź jądra. Liczba zero albo większa zwykle znaczy sukces. Minus jeden z nazwą błędu znaczy porażkę, a nazwy są czytelne: <code>ENOENT</code> brak pliku, <code>EACCES</code> brak uprawnień.</p><p>Kilka przydatnych wariantów:</p><div class="kod"><pre><code>strace -f -Z -e trace=%file ./kopia_conf.sh   # tylko nieudane prośby o pliki
+strace -o slad.txt -f ./kopia_conf.sh          # cały zapis do pliku
+strace -c ls /etc                              # statystyka: ile czego wywołał
+sudo strace -p 1234                            # podepnij się do działającego procesu</code></pre></div><p><code>-f</code> śledzi też dzieci, czyli każdą komendę, którą skrypt odpali. Przy skryptach to obowiązkowe, bo skrypt to głównie odpalanie innych programów. <code>-p</code> podpina się do procesu, który już działa, na przykład wiszącego od godziny. Zobaczysz, na czym czeka. Do cudzych procesów potrzebujesz <code>sudo</code>.</p><p>Uwaga: <code>strace</code> mocno spowalnia śledzony program, bo zatrzymuje go przy każdej prośbie do jądra. Na produkcji podpinaj się krótko i z głową. I pamiętaj, że w zapisie widać wszystko, co program czyta i pisze, łącznie z hasłami. Plik <code>slad.txt</code> traktuj jak poufny.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>na macOS <code>strace</code> nie istnieje, najbliższy odpowiednik to <code>dtruss</code>, mocno ograniczony przez System Integrity Protection. Na Linuksie podobne pytania zadaje się też <code>ltrace</code> (wywołania bibliotek) i narzędziami eBPF.</p></aside></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p>Cztery narzędzia, cztery różne poziomy.</p><p><code>bash -n</code> uruchamia tylko pierwszą połowę pracy urzędnika: czytanie i rozbiór na części. Bash i tak zawsze najpierw rozbiera całą komendę złożoną, na przykład cały <code>if</code> aż do <code>fi</code>, a dopiero potem wykonuje. Z opcją <code>-n</code> zatrzymuje się po rozbiorze.</p><p><code>set -x</code> działa w drugiej połowie. Bash po rozwinięciu zmiennych, gwiazdek i cudzysłowów, tuż przed uruchomieniem komendy, wypisuje ją na stderr z prefiksem z <code>PS4</code>. Dlatego widzisz wartości, a nie nazwy zmiennych.</p><p>ShellCheck w ogóle nie jest Bashem. To osobny program, który buduje sobie drzewo skryptu i przykłada do niego setki reguł. Skryptu nie uruchamia nigdy. Dlatego jest bezpieczny, ale też dlatego nie wie, co jest naprawdę w Twoim <code>/etc</code>.</p><p><code>strace</code> korzysta z mechanizmu jądra o nazwie <code>ptrace</code>, tego samego, którego używają debugery. Jądro zatrzymuje śledzony proces przy wejściu do każdego wywołania systemowego i przy wyjściu z niego, a <code>strace</code> w tym czasie odczytuje argumenty i wynik. Dwa przystanki na każdą prośbę, stąd spowolnienie.</p></section><section><h2 id="sciaga-flag">Ściąga flag</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga</th><th>Co robi</th></tr><tr><td><code>bash</code></td><td><code>-n</code></td><td>sprawdza składnię, nic nie wykonuje</td></tr><tr><td><code>bash</code></td><td><code>-x</code></td><td>wypisuje każdą komendę po rozwinięciu</td></tr><tr><td><code>bash</code></td><td><code>-v</code></td><td>wypisuje linijki skryptu tak, jak są w pliku</td></tr><tr><td><code>set</code></td><td><code>-x</code> / <code>+x</code></td><td>włącza / wyłącza śledzenie w środku skryptu</td></tr><tr><td><code>PS4</code></td><td><code>&#x27;+ ${BASH_SOURCE}:${LINENO}: &#x27;</code></td><td>dodaje plik i numer linijki do śledzenia</td></tr><tr><td><code>BASH_XTRACEFD</code></td><td>numer deskryptora</td><td>wysyła śledzenie do osobnego pliku</td></tr><tr><td><code>shellcheck</code></td><td><code>-S warning</code></td><td>pomija drobne uwagi, zostawia ostrzeżenia i błędy</td></tr><tr><td><code>shellcheck</code></td><td><code>-x</code></td><td>zagląda do plików wczytywanych przez <code>source</code></td></tr><tr><td><code>shellcheck</code></td><td><code>-e SC2086</code></td><td>pomija wskazany kod</td></tr><tr><td><code>shellcheck</code></td><td><code>-f gcc</code> / <code>-f json</code></td><td>wynik dla innych narzędzi</td></tr><tr><td><code>strace</code></td><td><code>-f</code></td><td>śledzi też procesy potomne</td></tr><tr><td><code>strace</code></td><td><code>-e trace=%file</code></td><td>tylko wywołania związane z plikami</td></tr><tr><td><code>strace</code></td><td><code>-Z</code></td><td>tylko nieudane wywołania</td></tr><tr><td><code>strace</code></td><td><code>-p PID</code></td><td>podpina się do działającego procesu</td></tr><tr><td><code>strace</code></td><td><code>-o PLIK</code></td><td>zapis do pliku zamiast na ekran</td></tr><tr><td><code>strace</code></td><td><code>-c</code></td><td>podsumowanie: ile jakich wywołań</td></tr><tr><td><code>strace</code></td><td><code>-tt</code> / <code>-T</code></td><td>znacznik czasu / czas trwania wywołania</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>Debugujesz skrypt, który wysyła raport z hasłem. Wstawiasz na górze <code>set -x</code>, znajdujesz problem, naprawiasz. I zapominasz usunąć <code>set -x</code>.</p><div class="kod"><pre><code>#!/bin/bash
+set -x
+haslo=&#x27;Tajne123!&#x27;
+curl -s -u &quot;admin:$haslo&quot; -o /dev/null http://127.0.0.1:9/raport</code></pre></div><div class="kod"><pre><code>+ haslo=&#x27;Tajne123!&#x27;
++ curl -s -u &#x27;admin:Tajne123!&#x27; -o /dev/null http://127.0.0.1:9/raport</code></pre></div><p>Hasło jest teraz w logu crona, w dzienniku systemowym, w mailu z wynikiem zadania i w zgłoszeniach, do których ktoś wkleił „dziwny wynik skryptu”. Kamera nagrała PIN przy bankomacie i wrzuciła nagranie na tablicę ogłoszeń.</p><p>ShellCheck tego nie złapie, bo <code>set -x</code> jest w pełni poprawne. Co robić:</p><ul><li>przed commitem przeszukaj skrypty: <code>grep -n &#x27;set -x&#x27; *.sh</code>;</li><li>wokół linijek z sekretami wyłączaj kamerę: <code>{ set +x; } 2&gt;/dev/null</code> przed nimi i <code>set -x</code> po nich (nawiasy z przekierowaniem sprawiają, że nawet samo wyłączenie się nie nagra);</li><li>haseł nie trzymaj w skrypcie w ogóle, tylko w osobnym pliku z uprawnieniami <code>600</code> albo w menedżerze sekretów. O tym w module o bezpieczeństwie.</li></ul></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><p>Masz skrypt <code>policz.sh</code>, który ma policzyć pliki w folderze:</p><div class="kod"><pre><code>#!/bin/bash
+katalog=$1
+ile=0
+for f in $katalog/*; do
+    if [ -f $f ]; then
+        ile=$((ile + 1))
+    fi
+done
+echo &quot;W $katalog jest $ile plików&quot;
+if [ $ile -gt 3 ] then
+    echo &quot;Sporo!&quot;
+fi</code></pre></div><ol><li>Sprawdź go <code>bash -n</code> i zanotuj, w której linijce Bash zgłasza błąd, a w której błąd naprawdę jest.</li><li>Popraw składnię, utwórz folder <code>Moje dokumenty</code> z kilkoma plikami i uruchom skrypt na nim przez <code>bash -x</code>. Znajdź w zapisie kamery miejsce, gdzie nazwa folderu się rozsypuje.</li><li>Przepuść skrypt przez ShellCheck i popraw wszystko, co pokaże, aż wynik będzie czysty.</li><li>Bonus: sprawdź <code>strace -e trace=%file whoami</code>, z jakiego pliku <code>whoami</code> bierze Twoją nazwę użytkownika.</li></ol><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><div class="kod"><pre><code>$ bash -n policz.sh
+policz.sh: line 12: syntax error near unexpected token `fi&#x27;
+policz.sh: line 12: `fi&#x27;</code></pre></div><p>Bash krzyczy o linijce 12, czyli o <code>fi</code>. A prawdziwy błąd jest w linijce 10: brakuje średnika przed <code>then</code>. Bez średnika Bash uznaje <code>then</code> za kolejny argument komendy <code>[</code>, czyta dalej i dopiero na <code>fi</code> orientuje się, że nigdzie nie było prawdziwego <code>then</code>. Zasada na całe życie: błąd składni szukaj <strong>w zgłoszonej linijce albo wyżej</strong>. Nigdy niżej.</p><p>Po dopisaniu średnika kamera:</p><div class="kod"><pre><code>$ bash -x ./policz.sh &quot;Moje dokumenty&quot;
++ katalog=&#x27;Moje dokumenty&#x27;
++ ile=0
++ for f in $katalog/*
++ &#x27;[&#x27; -f Moje &#x27;]&#x27;
++ for f in $katalog/*
++ &#x27;[&#x27; -f &#x27;dokumenty/*&#x27; &#x27;]&#x27;
++ echo &#x27;W Moje dokumenty jest 0 plików&#x27;
+W Moje dokumenty jest 0 plików</code></pre></div><p>Folder rozsypał się na <code>Moje</code> i <code>dokumenty/*</code>, a gwiazdka nie miała czego złapać. Sześć plików, wynik zero. ShellCheck pokazuje trzy rzeczy: <code>SC2231</code> (cudzysłów w pętli), <code>SC2086</code> (cudzysłów w teście) i <code>SC1010</code> (średnik przed <code>then</code>). Po poprawkach:</p><div class="kod"><pre><code>for f in &quot;$katalog&quot;/*; do
+    if [ -f &quot;$f&quot; ]; then
+        ile=$((ile + 1))
+    fi
+done
+echo &quot;W $katalog jest $ile plików&quot;
+if [ &quot;$ile&quot; -gt 3 ]; then
+    echo &quot;Sporo!&quot;
+fi</code></pre></div><div class="kod"><pre><code>W Moje dokumenty jest 6 plików
+Sporo!</code></pre></div><p>A bonus? <code>strace -e trace=%file whoami</code> pokazuje, że <code>whoami</code> najpierw czyta <code>/etc/nsswitch.conf</code>, czyli spis, gdzie szukać użytkowników, a potem <code>/etc/passwd</code>. Program, który zna Twoje imię, musi je najpierw sprawdzić w spisie lokatorów. Jak recepcjonista, który widzi Cię codziennie od pięciu lat.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Skoro już wiesz, że stderr to osobny głośnik, w następnej lekcji robimy z tego porządek: co skrypt mówi na stdout, a co na stderr, jak pisać do dziennika systemowego przez <code>logger</code>, jak dodać kolory, które nie zaśmiecą logów, i co znaczą kody wyjścia 1, 2, 126, 127 i 130.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-052.html" rel="prev">← 52. Opcje jak w prawdziwych programach</a><a class="btn domyslny zolty" href="lekcja-054.html" rel="next">54. Komunikaty, logi i kolory →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>47. awk od podstaw — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 47 kursu Linux i Bash od zera do admina: awk od podstaw. kursant wyciąga awk-iem kolumny z dowolnego tekstu, filtruje linijki warunkami, liczy sumy i zestawienia i składa z tego czytelny raport.">
+<meta property="og:title" content="47. awk od podstaw — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 47 kursu Linux i Bash od zera do admina: awk od podstaw. kursant wyciąga awk-iem kolumny z dowolnego tekstu, filtruje linijki warunkami, liczy sumy i zestawienia i składa z tego czytelny raport.">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 4</span></div>
+      <div class="boczny-tytul"><a href="index.html#m04">Napisy, listy i przetwarzanie danych</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-041.html" data-lekcja="41"><span class="znacznik"></span><span class="nr">41</span> Nożyczki do tekstu</a></li><li><a href="lekcja-042.html" data-lekcja="42"><span class="znacznik"></span><span class="nr">42</span> Listy (tablice)</a></li><li><a href="lekcja-043.html" data-lekcja="43"><span class="znacznik"></span><span class="nr">43</span> Słowniki</a></li><li><a href="lekcja-044.html" data-lekcja="44"><span class="znacznik"></span><span class="nr">44</span> Ładne wypisywanie i długie teksty</a></li><li><a href="lekcja-045.html" data-lekcja="45"><span class="znacznik"></span><span class="nr">45</span> Wyrażenia regularne</a></li><li><a href="lekcja-046.html" data-lekcja="46"><span class="znacznik"></span><span class="nr">46</span> sed od podstaw</a></li><li><a href="lekcja-047.html" data-lekcja="47" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">47</span> awk od podstaw</a></li><li><a href="lekcja-048.html" data-lekcja="48"><span class="znacznik"></span><span class="nr">48</span> Znajdź wszystko</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="47" data-modul="4" data-tematy="kolumny, -F, warunki, sumy, NR, NF, raporty">
+    <div class="belka"><span>Lekcja 47 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m04">Moduł 4</a> › Lekcja 47</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>awk od podstaw</h1>
+      <p class="meta"><span>⏱ ok. 9 min czytania</span><span>· moduł 4: Napisy, listy i przetwarzanie danych</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant wyciąga awk-iem kolumny z dowolnego tekstu, filtruje linijki warunkami, liczy sumy i zestawienia i składa z tego czytelny raport.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#ksiegowa-z-kalkulatorem">Księgowa z kalkulatorem</a></li><li><a href="#kolumny-1-2-nf">Kolumny: $1, $2, $NF</a></li><li><a href="#f-inny-separator">-F: inny separator</a></li><li><a href="#warunki-ktore-linijki">Warunki: które linijki</a></li><li><a href="#sumy-zeszyt-ksiegowej">Sumy: zeszyt księgowej</a></li><li><a href="#zestawienia-tablica-jako-szatnia">Zestawienia: tablica jako szatnia</a></li><li><a href="#maly-raport-od-poczatku-do-konca">Mały raport od początku do końca</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga-flag">Ściąga flag</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p>Serwer muli. Pamięć prawie pełna. Pytanie: który użytkownik ją zjada? <code>ps aux</code> wypisuje kilkaset procesów, każdy z właścicielem i pamięcią. Trzeba je pogrupować po właścicielu i zsumować. W Excelu byś zrobił tabelę przestawną. W terminalu robisz to tak:</p><div class="kod"><pre><code>ps aux | awk &#x27;NR&gt;1 {mem[$1] += $6} END {for (u in mem) printf &quot;%-10s %8.1f MB\n&quot;, u, mem[u]/1024}&#x27; | sort -k2 -rn</code></pre></div><div class="kod"><pre><code>root         1190.3 MB
+postfix        37.8 MB
+www-data       30.0 MB
+kuba           19.5 MB</code></pre></div><p>Jedna linijka, tabela przestawna gotowa. Za kwadrans będziesz takie pisać z pamięci, a ludzie w biurze zaczną mówić, że „też umiesz w Excela, tylko na czarnym tle”.</p></section><section><h2 id="ksiegowa-z-kalkulatorem">Księgowa z kalkulatorem</h2><p>Grep to sito, sed to korektorka. A awk to księgowa. Dostaje tabelkę, patrzy na kolumny, liczy, sumuje, a na koniec kładzie na biurko raport. Do tego ma zeszyt, w którym prowadzi własne notatki.</p><p>Nazwa wzięła się od pierwszych liter nazwisk twórców: Aho, Weinberger, Kernighan. Pierwsza wersja jest z 1977 roku. Czyli awk jest starszy niż większość ludzi, którzy na niego narzekają.</p><p>Awk to tak naprawdę mały język programowania. Każdy program w awku wygląda tak samo:</p><div class="kod"><pre><code>warunek { akcja }</code></pre></div><p>Dla każdej linijki: jeśli warunek pasuje, zrób akcję. Bez warunku akcja działa na każdej linijce. Bez akcji domyślnie wypisuje całą linijkę. Jak kartka z poleceniami dla księgowej: „każdą fakturę z Krakowa dopisz do sumy”.</p><p>Program zawsze w apostrofach, czyli w kopercie. Zaraz zobaczysz dlaczego.</p></section><section><h2 id="kolumny-1-2-nf">Kolumny: $1, $2, $NF</h2><p>Awk sam dzieli każdą linijkę na kolumny, po awkowemu pola. <code>$1</code> to pierwsza kolumna, <code>$2</code> druga, <code>$0</code> cała linijka.</p><div class="kod"><pre><code>echo &#x27;Ala ma kota&#x27; | awk &#x27;{print $3, $1}&#x27;
+echo &#x27;  wiele   spacji  tu &#x27; | awk &#x27;{print $2}&#x27;</code></pre></div><div class="kod"><pre><code>kota Ala
+spacji</code></pre></div><p>Druga linijka to ważna różnica względem <code>cut</code>. Domyślnie awk traktuje dowolnie dużo spacji i tabulatorów jak jeden separator. <code>cut -d&#x27; &#x27;</code> przy podwójnej spacji zwariowałby i zwracał puste kolumny. Dlatego wyniki <code>ps</code>, <code>df</code> czy <code>ls -l</code>, gdzie kolumny są wyrównane spacjami, tniemy awkiem.</p><p>Przecinek w <code>print</code> wstawia między kolumny spację. Bez przecinka awk skleja: <code>print $1 $3</code> da „root0”.</p><p>Dwie wbudowane zmienne, które musisz znać:</p><ul><li><code>NF</code> to liczba pól w bieżącej linijce. A <code>$NF</code> to ostatnie pole, <code>$(NF-1)</code> przedostatnie.</li><li><code>NR</code> to numer linijki, od 1.</li></ul><p>W naszym <code>auth.log</code> z lekcji 45 adres IP jest czwarty od końca, niezależnie od tego, czy linijka ma „invalid user”, czy nie:</p><div class="kod"><pre><code>awk &#x27;/Failed/ {print $(NF-3)}&#x27; auth.log | sort | uniq -c | sort -rn</code></pre></div><div class="kod"><pre><code>      3 203.0.113.45
+      2 198.51.100.7
+      1 192.0.2.10</code></pre></div><p>Ten sam wynik co w haku z lekcji 45, bez regeksu na adres IP. Liczenie od końca to trik, który ratuje, kiedy początek linijki pływa.</p></section><section><h2 id="f-inny-separator">-F: inny separator</h2><p><code>-F</code> mówi, czym są oddzielone kolumny. Na przykład dwukropkiem w <code>/etc/passwd</code>. Do ćwiczeń zrób plik <code>konta.txt</code> w tym samym formacie:</p><div class="kod"><pre><code>root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+sshd:x:105:65534::/run/sshd:/usr/sbin/nologin
+nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
+eryk:x:1000:1000:Eryk:/home/eryk:/bin/bash
+ania:x:1001:1001:Ania Nowak:/home/ania:/bin/zsh
+stazysta:x:1002:1002::/home/stazysta:/bin/bash</code></pre></div><div class="kod"><pre><code>awk -F: &#x27;{print $1, $7}&#x27; konta.txt | head -3</code></pre></div><div class="kod"><pre><code>root /bin/bash
+daemon /usr/sbin/nologin
+sshd /usr/sbin/nologin</code></pre></div><p>A jeśli chcesz zmienić separator na wyjściu, jest zmienna <code>OFS</code>:</p><div class="kod"><pre><code>awk -F: -v OFS=&#x27;;&#x27; &#x27;{print $1, $3, $7}&#x27; konta.txt | head -2</code></pre></div><div class="kod"><pre><code>root;0;/bin/bash
+daemon;1;/usr/sbin/nologin</code></pre></div></section><section><h2 id="warunki-ktore-linijki">Warunki: które linijki</h2><p>Przed klamrą możesz napisać warunek. Porównania jak w matematyce: <code>==</code>, <code>!=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&gt;=</code>. Łączysz przez <code>&amp;&amp;</code> (i) oraz <code>||</code> (lub).</p><div class="kod"><pre><code>awk -F: &#x27;$3 &gt;= 1000 &amp;&amp; $3 != 65534 {print $1}&#x27; konta.txt</code></pre></div><div class="kod"><pre><code>eryk
+ania
+stazysta</code></pre></div><p>To są ludzie. Wszystko poniżej UID 1000 to konta systemowe, a 65534 to <code>nobody</code>, który ma UID wyższy niż wszyscy, a prawa niższe niż wszyscy. Jak strażnik z największym numerem na identyfikatorze i bez klucza do czegokolwiek.</p><p>[Ubuntu] [RHEL] Na obu rodzinach zwykli użytkownicy dostają UID od 1000. Sprawdzisz to w <code>/etc/login.defs</code>, w linijce <code>UID_MIN</code>.</p><p>Warunek może też być wyrażeniem regularnym w ukośnikach, jak w grepie. Albo dopasowaniem jednej kolumny przez <code>~</code>:</p><div class="kod"><pre><code>awk -F: &#x27;$7 == &quot;/bin/bash&quot; {print NR &quot;: &quot; $1}&#x27; konta.txt</code></pre></div><div class="kod"><pre><code>1: root
+5: eryk
+7: stazysta</code></pre></div><p>Napisy w awku zawsze w cudzysłowach, inaczej awk pomyśli, że to nazwa zmiennej. A <code>awk -F: &#x27;$7 ~ /bash/&#x27;</code> znaczy „siódma kolumna zawiera bash”.</p></section><section><h2 id="sumy-zeszyt-ksiegowej">Sumy: zeszyt księgowej</h2><p>Zmienne w awku nie trzeba tworzyć. Pierwsze użycie i już jest, z wartością zero albo pustym napisem. Do tego dwa specjalne bloki: <code>BEGIN</code> działa raz przed pierwszą linijką, <code>END</code> raz po ostatniej. Księgowa przed pracą rysuje nagłówek tabelki, a po pracy podlicza.</p><p>Plik <code>sprzedaz.csv</code>:</p><div class="kod"><pre><code>data,sklep,produkt,sztuk,cena
+2026-11-01,Krakow,kawa,3,24.50
+2026-11-01,Warszawa,herbata,5,12.00
+2026-11-02,Krakow,herbata,2,12.00
+2026-11-02,Gdansk,kawa,4,24.50
+2026-11-03,Krakow,kawa,1,24.50
+2026-11-03,Warszawa,kawa,6,24.50</code></pre></div><div class="kod"><pre><code>awk -F, &#x27;NR&gt;1 {suma += $4*$5} END {printf &quot;Utarg: %.2f zl\n&quot;, suma}&#x27; sprzedaz.csv</code></pre></div><div class="kod"><pre><code>Utarg: 427.00 zl</code></pre></div><p><code>NR&gt;1</code> pomija nagłówek. Dla każdej linijki doliczamy sztuki razy cenę. Na końcu <code>printf</code>, który znasz z lekcji 44, tylko że tu w nawiasach nie trzeba, a argumenty oddziela przecinek. I zauważ: awk liczy na ułamkach. Bash z lekcji 38 przy 24.50 by się obraził.</p></section><section><h2 id="zestawienia-tablica-jako-szatnia">Zestawienia: tablica jako szatnia</h2><p>A teraz magia z haka. Tablice w awku działają jak słownik z lekcji 43, szatnia z nazwiskami. Kluczem może być dowolny napis.</p><div class="kod"><pre><code>awk -F, &#x27;NR&gt;1 {utarg[$2] += $4*$5} END {for (s in utarg) printf &quot;%-10s %8.2f\n&quot;, s, utarg[s]}&#x27; sprzedaz.csv | sort -k2 -rn</code></pre></div><div class="kod"><pre><code>Warszawa     207.00
+Krakow       122.00
+Gdansk        98.00</code></pre></div><p>Dla każdej linijki księgowa idzie do wieszaka z nazwą sklepu i dokłada do niego kwotę. Wieszaka nie ma? Awk sam go stawia. W <code>END</code> pętla <code>for (s in utarg)</code> przechodzi po wszystkich wieszakach. Kolejność jest przypadkowa, dlatego na końcu <code>sort</code>.</p><p>Ten sam schemat liczy wystąpienia:</p><div class="kod"><pre><code>awk -F: &#x27;{licz[$7]++} END {for (p in licz) print licz[p], p}&#x27; konta.txt | sort -rn</code></pre></div><div class="kod"><pre><code>3 /usr/sbin/nologin
+3 /bin/bash
+1 /bin/zsh</code></pre></div><p>Pamiętasz zadanie z lekcji 7, ranking powłok przez <code>cut | sort | uniq -c | sort -rn</code>? Tu jest to samo, jednym programem.</p></section><section><h2 id="maly-raport-od-poczatku-do-konca">Mały raport od początku do końca</h2><p>Wszystko razem: nagłówek w <code>BEGIN</code>, filtr, licznik, podsumowanie w <code>END</code>.</p><div class="kod"><pre><code>awk -F: &#x27;
+BEGIN { printf &quot;%-10s %6s\n&quot;, &quot;KONTO&quot;, &quot;UID&quot; }
+$3 &gt;= 1000 &amp;&amp; $3 != 65534 { printf &quot;%-10s %6d\n&quot;, $1, $3; n++ }
+END { print &quot;Razem ludzi:&quot;, n }
+&#x27; konta.txt</code></pre></div><div class="kod"><pre><code>KONTO         UID
+eryk         1000
+ania         1001
+stazysta     1002
+Razem ludzi: 3</code></pre></div><p>Program może mieć wiele linijek. Kiedy urośnie, przenieś go do pliku <code>raport.awk</code> i uruchamiaj przez <code>awk -F: -f raport.awk konta.txt</code>.</p></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p>Awk to interpreter, jak Bash, tylko wyspecjalizowany w tabelkach. Cykl wygląda tak:</p><ol><li>Wykonaj blok <code>BEGIN</code>.</li><li>Wczytaj rekord, domyślnie jedną linijkę. Ustaw <code>$0</code> i <code>NR</code>.</li><li>Pokrój go na pola według separatora <code>FS</code> (to właśnie ustawia <code>-F</code>). Ustaw <code>$1</code>, <code>$2</code>, ... i <code>NF</code>.</li><li>Sprawdź po kolei wszystkie pary „warunek { akcja }”.</li><li>Wróć do punktu 2. Po ostatniej linijce wykonaj <code>END</code>.</li></ol><p>Zmienne są jednocześnie liczbami i napisami. <code>&quot;12&quot; + 3</code> daje 15, a do <code>$5</code> z napisem „24.50” można normalnie dodać liczbę. Jak pudełko, które samo zgaduje, czy trzymać w nim śrubki, czy kartkę.</p><p>I ważne: „awk” to nie jeden program. To język, który ma kilka implementacji.</p><ul><li>[RHEL] komenda <code>awk</code> to GNU awk, czyli <code>gawk</code>.</li><li>[Ubuntu] domyślnie jest <code>mawk</code>, szybki i oszczędny. Jeśli doinstalujesz <code>gawk</code>, przejmuje on komendę <code>awk</code> przez mechanizm alternatyw (sprawdzisz <code>readlink -f /usr/bin/awk</code>).</li></ul><p>Wszystko z tej lekcji działa w obu. Różnice wychodzą przy dodatkach. Na przykład przy polskich znakach:</p><div class="kod"><pre><code>echo &#x27;ćma&#x27; | mawk &#x27;{print length($0)}&#x27;
+echo &#x27;ćma&#x27; | LC_ALL=C.UTF-8 gawk &#x27;{print length($0)}&#x27;</code></pre></div><div class="kod"><pre><code>4
+3</code></pre></div><p>Mawk liczy bajty, a ć w UTF-8 zajmuje dwa. Gawk z ustawionym UTF-8 liczy litery.</p><p>[macOS] Na Macu <code>awk</code> to wersja z rodziny BSD, wywodząca się od awka autorów języka (awk --version pokazuje zamiast numeru datę, np. 20200816). Podstawy z tej lekcji działają tak samo. Funkcje typowe dla GNU, na przykład <code>strftime</code> czy sortowanie tablic, nie istnieją w awku z Maca, są w <code>gawk</code>: <code>brew install gawk</code>.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>gawk umie też <code>-F</code> z regeksem (<code>-F&#x27;[,;]&#x27;</code>), <code>FPAT</code> do CSV z przecinkami w cudzysłowach, a od wersji 5.3 opcję <code>--csv</code>. Prawdziwe CSV z cytowanymi polami to właśnie miejsce, gdzie zwykłe <code>-F,</code> się wyłoży.</p></aside></section><section><h2 id="sciaga-flag">Ściąga flag</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga / element</th><th>Co robi</th></tr><tr><td>awk</td><td><code>-F X</code></td><td>separator kolumn na wejściu (<code>FS</code>)</td></tr><tr><td>awk</td><td><code>-v zm=wart</code></td><td>przekazuje wartość z Basha do zmiennej awka</td></tr><tr><td>awk</td><td><code>-f plik.awk</code></td><td>czyta program z pliku</td></tr><tr><td>awk</td><td><code>$1</code>, <code>$2</code>, <code>$0</code></td><td>pierwsza, druga kolumna, cała linijka</td></tr><tr><td>awk</td><td><code>NF</code> / <code>$NF</code></td><td>liczba kolumn / ostatnia kolumna</td></tr><tr><td>awk</td><td><code>NR</code></td><td>numer linijki</td></tr><tr><td>awk</td><td><code>OFS</code></td><td>separator kolumn na wyjściu</td></tr><tr><td>awk</td><td><code>BEGIN {}</code> / <code>END {}</code></td><td>przed pierwszą / po ostatniej linijce</td></tr><tr><td>awk</td><td><code>/wzor/</code></td><td>warunek: linijka pasuje do regeksu</td></tr><tr><td>awk</td><td><code>$3 ~ /wzor/</code></td><td>warunek: kolumna 3 pasuje do regeksu</td></tr><tr><td>awk</td><td><code>&amp;&amp;</code> / pionowe kreski / <code>!</code></td><td>i / lub / nie</td></tr><tr><td>awk</td><td><code>suma += $4</code></td><td>sumowanie kolumny</td></tr><tr><td>awk</td><td><code>t[$1]++</code></td><td>licznik w tablicy (zestawienie)</td></tr><tr><td>awk</td><td><code>for (k in t)</code></td><td>pętla po kluczach tablicy</td></tr><tr><td>awk</td><td><code>printf</code></td><td>wypisywanie z formatem, jak w Bashu</td></tr><tr><td>awk</td><td><code>length()</code></td><td>długość napisu</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><div class="kod"><pre><code>awk -F: &quot;{print $1}&quot; konta.txt | head -2</code></pre></div><div class="kod"><pre><code>root:x:0:0:root:/root:/bin/bash
+daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin</code></pre></div><p>Miała być pierwsza kolumna, a jest cała linijka. Program był w cudzysłowach, a nie w apostrofach. Bash zajrzał do koperty, zobaczył <code>$1</code> i podstawił swoją zmienną <code>$1</code>, czyli pierwszy argument skryptu. A tu była pusta. Awk dostał <code>{print }</code>, czyli „wypisz wszystko”. Dwa programy, ten sam znaczek dolara, a każdy myśli, że jest jego. Jak dwóch Kowalskich wołanych w poczekalni.</p><p>Naprawa: program awka zawsze w apostrofach. A jeśli chcesz przekazać zmienną z Basha, nie sklejaj cudzysłowów, tylko użyj <code>-v</code>:</p><div class="kod"><pre><code>powloka=/bin/bash
+awk -F: -v p=&quot;$powloka&quot; &#x27;$7 == p {print $1}&#x27; konta.txt</code></pre></div><p>I drugi, cichy grzech: <code>cut -d&#x27; &#x27;</code> na wyniku <code>ps</code> albo <code>df</code>. Kolumny wyrównane spacjami, liczba spacji się zmienia i nagle dostajesz puste pola. Tu zawsze awk.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><ol><li>Z <code>/etc/passwd</code> wypisz awk-iem tabelkę kont ludzi (UID od 1000 w górę, bez <code>nobody</code>): nazwa, UID i powłoka w równych kolumnach, z nagłówkiem w <code>BEGIN</code> i liczbą kont w <code>END</code>.</li><li>Z <code>df -P</code> wypisz systemy plików zajęte w ponad 50%: punkt montowania i procent. Podpowiedź: znak procentu przeszkadza w porównaniu.</li><li>Z <code>sprzedaz.csv</code> policz, ile sztuk każdego produktu sprzedano łącznie, od największej liczby.</li></ol><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><p>Część pierwsza, tabelka ludzi z <code>/etc/passwd</code>. Pokazuję na pliku <code>konta.txt</code> z poprzedniej lekcji, na prawdziwym <code>/etc/passwd</code> działa tak samo:</p><div class="kod"><pre><code>awk -F: &#x27;
+BEGIN { printf &quot;%-12s %6s  %s\n&quot;, &quot;KONTO&quot;, &quot;UID&quot;, &quot;POWLOKA&quot; }
+$3 &gt;= 1000 &amp;&amp; $1 != &quot;nobody&quot; { printf &quot;%-12s %6d  %s\n&quot;, $1, $3, $7; n++ }
+END { print &quot;Kont ludzi:&quot;, n }
+&#x27; konta.txt</code></pre></div><div class="kod"><pre><code>KONTO           UID  POWLOKA
+eryk           1000  /bin/bash
+ania           1001  /bin/zsh
+stazysta       1002  /bin/bash
+Kont ludzi: 3</code></pre></div><p>Część druga, zajęte systemy plików:</p><div class="kod"><pre><code>df -P | awk &#x27;NR&gt;1 {zaj = $5; sub(/%/, &quot;&quot;, zaj); if (zaj+0 &gt; 50) print $6, $5}&#x27;</code></pre></div><div class="kod"><pre><code>/ 63%
+/boot 57%</code></pre></div><p>Czemu nie po prostu <code>$5 &gt; 50</code>? Bo „63%” to dla awka napis, a nie liczba. A napisy porównuje znak po znaku, jak słownik. Wtedy „8%” jest większe od „50”, bo ósemka stoi dalej niż piątka. Dysk zajęty w ośmiu procentach dostałby alarm, a ty telefon o trzeciej w nocy. <code>sub</code> wycina procent, a <code>+0</code> mówi: „to jest liczba, licz jak liczbę”. <code>-P</code> przy <code>df</code> daje stały format bez łamania długich nazw na dwie linijki.</p><p>Część trzecia, sztuki na produkt:</p><div class="kod"><pre><code>awk -F, &#x27;NR&gt;1 {szt[$3] += $4} END {for (p in szt) print szt[p], p}&#x27; sprzedaz.csv | sort -rn</code></pre></div><div class="kod"><pre><code>14 kawa
+7 herbata</code></pre></div><p>Kawa wygrywa. Jak w każdym dziale IT na świecie.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Umiesz już przerabiać to, co jest w plikach. Tylko że najpierw trzeba te pliki znaleźć. W następnej lekcji <code>find</code>: szukanie po nazwie, rozmiarze, dacie, właścicielu i uprawnieniach, a do tego <code>xargs</code> i <code>locate</code>.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-046.html" rel="prev">← 46. sed od podstaw</a><a class="btn domyslny zolty" href="lekcja-048.html" rel="next">48. Znajdź wszystko →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>14. Linki: skróty, które nie są skrótami — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 14 kursu Linux i Bash od zera do admina: Linki: skróty, które nie są skrótami. kursant wie, co to jest i-węzeł, robi link twardy i symboliczny, przewiduje, co się stanie po usunięciu oryginału, i umie sprawdzić, dokąd naprawdę prowadzi link.">
+<meta property="og:title" content="14. Linki: skróty, które nie są skrótami — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 14 kursu Linux i Bash od zera do admina: Linki: skróty, które nie są skrótami. kursant wie, co to jest i-węzeł, robi link twardy i symboliczny, przewiduje, co się stanie po usunięciu oryginału, i umie sprawdzić, dokąd naprawdę prowadzi link.">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 1</span></div>
+      <div class="boczny-tytul"><a href="index.html#m01">Praca w powłoce</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-005.html" data-lekcja="5"><span class="znacznik"></span><span class="nr">5</span> Gwiazdka, która robi robotę za ciebie</a></li><li><a href="lekcja-006.html" data-lekcja="6"><span class="znacznik"></span><span class="nr">6</span> Gdzie idzie wynik komendy</a></li><li><a href="lekcja-007.html" data-lekcja="7"><span class="znacznik"></span><span class="nr">7</span> Rura i narzędzia do tekstu</a></li><li><a href="lekcja-008.html" data-lekcja="8"><span class="znacznik"></span><span class="nr">8</span> Mapa Linuksa: co leży w którym folderze</a></li><li><a href="lekcja-009.html" data-lekcja="9"><span class="znacznik"></span><span class="nr">9</span> Co to jest powłoka i jakie są</a></li><li><a href="lekcja-010.html" data-lekcja="10"><span class="znacznik"></span><span class="nr">10</span> Jak Bash czyta twoją komendę</a></li><li><a href="lekcja-011.html" data-lekcja="11"><span class="znacznik"></span><span class="nr">11</span> nano: edytor, z którego da się wyjść</a></li><li><a href="lekcja-012.html" data-lekcja="12"><span class="znacznik"></span><span class="nr">12</span> vi i vim bez paniki</a></li><li><a href="lekcja-013.html" data-lekcja="13"><span class="znacznik"></span><span class="nr">13</span> Midnight Commander i inne menedżery plików</a></li><li><a href="lekcja-014.html" data-lekcja="14" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">14</span> Linki: skróty, które nie są skrótami</a></li><li><a href="lekcja-015.html" data-lekcja="15"><span class="znacznik"></span><span class="nr">15</span> Kto może czytać twój plik</a></li><li><a href="lekcja-016.html" data-lekcja="16"><span class="znacznik"></span><span class="nr">16</span> Uprawnienia specjalne i ACL</a></li><li><a href="lekcja-017.html" data-lekcja="17"><span class="znacznik"></span><span class="nr">17</span> Ustawienia Basha pod siebie</a></li><li><a href="lekcja-018.html" data-lekcja="18"><span class="znacznik"></span><span class="nr">18</span> tmux: terminal, który przeżyje rozłączenie</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="14" data-modul="1" data-tematy="i-węzeł (inode), ls -i, stat, ln (twardy), ln -s (symboliczny), co się dzieje po usunięciu oryginału, readlink -f">
+    <div class="belka"><span>Lekcja 14 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m01">Moduł 1</a> › Lekcja 14</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Linki: skróty, które nie są skrótami</h1>
+      <p class="meta"><span>⏱ ok. 9 min czytania</span><span>· moduł 1: Praca w powłoce</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant wie, co to jest i-węzeł, robi link twardy i symboliczny, przewiduje, co się stanie po usunięciu oryginału, i umie sprawdzić, dokąd naprawdę prowadzi link.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#nazwa-to-nie-plik">Nazwa to nie plik</a></li><li><a href="#link-twardy-druga-karteczka-do-tej-samej-ksiazki">Link twardy: druga karteczka do tej samej książki</a></li><li><a href="#link-symboliczny-karteczka-z-adresem">Link symboliczny: karteczka z adresem</a></li><li><a href="#co-sie-dzieje-po-usunieciu-oryginalu">Co się dzieje po usunięciu oryginału</a></li><li><a href="#dokad-naprawde-prowadzi-link-readlink">Dokąd naprawdę prowadzi link: readlink</a></li><li><a href="#czego-twardy-link-nie-potrafi">Czego twardy link nie potrafi</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga-flag">Ściąga flag</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p class="ekran">dwa pliki obok siebie w <code>ls -li</code>, ta sama liczba na początku obu linijek</p><p>Zmieniasz coś w jednym pliku, a zmienia się drugi. Kasujesz plik, a on dalej jest. Kasujesz inny i nagle trzeci przestaje działać. Na dysku jest wolne 90 procent miejsca, a system krzyczy „brak miejsca”.</p><p>To nie duchy. To linki i i-węzły. Po tej lekcji każda z tych zagadek będzie miała proste wyjaśnienie, a Ty zobaczysz, jak plik wygląda od środka.</p></section><section><h2 id="nazwa-to-nie-plik">Nazwa to nie plik</h2><p>Wyobraź sobie bibliotekę. Książki stoją w magazynie i każda ma numer, powiedzmy 983049. Na półce z katalogiem są karteczki: „Pan Tadeusz → 983049”. Karteczka to nie książka. To tylko nazwa i numer.</p><p>W Linuksie jest dokładnie tak. Folder to katalog z karteczkami: nazwa pliku i numer. A pod numerem leży prawdziwa karta pliku. Ta karta nazywa się <strong>i-węzeł</strong>, po angielsku <strong>inode</strong>. Zapisane są w nim: kto jest właścicielem, jakie są uprawnienia, jaki rozmiar, kiedy zmieniany i gdzie na dysku leżą kawałki treści. Czego w i-węźle nie ma? Nazwy. Nazwa mieszka tylko w folderze.</p><p>Numer i-węzła pokazuje <code>ls -i</code>:</p><div class="kod"><pre><code>mkdir ~/linki &amp;&amp; cd ~/linki
+echo &quot;Kup mleko&quot; &gt; notatka.txt
+ls -i notatka.txt</code></pre></div><div class="kod"><pre><code>983049 notatka.txt</code></pre></div><p>A całą kartę wyciąga <code>stat</code>:</p><div class="kod"><pre><code>stat notatka.txt</code></pre></div><div class="kod"><pre><code>  File: notatka.txt
+  Size: 10        	Blocks: 8          IO Block: 4096   regular file
+Device: 254,0	Inode: 983049      Links: 1
+Access: (0664/-rw-rw-r--)  Uid: (30042/    eryk)   Gid: (30043/    eryk)
+Access: 2026-11-03 21:12:45.623824092 +0000
+Modify: 2026-11-03 21:12:45.628670144 +0000
+Change: 2026-11-03 21:12:45.628670144 +0000
+ Birth: 2026-11-03 21:12:45.623824092 +0000</code></pre></div><p>Popatrz na <code>Links: 1</code>. Tyle karteczek w katalogach wskazuje na tę książkę. Zaraz to zmienimy.</p></section><section><h2 id="link-twardy-druga-karteczka-do-tej-samej-ksiazki">Link twardy: druga karteczka do tej samej książki</h2><div class="kod"><pre><code>ln notatka.txt kopia.txt
+ls -li</code></pre></div><div class="kod"><pre><code>983049 -rw-rw-r-- 2 eryk eryk 10 Nov  3 21:12 kopia.txt
+983049 -rw-rw-r-- 2 eryk eryk 10 Nov  3 21:12 notatka.txt</code></pre></div><p><code>ln</code> bez żadnej flagi robi <strong>link twardy</strong>. Ten sam numer i-węzła, a w drugiej kolumnie <code>ls -l</code> dwójka. To ta kolumna, którą do tej pory pomijałeś: licznik karteczek.</p><p>I tu pierwsza zagadka z haka. Dopisuję coś do „kopii”:</p><div class="kod"><pre><code>echo &quot;i chleb&quot; &gt;&gt; kopia.txt
+cat notatka.txt</code></pre></div><div class="kod"><pre><code>Kup mleko
+i chleb</code></pre></div><p>Bo to nie jest kopia. To ta sama książka z dwiema karteczkami w katalogu. Nie ma oryginału i kopii, obie nazwy są równie ważne. Jak bliźniaki, tylko jeszcze bardziej: to jeden człowiek z dwoma dowodami osobistymi.</p></section><section><h2 id="link-symboliczny-karteczka-z-adresem">Link symboliczny: karteczka z adresem</h2><div class="kod"><pre><code>ln -s notatka.txt skrot.txt
+ls -li</code></pre></div><div class="kod"><pre><code>983049 -rw-rw-r-- 2 eryk eryk 18 Nov  3 21:12 kopia.txt
+983049 -rw-rw-r-- 2 eryk eryk 18 Nov  3 21:12 notatka.txt
+983050 lrwxrwxrwx 1 eryk eryk 11 Nov  3 21:12 skrot.txt -&gt; notatka.txt</code></pre></div><p><code>ln -s</code> robi <strong>link symboliczny</strong>, po polsku też dowiązanie symboliczne, w mowie adminów „symlink”. To już jest osobny plik, z własnym numerem i-węzła, a na początku uprawnień ma literkę <code>l</code>. W środku nie ma treści notatki, tylko adres: „szukaj w <code>notatka.txt</code>”. Rozmiar 11 bajtów, bo tyle liter ma ten adres.</p><p>To jest właśnie skrót z Windowsa. Kartka „Pan Tadeusz stoi w dziale polskim, regał 3”. Ten drogowskaz poznałeś już w lekcji 8, kiedy <code>/bin</code> pokazywał na <code>usr/bin</code>, i w lekcji 9, kiedy <code>sh</code> okazał się dashem.</p></section><section><h2 id="co-sie-dzieje-po-usunieciu-oryginalu">Co się dzieje po usunięciu oryginału</h2><p>I teraz test, który odróżnia tych, co rozumieją linki, od tych, co tylko je robią.</p><div class="kod"><pre><code>rm notatka.txt
+ls -li
+cat kopia.txt
+cat skrot.txt</code></pre></div><div class="kod"><pre><code>983049 -rw-rw-r-- 1 eryk eryk 18 Nov  3 21:12 kopia.txt
+983050 lrwxrwxrwx 1 eryk eryk 11 Nov  3 21:12 skrot.txt -&gt; notatka.txt
+Kup mleko
+i chleb
+cat: skrot.txt: No such file or directory</code></pre></div><p><code>rm</code> nie usuwa pliku. <code>rm</code> wyrzuca karteczkę z katalogu i zmniejsza licznik. Licznik spadł z 2 na 1, więc książka dalej stoi w magazynie, a <code>kopia.txt</code> działa bez zarzutu. Treść zniknie dopiero wtedy, gdy licznik spadnie do zera.</p><p>A symlink? Prowadzi pod adres <code>notatka.txt</code>, a pod tym adresem nikogo już nie ma. Drogowskaz do zamkniętego sklepu. Taki link nazywa się <strong>wiszący</strong>, po angielsku dangling albo broken. W kolorowym <code>ls</code> świeci na czerwono, w mc ma wykrzyknik. Brzmi znajomo?</p><p>Wystarczy z powrotem utworzyć plik o tej nazwie i link ożyje. On nie pamięta pliku, pamięta tylko adres.</p></section><section><h2 id="dokad-naprawde-prowadzi-link-readlink">Dokąd naprawdę prowadzi link: readlink</h2><div class="kod"><pre><code>readlink skrot.txt
+readlink -f skrot.txt
+ln -s /etc/os-release system
+readlink system
+readlink -f system</code></pre></div><div class="kod"><pre><code>notatka.txt
+/home/eryk/linki/notatka.txt
+/etc/os-release
+/usr/lib/os-release</code></pre></div><p>Samo <code>readlink</code> czyta, co jest napisane na kartce. <code>readlink -f</code> idzie za wszystkimi drogowskazami po kolei i podaje pełną, ostateczną ścieżkę. Zobacz: <code>/etc/os-release</code> to też symlink, który prowadzi do <code>/usr/lib/os-release</code>. Właśnie dlatego w zadaniu mc skopiował drogowskaz.</p><p>Kiedy który link? Symlinków używasz w 95 procentach przypadków: do folderów, między dyskami, do przełączania wersji. Na przykład <code>aktualna -&gt; wersja-2.4</code>, a przy aktualizacji tylko przestawiasz strzałkę. Twarde linki spotkasz rzadziej, głównie w narzędziach do kopii zapasowych, które w ten sposób trzymają sto kopii folderu, a każdy niezmieniony plik zajmuje miejsce tylko raz.</p></section><section><h2 id="czego-twardy-link-nie-potrafi">Czego twardy link nie potrafi</h2><div class="kod"><pre><code>ln /etc etc_twardy
+ln kopia.txt /dev/shm/kopia.txt</code></pre></div><div class="kod"><pre><code>ln: /etc: hard link not allowed for directory
+ln: failed to create hard link &#x27;/dev/shm/kopia.txt&#x27; =&gt; &#x27;kopia.txt&#x27;: Invalid cross-device link</code></pre></div><p>Po pierwsze: żadnych twardych linków do folderów. Gdyby się dało, mógłbyś zrobić folder, który zawiera sam siebie, i <code>find</code> krążyłby w kółko do emerytury. Po drugie: tylko w obrębie jednego systemu plików. Numer i-węzła to numer w magazynie konkretnego dysku. Numer 983049 na innym dysku to zupełnie inna książka. <code>/dev/shm</code> żyje w pamięci RAM, więc to inny magazyn.</p><p>Symlink nie ma tych ograniczeń. Może prowadzić do folderu, na inny dysk, a nawet donikąd.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>foldery mają jednak twarde linki, tylko robi je sam system: kropka <code>.</code> w każdym folderze i <code>..</code> w każdym podfolderze. Dlatego <code>stat -c &#x27;%h&#x27; /etc</code> pokazuje u mnie 133: dwa za <code>/etc</code> i <code>/etc/.</code>, plus po jednym za każdy podfolder. Jest też zabezpieczenie <code>fs.protected_hardlinks</code>: zwykły użytkownik nie zrobi twardego linku do cudzego pliku, do którego nie ma prawa zapisu. <code>ln /etc/passwd moje_passwd</code> kończy się <code>Operation not permitted</code>.</p></aside></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p>Każdy system plików, na przykład ext4 na Ubuntu czy XFS na RHEL, ma tablicę i-węzłów. Folder na dysku to dosłownie lista par: nazwa i numer i-węzła. <code>ln</code> dopisuje do folderu nową parę i podbija licznik w i-węźle. <code>rm</code> w środku wywołuje funkcję jądra o wymownej nazwie <code>unlink</code>, czyli „odlinkuj”: usuwa parę i zmniejsza licznik.</p><p>Treść pliku znika, kiedy spełnione są dwa warunki: licznik linków spada do zera i żaden program nie trzyma pliku otwartego. Ten drugi warunek to klasyka awarii. Usuwasz wielki log, a miejsca nie przybywa, bo program dalej do niego pisze:</p><div class="kod"><pre><code>ls -l /proc/14581/fd/4</code></pre></div><div class="kod"><pre><code>lr-x------ 1 eryk eryk 64 Nov  3 22:12 /proc/14581/fd/4 -&gt; /home/eryk/kurs/t2.txt (deleted)</code></pre></div><p>Plik usunięty, a proces numer 14581 wciąż go trzyma. Wrócimy do tego w module o awariach.</p><p>I druga klasyka. I-węzłów jest skończona liczba, ustalona przy tworzeniu systemu plików. Milion maleńkich plików może je wyczerpać, zanim skończą się bajty. Sprawdzasz to przez <code>df -i</code>. Zrobiłem malutki dysk w pamięci z miejscem na 10 i-węzłów:</p><div class="kod"><pre><code>touch: cannot touch &#x27;plik10&#x27;: No space left on device
+Filesystem      Size  Used Avail Use% Mounted on
+tmpfs            10M     0   10M   0% /home/eryk/mini
+Filesystem     Inodes IUsed IFree IUse% Mounted on
+tmpfs              10    10     0  100% /home/eryk/mini</code></pre></div><p>Zero procent zajętego miejsca, sto procent zajętych i-węzłów i komunikat „brak miejsca”. Biblioteka z pustymi półkami, w której skończyły się numerki. Jak <code>df -h</code> mówi, że jest miejsce, a system twierdzi, że nie ma, od razu <code>df -i</code>.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>na XFS i-węzły przydzielane są dynamicznie, więc ten problem jest tam rzadszy niż na ext4.</p></aside></section><section><h2 id="sciaga-flag">Ściąga flag</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga</th><th>Co robi</th></tr><tr><td><code>ls</code></td><td><code>-i</code></td><td>pokazuje numer i-węzła</td></tr><tr><td><code>ls</code></td><td><code>-l</code></td><td>druga kolumna to licznik twardych linków, <code>l</code> na początku to symlink</td></tr><tr><td><code>stat</code></td><td>(bez flag)</td><td>cała karta pliku: i-węzeł, linki, uprawnienia, daty</td></tr><tr><td><code>stat</code></td><td><code>-c &#x27;%i %h %n&#x27;</code></td><td>tylko wybrane pola: numer i-węzła, liczba linków, nazwa</td></tr><tr><td><code>ln</code></td><td>(bez flag)</td><td>link twardy</td></tr><tr><td><code>ln</code></td><td><code>-s</code></td><td>link symboliczny</td></tr><tr><td><code>ln</code></td><td><code>-sf</code></td><td>symlink, nadpisz istniejący (przestawianie strzałki)</td></tr><tr><td><code>readlink</code></td><td>(bez flag)</td><td>co jest zapisane w symlinku</td></tr><tr><td><code>readlink</code></td><td><code>-f</code></td><td>pełna, ostateczna ścieżka po wszystkich strzałkach</td></tr><tr><td><code>find</code></td><td><code>-samefile plik</code></td><td>wszystkie twarde linki do tego samego i-węzła</td></tr><tr><td><code>find</code></td><td><code>-xtype l</code></td><td>wiszące symlinki</td></tr><tr><td><code>df</code></td><td><code>-i</code></td><td>zajętość i-węzłów</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>Symlink ze ścieżką względną zrobiony z innego folderu.</p><div class="kod"><pre><code>mkdir projekt
+echo hej &gt; projekt/plik.txt
+ln -s projekt/plik.txt projekt/link.txt
+cat projekt/link.txt</code></pre></div><div class="kod"><pre><code>cat: projekt/link.txt: No such file or directory</code></pre></div><p>Intuicja mówi: przecież <code>projekt/plik.txt</code> istnieje. Ale adres w symlinku jest liczony od miejsca, w którym leży link, a nie od miejsca, w którym stałeś, kiedy go robiłeś. Link leży w <code>projekt</code>, więc szuka <code>projekt/projekt/plik.txt</code>. Kartka w szufladzie z napisem „w szufladzie obok”, tylko że szuflada obok jest liczona od tej kartki.</p><p>Naprawa: pisz adres tak, jakbyś stał w folderze linku (<code>cd projekt; ln -s plik.txt link.txt</code>), albo daj ścieżkę bezwzględną od <code>/</code>. Wiszące linki w całym folderze znajdziesz tak:</p><div class="kod"><pre><code>find . -xtype l</code></pre></div><div class="kod"><pre><code>./projekt/link.txt</code></pre></div><p>Drugi częsty błąd: <code>rm -rf link_do_folderu/</code> z ukośnikiem na końcu. Bez ukośnika usuwasz sam drogowskaz. Z ukośnikiem możesz wyczyścić zawartość folderu, na który on pokazuje. Przy symlinkach do folderów usuwaj bez ukośnika na końcu, a jak masz wątpliwości, ćwicz na maszynie wirtualnej.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><ol><li>W nowym folderze utwórz plik <code>oryginal.txt</code> z dowolnym tekstem. Zrób do niego link twardy <code>twardy.txt</code> i symboliczny <code>miekki.txt</code>.</li><li>Komendą <code>ls -li</code> sprawdź numery i-węzłów i licznik linków. Zapisz, który link ma ten sam numer co oryginał.</li><li>Usuń <code>oryginal.txt</code>. Sprawdź, który link działa, a który wisi. Potem napraw wiszący link, nie usuwając go.</li><li>Sprawdź, ile i-węzłów jest zajętych na Twoim głównym dysku.</li></ol><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><div class="kod"><pre><code>mkdir ~/zadanie14 &amp;&amp; cd ~/zadanie14
+echo &quot;Ważny tekst&quot; &gt; oryginal.txt
+ln oryginal.txt twardy.txt
+ln -s oryginal.txt miekki.txt
+ls -li</code></pre></div><div class="kod"><pre><code>983063 lrwxrwxrwx 1 eryk eryk 12 Nov  3 21:14 miekki.txt -&gt; oryginal.txt
+983062 -rw-rw-r-- 2 eryk eryk 13 Nov  3 21:14 oryginal.txt
+983062 -rw-rw-r-- 2 eryk eryk 13 Nov  3 21:14 twardy.txt</code></pre></div><p>Ten sam numer co oryginał ma <code>twardy.txt</code>, a licznik linków to 2. Teraz usuwamy:</p><div class="kod"><pre><code>rm oryginal.txt
+cat twardy.txt
+cat miekki.txt</code></pre></div><div class="kod"><pre><code>Ważny tekst
+cat: miekki.txt: No such file or directory</code></pre></div><p>Twardy działa, miękki wisi. Jak naprawić wiszący link bez dotykania go? Wystarczy, żeby pod adresem <code>oryginal.txt</code> znowu coś było. A najsprytniej: zrobić tę nazwę twardym linkiem do ocalałej treści.</p><div class="kod"><pre><code>ln twardy.txt oryginal.txt
+cat miekki.txt
+df -i /</code></pre></div><div class="kod"><pre><code>Ważny tekst
+Filesystem       Inodes  IUsed    IFree IUse% Mounted on
+/dev/vda       16777216 449746 16327470    3% /</code></pre></div><p>Plik wrócił z martwych dzięki temu, że miał zapasową karteczkę. Gdyby tak działało życie, nikt by nie robił kopii zapasowych. A i-węzłów zajęte 3 procent, można spać spokojnie.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>W <code>ls -l</code> zostało nam jeszcze dziesięć tajemniczych znaczków na początku każdej linijki: <code>-rw-rw-r--</code>. W następnej lekcji rozbieramy je do śrubki. Kto może czytać Twój plik, kto zmieniać, kto uruchamiać, i czemu <code>sudo echo</code> do pliku systemowego wywala „Permission denied”, chociaż masz <code>sudo</code>.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-013.html" rel="prev">← 13. Midnight Commander i inne menedżery plików</a><a class="btn domyslny zolty" href="lekcja-015.html" rel="next">15. Kto może czytać twój plik →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

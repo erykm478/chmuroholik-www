@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>31. Twój pierwszy skrypt — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 31 kursu Linux i Bash od zera do admina: Twój pierwszy skrypt. kursant zamienia kilka komend wpisywanych ręcznie w plik-skrypt, który odpala jednym poleceniem, i rozumie, co się dzieje od wciśnięcia Entera do pierwszej linijki wyniku.">
+<meta property="og:title" content="31. Twój pierwszy skrypt — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 31 kursu Linux i Bash od zera do admina: Twój pierwszy skrypt. kursant zamienia kilka komend wpisywanych ręcznie w plik-skrypt, który odpala jednym poleceniem, i rozumie, co się dzieje od wciśnięcia Entera do pierwszej linijki wyniku.">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 3</span></div>
+      <div class="boczny-tytul"><a href="index.html#m03">Pisanie skryptów</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-031.html" data-lekcja="31" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">31</span> Twój pierwszy skrypt</a></li><li><a href="lekcja-032.html" data-lekcja="32"><span class="znacznik"></span><span class="nr">32</span> Zmienne i cudzysłowy</a></li><li><a href="lekcja-033.html" data-lekcja="33"><span class="znacznik"></span><span class="nr">33</span> Skrypt, który przyjmuje polecenia</a></li><li><a href="lekcja-034.html" data-lekcja="34"><span class="znacznik"></span><span class="nr">34</span> Udało się czy nie?</a></li><li><a href="lekcja-035.html" data-lekcja="35"><span class="znacznik"></span><span class="nr">35</span> Jeśli… to…</a></li><li><a href="lekcja-036.html" data-lekcja="36"><span class="znacznik"></span><span class="nr">36</span> Wybór z menu</a></li><li><a href="lekcja-037.html" data-lekcja="37"><span class="znacznik"></span><span class="nr">37</span> Pętle</a></li><li><a href="lekcja-038.html" data-lekcja="38"><span class="znacznik"></span><span class="nr">38</span> Bash umie liczyć (trochę)</a></li><li><a href="lekcja-039.html" data-lekcja="39"><span class="znacznik"></span><span class="nr">39</span> Wynik komendy w zmiennej</a></li><li><a href="lekcja-040.html" data-lekcja="40"><span class="znacznik"></span><span class="nr">40</span> Funkcje</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="31" data-modul="3" data-tematy="plik, #!, chmod +x, ./skrypt, bash skrypt, komentarze, co się dzieje przy uruchomieniu">
+    <div class="belka"><span>Lekcja 31 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m03">Moduł 3</a> › Lekcja 31</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Twój pierwszy skrypt</h1>
+      <p class="meta"><span>⏱ ok. 11 min czytania</span><span>· moduł 3: Pisanie skryptów</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant zamienia kilka komend wpisywanych ręcznie w plik-skrypt, który odpala jednym poleceniem, i rozumie, co się dzieje od wciśnięcia Entera do pierwszej linijki wyniku.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#skrypt-czyli-przepis-kulinarny">Skrypt, czyli przepis kulinarny</a></li><li><a href="#piszemy-raport-sh">Piszemy raport.sh</a></li><li><a href="#pierwsza-linijka">Pierwsza linijka: #!</a></li><li><a href="#komentarze-czyli-notatki-na-marginesie">Komentarze, czyli notatki na marginesie</a></li><li><a href="#pozwolenie-na-uruchomienie-chmod-x">Pozwolenie na uruchomienie: chmod +x</a></li><li><a href="#trzy-sposoby-uruchomienia">Trzy sposoby uruchomienia</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga-flag">Ściąga flag</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p>Nowy serwer przyszedł. Szef chce wiedzieć, co w nim siedzi. Wpisujesz sześć komend. Jutro przychodzi drugi serwer. Wpisujesz te same sześć komend. W piątek przychodzi dziesięć serwerów i nagle odkrywasz w sobie powołanie do hodowli alpak w Bieszczadach.</p><p>Albo robisz tak: wszystkie sześć komend zapisujesz raz w pliku. Od teraz wpisujesz jedno słowo i komputer sam robi resztę. Na każdym serwerze. Ile razy chcesz.</p><div class="kod"><pre><code>./raport.sh</code></pre></div><p>To jest skrypt. I dziś zrobimy z Twojego zadania domowego Twój pierwszy prawdziwy program. Bez instalowania czegokolwiek, bez kompilatora, w zwykłym edytorze tekstu.</p></section><section><h2 id="skrypt-czyli-przepis-kulinarny">Skrypt, czyli przepis kulinarny</h2><p>Wyobraź sobie, że gotujesz rosół. Za pierwszym razem dzwonisz do babci i ona dyktuje: woda, mięso, marchewka, pietruszka, trzy godziny na małym ogniu. Za drugim razem znowu dzwonisz. Za trzecim babcia mówi: „Zapisz to sobie, dziecko”.</p><p>Skrypt to właśnie zapisany przepis. Zwykły plik tekstowy, w którym jedna pod drugą stoją komendy, dokładnie takie, jakie wpisujesz w terminalu. Bash czyta je po kolei, od góry do dołu, i wykonuje. Jak kucharz, który czyta przepis linijka po linijce.</p><p>Nie ma tu żadnej magii. Każdą komendę ze skryptu możesz wpisać ręcznie i zadziała tak samo. Skrypt tylko oszczędza Ci pisania i pomyłek. Bo człowiek o trzeciej w nocy myli <code>&gt;</code> z <code>&gt;&gt;</code>, a plik się nie myli.</p></section><section><h2 id="piszemy-raport-sh">Piszemy raport.sh</h2><p>Otwórz edytor. Może być nano, może być vi, może być nawet Midnight Commander, jeśli lubisz klikać klawiszami.</p><div class="kod"><pre><code>nano raport.sh</code></pre></div><p>I wpisz:</p><div class="kod"><pre><code>#!/bin/bash
+# raport.sh - zbiera podstawowe informacje o komputerze
+# Autor: Ty. Wersja: 1. Data: dziś.
+
+echo &quot;=== Raport o maszynie ===&quot;
+date
+
+echo &quot;--- Nazwa komputera ---&quot;
+hostname
+
+echo &quot;--- Jądro ---&quot;
+uname -r
+
+echo &quot;--- Procesor ---&quot;
+LC_ALL=C lscpu | grep &#x27;Model name&#x27;   # LC_ALL=C: nagłówki po angielsku
+nproc
+
+echo &quot;--- Pamięć ---&quot;
+free -h
+
+echo &quot;--- Dyski ---&quot;
+lsblk</code></pre></div><p>Zapisz i wyjdź. W nano to Ctrl+O, Enter, Ctrl+X. W vi <code>Esc</code>, <code>:wq</code>. Jeśli nadal jesteś w vi, nie panikuj, lekcja dwunasty czeka.</p><p>Co tu jest nowego w porównaniu z zadaniem? Trzy rzeczy: pierwsza linijka z dziwnym <code>#!</code>, linijki z krzyżykiem na początku i <code>echo</code> z nagłówkami, żeby wynik dało się czytać bez lupy. A przy <code>lscpu</code> stoi <code>LC_ALL=C</code>. To mówi programowi: „Na ten jeden raz mów po angielsku”. Dzięki temu <code>grep &#x27;Model name&#x27;</code> zadziała i na polskim, i na angielskim systemie.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p><code>ZMIENNA=wartość komenda</code> ustawia zmienną tylko dla tej jednej komendy. W skryptach <code>LC_ALL=C</code> przed narzędziami, których wynik parsujesz, to dobry nawyk: komunikaty się nie tłumaczą, a sortowanie jest przewidywalne.</p></aside></section><section><h2 id="pierwsza-linijka">Pierwsza linijka: #!</h2><p>Pierwsza linijka to tak zwany shebang. Czyta się „szebang”, od angielskich nazw znaków: hash, czyli krzyżyk, i bang, czyli wykrzyknik.</p><p>To jest kartka przyklejona na przepisie: „Ten przepis jest dla kucharza od kuchni polskiej”. Kiedy system dostaje plik do uruchomienia, patrzy na pierwsze dwa znaki. Jeśli to <code>#!</code>, czyta resztę linijki i woła tego, kto tam jest wpisany. Tu: program <code>/bin/bash</code>. I to on dostaje Twój plik do przeczytania.</p><p>Możesz tam wpisać innego kucharza. <code>#!/bin/sh</code> to prosta, starsza powłoka, o której mówiliśmy w lekcji dziewiątym. <code>#!/usr/bin/python3</code> to Python. Ten sam mechanizm, inny kucharz.</p><p>Jest jeszcze wersja, którą zobaczysz w wielu repozytoriach:</p><div class="kod"><pre><code>#!/usr/bin/env bash</code></pre></div><p><code>env</code> szuka Basha w folderach z <code>PATH</code>, zamiast zakładać, że leży w <code>/bin</code>. Przydaje się na systemach, gdzie Bash mieszka gdzie indziej, na przykład na Macu z nowszym Bashem z Homebrew. Na serwerach z Linuksem <code>/bin/bash</code> jest zawsze, więc obie wersje są w porządku.</p><p class="ekran">macOS: systemowy <code>/bin/bash</code> na Macu to bardzo stara wersja 3.2, a domyślną powłoką jest zsh. Jeśli piszesz skrypty na Macu, <code>#!/usr/bin/env bash</code> z Bashem z Homebrew oszczędzi Ci niespodzianek.</p><p>Skąd się wziął ten znaczek? Dennis Ritchie, jeden z twórców Uniksa, napisał po latach, że pomysł podłapał od kogoś z konferencji o uniksie z Berkeley, a sam był chyba jednym z pierwszych, którzy to wdrożyli. Na początku lat osiemdziesiątych shebang działał już w systemach BSD. Czyli jest starszy niż większość adminów, którzy go dziś używają.</p></section><section><h2 id="komentarze-czyli-notatki-na-marginesie">Komentarze, czyli notatki na marginesie</h2><p>Wszystko po krzyżyku <code>#</code> Bash ignoruje. To notatki dla ludzi. Ołówkiem na marginesie przepisu: „Babcia daje więcej pieprzu”.</p><div class="kod"><pre><code># To jest komentarz w osobnej linijce
+nproc   # a to komentarz na końcu komendy</code></pre></div><p>Shebang też zaczyna się od krzyżyka, więc dla samego Basha jest zwykłym komentarzem. Czyta go nie Bash, tylko jądro systemu, zanim Bash w ogóle wystartuje. Sprytne, prawda? Jedna linijka, dwóch czytelników, każdy widzi w niej co innego.</p><p>Po co komentarze w sześciolinijkowym skrypcie? Bo za pół roku otworzysz ten plik i nie będziesz pamiętać, czemu tam jest <code>LC_ALL=C</code>. A za rok otworzy go ktoś inny i zapyta, kto to pisał. Komentarz w nagłówku od razu odpowie. Komentuj „dlaczego”, a nie „co”. Komentarz „wypisuje datę” nad <code>date</code> jest jak napis „drzwi” na drzwiach.</p></section><section><h2 id="pozwolenie-na-uruchomienie-chmod-x">Pozwolenie na uruchomienie: chmod +x</h2><p>Plik gotowy. Odpalamy:</p><div class="kod"><pre><code>./raport.sh</code></pre></div><div class="kod"><pre><code>bash: ./raport.sh: Permission denied</code></pre></div><p>Nawet jako root. Pamiętasz klucze do pokojów z lekcji o uprawnieniach? Plik ma trzy rodzaje kluczy: do czytania, do pisania i do wykonywania, czyli <code>r</code>, <code>w</code> i <code>x</code>. Nowy plik z edytora dostaje tylko pierwsze dwa. System nie pozwoli uruchomić czegoś, co nie jest oznaczone jako program. I dobrze, bo inaczej każdy plik tekstowy z internetu byłby potencjalnym programem.</p><div class="kod"><pre><code>ls -l raport.sh
+chmod +x raport.sh
+ls -l raport.sh</code></pre></div><div class="kod"><pre><code>-rw-r--r-- 1 eryk eryk 382 Nov  3 16:24 raport.sh
+-rwxr-xr-x 1 eryk eryk 382 Nov  3 16:24 raport.sh</code></pre></div><p>Pojawiły się iksy. <code>chmod +x</code> daje prawo wykonania wszystkim trzem: właścicielowi, grupie i reszcie (z poprawką na umask). Jeśli chcesz tylko dla siebie, <code>chmod u+x</code>. W cyferkach to zwykle <code>chmod 755</code> albo <code>chmod 700</code>, jeśli skrypt jest prywatny.</p><p>I teraz:</p><div class="kod"><pre><code>./raport.sh</code></pre></div><div class="kod"><pre><code>=== Raport o maszynie ===
+Tue Nov  3 16:24:51 CET 2026
+--- Nazwa komputera ---
+vm
+--- Jądro ---
+6.8.0-48-generic
+--- Procesor ---
+Model name:                              Intel(R) Xeon(R) Processor @ 2.10GHz
+2
+--- Pamięć ---
+               total        used        free      shared  buff/cache   available
+Mem:           7.8Gi       708Mi       6.8Gi        15Mi       604Mi       7.1Gi
+...</code></pre></div><p>I to jest moment, w którym zostajesz programistą. Bez rozmowy kwalifikacyjnej, bez owocowych czwartków, ale jednak.</p><p>A jak chcesz wynik w pliku, to robisz to, co znasz od dawna:</p><div class="kod"><pre><code>./raport.sh &gt; raport.txt</code></pre></div><p>Jedna strzałka zamiast sześciu. Skrypt zachowuje się jak każda inna komenda: ma wyjście, da się je przekierować, wsadzić do rury, przepuścić przez <code>grep</code>.</p></section><section><h2 id="trzy-sposoby-uruchomienia">Trzy sposoby uruchomienia</h2><div class="kod"><pre><code>./raport.sh
+bash raport.sh
+raport.sh</code></pre></div><p>Pierwszy już znasz. Kropka i ukośnik znaczą „ten plik, tutaj, w bieżącym folderze”. Potrzebuje prawa <code>x</code> i shebanga.</p><p>Drugi to „Bashu, przeczytaj ten plik”. Tu prawo <code>x</code> nie jest potrzebne, bo uruchamiasz Basha, a nie plik. Plik jest tylko czytany, jak kartka podana urzędnikowi. Shebang wtedy nic nie znaczy. Gdybyś napisał <code>sh raport.sh</code>, przepis przeczyta inny kucharz, <code>dash</code> na Ubuntu, i w bardziej zaawansowanych skryptach coś się wysypie. Nasz akurat jest na tyle prosty, że zadziała.</p><p>Trzeci, bez kropki:</p><div class="kod"><pre><code>bash: raport.sh: command not found</code></pre></div><p>Bash nie szuka komend w bieżącym folderze. Szuka tylko w folderach z listy <code>PATH</code>, o której mówiliśmy przy ustawieniach Basha. To celowe zabezpieczenie: gdyby szukał w bieżącym folderze, ktoś mógłby podrzucić Ci do <code>/tmp</code> plik o nazwie <code>ls</code> i poczekać, aż tam wejdziesz.</p><p>Jeśli chcesz wołać swój skrypt jak zwykłą komendę, z każdego miejsca, wrzuć go do swojego prywatnego folderu na programy:</p><div class="kod"><pre><code>mkdir -p ~/bin
+mv raport.sh ~/bin/raport</code></pre></div><p>[Ubuntu] domyślny <code>~/.profile</code> dopisuje <code>~/bin</code> i <code>~/.local/bin</code> do <code>PATH</code>, ale tylko jeśli folder istnieje w chwili logowania. Czyli po założeniu folderu wyloguj się i zaloguj ponownie.</p><p>[RHEL] domyślne pliki startowe z <code>/etc/skel</code> też dopisują <code>~/.local/bin</code> i <code>~/bin</code> do <code>PATH</code>.</p><p>I jeszcze jedno: rozszerzenie <code>.sh</code> jest dla ludzi, nie dla systemu. Linux patrzy na shebang i prawo <code>x</code>, a nie na końcówkę nazwy. Komendy systemowe, które są skryptami, zwykle nie mają żadnego rozszerzenia.</p></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p>Wciskasz Enter po <code>./raport.sh</code>. Co się dzieje?</p><p>Bash, Twój urzędnik w okienku, rozdziela się na dwie kopie. To <code>fork</code>, znany z lekcji o procesach. Kopia prosi jądro: „Uruchom mi plik <code>./raport.sh</code>”. To wywołanie systemowe <code>execve</code>.</p><p>Jądro sprawdza, czy masz prawo <code>x</code>. Potem czyta początek pliku. Widzi <code>#!</code> i według dokumentacji jądra uruchamia interpreter w taki sposób:</p><div class="kod"><pre><code>/bin/bash ./raport.sh</code></pre></div><p>Czyli nowy Bash dostaje nazwę Twojego pliku jako argument. Ten nowy Bash czyta plik od góry. Pierwszą linijkę traktuje jak komentarz. Każdą kolejną wykonuje, czekając, aż skończy się poprzednia. Na końcu pliku kończy pracę, a Twój Bash w terminalu wraca z promptem.</p><p>Można to zobaczyć na własne oczy. Mały skrypt:</p><div class="kod"><pre><code>#!/bin/bash
+# gdzie.sh - pokazuje, że skrypt to osobny proces
+cd /tmp || exit
+pwd
+ps -o pid,ppid,cmd -p &quot;$$&quot; -p &quot;$PPID&quot;</code></pre></div><div class="kod"><pre><code>/home/eryk
+/tmp
+  PID  PPID CMD
+ 6114  6109 bash
+ 6115  6114 /bin/bash ./gdzie.sh
+/home/eryk</code></pre></div><p>Pierwsze <code>/home/eryk</code> wypisałem ręcznie przed uruchomieniem, ostatnie po. W środku skrypt przeszedł do <code>/tmp</code> i to widzi. <code>ps</code> pokazuje dwa procesy: Twój Bash i pod nim osobny <code>/bin/bash ./gdzie.sh</code>, dokładnie tak, jak go uruchomiło jądro. A po skończeniu skryptu… dalej jesteś w swoim folderze domowym.</p><p>Dlaczego? Bo skrypt jest osobnym kucharzem w osobnej kuchni. Jeśli on przestawi garnki u siebie, Twoja kuchnia się nie zmienia. <code>cd</code> w skrypcie zmienia folder tylko skryptowi. Tak samo zmienne, które w nim ustawisz. Jeśli kiedyś naprawdę chcesz wykonać plik w swojej własnej powłoce, jest do tego <code>source plik</code> albo <code>. plik</code>, ale to temat na lekcja o dużych skryptach. <code>|| exit</code> przy <code>cd</code> wyjaśnię za trzy lekcje, na razie przyjmij, że to pas bezpieczeństwa.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>według <code>man 2 execve</code> jądro czyta tylko ograniczoną liczbę znaków po <code>#!</code>: przed Linuksem 5.1 było to 127 znaków, od 5.1 jest 255. Wszystko, co jest po nazwie interpretera, idzie jako jeden argument, dlatego <code>#!/usr/bin/env bash -e</code> nie zadziała tak, jak się spodziewasz. A jeśli w pliku nie ma shebanga, jądro odmawia, a Bash sam przejmuje plik i czyta go jako skrypt dla siebie. Inne programy już tak uprzejme nie są.</p></aside></section><section><h2 id="sciaga-flag">Ściąga flag</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga / forma</th><th>Co robi</th></tr><tr><td><code>#!/bin/bash</code></td><td>pierwsza linijka</td><td>mówi jądru, kto ma czytać plik</td></tr><tr><td><code>#!/usr/bin/env bash</code></td><td>pierwsza linijka</td><td>szuka Basha w <code>PATH</code></td></tr><tr><td><code>chmod</code></td><td><code>+x</code></td><td>daje prawo wykonania wszystkim</td></tr><tr><td><code>chmod</code></td><td><code>u+x</code></td><td>daje prawo wykonania tylko właścicielowi</td></tr><tr><td><code>chmod</code></td><td><code>755</code> / <code>700</code></td><td>publiczny / prywatny skrypt</td></tr><tr><td><code>./skrypt.sh</code></td><td>—</td><td>uruchamia plik z bieżącego folderu (wymaga <code>x</code>)</td></tr><tr><td><code>bash</code></td><td><code>skrypt.sh</code></td><td>Bash czyta plik (nie wymaga <code>x</code>)</td></tr><tr><td><code>file</code></td><td><code>skrypt.sh</code></td><td>mówi, co to za plik i jakie ma końce linii</td></tr><tr><td><code>cat</code></td><td><code>-A</code></td><td>pokazuje ukryte znaki, np. <code>^M</code> na końcu linii</td></tr><tr><td><code>shellcheck</code></td><td><code>skrypt.sh</code></td><td>sprawdza skrypt pod kątem błędów</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>Piszesz skrypt na komputerze z Windowsem, w Notatniku, kopiujesz na serwer, dajesz <code>chmod +x</code> i:</p><div class="kod"><pre><code>bash: ./okna.sh: cannot execute: required file not found</code></pre></div><p>Jak to „not found”? Plik jest, Bash jest. Windows kończy linijki dwoma znakami: powrotem karetki i nową linią. Linux tylko nową linią. Ten dodatkowy niewidzialny znak siedzi na końcu shebanga i jądro szuka programu o nazwie <code>/bin/bash</code> z doklejonym niewidzialnym ogonkiem. Takiego programu nie ma. Na starszych Bashach komunikat jest bardziej wprost: <code>bad interpreter: No such file or directory</code>.</p><p>Jak to zobaczyć:</p><div class="kod"><pre><code>file okna.sh
+cat -A okna.sh</code></pre></div><div class="kod"><pre><code>okna.sh: Bourne-Again shell script, ASCII text executable, with CRLF line terminators
+#!/bin/bash^M$
+echo hej^M$</code></pre></div><p>To <code>^M</code> to właśnie ogonek z Windowsa. Naprawa:</p><div class="kod"><pre><code>sed -i &#x27;s/\r$//&#x27; okna.sh</code></pre></div><p>Albo program <code>dos2unix</code>, który jest w repozytoriach i Ubuntu, i RHEL-a, w pakiecie o tej samej nazwie. A na przyszłość: w edytorze typu VS Code przełącz końce linii na LF, w prawym dolnym rogu.</p><p>I drugi klasyk: literówka w shebangu, na przykład <code>#!/bin/bsh</code>. Komunikat ten sam, „required file not found”. Jeśli więc Bash mówi, że nie ma pliku, który ewidentnie jest, patrz najpierw na pierwszą linijkę.</p><p>A na koniec dobry nawyk na całe życie: każdy skrypt przepuść przez ShellCheck. To darmowy program, który czyta skrypt i wytyka typowe błędy. [Ubuntu] <code>sudo apt install shellcheck</code>. [RHEL] pakiet <code>ShellCheck</code> z repozytorium EPEL. Nasz <code>raport.sh</code> przechodzi bez uwag. A plik bez shebanga od razu dostaje uwagę:</p><div class="kod"><pre><code>In bez.sh line 1:
+echo jestem bez shebanga
+^-- SC2148 (error): Tips depend on target shell and yours is unknown. Add a shebang or a &#x27;shell&#x27; directive.</code></pre></div><p>ShellCheck nie wie, dla którego kucharza jest przepis, więc nie umie doradzić. Uczciwie.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><p>Napisz skrypt <code>kto.sh</code>, który wypisuje po kolei, każde z nagłówkiem zrobionym przez <code>echo</code>: kim jesteś (<code>whoami</code>), w jakim folderze jesteś (<code>pwd</code>), jaka jest data i godzina (<code>date</code>) oraz od jak dawna działa system (<code>uptime -p</code>). Dodaj shebang i komentarz z opisem. Uruchom go na dwa sposoby: przez <code>./kto.sh</code> i przez <code>bash kto.sh</code>. Sprawdź ShellCheckiem. A potem odbierz mu prawo wykonania i sprawdź, który z dwóch sposobów dalej działa.</p><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><div class="kod"><pre><code>#!/bin/bash
+# kto.sh - krótka wizytówka sesji
+echo &quot;--- Kim jestem ---&quot;
+whoami
+echo &quot;--- Gdzie jestem ---&quot;
+pwd
+echo &quot;--- Kiedy ---&quot;
+date
+echo &quot;--- Od kiedy system działa ---&quot;
+uptime -p</code></pre></div><div class="kod"><pre><code>chmod +x kto.sh
+./kto.sh
+bash kto.sh
+shellcheck kto.sh
+chmod -x kto.sh
+./kto.sh
+bash kto.sh</code></pre></div><div class="kod"><pre><code>--- Kim jestem ---
+eryk
+--- Gdzie jestem ---
+/home/eryk
+--- Kiedy ---
+Tue Nov  3 16:40:20 CET 2026
+--- Od kiedy system działa ---
+up 22 minutes
+bash: ./kto.sh: Permission denied</code></pre></div><p>Po zabraniu iksa <code>./kto.sh</code> dostaje odmowę, a <code>bash kto.sh</code> dalej działa, bo wtedy uruchamiasz Basha, a plik jest dla niego tylko kartką do przeczytania. ShellCheck milczy, czyli jest dobrze. Milczący ShellCheck to jedyny przypadek w informatyce, kiedy cisza oznacza pochwałę.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Nasz raport ma jedną wadę: wszystko jest w nim wpisane na sztywno. W następnej lekcji dajemy skryptowi pamięć: zmienne, czyli pudełka z napisem, cudzysłowy, które są kopertami, i <code>read</code>, czyli sposób, żeby skrypt mógł Cię o coś zapytać.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-030.html" rel="prev">← 30. Sprzęt, jądro i udev</a><a class="btn domyslny zolty" href="lekcja-032.html" rel="next">32. Zmienne i cudzysłowy →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

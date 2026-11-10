@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>39. Wynik komendy w zmiennej — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 39 kursu Linux i Bash od zera do admina: Wynik komendy w zmiennej. kursant zapisuje wynik komendy do zmiennej przez $( ), rozpoznaje stare odwrotne apostrofy i podstawia wynik komendy jako plik przez &lt;( ), na przykład do porównania dwóch list jedną komendą.">
+<meta property="og:title" content="39. Wynik komendy w zmiennej — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 39 kursu Linux i Bash od zera do admina: Wynik komendy w zmiennej. kursant zapisuje wynik komendy do zmiennej przez $( ), rozpoznaje stare odwrotne apostrofy i podstawia wynik komendy jako plik przez &lt;( ), na przykład do porównania dwóch list jedną komendą.">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 3</span></div>
+      <div class="boczny-tytul"><a href="index.html#m03">Pisanie skryptów</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-031.html" data-lekcja="31"><span class="znacznik"></span><span class="nr">31</span> Twój pierwszy skrypt</a></li><li><a href="lekcja-032.html" data-lekcja="32"><span class="znacznik"></span><span class="nr">32</span> Zmienne i cudzysłowy</a></li><li><a href="lekcja-033.html" data-lekcja="33"><span class="znacznik"></span><span class="nr">33</span> Skrypt, który przyjmuje polecenia</a></li><li><a href="lekcja-034.html" data-lekcja="34"><span class="znacznik"></span><span class="nr">34</span> Udało się czy nie?</a></li><li><a href="lekcja-035.html" data-lekcja="35"><span class="znacznik"></span><span class="nr">35</span> Jeśli… to…</a></li><li><a href="lekcja-036.html" data-lekcja="36"><span class="znacznik"></span><span class="nr">36</span> Wybór z menu</a></li><li><a href="lekcja-037.html" data-lekcja="37"><span class="znacznik"></span><span class="nr">37</span> Pętle</a></li><li><a href="lekcja-038.html" data-lekcja="38"><span class="znacznik"></span><span class="nr">38</span> Bash umie liczyć (trochę)</a></li><li><a href="lekcja-039.html" data-lekcja="39" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">39</span> Wynik komendy w zmiennej</a></li><li><a href="lekcja-040.html" data-lekcja="40"><span class="znacznik"></span><span class="nr">40</span> Funkcje</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="39" data-modul="3" data-tematy="$( ), stare odwrotne apostrofy, &lt;( )">
+    <div class="belka"><span>Lekcja 39 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m03">Moduł 3</a> › Lekcja 39</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Wynik komendy w zmiennej</h1>
+      <p class="meta"><span>⏱ ok. 9 min czytania</span><span>· moduł 3: Pisanie skryptów</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant zapisuje wynik komendy do zmiennej przez <code>$( )</code>, rozpoznaje stare odwrotne apostrofy i podstawia wynik komendy jako plik przez <code>&lt;( )</code>, na przykład do porównania dwóch list jedną komendą.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#czyli-prosimy-o-odpowiedz-na-pismie">$( ), czyli prosimy o odpowiedź na piśmie</a></li><li><a href="#co-goniec-przynosi-a-czego-nie">Co goniec przynosi, a czego nie</a></li><li><a href="#stare-odwrotne-apostrofy">Stare odwrotne apostrofy</a></li><li><a href="#czyli-wynik-komendy-udajacy-plik">&lt;( ), czyli wynik komendy udający plik</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga-flag">Ściąga flag</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p class="ekran">skrypt kopii zapasowej, w którym nazwa pliku to <code>kopia.tar.gz</code>, a obok folder z jednym jedynym plikiem <code>kopia.tar.gz</code></p><p>Ktoś napisał skrypt do kopii zapasowych. Codziennie o północy pakuje dane do <code>kopia.tar.gz</code>. Codziennie. Do tego samego pliku. Czyli codziennie nadpisuje wczorajszą kopię. Kiedy w czwartek ktoś zauważy, że we wtorek skasował ważny plik, okaże się, że kopia z wtorku nie istnieje. Jest tylko dzisiejsza, już bez tego pliku.</p><p>Potrzebujesz w nazwie dzisiejszej daty. Datę zna komenda <code>date</code>. Pytanie: jak wynik komendy wsadzić do nazwy pliku albo do zmiennej? Dziś się dowiesz i po tej lekcji skrypty zaczną rozmawiać z systemem, zamiast tylko mówić do niego.</p></section><section><h2 id="czyli-prosimy-o-odpowiedz-na-pismie">$( ), czyli prosimy o odpowiedź na piśmie</h2><p>Wyobraź sobie, że urzędnik w okienku wypełnia formularz i w jednej rubryce potrzebuje informacji z innego działu. Wysyła gońca: „idź do działu dat i przynieś dzisiejszą datę”. Goniec wraca z karteczką, urzędnik przepisuje to, co na niej jest, w rubrykę i idzie dalej.</p><p>Tym gońcem jest <code>$( )</code>. W środku piszesz komendę, a całość zamienia się na to, co ta komenda wypisała.</p><div class="kod"><pre><code>dzis=$(date +%F)
+echo &quot;Kopia z dnia $dzis&quot;</code></pre></div><div class="kod"><pre><code>Kopia z dnia 2026-11-03</code></pre></div><p><code>date +%F</code> wypisuje datę w formacie rok-miesiąc-dzień. <code>$( )</code> łapie ten wynik, zamiast puścić go na ekran, i wkłada do pudełka <code>dzis</code>. Teraz skrypt z haka naprawiamy jedną zmianą:</p><div class="kod"><pre><code>tar czf &quot;kopia-$(date +%F).tar.gz&quot; /dane</code></pre></div><p>Każdy dzień to nowy plik. <code>kopia-2026-11-03.tar.gz</code>, <code>kopia-2026-11-04.tar.gz</code> i tak dalej. Format rok-miesiąc-dzień ma też tę zaletę, że sortuje się alfabetycznie w dobrej kolejności. Format dzień-miesiąc-rok tego nie umie i po pół roku masz w folderze bałagan jak w szufladzie na kable.</p><p>Możesz też wstawić <code>$( )</code> prosto w tekst, bez zmiennej:</p><div class="kod"><pre><code>echo &quot;Jestem w folderze: $(basename &quot;$(pwd)&quot;)&quot;</code></pre></div><div class="kod"><pre><code>Jestem w folderze: e39</code></pre></div><p><code>$( )</code> można zagnieżdżać. Wewnętrzny goniec przynosi pełną ścieżkę, zewnętrzny wycina z niej ostatni kawałek. Zauważ też cudzysłowy w środku: wewnątrz <code>$( )</code> zaczyna się nowy, czysty świat i koperty z zewnątrz się z nimi nie gryzą.</p><p>Dwa przykłady, które zobaczysz w każdym skrypcie admina:</p><div class="kod"><pre><code>konta=$(wc -l &lt; /etc/passwd)
+echo &quot;Kont w systemie: $konta&quot;
+komputer=$(hostname)
+echo &quot;Działam na: $komputer&quot;</code></pre></div><div class="kod"><pre><code>Kont w systemie: 90
+Działam na: vm</code></pre></div></section><section><h2 id="co-goniec-przynosi-a-czego-nie">Co goniec przynosi, a czego nie</h2><p>Goniec ma swoje zwyczaje i dobrze je znać.</p><p>Po pierwsze, obcina puste linijki z końca wyniku. Każda komenda kończy wynik znakiem nowej linii. Gdyby goniec go nie obciął, każda data miałaby doczepiony Enter i nazwy plików byłyby połamane. Dzięki temu <code>kopia-$(date +%F).tar.gz</code> wychodzi w jednej linijce.</p><p>Po drugie, wynik bez cudzysłowu zostaje pocięty na słowa. Porównaj:</p><div class="kod"><pre><code>lista=$(printf &#x27;a\nb\nc\n&#x27;)
+echo $lista
+echo &quot;$lista&quot;</code></pre></div><div class="kod"><pre><code>a b c
+a
+b
+c</code></pre></div><p>Bez koperty trzy linijki skleiły się w jedną. W kopercie zostały, jak były. Zasada, która wraca w tym kursie jak bumerang: zmienne i <code>$( )</code> zawsze w cudzysłowie, chyba że dokładnie wiesz, dlaczego nie.</p><p>Po trzecie, goniec przynosi tylko to, co komenda wypisała pierwszym głośnikiem. Błędy z drugiego głośnika dalej lecą na ekran. Jeśli chcesz je też złapać: <code>wynik=$(komenda 2&gt;&amp;1)</code>.</p><p>Po czwarte, kod wyjścia komendy nie ginie. Zaraz po przypisaniu leży w <code>$?</code>:</p><div class="kod"><pre><code>wynik=$(grep -c root /etc/passwd)
+echo &quot;kod: $? wynik: $wynik&quot;
+wynik=$(grep -c nieistnieje /etc/passwd)
+echo &quot;kod: $? wynik: $wynik&quot;</code></pre></div><div class="kod"><pre><code>kod: 0 wynik: 1
+kod: 1 wynik: 0</code></pre></div><p>Czyli masz i odpowiedź na piśmie, i kciuk. Możesz nawet napisać <code>if wynik=$(komenda); then</code>, a bramkarz sprawdzi kciuk, a wynik i tak trafi do pudełka.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p><code>$(cat plik)</code> można zastąpić szybszym <code>$(&lt; plik)</code>. Bash czyta wtedy plik sam, bez uruchamiania <code>cat</code>. <code>man bash</code> wprost poleca tę postać.</p></aside></section><section><h2 id="stare-odwrotne-apostrofy">Stare odwrotne apostrofy</h2><p>W starych skryptach i na Stack Overflow z dawnych lat zobaczysz to samo zapisane inaczej:</p><div class="kod"><pre><code>dzis=`date +%F`</code></pre></div><p>To są odwrotne apostrofy, ten znak pod Escape, obok jedynki. Robią to samo co <code>$( )</code>. Kiedyś były jedyną drogą, dziś są jak telefon z kręconym kablem: działa, ale nikt rozsądny nie kupuje nowego.</p><p>Dlaczego? Bo nie da się ich łatwo zagnieżdżać. Ten sam przykład z folderem w starej wersji wygląda tak:</p><div class="kod"><pre><code>echo &quot;Jestem w folderze: `basename \`pwd\``&quot;</code></pre></div><p>Wewnętrzne apostrofy trzeba poprzedzić ukośnikami, bo inaczej Bash nie wie, który apostrof zamyka który. Przy trzech poziomach robi się z tego szyfr Enigmy. Do tego w środku odwrotnych apostrofów ukośniki zachowują się inaczej niż wszędzie indziej, co opisuje osobny akapit w <code>man bash</code>. A na wielu czcionkach odwrotny apostrof wygląda prawie jak zwykły, więc w tutorialu łatwo pomylić jeden z drugim.</p><p>ShellCheck na odwrotne apostrofy mówi krótko: <code>Use $(...) notation instead of legacy backticks</code>. Rozpoznawaj je, kiedy czytasz cudze skrypty, ale sam pisz <code>$( )</code>.</p></section><section><h2 id="czyli-wynik-komendy-udajacy-plik">&lt;( ), czyli wynik komendy udający plik</h2><p>Czasem komenda nie chce tekstu, tylko pliku. Klasyka: <code>diff</code>, który porównuje dwa pliki. Chcesz porównać, jakie pliki leżą w dwóch folderach. Po staremu robisz dwa pliki tymczasowe, porównujesz i sprzątasz. Trzy komendy plus pamiętanie o sprzątaniu, o którym nikt nie pamięta.</p><p>Wyobraź sobie, że urzędnik wymaga dwóch dokumentów na papierze. Zamiast drukować, podsuwasz mu dwie tuby, z których tekst wyjeżdża na bieżąco. On myśli, że czyta kartki. Ty nie zużyłeś ani jednej.</p><div class="kod"><pre><code>diff &lt;(ls stary) &lt;(ls nowy)</code></pre></div><div class="kod"><pre><code>2d1
+&lt; b.conf
+3a3
+&gt; d.conf</code></pre></div><p><code>&lt;( )</code> uruchamia komendę w środku, a w jej miejsce wstawia nazwę pliku, z którego można czytać jej wynik. <code>diff</code> dostał dwie „nazwy plików” i nawet nie wie, że to nie są prawdziwe pliki. Wynik czytamy tak: <code>b.conf</code> jest tylko w starym folderze, <code>d.conf</code> tylko w nowym.</p><p>Co to za nazwa? Sprawdźmy:</p><div class="kod"><pre><code>echo &lt;(true)</code></pre></div><div class="kod"><pre><code>/dev/fd/63</code></pre></div><p>To nie plik na dysku, tylko furtka do rury, do której jest podpięta komenda. O tym za chwilę pod spodem.</p><p>Prawdziwe zastosowania admina: porównanie listy pakietów na dwóch serwerach, porównanie konfiguracji przed zmianą i po, sprawdzenie, czego brakuje na jednej liście względem drugiej. Za każdym razem jedna linijka zamiast plików tymczasowych.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>jest też odwrotność, <code>&gt;( )</code>, czyli plik, do którego pisanie wysyła dane do komendy. Na przykład <code>tee &gt;(gzip &gt; log.gz) &gt; log.txt</code> zapisuje to samo raz zwykłe, raz spakowane. Uwaga: <code>&lt;( )</code> to rozszerzenie Basha i nie działa w <code>sh</code>, czyli w <code>dash</code> na Ubuntu skończy się błędem <code>Syntax error: &quot;(&quot; unexpected</code>.</p></aside></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p><code>$( )</code> to wynajęcie drugiego kucharza. Bash tworzy kopię samego siebie, czyli podpowłokę, każe jej wykonać komendę, a jej pierwszy głośnik podpina do rury, z której sam czyta. Kiedy kucharz skończy, Bash ma cały wynik, obcina końcowe Entery i wstawia go w miejsce <code>$( )</code>.</p><p>Kopia jest kopią. Wszystko, co zrobi się w środku, zostaje w środku:</p><div class="kod"><pre><code>x=1
+y=$(x=2; echo &quot;$x&quot;)
+echo &quot;x=$x y=$y&quot;</code></pre></div><div class="kod"><pre><code>x=1 y=2</code></pre></div><p>W środku <code>x</code> było dwa, ale na zewnątrz dalej jest jeden. Kucharz na zapleczu może przestawić sobie wszystkie garnki, ale Twoja kuchnia zostaje nietknięta. Przez to <code>cd</code> wewnątrz <code>$( )</code> też nie zmienia folderu skryptu.</p><p><code>&lt;( )</code> działa podobnie, ale zamiast czekać na koniec i zbierać wynik, Bash od razu uruchamia komendę w tle, jej wyjście podpina do rury i przekazuje nazwę tej rury jako <code>/dev/fd/63</code> albo podobną. Na Linuksie <code>/dev/fd/</code> to folder, w którym każdy proces widzi swoje otwarte pliki pod numerami. Numer zero to wejście, jeden to pierwszy głośnik, dwa to drugi. A 63 to rura, którą Bash otworzył specjalnie dla <code>diff</code>. Komenda czyta z niej jak z pliku, tylko nie może się w nim cofać, bo rura płynie w jedną stronę.</p></section><section><h2 id="sciaga-flag">Ściąga flag</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga / element</th><th>Co robi</th></tr><tr><td><code>$( )</code></td><td><code>x=$(komenda)</code></td><td>wynik komendy do zmiennej</td></tr><tr><td><code>$( )</code></td><td><code>&quot;$(komenda)&quot;</code></td><td>wynik w kopercie, bez cięcia na słowa</td></tr><tr><td><code>$( )</code></td><td><code>$(komenda 2&gt;&amp;1)</code></td><td>złap też błędy</td></tr><tr><td><code>$( )</code></td><td><code>$(&lt; plik)</code></td><td>zawartość pliku bez <code>cat</code></td></tr><tr><td>odwrotne apostrofy</td><td>stara postać</td><td>to samo co <code>$( )</code>, nie używaj w nowych skryptach</td></tr><tr><td><code>&lt;( )</code></td><td><code>diff &lt;(a) &lt;(b)</code></td><td>wynik komendy jako plik do czytania</td></tr><tr><td><code>&lt;( )</code></td><td><code>done &lt; &lt;(komenda)</code></td><td>wynik komendy na wejście pętli</td></tr><tr><td><code>&gt;( )</code></td><td><code>tee &gt;(komenda)</code></td><td>plik, który przekazuje dane do komendy</td></tr><tr><td><code>date</code></td><td><code>+%F</code></td><td>data RRRR-MM-DD</td></tr><tr><td><code>date</code></td><td><code>&#x27;+%F %T&#x27;</code></td><td>data i godzina</td></tr><tr><td><code>basename</code></td><td><code>basename ścieżka</code></td><td>ostatni kawałek ścieżki</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>Ten błąd kosztował już wielu adminów godzinę życia, bo nie ma żadnego komunikatu. Liczymy konta z powłoką Bash:</p><div class="kod"><pre><code>#!/bin/bash
+# zle.sh — liczy konta z powłoką bash (z błędem)
+
+licznik=0
+grep &#x27;bash$&#x27; /etc/passwd | cut -d: -f1 | while IFS= read -r linia; do
+    echo &quot;Znalazłem: $linia&quot;
+    licznik=$(( licznik + 1 ))
+done
+echo &quot;Razem: $licznik&quot;</code></pre></div><div class="kod"><pre><code>Znalazłem: root
+Znalazłem: ubuntu
+Znalazłem: eryk
+...
+Razem: 0</code></pre></div><p>Pętla znalazła kilkanaście kont, a na końcu „Razem: 0”. Jak to?</p><p>Każdy kawałek rury działa w osobnej podpowłoce. Także pętla <code>while</code> za ostatnią kreską. Czyli liczył kucharz na zapleczu, w swojej kopii zmiennej <code>licznik</code>. Kiedy pętla się skończyła, kucharz poszedł do domu razem ze swoim wynikiem, a Ty masz swoje stare zero. ShellCheck to wyłapuje: <code>licznik was modified in a subshell. That change might be lost</code>.</p><p>Naprawa: zamiast wpychać dane do pętli rurą, podaj je pętli jak plik przez <code>&lt; &lt;( )</code>:</p><div class="kod"><pre><code>#!/bin/bash
+# dobre.sh — liczy konta z powłoką bash
+
+licznik=0
+while IFS= read -r linia; do
+    echo &quot;Znalazłem: $linia&quot;
+    licznik=$(( licznik + 1 ))
+done &lt; &lt;(grep &#x27;bash$&#x27; /etc/passwd | cut -d: -f1)
+echo &quot;Razem: $licznik&quot;</code></pre></div><div class="kod"><pre><code>Znalazłem: root
+Znalazłem: ubuntu
+Znalazłem: eryk
+...
+Razem: 16</code></pre></div><p>Pierwsza strzałka to zwykłe przekierowanie wejścia, tak jak <code>done &lt; plik</code>. Druga, razem z nawiasem, to <code>&lt;( )</code>, czyli „plik” z wynikiem komendy. Spacja między nimi jest obowiązkowa. Teraz pętla działa w głównej powłoce, a podpowłoka tylko dostarcza dane. Licznik zostaje u Ciebie.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>inna droga to <code>shopt -s lastpipe</code>, które każe Bashowi wykonać ostatni kawałek rury w głównej powłoce. Działa jednak tylko wtedy, gdy kontrola zadań jest wyłączona, czyli w skryptach tak, w okienku terminala zwykle nie.</p></aside></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><ol><li>Napisz skrypt <code>stan.sh</code>, który zapisze do zmiennych nazwę komputera, dzisiejszą datę z godziną, liczbę procesów w systemie (<code>ps -e --no-headers | wc -l</code>) i procent zajętości dysku <code>/</code> jako samą liczbę. Podpowiedź: <code>df --output=pcent /</code>, potem <code>tail -n 1</code>, potem <code>tr -dc &#x27;0-9&#x27;</code>. Wypisz to wszystko w jednej linijce, a jeśli dysk jest zajęty w ponad 80 procentach, dopisz ostrzeżenie.</li><li>Zrób dwa foldery z kilkoma plikami, częściowo takimi samymi, częściowo różnymi, i jedną komendą <code>diff</code> z <code>&lt;( )</code> pokaż, czego brakuje w którym.</li></ol><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><div class="kod"><pre><code>#!/bin/bash
+# stan.sh — jednolinijkowy raport o stanie serwera
+
+komputer=$(hostname)
+teraz=$(date &#x27;+%F %T&#x27;)
+procesy=$(ps -e --no-headers | wc -l)
+zajete=$(df --output=pcent / | tail -n 1 | tr -dc &#x27;0-9&#x27;)
+
+echo &quot;$teraz | $komputer | procesów: $procesy | dysk /: $zajete%&quot;
+
+if (( zajete &gt; 80 )); then
+    echo &quot;UWAGA: na / zostało mało miejsca!&quot;
+fi</code></pre></div><div class="kod"><pre><code>2026-11-03 16:35:46 | vm | procesów: 138 | dysk /: 38%</code></pre></div><p>Najciekawsza jest linijka z dyskiem. <code>df --output=pcent /</code> wypisuje nagłówek <code>Use%</code> i pod nim <code> 38%</code>, ze spacją na początku. <code>tail -n 1</code> zostawia ostatnią linijkę, a <code>tr -dc &#x27;0-9&#x27;</code> usuwa wszystko, co nie jest cyfrą. Zostaje czyste <code>38</code>, z którym kalkulator <code>(( ))</code> umie już porównywać. A żeby sprawdzić ostrzeżenie bez zapychania dysku, podmień na próbę zmienną ręcznie: <code>zajete=91</code>. Testowanie alarmu przeciwpożarowego zapalniczką, a nie podpalaniem biura.</p><p>Druga część:</p><div class="kod"><pre><code>mkdir -p stary nowy
+touch stary/{a,b,c}.conf nowy/{a,c,d}.conf
+diff &lt;(ls stary) &lt;(ls nowy)</code></pre></div><div class="kod"><pre><code>2d1
+&lt; b.conf
+3a3
+&gt; d.conf</code></pre></div><p><code>b.conf</code> jest tylko po lewej, <code>d.conf</code> tylko po prawej. Zauważ też, że pliki zrobiłeś nawiasami klamrowymi z modułu pierwszego. Wszystko, czego się uczysz, zaczyna się składać w jedno. Jak IKEA, tylko instrukcja jest czytelna.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>Nasze skrypty robią się coraz dłuższe i te same kawałki zaczynają się powtarzać. W następnej lekcji zamkniemy je w funkcjach, czyli przyciskach w windzie: jeden przycisk, cała procedura. I wyjaśnimy wreszcie, czemu <code>return</code> nie zwraca tego, co myślisz.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-038.html" rel="prev">← 38. Bash umie liczyć (trochę)</a><a class="btn domyslny zolty" href="lekcja-040.html" rel="next">40. Funkcje →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>

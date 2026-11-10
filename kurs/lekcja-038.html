@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>38. Bash umie liczyć (trochę) — kurs Linux i Bash | Chmuroholik</title>
+<meta name="description" content="Lekcja 38 kursu Linux i Bash od zera do admina: Bash umie liczyć (trochę). kursant liczy w skrypcie przez $(( )) i (( )), wie, że Bash zna tylko liczby całkowite, używa bc do ułamków i losuje liczby przez RANDOM.">
+<meta property="og:title" content="38. Bash umie liczyć (trochę) — kurs Linux i Bash | Chmuroholik">
+<meta property="og:description" content="Lekcja 38 kursu Linux i Bash od zera do admina: Bash umie liczyć (trochę). kursant liczy w skrypcie przez $(( )) i (( )), wie, że Bash zna tylko liczby całkowite, używa bc do ułamków i losuje liczby przez RANDOM.">
+<meta property="og:image" content="../img/og.png">
+<link rel="icon" type="image/png" href="../img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="kurs.css">
+</head>
+<body data-strona="lekcja">
+<a class="pomin" href="#tresc">Przejdź do treści</a>
+<nav class="menu" aria-label="Menu">
+  <a class="logo" href="../index.html" aria-label="Chmuroholik — strona główna"><img src="../img/favicon.png" alt="" width="30" height="30"></a>
+  <div class="linki" id="linki">
+    <a href="../index.html">Kanał</a>
+    <a href="index.html">Kurs</a>
+    <a href="index.html#moduly">Moduły</a>
+    <a href="index.html#analogie">Analogie</a>
+  </div>
+  <button class="dzwiek" id="przel-muzyka" type="button" aria-pressed="false" title="Muzyka">♪</button>
+  <button class="dzwiek" id="przel-sfx" type="button" aria-pressed="true" title="Efekty dźwiękowe">SFX</button>
+  <span class="poziom" id="poziom" title="Twój poziom">LVL 1</span>
+  <span class="postep-menu" id="postep-menu" title="Ukończone lekcje">0/0</span>
+  <button class="burger" aria-expanded="false" aria-controls="linki">Menu</button>
+</nav>
+<div class="pasek-czytania" aria-hidden="true"><i id="pasek-czytania"></i></div>
+
+<div class="uklad-lekcji">
+  <aside class="boczny" aria-label="Lekcje modułu">
+    <div class="okno">
+      <div class="belka"><span>Moduł 3</span></div>
+      <div class="boczny-tytul"><a href="index.html#m03">Pisanie skryptów</a></div>
+      <ol class="lista-lekcji"><li><a href="lekcja-031.html" data-lekcja="31"><span class="znacznik"></span><span class="nr">31</span> Twój pierwszy skrypt</a></li><li><a href="lekcja-032.html" data-lekcja="32"><span class="znacznik"></span><span class="nr">32</span> Zmienne i cudzysłowy</a></li><li><a href="lekcja-033.html" data-lekcja="33"><span class="znacznik"></span><span class="nr">33</span> Skrypt, który przyjmuje polecenia</a></li><li><a href="lekcja-034.html" data-lekcja="34"><span class="znacznik"></span><span class="nr">34</span> Udało się czy nie?</a></li><li><a href="lekcja-035.html" data-lekcja="35"><span class="znacznik"></span><span class="nr">35</span> Jeśli… to…</a></li><li><a href="lekcja-036.html" data-lekcja="36"><span class="znacznik"></span><span class="nr">36</span> Wybór z menu</a></li><li><a href="lekcja-037.html" data-lekcja="37"><span class="znacznik"></span><span class="nr">37</span> Pętle</a></li><li><a href="lekcja-038.html" data-lekcja="38" aria-current="page" class="biezaca"><span class="znacznik"></span><span class="nr">38</span> Bash umie liczyć (trochę)</a></li><li><a href="lekcja-039.html" data-lekcja="39"><span class="znacznik"></span><span class="nr">39</span> Wynik komendy w zmiennej</a></li><li><a href="lekcja-040.html" data-lekcja="40"><span class="znacznik"></span><span class="nr">40</span> Funkcje</a></li></ol>
+    </div>
+  </aside>
+  <main id="tresc" class="okno duze lekcja" data-nr="38" data-modul="3" data-tematy="$(( )), (( )), let, liczby całkowite, bc, RANDOM">
+    <div class="belka"><span>Lekcja 38 z 117</span></div>
+    <article class="tresc-lekcji">
+      <p class="okruszki"><a href="index.html">Kurs</a> › <a href="index.html#m03">Moduł 3</a> › Lekcja 38</p>
+      <div class="plansza" id="plansza" aria-hidden="true"></div>
+      <h1>Bash umie liczyć (trochę)</h1>
+      <p class="meta"><span>⏱ ok. 11 min czytania</span><span>· moduł 3: Pisanie skryptów</span></p>
+      <p class="cel"><strong>Po tej lekcji:</strong> kursant liczy w skrypcie przez <code>$(( ))</code> i <code>(( ))</code>, wie, że Bash zna tylko liczby całkowite, używa <code>bc</code> do ułamków i losuje liczby przez <code>RANDOM</code>.</p>
+      <nav class="spis" aria-label="W tej lekcji"><strong>W tej lekcji</strong><ol><li><a href="#wstep">Wstęp</a></li><li><a href="#czyli-kalkulator-w-okienku">$(( )), czyli kalkulator w okienku</a></li><li><a href="#czyli-kalkulator-bez-dolara">(( )), czyli kalkulator bez dolara</a></li><li><a href="#let-czyli-starosc">let, czyli starość</a></li><li><a href="#tylko-liczby-calkowite">Tylko liczby całkowite</a></li><li><a href="#bc-czyli-kolega-z-dzialu-ksiegowosci">bc, czyli kolega z działu księgowości</a></li><li><a href="#random-czyli-kostka-do-gry">RANDOM, czyli kostka do gry</a></li><li><a href="#jak-to-dziala-pod-spodem">Jak to działa pod spodem</a></li><li><a href="#sciaga-flag">Ściąga flag</a></li><li><a href="#zadanie">Zadanie</a></li><li><a href="#co-dalej">Co dalej</a></li></ol></nav>
+      
+      <section><h2 id="wstep">Wstęp</h2><p class="ekran">terminal, wpisuję <code>echo $(( 7 / 2 ))</code>, wynik <code>3</code></p><p>Siedem podzielić na dwa. Każde dziecko w trzeciej klasie powie: trzy i pół. Bash mówi: trzy. Bez przecinka, bez przeprosin, bez mrugnięcia.</p><p>To nie jest błąd. To jest decyzja. Bash to powłoka, a nie kalkulator naukowy, i liczy tylko na liczbach całkowitych. Do tego, czego potrzebuje admin, czyli liczenia plików, prób, procentów zajętości dysku i sekund, w zupełności to wystarcza. A jak potrzebujesz ułamków, zawołasz kolegi z innego działu. Dziś poznasz obu.</p></section><section><h2 id="czyli-kalkulator-w-okienku">$(( )), czyli kalkulator w okienku</h2><p>Wyobraź sobie, że urzędnik w okienku ma pod ladą prosty kalkulator. Taki z bazaru, bez przecinka. Jeśli w podaniu napiszesz działanie w podwójnych nawiasach z dolarem, urzędnik je policzy i wpisze wynik w to miejsce.</p><div class="kod"><pre><code>echo $(( 2 + 3 * 4 ))
+echo $(( (2 + 3) * 4 ))
+echo $(( 7 / 2 ))
+echo $(( 7 % 2 ))
+echo $(( 2 ** 10 ))</code></pre></div><div class="kod"><pre><code>14
+20
+3
+1
+1024</code></pre></div><p>Kolejność działań jak w szkole: mnożenie przed dodawaniem, nawiasy najpierw. <code>/</code> to dzielenie bez reszty, czyli obcina wszystko po przecinku. <code>%</code> to reszta z dzielenia, czyli to, co zostało. <code>**</code> to potęga.</p><p>Ta reszta z dzielenia wygląda na ciekawostkę z lekcji matematyki, a jest jednym z najprzydatniejszych narzędzi. Liczba parzysta? <code>x % 2</code> daje zero. Co dziesiąty plik? <code>i % 10</code> równe zero. Rzut kostką? Zaraz zobaczysz.</p><p>W środku podwójnych nawiasów zmienne możesz pisać bez dolara:</p><div class="kod"><pre><code>a=10
+b=3
+echo $(( a * b ))</code></pre></div><div class="kod"><pre><code>30</code></pre></div><p>Z dolarem też zadziała, ale ShellCheck grzecznie zauważy, że jest zbędny. W kalkulatorze każde słowo i tak jest traktowane jak nazwa pudełka z liczbą.</p><p>I ważny drobiazg: całe <code>$(( ... ))</code> zamienia się na wynik. Możesz go wstawić gdziekolwiek, w <code>echo</code>, w przypisanie, w środek tekstu:</p><div class="kod"><pre><code>zajete=37
+calosc=120
+echo &quot;Zajęte: $(( zajete * 100 / calosc ))%&quot;</code></pre></div><div class="kod"><pre><code>Zajęte: 30%</code></pre></div></section><section><h2 id="czyli-kalkulator-bez-dolara">(( )), czyli kalkulator bez dolara</h2><p>Te same podwójne nawiasy, ale bez dolara z przodu, to nie jest „wstaw wynik”, tylko „zrób to działanie”. Służą do dwóch rzeczy.</p><p>Pierwsza: zmiana zmiennej w miejscu.</p><div class="kod"><pre><code>licznik=0
+(( licznik++ ))
+(( licznik += 5 ))
+echo &quot;$licznik&quot;</code></pre></div><div class="kod"><pre><code>6</code></pre></div><p><code>++</code> dodaje jeden, <code>--</code> odejmuje jeden, <code>+= 5</code> dodaje pięć. Jak klikacz, którym bramkarz w klubie liczy wchodzących.</p><p>Druga, ważniejsza: warunek. Pamiętasz bramkarza <code>[ &quot;$a&quot; -gt &quot;$b&quot; ]</code> z <code>-gt</code>, <code>-lt</code>, <code>-eq</code>? W podwójnych nawiasach możesz napisać to po ludzku:</p><div class="kod"><pre><code>if (( a &gt; b )); then
+    echo &quot;a większe&quot;
+fi</code></pre></div><p><code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code>, <code>==</code>, <code>!=</code>. Jak w szkole, a nie jak w szyfrze. Pod jednym warunkiem: to działa tylko dla liczb. Do porównywania tekstów dalej używasz <code>[ ]</code> albo <code>[[ ]]</code>.</p><p>Jak <code>(( ))</code> mówi „prawda” albo „fałsz”? Bardzo prosto: wynik zero to kciuk w dół, wynik inny niż zero to kciuk w górę.</p><div class="kod"><pre><code>(( 0 )); echo &quot;kod po ((0)): $?&quot;
+(( 5 )); echo &quot;kod po ((5)): $?&quot;</code></pre></div><div class="kod"><pre><code>kod po ((0)): 1
+kod po ((5)): 0</code></pre></div><p>Tak, to wygląda odwrotnie. W świecie kodów wyjścia zero to sukces, a w świecie matematyki zero to fałsz. <code>(( ))</code> tłumaczy jedno na drugie, jak tłumacz przysięgły na granicy dwóch krajów, w których kiwanie głową znaczy co innego.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>przez to <code>(( licznik++ ))</code> przy liczniku równym zero zwraca kod 1, bo <code>licznik++</code> najpierw oddaje starą wartość, czyli zero. W zwykłym skrypcie nic się nie dzieje, ale pod <code>set -e</code>, które poznamy w module o solidnych skryptach, skrypt się na tym zatrzyma. Bezpieczniej: <code>licznik=$(( licznik + 1 ))</code>.</p></aside></section><section><h2 id="let-czyli-starosc">let, czyli starość</h2><p>Zobaczysz też w starych skryptach taką postać:</p><div class="kod"><pre><code>let &quot;wynik = a + b&quot;
+echo &quot;$wynik&quot;</code></pre></div><div class="kod"><pre><code>13</code></pre></div><p><code>let</code> robi to samo co <code>(( ))</code>, tylko wygląda jak z innej epoki. ShellCheck nawet podpowiada: „Instead of let expr, prefer (( expr ))”. Rozpoznawaj, ale sam pisz <code>(( ))</code>. Jak z czekami w banku: wiesz, że istnieją, ale nie płacisz nimi za bułki.</p></section><section><h2 id="tylko-liczby-calkowite">Tylko liczby całkowite</h2><p>Spróbujmy ułamka:</p><div class="kod"><pre><code>echo $(( 1.5 + 1 ))</code></pre></div><div class="kod"><pre><code>bash: 1.5 + 1 : syntax error: invalid arithmetic operator (error token is &quot;.5 + 1 &quot;)</code></pre></div><p>Kalkulator z bazaru zobaczył kropkę i się obraził. Bash w ogóle nie zna ułamków. Ani w wyniku, ani na wejściu.</p><p>A jak dzielisz, kolejność ma znaczenie:</p><div class="kod"><pre><code>echo &quot;$(( zajete * 100 / calosc ))%&quot;
+echo &quot;$(( zajete / calosc * 100 ))%&quot;</code></pre></div><div class="kod"><pre><code>30%
+0%</code></pre></div><p>W drugiej linijce Bash najpierw policzył 37 przez 120, wyszło zero z kawałkiem, kawałek wyrzucił, i zero razy sto to zero. Dysk w połowie pełny, a skrypt mówi „0%, luzik”. Zasada: przy procentach najpierw mnóż, potem dziel. ShellCheck też to wyłapie.</p><p>I jeszcze dzielenie przez zero:</p><div class="kod"><pre><code>bash: 10 / 0 : division by 0 (error token is &quot;0 &quot;)</code></pre></div><p>Przynajmniej Bash mówi to wprost, zamiast wymyślać wynik.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>Bash liczy na liczbach o stałej szerokości i, jak mówi <code>man bash</code>, nie sprawdza przepełnienia. Na 64-bitowym Linuksie <code>$(( 9223372036854775807 + 1 ))</code> daje <code>-9223372036854775808</code>. Liczby zaczynające się od <code>0x</code> są szesnastkowe, od <code>0</code> ósemkowe, a <code>2#1010</code> to zapis w dwójkowym: <code>$(( 0x1F ))</code> to 31, <code>$(( 2#1010 ))</code> to 10.</p></aside></section><section><h2 id="bc-czyli-kolega-z-dzialu-ksiegowosci">bc, czyli kolega z działu księgowości</h2><p>Kiedy potrzebujesz przecinka, urzędnik wysyła pismo do księgowości. Księgowość nazywa się <code>bc</code>. To osobny program, kalkulator z własnym językiem, który liczy z dowolną dokładnością. Działanie podajesz mu rurą:</p><div class="kod"><pre><code>echo &#x27;7 / 2&#x27; | bc
+echo &#x27;scale=2; 7 / 2&#x27; | bc
+echo &#x27;1.5 + 1&#x27; | bc
+echo &#x27;10 / 3&#x27; | bc -l
+echo &#x27;2 ^ 100&#x27; | bc</code></pre></div><div class="kod"><pre><code>3
+3.50
+2.5
+3.33333333333333333333
+1267650600228229401496703205376</code></pre></div><p>Niespodzianka w pierwszej linijce: <code>bc</code> też domyślnie dzieli bez ułamków. <code>scale=2</code> mówi „dwa miejsca po przecinku”. <code>-l</code> włącza bibliotekę matematyczną i od razu ustawia dużo miejsc po przecinku. A <code>2 ^ 100</code> pokazuje, że <code>bc</code> nie ma limitu wielkości liczb. Bash przy takiej liczbie dawno by się przekręcił jak licznik w starym aucie.</p><p>Uwaga na potęgę: w Bashu <code>**</code>, w <code>bc</code> daszek <code>^</code>. Dwa działy, dwa formularze.</p><p>Na naszym procencie dysku:</p><div class="kod"><pre><code>echo &quot;scale=1; 37 * 100 / 120&quot; | bc</code></pre></div><div class="kod"><pre><code>30.8</code></pre></div><p>[Ubuntu] [RHEL] <code>bc</code> jest w pakiecie o tej samej nazwie, ale na minimalnej instalacji serwera może go nie być. Sprawdzisz przez <code>command -v bc</code>. Brak? <code>sudo apt install bc</code> albo <code>sudo dnf install bc</code>.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p><code>bc</code> przed kropką nie pisze zera: <code>0.1 + 0.2</code> daje <code>.3</code>. Za to daje dokładnie <code>.3</code>, a nie <code>0.30000000000000004</code> jak w wielu językach programowania, bo liczy dziesiętnie, a nie dwójkowo.</p></aside></section><section><h2 id="random-czyli-kostka-do-gry">RANDOM, czyli kostka do gry</h2><p>Bash ma wbudowaną maszynę losującą. To zmienna <code>RANDOM</code>, która przy każdym odczytaniu daje inną liczbę od 0 do 32767.</p><div class="kod"><pre><code>echo &quot;$RANDOM $RANDOM&quot;</code></pre></div><div class="kod"><pre><code>16518 17388</code></pre></div><p>Sama w sobie jest mało przydatna, bo kto potrzebuje liczby od zera do trzydziestu dwóch tysięcy? Ale właśnie tu wraca reszta z dzielenia. <code>RANDOM % 6</code> daje resztę z dzielenia przez sześć, czyli coś od 0 do 5. Dodaj jeden i masz kostkę:</p><div class="kod"><pre><code>#!/bin/bash
+# kostka.sh — rzuca kostką kilka razy i liczy średnią
+
+rzuty=4
+suma=0
+
+for (( i = 1; i &lt;= rzuty; i++ )); do
+    oczka=$(( RANDOM % 6 + 1 ))
+    echo &quot;Rzut $i: $oczka&quot;
+    (( suma += oczka ))
+done
+
+echo &quot;Suma: $suma, średnio: $(( suma / rzuty ))&quot;</code></pre></div><div class="kod"><pre><code>Rzut 1: 4
+Rzut 2: 3
+Rzut 3: 2
+Rzut 4: 6
+Suma: 15, średnio: 3</code></pre></div><p>Średnia to naprawdę 3,75, ale Bash obciął do trzech. Wiesz już, dlaczego.</p><p>Po co adminowi losowanie? Żeby 300 serwerów nie uderzyło po aktualizacje w tę samą sekundę. Dajesz w skrypcie <code>sleep $(( RANDOM % 60 ))</code> i każdy serwer czeka losowo do minuty. Jak w sklepie, kiedy otwierają nową kasę i nie wszyscy rzucają się naraz. Przynajmniej w teorii.</p><p>Uwaga, bardzo ważna: <code>RANDOM</code> nie nadaje się do haseł ani niczego, co ma być tajne. To kostka do gry, a nie sejf. Do haseł służą narzędzia, które poznamy w module o bezpieczeństwie.</p><aside class="ramka dociekliwi"><div class="ramka-tytul">Dla dociekliwych</div><p>nowsze wersje Basha mają też <code>SRANDOM</code>, 32-bitową liczbę losową, której nie da się zasiać. <code>RANDOM</code> można zasiać przypisaniem, np. <code>RANDOM=42</code>, i wtedy daje zawsze ten sam ciąg, co przydaje się przy testach. <code>RANDOM % 6</code> nie jest idealnie równy, bo 32768 nie dzieli się przez 6, ale do kostki wystarczy.</p></aside></section><section><h2 id="jak-to-dziala-pod-spodem">Jak to działa pod spodem</h2><p><code>$(( ))</code>, <code>(( ))</code> i <code>let</code> to wszystko robota samego Basha. Żadnego osobnego programu, cały kalkulator jest wbudowany w urzędnika. Działania i ich kolejność są takie same jak w języku C, bo Bash został napisany w C i po prostu pożyczył zasady.</p><p>Kiedy Bash widzi <code>$(( zajete * 100 / calosc ))</code>, robi to w kolejności: podstawia wartości zmiennych, zamienia tekst na liczby całkowite, liczy i wstawia wynik z powrotem jako tekst. Bo w Bashu wszystko jest tekstem, nawet liczby. <code>zajete=37</code> to tak naprawdę pudełko z napisem „37”, które kalkulator na chwilę traktuje jak liczbę.</p><p>A co, jeśli w pudełku nie ma liczby?</p><div class="kod"><pre><code>x=abc
+echo $(( x + 1 ))</code></pre></div><div class="kod"><pre><code>1</code></pre></div><p>Kalkulator potraktował <code>abc</code> jak nazwę kolejnej zmiennej, nie znalazł jej i przyjął zero. Pusta zmienna też daje zero. Wygodne i zdradliwe jednocześnie: literówka w nazwie zmiennej nie daje błędu, tylko zero. Dlatego dane od użytkownika warto najpierw sprawdzić, czy to w ogóle liczba.</p><p><code>bc</code> z kolei to osobny program, który trzeba uruchomić przez rurę. Czyli nowy proces, nowy kucharz w kuchni. Przy jednym działaniu nie ma to znaczenia, ale w pętli na milion okrążeń różnica będzie wyraźna. Liczby całkowite licz w Bashu, ułamki dopiero w <code>bc</code>.</p></section><section><h2 id="sciaga-flag">Ściąga flag</h2><div class="tabela"><table><tr><th>Komenda</th><th>Flaga / element</th><th>Co robi</th></tr><tr><td><code>$(( ))</code></td><td><code>+ - * /</code></td><td>dodawanie, odejmowanie, mnożenie, dzielenie bez ułamka</td></tr><tr><td><code>$(( ))</code></td><td><code>%</code></td><td>reszta z dzielenia</td></tr><tr><td><code>$(( ))</code></td><td><code>**</code></td><td>potęga</td></tr><tr><td><code>(( ))</code></td><td><code>x++</code> / <code>x--</code></td><td>dodaj / odejmij jeden</td></tr><tr><td><code>(( ))</code></td><td><code>x += 5</code></td><td>dodaj 5 do zmiennej</td></tr><tr><td><code>(( ))</code></td><td><code>&gt; &lt; &gt;= &lt;= == !=</code></td><td>porównanie liczb w warunku</td></tr><tr><td><code>let</code></td><td><code>let &quot;x = 1 + 2&quot;</code></td><td>stara postać <code>(( ))</code></td></tr><tr><td><code>bc</code></td><td><code>scale=N</code></td><td>N miejsc po przecinku</td></tr><tr><td><code>bc</code></td><td><code>-l</code></td><td>biblioteka matematyczna, dużo miejsc po przecinku</td></tr><tr><td><code>bc</code></td><td><code>^</code></td><td>potęga w <code>bc</code></td></tr><tr><td><code>RANDOM</code></td><td><code>$(( RANDOM % N + 1 ))</code></td><td>losowa liczba od 1 do N</td></tr><tr><td><code>RANDOM</code></td><td><code>RANDOM=42</code></td><td>zasianie, powtarzalny ciąg</td></tr></table></div></section><section class="ramka blad"><h2><span class="ikona-r">⚠</span> Typowy błąd</h2><p>Skrypt bierze godzinę albo miesiąc z daty i coś z nią liczy. Działał świetnie przez całe lato. A pewnego dnia o ósmej rano:</p><div class="kod"><pre><code>#!/bin/bash
+godzina=08
+echo $(( godzina + 1 ))</code></pre></div><div class="kod"><pre><code>t3.sh: line 3: 08: value too great for base (error token is &quot;08&quot;)</code></pre></div><p>Dlaczego? Bo liczba z zerem z przodu to dla Basha zapis ósemkowy. A w systemie ósemkowym są tylko cyfry od 0 do 7. Ósemka i dziewiątka nie istnieją. <code>07</code> przejdzie, <code>08</code> i <code>09</code> wywalą skrypt. Dlatego ten błąd wychodzi w sierpniu, we wrześniu i o ósmej i dziewiątej rano, czyli dokładnie wtedy, kiedy nikt się go nie spodziewa i wszyscy są na urlopie albo w drodze do pracy.</p><p>Naprawa: powiedz kalkulatorowi wprost, że to liczba dziesiętna.</p><div class="kod"><pre><code>godzina=08
+echo $(( 10#$godzina + 1 ))</code></pre></div><div class="kod"><pre><code>9</code></pre></div><p><code>10#</code> znaczy „to jest w systemie dziesiętnym”. Tu dolar przed zmienną jest potrzebny, bo <code>10#</code> musi stać tuż przed cyframi.</p></section>
+      <section class="ramka zadanie" id="zadanie"><h2><span class="ikona-r">✎</span> Zadanie</h2><p>Napisz grę <code>zgadnij.sh</code>. Skrypt losuje liczbę od 1 do 100 i w pętli pyta gracza o liczbę. Po każdej próbie mówi „Więcej” albo „Mniej”. Po trafieniu wypisuje, za którym razem się udało, i kończy grę. Jeśli ktoś wpisze coś, co nie jest liczbą, skrypt ma tego nie liczyć jako próby i zapytać jeszcze raz.</p><p>Podpowiedź: <code>RANDOM</code>, <code>while true</code>, <code>read</code>, <code>(( ))</code> i <code>case</code> z wzorcem na „coś, co nie jest cyfrą”.</p><details class="rozwiazanie"><summary>Pokaż rozwiązanie</summary><div><div class="kod"><pre><code>#!/bin/bash
+# zgadnij.sh — zgadnij liczbę od 1 do 100
+
+sekret=$(( RANDOM % 100 + 1 ))
+proby=0
+
+while true; do
+    read -r -p &quot;Twoja liczba: &quot; liczba
+    case &quot;$liczba&quot; in
+        &quot;&quot;|*[!0-9]*)
+            echo &quot;To nie jest liczba, spróbuj jeszcze raz&quot;
+            continue
+            ;;
+    esac
+    proby=$(( proby + 1 ))
+    if (( liczba &lt; sekret )); then
+        echo &quot;Więcej&quot;
+    elif (( liczba &gt; sekret )); then
+        echo &quot;Mniej&quot;
+    else
+        echo &quot;Trafione za $proby razem!&quot;
+        break
+    fi
+done</code></pre></div><div class="kod"><pre><code>Twoja liczba: abc
+To nie jest liczba, spróbuj jeszcze raz
+Twoja liczba: 50
+Mniej
+Twoja liczba: 25
+Więcej
+Twoja liczba: 37
+Trafione za 3 razem!</code></pre></div><p>Najciekawszy jest wzorzec <code>*[!0-9]*</code>. Wykrzyknik w nawiasach kwadratowych znaczy „znak, który nie jest cyfrą”. Czyli: jeśli gdziekolwiek w tekście jest coś innego niż cyfra, to nie liczba. Do tego <code>&quot;&quot;</code> dla pustego Entera. I zauważ <code>continue</code> przed liczeniem próby, więc literówki nie psują wyniku.</p><p>A strategia na wygraną? Zawsze strzelaj w połowę tego, co zostało: 50, 25, 37 i tak dalej. Przy stu liczbach zawsze trafisz w maksymalnie siedmiu próbach. To się nazywa wyszukiwanie binarne i jest pytaniem na połowie rozmów rekrutacyjnych. Proszę bardzo, właśnie się przygotowałeś, grając w grę.</p></div></details></section><section class="co-dalej"><h2 id="co-dalej">Co dalej</h2><p>W <code>kostka.sh</code> wynik działania wpadający do zmiennej był prosty, bo liczył sam Bash. A co, jeśli chcesz w zmiennej zapisać wynik prawdziwej komendy, na przykład dzisiejszą datę albo liczbę zalogowanych użytkowników? O tym następna lekcja: wynik komendy w zmiennej.</p></section>
+      <label class="ukonczone"><input type="checkbox" id="ukonczone"> <span>Lekcja ukończona</span></label>
+      <nav class="nawigacja" aria-label="Poprzednia i następna lekcja"><a class="btn" href="lekcja-037.html" rel="prev">← 37. Pętle</a><a class="btn domyslny zolty" href="lekcja-039.html" rel="next">39. Wynik komendy w zmiennej →</a></nav>
+    </article>
+  </main>
+</div>
+<footer><div class="kontener">© Chmuroholik · kurs „Linux i Bash od zera do admina” · <a href="../index.html">wróć na stronę kanału</a></div></footer>
+<script src="kurs.js"></script>
+<script src="kurs-media.js"></script>
+</body>
+</html>
