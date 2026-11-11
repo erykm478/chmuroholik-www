@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /narzedzia/
+
+Sitemap: https://chmuroholik.com/sitemap.xml

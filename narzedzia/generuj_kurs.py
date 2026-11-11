@@ -15,7 +15,7 @@ Scenariusze odcinków zamieniamy na lekcje do czytania:
 - język nagrania („odcinek”, „widz”) → język kursu („lekcja”, „Ty”).
 użycie: python3 narzedzia/generuj_kurs.py <katalog-xml>
 """
-import glob, html, json, os, re, sys
+import subprocess, glob, html, json, os, re, sys
 import xml.etree.ElementTree as ET
 
 ZRODLO = sys.argv[1]
@@ -432,7 +432,10 @@ NAZWY_TAB = ['m%02d' % i for i in range(14)]
 IKONY = ['chmura', 'komputer', 'zebatka', 'ksiazka', 'tabela', 'tarcza', 'dysk', 'paczka', 'globus', 'klodka', 'serwer', 'robot', 'krawat', 'puchar']
 
 
-def strona(tytul, opis, tresc, kanon, glebokosc=''):
+ADRES = 'https://chmuroholik.com'
+
+
+def strona(tytul, opis, tresc, kanon, glebokosc='', plik=''):
     return f'''<!doctype html>
 <html lang="pl">
 <head>
@@ -442,7 +445,10 @@ def strona(tytul, opis, tresc, kanon, glebokosc=''):
 <meta name="description" content="{html.escape(opis)}">
 <meta property="og:title" content="{html.escape(tytul)}">
 <meta property="og:description" content="{html.escape(opis)}">
-<meta property="og:image" content="../img/og.png">
+<link rel="canonical" href="{ADRES}/kurs/{plik}">
+<meta property="og:url" content="{ADRES}/kurs/{plik}">
+<meta property="og:type" content="article">
+<meta property="og:image" content="{ADRES}/img/og.png">
 <link rel="icon" type="image/png" href="../img/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -553,7 +559,7 @@ def lekcja_html(l, mod_nr, mod, wszystkie, idx):
   </main>
 </div>'''
     opis = f'Lekcja {l["nr"]} kursu Linux i Bash od zera do admina: {plain_txt(l["tytul"])}. {plain_txt(l["cel"])}'
-    return strona(f'{l["nr"]}. {l["tytul"]} — kurs Linux i Bash | Chmuroholik', opis[:300], tresc, 'lekcja')
+    return strona(f'{l["nr"]}. {l["tytul"]} — kurs Linux i Bash | Chmuroholik', opis[:300], tresc, 'lekcja', plik=slug(l['nr']))
 
 
 def krotki(t):
@@ -635,7 +641,7 @@ def indeks_html(plan, moduly, wszystkie):
   <div class="okno pojaw"><div class="belka"><span>Słowniczek obrazkowy</span></div><div class="tresc proza">{plan['analogie']}</div></div>
 </section>
 </main>'''
-    return strona('Kurs Linux i Bash od zera do admina | Chmuroholik', f'Darmowy kurs po polsku: {len(wszystkie)} lekcji od pierwszego otwarcia terminala do pracy administratora serwerów Linux. Bash, skrypty, sieć, bezpieczeństwo, Ansible i przygotowanie do rozmowy.', tresc, 'kurs')
+    return strona('Kurs Linux i Bash od zera do admina | Chmuroholik', f'Darmowy kurs po polsku: {len(wszystkie)} lekcji od pierwszego otwarcia terminala do pracy administratora serwerów Linux. Bash, skrypty, sieć, bezpieczeństwo, Ansible i przygotowanie do rozmowy.', tresc, 'kurs', plik='')
 
 
 def tematy(p, nr):
@@ -672,3 +678,5 @@ if __name__ == '__main__':
     bez_roz = [w['l']['nr'] for w in wszystkie if any(s['tytul'] == 'Zadanie' for s in w['l']['sekcje']) and not w['l'].get('rozwiazanie')]
     print('bez zadania:', bez_zad)
     print('zadanie bez rozwiązania:', bez_roz)
+    # mapa strony dla Google (sitemap.xml + robots.txt)
+    subprocess.run([sys.executable, os.path.join(os.path.dirname(os.path.abspath(__file__)), 'mapa_strony.py')])
