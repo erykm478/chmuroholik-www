@@ -24,10 +24,18 @@ UA = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit
 NS = {'a': 'http://www.w3.org/2005/Atom', 'yt': 'http://www.youtube.com/xml/schemas/2015', 'media': 'http://search.yahoo.com/mrss/'}
 
 
-def pobierz(url):
-    req = urllib.request.Request(url, headers=UA)
-    with urllib.request.urlopen(req, timeout=30) as r:
-        return r.read().decode('utf-8', 'replace')
+def pobierz(url, prob=4):
+    """YouTube czasem chwilowo zwraca 404/429/5xx (zwłaszcza dla serwerów GitHuba), więc ponawiamy."""
+    ostatni = None
+    for i in range(prob):
+        try:
+            req = urllib.request.Request(url, headers=UA)
+            with urllib.request.urlopen(req, timeout=30) as r:
+                return r.read().decode('utf-8', 'replace')
+        except Exception as e:
+            ostatni = e
+            time.sleep(5 * (i + 1))
+    raise ostatni
 
 
 def initial_data(html):
@@ -145,8 +153,14 @@ def main():
         except Exception:
             stare = {}
     filmy = {k: dict(v) for k, v in stare.items()}
-    z_rss(filmy)
-    z_kanalu(filmy)
+    ok = 0
+    for zrodlo in (z_rss, z_kanalu):
+        try:
+            zrodlo(filmy); ok += 1
+        except Exception as e:
+            print(f'uwaga: {zrodlo.__name__} nie zadziałało ({e}), próbuję dalej', file=sys.stderr)
+    if not ok or not filmy:
+        print('YouTube nie odpowiada, zostawiam listę bez zmian'); return
     for f in filmy.values():
         if not f.get('data') or not f.get('opis') or (f.get('typ') == 'film' and not f.get('dlugosc')):
             uzupelnij(f)
