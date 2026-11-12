@@ -1,5 +1,5 @@
 {
- "aktualizacja": "2026-11-11T22:45:00+00:00",
+ "aktualizacja": "2026-11-12T03:52:45+00:00",
  "kanal": {
   "id": "UC_JbBSEP0ljATQ0DWmCxADw",
   "url": "https://www.youtube.com/@chmuroholik",
@@ -22,7 +22,7 @@
    "tytul": "Linux i Halloween. Przypadek? 🎃",
    "typ": "short",
    "data": "2026-11-10T15:30:34+00:00",
-   "wyswietlenia": 920,
+   "wyswietlenia": 961,
    "tytul_krotki": "Linux i Halloween. Przypadek? 🎃",
    "seria": null,
    "zajawka": "Pierwsza publiczna wersja Red Hat Linux wyszła w Halloween 1994 roku. Cztery lata później, też w okolicach Halloween, wyciekają wewnętrzne notatki Microsoftu o tym, jak walczyć z Linuxem: „dokumenty Halloweenowe”. A w 1999 roku Red Hat wchodzi na giełdę i jego akcje w jeden dzień",
@@ -33,7 +33,7 @@
    "tytul": "To nie Linux, tylko GNU/Linux. Kto ma rację?",
    "typ": "short",
    "data": "2026-11-10T14:30:13+00:00",
-   "wyswietlenia": 321,
+   "wyswietlenia": 326,
    "tytul_krotki": "To nie Linux, tylko GNU/Linux. Kto ma rację?",
    "seria": null,
    "zajawka": "tallman miał wolny samochód bez silnika, Linus miał silnik. Gdy silnik dostał tę samą licencję GPL, można było wsadzić jedno w drugie i jechać. Dlatego Stallman do dziś poprawia każdego: to nie Linux, tylko GNU/Linux. Technicznie ma sporo racji, ale ludzie wolą krótkie nazwy: mów",
