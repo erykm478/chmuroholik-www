@@ -4,7 +4,7 @@
 name: Aktualizuj filmy z YouTube
 on:
   schedule:
-    - cron: '17 * * * *'
+    - cron: '*/15 * * * *'  # GitHub i tak opóźnia/pomija harmonogramy, więc pytamy często
   workflow_dispatch:
 permissions:
   contents: write

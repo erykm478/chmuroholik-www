@@ -801,8 +801,8 @@ fetch('dane/filmy.json',{cache:'no-cache'}).then(r=>{ if(!r.ok) throw 0; return 
   document.getElementById('licz-shorty').textContent=shorty.length;
   document.getElementById('licz-filmy-opis').textContent=odm(filmy.length,'odcinek','odcinki','odcinków');
   document.getElementById('licz-shorty-opis').textContent=odm(shorty.length,'short','shorty','shortów');
-  // najnowszy film w oknie powitalnym
-  const nowy=dane.filmy[0];
+  // najnowszy odcinek (długi film, nie short) w oknie powitalnym
+  const nowy=filmy[0];
   if(nowy){ const a=document.getElementById('nowosc'); a.hidden=false; a.href=urlFilmu(nowy); document.getElementById('nowosc-tytul').textContent=nowy.tytul_krotki; }
   // Finder z odcinkami: wszystkie długie filmy + ikona kursu
   ikony.innerHTML='';
