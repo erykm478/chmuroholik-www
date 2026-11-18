@@ -1,5 +1,5 @@
 {
- "aktualizacja": "2026-11-18T08:43:09+00:00",
+ "aktualizacja": "2026-11-18T17:34:35+00:00",
  "kanal": {
   "id": "UC_JbBSEP0ljATQ0DWmCxADw",
   "url": "https://www.youtube.com/@chmuroholik",
@@ -11,7 +11,7 @@
    "tytul": "Ubuntu, Fedora, Arch… Czemu jest setki Linuxów i który wybrać?",
    "typ": "film",
    "data": "2026-11-18T08:00:34+00:00",
-   "wyswietlenia": 1,
+   "wyswietlenia": 13,
    "tytul_krotki": "Ubuntu, Fedora, Arch… Czemu jest setki Linuxów i który wybrać?",
    "seria": "linux",
    "zajawka": "Przesiadasz się z Windowsa na Linuxa i pierwsze, co widzisz: nie ma dysku C. Zaglądamy pod maskę i pokazuję 5 rzeczy, które działają tu zupełnie inaczej. 🐧",
@@ -20,11 +20,11 @@
   },
   {
    "id": "v7t-SM1M45s",
-   "tytul": "Rok Linuxa nadszedł dawno. Nikt tego nie zauważył",
+   "tytul": "Używasz Linuxa codziennie. Nawet o tym nie wiesz",
    "typ": "film",
    "data": "2026-11-16T08:00:40+00:00",
    "wyswietlenia": 24,
-   "tytul_krotki": "Rok Linuxa nadszedł dawno. Nikt tego nie zauważył",
+   "tytul_krotki": "Używasz Linuxa codziennie. Nawet o tym nie wiesz",
    "seria": "linux",
    "zajawka": "Od lat ludzie pytają, kiedy nadejdzie rok Linuxa na komputerach. A on nadszedł dawno, tylko nie na biurku, a w kieszeni, w serwerowniach, w chmurze, a nawet na Marsie. 🐧",
    "czesc": 6,
@@ -98,16 +98,16 @@
   },
   {
    "id": "WH5sW4iJkI4",
-   "tytul": "Microsoft nazwał Linuxa rakiem. 13 lat później go pokochał",
+   "tytul": "Microsoft walczył z Linuxem latami. I przegrał",
    "typ": "film",
    "data": "2026-11-12T10:00:24+00:00",
-   "wyswietlenia": 109,
+   "wyswietlenia": 111,
    "dlugosc": 391,
-   "tytul_krotki": "Microsoft nazwał Linuxa rakiem. 13 lat później go pokochał",
+   "tytul_krotki": "Microsoft walczył z Linuxem latami. I przegrał",
    "seria": "linux",
-   "zajawka": "Wojna Microsoftu z Linuxem: od „Linux to rak” w 2001 roku do „Microsoft ♥ Linux” w 2014. Po drodze Linux po cichu wygrał. 🐧",
+   "zajawka": "Microsoft przez lata walczył z Linuxem. Nazwał go „rakiem”, straszył prawnikami i liczył, że darmowy system zniknie. Dziś ponad połowa jego własnej chmury działa na Linuxie. Jak to się stało? 🐧",
    "czesc": 5,
-   "opis": "Wojna Microsoftu z Linuxem: od „Linux to rak” w 2001 roku do „Microsoft ♥ Linux” w 2014. Po drodze Linux po cichu wygrał. 🐧\n\nRozdziały:\n0:00 Intro\n0:09 Początek 1992: silnik jest, gotowych aut brak\n0:19 Linuxa nie da się po prostu zainstalować\n0:37 Dystrybucje: Slackware i Debian\n0:59 Deb + Ian, czyli skąd nazwa Debian\n1:17 Linux 1.0\n1:32 Red Hat i Halloween 1994\n1:51 Jak zarabiać na czymś, co jest darmowe?\n2:13 Tux: pingwin, który ugryzł Linusa\n2:39 Afera ze znakiem towarowym „Linux”\n2:56 Microsoft się martwi: dokumenty Halloweenowe\n3:36 Red Hat na giełdzie\n3:55 IBM: miliard dolarów na Linuxa\n4:08 Steve Ballmer: „Linux to rak”\n4:44 SCO kontra IBM\n5:23 Zwrot akcji: Microsoft ♥ Linux\n5:42 Bo chmura: Azure, WSL i 34 miliardy za Red Hata\n6:09 Linux po cichu wygrywa wojnę"
+   "opis": "Microsoft przez lata walczył z Linuxem. Nazwał go „rakiem”, straszył prawnikami i liczył, że darmowy system zniknie. Dziś ponad połowa jego własnej chmury działa na Linuxie. Jak to się stało? 🐧\n\nTo historia Linuxa od 1992 roku do dziś: pierwsze dystrybucje, Red Hat, pingwin Tux, „dokumenty Halloweenowe”, słynne „Linux to rak” Steve'a Ballmera i zwrot akcji, którego nikt się nie spodziewał.\n\nRozdziały:\n0:00 1992: silnik jest, gotowych aut brak\n0:19 Linuxa nie da się po prostu zainstalować\n0:37 Dystrybucje: Slackware i Debian\n0:59 Deb + Ian, czyli skąd nazwa Debian\n1:17 Linux 1.0\n1:32 Red Hat i Halloween 1994\n1:51 Jak zarabiać na czymś, co jest darmowe?\n2:13 Tux: pingwin, który ugryzł Linusa\n2:39 Afera ze znakiem towarowym „Linux”\n2:56 Microsoft się martwi: dokumenty Halloweenowe\n3:36 Red Hat na giełdzie\n3:55 IBM: miliard dolarów na Linuxa\n4:08 Steve Ballmer: „Linux to rak”\n4:44 SCO kontra IBM\n5:23 Zwrot akcji: Microsoft ♥ Linux\n5:42 Bo chmura: Azure, WSL, a IBM kupuje Red Hata za 34 mld $\n6:09 Linux po cichu wygrywa wojnę\n\n🌐 chmuroholik.com\n\n#linux #microsoft #historiainformatyki"
   },
   {
    "id": "Hsd-rKDHu6g",
@@ -136,7 +136,7 @@
    "tytul": "Linux i Halloween. Przypadek? 🎃",
    "typ": "short",
    "data": "2026-11-10T15:30:34+00:00",
-   "wyswietlenia": 999,
+   "wyswietlenia": 1000,
    "tytul_krotki": "Linux i Halloween. Przypadek? 🎃",
    "seria": null,
    "zajawka": "Pierwsza publiczna wersja Red Hat Linux wyszła w Halloween 1994 roku. Cztery lata później, też w okolicach Halloween, wyciekają wewnętrzne notatki Microsoftu o tym, jak walczyć z Linuxem: „dokumenty Halloweenowe”. A w 1999 roku Red Hat wchodzi na giełdę i jego akcje w jeden dzień",
