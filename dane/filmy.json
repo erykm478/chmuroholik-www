@@ -1,5 +1,5 @@
 {
- "aktualizacja": "2026-11-18T01:25:24+00:00",
+ "aktualizacja": "2026-11-18T08:43:09+00:00",
  "kanal": {
   "id": "UC_JbBSEP0ljATQ0DWmCxADw",
   "url": "https://www.youtube.com/@chmuroholik",
@@ -7,11 +7,23 @@
  },
  "filmy": [
   {
+   "id": "369tSPYWw8o",
+   "tytul": "Ubuntu, Fedora, Arch… Czemu jest setki Linuxów i który wybrać?",
+   "typ": "film",
+   "data": "2026-11-18T08:00:34+00:00",
+   "wyswietlenia": 1,
+   "tytul_krotki": "Ubuntu, Fedora, Arch… Czemu jest setki Linuxów i który wybrać?",
+   "seria": "linux",
+   "zajawka": "Przesiadasz się z Windowsa na Linuxa i pierwsze, co widzisz: nie ma dysku C. Zaglądamy pod maskę i pokazuję 5 rzeczy, które działają tu zupełnie inaczej. 🐧",
+   "czesc": 7,
+   "opis": "Przesiadasz się z Windowsa na Linuxa i pierwsze, co widzisz: nie ma dysku C. Zaglądamy pod maskę i pokazuję 5 rzeczy, które działają tu zupełnie inaczej. 🐧\n\nRozdziały: \n0:00 Intro \n0:09 5 rzeczy pod maską \n0:15 1. Nie ma dysku C \n0:38 Jeden dom \n0:48 2. Terminal \n0:59 Hakerzy z filmów \n1:13 Palcem czy słowami? \n1:35 3. Root \n1:45 Root jak administrator bloku \n2:00 Hasło i wirusy \n2:21 4. Instalowanie programów \n2:32 Sklep z aplikacjami \n2:54 5. Wygląd: wymienne pulpity \n3:12 GNOME i KDE Plasma, ten sam silnik \n3:32 Setki Linuxów \n3:47 Jeden silnik, setki marek \n4:06 Rodzina Debian \n4:51 Rodzina Red Hat \n5:19 Arch \n5:45 Reszta świata \n6:16 Którą wybrać? \n6:33 To nie ślub"
+  },
+  {
    "id": "v7t-SM1M45s",
    "tytul": "Rok Linuxa nadszedł dawno. Nikt tego nie zauważył",
    "typ": "film",
    "data": "2026-11-16T08:00:40+00:00",
-   "wyswietlenia": 23,
+   "wyswietlenia": 24,
    "tytul_krotki": "Rok Linuxa nadszedł dawno. Nikt tego nie zauważył",
    "seria": "linux",
    "zajawka": "Od lat ludzie pytają, kiedy nadejdzie rok Linuxa na komputerach. A on nadszedł dawno, tylko nie na biurku, a w kieszeni, w serwerowniach, w chmurze, a nawet na Marsie. 🐧",
@@ -34,7 +46,7 @@
    "tytul": "Ten breloczek sprawia, że hakerzy przestają mieć sens",
    "typ": "short",
    "data": "2026-11-13T11:45:08+00:00",
-   "wyswietlenia": 195,
+   "wyswietlenia": 193,
    "tytul_krotki": "Ten breloczek sprawia, że hakerzy przestają mieć sens",
    "seria": null,
    "zajawka": "Klucz sprzętowy to breloczek, przez który phishing przestaje działać. Google dał go ponad 85 tysiącom pracowników i od tamtej pory nikomu nie przejęto konta.",
@@ -254,7 +266,7 @@
    "tytul": "Root jak brytyjski monarcha #AWS #Organizations #IAM #root #cloud #IT #devops #chmura",
    "typ": "short",
    "data": "2026-11-04T10:15:24+00:00",
-   "wyswietlenia": 203,
+   "wyswietlenia": 204,
    "tytul_krotki": "Root jak brytyjski monarcha",
    "seria": null,
    "zajawka": "W dużych firmach z AWS Organizations roota na kontach podrzędnych można w ogóle zabrać 👑❌\nWtedy root jest jak brytyjski monarcha: niby ma władzę, ale w sumie niczego nie podpisuje 😅",
