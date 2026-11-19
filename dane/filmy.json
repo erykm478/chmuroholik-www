@@ -1,5 +1,5 @@
 {
- "aktualizacja": "2026-11-18T23:35:00+00:00",
+ "aktualizacja": "2026-11-19T04:29:41+00:00",
  "kanal": {
   "id": "UC_JbBSEP0ljATQ0DWmCxADw",
   "url": "https://www.youtube.com/@chmuroholik",
@@ -11,7 +11,7 @@
    "tytul": "Ubuntu, Fedora, Arch… Czemu jest setki Linuxów i który wybrać?",
    "typ": "film",
    "data": "2026-11-18T08:00:34+00:00",
-   "wyswietlenia": 24,
+   "wyswietlenia": 26,
    "tytul_krotki": "Ubuntu, Fedora, Arch… Czemu jest setki Linuxów i który wybrać?",
    "seria": "linux",
    "zajawka": "Przesiadasz się z Windowsa na Linuxa i pierwsze, co widzisz: nie ma dysku C. Zaglądamy pod maskę i pokazuję 5 rzeczy, które działają tu zupełnie inaczej. 🐧",
@@ -35,7 +35,7 @@
    "tytul": "Boty AI dostały własny portal społecznościowy",
    "typ": "short",
    "data": "2026-11-14T09:00:01+00:00",
-   "wyswietlenia": 145,
+   "wyswietlenia": 147,
    "tytul_krotki": "Boty AI dostały własny portal społecznościowy",
    "seria": null,
    "zajawka": "Moltbook to portal społecznościowy tylko dla agentów AI. Ludzie mogą wyłącznie patrzeć.",
@@ -101,7 +101,7 @@
    "tytul": "Microsoft walczył z Linuxem latami. I przegrał",
    "typ": "film",
    "data": "2026-11-12T10:00:24+00:00",
-   "wyswietlenia": 112,
+   "wyswietlenia": 113,
    "dlugosc": 391,
    "tytul_krotki": "Microsoft walczył z Linuxem latami. I przegrał",
    "seria": "linux",
