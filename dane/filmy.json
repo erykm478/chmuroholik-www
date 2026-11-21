@@ -1,5 +1,5 @@
 {
- "aktualizacja": "2026-11-21T07:30:08+00:00",
+ "aktualizacja": "2026-11-21T15:31:46+00:00",
  "kanal": {
   "id": "UC_JbBSEP0ljATQ0DWmCxADw",
   "url": "https://www.youtube.com/@chmuroholik",
@@ -7,11 +7,33 @@
  },
  "filmy": [
   {
+   "id": "ckaxHWAazp8",
+   "tytul": "Pierwszy komputer, który latał na innej planecie, miał Linuxa 🚁",
+   "typ": "short",
+   "data": "2026-11-21T12:00:36+00:00",
+   "wyswietlenia": 113,
+   "tytul_krotki": "Pierwszy komputer, który latał na innej planecie, miał Linuxa 🚁",
+   "seria": null,
+   "zajawka": "19 kwietnia 2021 roku helikopter NASA Ingenuity wznosi się w rzadkie marsjańskie powietrze. Pierwszy lot napędzany silnikiem na innej planecie. A w środku procesor jak z telefonu sprzed kilku lat i Linux.",
+   "opis": "19 kwietnia 2021 roku helikopter NASA Ingenuity wznosi się w rzadkie marsjańskie powietrze. Pierwszy lot napędzany silnikiem na innej planecie. A w środku procesor jak z telefonu sprzed kilku lat i Linux."
+  },
+  {
+   "id": "Ncw59O_Q1t8",
+   "tytul": "Git powstał, bo twórca linuxa się wk****ł",
+   "typ": "short",
+   "data": "2026-11-21T09:00:36+00:00",
+   "wyswietlenia": 180,
+   "tytul_krotki": "Git powstał, bo twórca linuxa się wk****ł",
+   "seria": null,
+   "zajawka": "W 2005 roku twórcy Linuxa stracili darmowy dostęp do BitKeepera, programu, w którym trzymali kod. Co robi Linus? Siada i pisze własne narzędzie.",
+   "opis": "W 2005 roku twórcy Linuxa stracili darmowy dostęp do BitKeepera, programu, w którym trzymali kod. Co robi Linus? Siada i pisze własne narzędzie.\n\n#git #linux #programowanie #techtok #shorts"
+  },
+  {
    "id": "HgMiF1xZBdg",
    "tytul": "Agent AI przepalił kasę przez noc",
    "typ": "short",
    "data": "2026-11-20T14:30:36+00:00",
-   "wyswietlenia": 105,
+   "wyswietlenia": 107,
    "tytul_krotki": "Agent AI przepalił kasę przez noc",
    "seria": null,
    "zajawka": "Agent AI płaci za każde myślenie, a jeden zapętlony agent potrafi przez noc przepalić sporo pieniędzy. 💳 Dlatego powstał Paperclip, darmowy program, w którym agenci AI pracują jak w firmie: każdy ma szefa, zadania i miesięczny budżet. Przy 80% dostajesz ostrzeżenie, a przy 100% a",
@@ -22,7 +44,7 @@
    "tytul": "Linux w 2026: Steam Deck, Linux 7.0 i jak go wypróbować bez ryzyka",
    "typ": "film",
    "data": "2026-11-20T14:15:33+00:00",
-   "wyswietlenia": 51,
+   "wyswietlenia": 85,
    "tytul_krotki": "Linux w 2026: Steam Deck, Linux 7.0 i jak go wypróbować bez ryzyka",
    "seria": "linux",
    "zajawka": "W ósmej, ostatniej części serii: ile osób naprawdę używa Linuxa na komputerach, serwerach i telefonach. Dlaczego na biurkach jest trudno i jak Valve z Protonem i Steam Deckiem sprawiło, że gry z Windowsa działają na Linuxie. Czemu jądro Linuxa przez ponad 30 lat było pisane w C, ",
@@ -45,7 +67,7 @@
    "tytul": "Ubuntu, Fedora, Arch… Czemu jest setki Linuxów i który wybrać?",
    "typ": "film",
    "data": "2026-11-18T08:00:34+00:00",
-   "wyswietlenia": 144,
+   "wyswietlenia": 145,
    "tytul_krotki": "Ubuntu, Fedora, Arch… Czemu jest setki Linuxów i który wybrać?",
    "seria": "linux",
    "zajawka": "Przesiadasz się z Windowsa na Linuxa i pierwsze, co widzisz: nie ma dysku C. Zaglądamy pod maskę i pokazuję 5 rzeczy, które działają tu zupełnie inaczej. 🐧",
@@ -181,7 +203,7 @@
    "tytul": "To nie Linux, tylko GNU/Linux. Kto ma rację?",
    "typ": "short",
    "data": "2026-11-10T14:30:13+00:00",
-   "wyswietlenia": 335,
+   "wyswietlenia": 336,
    "tytul_krotki": "To nie Linux, tylko GNU/Linux. Kto ma rację?",
    "seria": null,
    "zajawka": "tallman miał wolny samochód bez silnika, Linus miał silnik. Gdy silnik dostał tę samą licencję GPL, można było wsadzić jedno w drugie i jechać. Dlatego Stallman do dziś poprawia każdego: to nie Linux, tylko GNU/Linux. Technicznie ma sporo racji, ale ludzie wolą krótkie nazwy: mów",
