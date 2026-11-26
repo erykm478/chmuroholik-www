@@ -1,5 +1,5 @@
 {
- "aktualizacja": "2026-11-25T19:32:15+00:00",
+ "aktualizacja": "2026-11-26T02:22:24+00:00",
  "kanal": {
   "id": "UC_JbBSEP0ljATQ0DWmCxADw",
   "url": "https://www.youtube.com/@chmuroholik",
@@ -11,7 +11,7 @@
    "tytul": "AI pisze powieść zamiast jednej linijki. Ten dodatek to zmienia",
    "typ": "short",
    "data": "2026-11-25T09:00:26+00:00",
-   "wyswietlenia": 108,
+   "wyswietlenia": 183,
    "tytul_krotki": "AI pisze powieść zamiast jednej linijki. Ten dodatek to zmienia",
    "seria": null,
    "zajawka": "Ponytail to darmowy dodatek dla asystenta AI do programowania, który uczy go zachowywać się jak leniwy senior. Zanim napisze kod, pyta się: czy to w ogóle jest potrzebne? Czy to już gdzieś jest? Czy da się w jednej linijce? 🐴",
@@ -22,7 +22,7 @@
    "tytul": "Mój skrypt usunął WSZYSTKO. Jedno puste pole.",
    "typ": "short",
    "data": "2026-11-24T17:00:20+00:00",
-   "wyswietlenia": 129,
+   "wyswietlenia": 153,
    "tytul_krotki": "Mój skrypt usunął WSZYSTKO. Jedno puste pole.",
    "seria": null,
    "zajawka": "Agenci AI mają dostęp do Twoich plików i komend, a instalacja jedną linijką to wpuszczanie do domu „pana z gazowni”.",
@@ -33,7 +33,7 @@
    "tytul": "5 agentów AI naraz = polski Sejm",
    "typ": "short",
    "data": "2026-11-24T12:00:14+00:00",
-   "wyswietlenia": 95,
+   "wyswietlenia": 108,
    "tytul_krotki": "5 agentów AI naraz = polski Sejm",
    "seria": null,
    "zajawka": "Agenci AI to już nie czat, tylko cyfrowe stado pracowników w terminalu.",
@@ -44,10 +44,11 @@
    "tytul": "Herdr: baca dla agentów AI.",
    "typ": "film",
    "data": "2026-11-24T11:00:28+00:00",
-   "wyswietlenia": 712,
+   "wyswietlenia": 804,
    "tytul_krotki": "Herdr: baca dla agentów AI.",
    "seria": null,
    "zajawka": "Odpalasz jednego agenta AI, potem drugiego, trzeciego… i nagle nie wiesz, który pracuje, który skończył, a który od godziny czeka na Twoją decyzję. 🐑",
+   "dlugosc": 599,
    "opis": "Odpalasz jednego agenta AI, potem drugiego, trzeciego… i nagle nie wiesz, który pracuje, który skończył, a który od godziny czeka na Twoją decyzję. 🐑\n\n⏱ Rozdziały \n0:00 Jeden agent… dwa… cztery \n0:58 Stado agentów, czyli polski Sejm \n1:55 Czym jest Herdr — baca i Gadu-Gadu \n3:29 Działa w tle: serwer, telefon, restart \n4:47 Pokaz: instalacja i praca z agentami \n5:49 Ciekawostki: agent zatrudnia agenta \n6:44 Okiem admina: bezpieczeństwo \n8:17 OpenClaw, Paperclip, Herdr — kto jest kim \n9:03 Dla kogo jest Herdr\n\n#agenciai #ai #programowanie"
   },
   {
@@ -137,6 +138,7 @@
    "seria": "linux",
    "zajawka": "W ósmej, ostatniej części serii: ile osób naprawdę używa Linuxa na komputerach, serwerach i telefonach. Dlaczego na biurkach jest trudno i jak Valve z Protonem i Steam Deckiem sprawiło, że gry z Windowsa działają na Linuxie. Czemu jądro Linuxa przez ponad 30 lat było pisane w C, ",
    "czesc": 8,
+   "dlugosc": 628,
    "opis": "W ósmej, ostatniej części serii: ile osób naprawdę używa Linuxa na komputerach, serwerach i telefonach. Dlaczego na biurkach jest trudno i jak Valve z Protonem i Steam Deckiem sprawiło, że gry z Windowsa działają na Linuxie. Czemu jądro Linuxa przez ponad 30 lat było pisane w C, czym jest Rust i dlaczego programiści kłócili się o niego tak długo jak o tabulatory i spacje. Linux 7.0, chmura, sztuczna inteligencja i superkomputery. A na koniec: trzy bezpieczne sposoby na spróbowanie Linuxa (pendrive, maszyna wirtualna, stary laptop) i trzy rady na start.\n\nRozdziały: \n0:00 Intro \n0:19 Rok Linuxa \n0:35 Ile osób używa Linuxa? \n0:53 Dlaczego na biurkach trudno? \n1:08 Gry na Linuxie \n1:30 Valve i Proton \n1:58 Steam Deck \n2:27 Linux na Steamie \n2:37 To nie raj \n2:54 Po prostu działa \n3:08 Język C \n3:58 Rust \n4:13 Rust w jądrze \n4:46 Tokio 2025 \n5:00 Linux 7.0 \n5:27 Chmura i AI \n5:48 Kto po Linusie? \n6:15 Spróbuj Linuxa \n6:29 Sposób 1: pendrive \n6:54 Co potrzebujesz? \n7:27 Sposób 2: w okienku \n7:47 Sposób 3: stary laptop \n8:27 Trzy rady \n8:54 Jeszcze raz od początku \n9:26 Linux dziś \n9:56 Mała puenta \n10:11 Spróbuj i napisz\n\nTo ostatnia część serii „Co to jest Linux”. Jeśli spróbujesz Linuxa z pendrive’a, napisz w komentarzu, jak poszło!\n\n#linux #rust #c++ #it #tech #itadmin"
   },
   {
@@ -160,6 +162,7 @@
    "seria": "linux",
    "zajawka": "Przesiadasz się z Windowsa na Linuxa i pierwsze, co widzisz: nie ma dysku C. Zaglądamy pod maskę i pokazuję 5 rzeczy, które działają tu zupełnie inaczej. 🐧",
    "czesc": 7,
+   "dlugosc": 414,
    "opis": "Przesiadasz się z Windowsa na Linuxa i pierwsze, co widzisz: nie ma dysku C. Zaglądamy pod maskę i pokazuję 5 rzeczy, które działają tu zupełnie inaczej. 🐧\n\nRozdziały: \n0:00 Intro \n0:09 5 rzeczy pod maską \n0:15 1. Nie ma dysku C \n0:38 Jeden dom \n0:48 2. Terminal \n0:59 Hakerzy z filmów \n1:13 Palcem czy słowami? \n1:35 3. Root \n1:45 Root jak administrator bloku \n2:00 Hasło i wirusy \n2:21 4. Instalowanie programów \n2:32 Sklep z aplikacjami \n2:54 5. Wygląd: wymienne pulpity \n3:12 GNOME i KDE Plasma, ten sam silnik \n3:32 Setki Linuxów \n3:47 Jeden silnik, setki marek \n4:06 Rodzina Debian \n4:51 Rodzina Red Hat \n5:19 Arch \n5:45 Reszta świata \n6:16 Którą wybrać? \n6:33 To nie ślub"
   },
   {
@@ -167,11 +170,12 @@
    "tytul": "Używasz Linuxa codziennie. Nawet o tym nie wiesz",
    "typ": "film",
    "data": "2026-11-16T08:00:40+00:00",
-   "wyswietlenia": 39,
+   "wyswietlenia": 40,
    "tytul_krotki": "Używasz Linuxa codziennie. Nawet o tym nie wiesz",
    "seria": "linux",
    "zajawka": "Od lat ludzie pytają, kiedy nadejdzie rok Linuxa na komputerach. A on nadszedł dawno, tylko nie na biurku, a w kieszeni, w serwerowniach, w chmurze, a nawet na Marsie. 🐧",
    "czesc": 6,
+   "dlugosc": 431,
    "opis": "Od lat ludzie pytają, kiedy nadejdzie rok Linuxa na komputerach. A on nadszedł dawno, tylko nie na biurku, a w kieszeni, w serwerowniach, w chmurze, a nawet na Marsie. 🐧\n\nRozdziały:\n0:00 Intro\n0:09 Kiedy rok Linuxa?\n0:24 Serwery stron internetowych\n0:41 Chmura\n1:01 Telefony z Androidem\n1:31 Routery, telewizory, bankomaty, lodówki\n1:55 Superkomputery\n2:11 Linux na Marsie\n2:50 1969 → 2021\n3:01 Git, czyli drugie dziecko Linusa\n4:11 Linus dziś\n4:33 Nowe wersje jądra\n5:05 Kto pisze Linuxa?\n5:45 Jaki jest Linus?\n6:09 16 września 2018: przeprosiny\n6:47 Lekcja\n6:58 Zapowiedź: pod maskę"
   },
   {
@@ -179,7 +183,7 @@
    "tytul": "Boty AI dostały własny portal społecznościowy",
    "typ": "short",
    "data": "2026-11-14T09:00:01+00:00",
-   "wyswietlenia": 151,
+   "wyswietlenia": 152,
    "tytul_krotki": "Boty AI dostały własny portal społecznościowy",
    "seria": null,
    "zajawka": "Moltbook to portal społecznościowy tylko dla agentów AI. Ludzie mogą wyłącznie patrzeć.",
@@ -610,7 +614,7 @@
    "id": "QmX_vpHjk6I",
    "tytul": "PHP umiera od 2005 roku i nie może skończyć #PHP #WordPress #programowanie #backend",
    "typ": "short",
-   "wyswietlenia": 667,
+   "wyswietlenia": 668,
    "dlugosc": 60,
    "data": "2026-10-31T04:45:14-07:00",
    "tytul_krotki": "PHP umiera od 2005 roku i nie może skończyć",
