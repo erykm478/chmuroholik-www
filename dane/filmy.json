@@ -1,5 +1,5 @@
 {
- "aktualizacja": "2026-11-28T02:50:10+00:00",
+ "aktualizacja": "2026-11-28T11:01:53+00:00",
  "kanal": {
   "id": "UC_JbBSEP0ljATQ0DWmCxADw",
   "url": "https://www.youtube.com/@chmuroholik",
@@ -7,11 +7,22 @@
  },
  "filmy": [
   {
+   "id": "Gz5TEe-wxkk",
+   "tytul": "Włamałem się do własnego serwera. Złapał mnie darmowy program",
+   "typ": "film",
+   "data": "2026-11-28T09:00:01+00:00",
+   "wyswietlenia": 2,
+   "tytul_krotki": "Włamałem się do własnego serwera. Złapał mnie darmowy program",
+   "seria": null,
+   "zajawka": "Ten czerwony alarm to ktoś, kto dziesięć razy próbował zgadnąć hasło do mojego serwera. Program złapał go po kilku sekundach. Tym włamywaczem byłem ja. 🐕‍🦺",
+   "opis": "Ten czerwony alarm to ktoś, kto dziesięć razy próbował zgadnąć hasło do mojego serwera. Program złapał go po kilku sekundach. Tym włamywaczem byłem ja. 🐕‍🦺\n\n⏱ Rozdziały \n0:00 Czerwony alarm. Tym włamywaczem byłem ja \n0:13 Darmowy ochroniarz, który czyta się „Łazu” \n0:41 Zeszyt, którego nikt nie czyta, czyli logi \n1:37 Jak działa Wazuh: ochroniarz w sklepie \n2:04 Stawiam Wazuha w homelabie \n2:36 Włamuję się do samego siebie \n2:58 Drugi test: podmieniony plik systemowy \n3:09 Co jeszcze potrafi: dziury i automatyczna blokada \n3:43 Bonus: VirusTotal \n3:59 Skąd się wziął Wazuh \n4:21 Uczciwie: minusy \n4:57 Dla kogo to jest \n5:17 Podsumowanie \n5:39 Jakie narzędzie sprawdzić następne?"
+  },
+  {
    "id": "xw8Gg5F54xE",
    "tytul": "Wazuh — pies-stróż dla Twojej sieci (piosenka)",
    "typ": "short",
    "data": "2026-11-26T22:00:09+00:00",
-   "wyswietlenia": 34,
+   "wyswietlenia": 47,
    "tytul_krotki": "Wazuh — pies-stróż dla Twojej sieci (piosenka)",
    "seria": null,
    "zajawka": "Wazuh to darmowy pies-stróż dla Twojej sieci: czyta tysiące linijek logów, łapie hakera w nocy i szczeka, zanim zrobi się pożar 🐕 Czołówka odcinka w wersji na telefon. Piosenka zrobiona przez AI, animacje własne. Cały odcinek na YouTube: Chmuroholik\n#wazuh #cyberbezpieczenstwo #s",
@@ -66,7 +77,7 @@
    "tytul": "Herdr: baca dla agentów AI.",
    "typ": "film",
    "data": "2026-11-24T11:00:28+00:00",
-   "wyswietlenia": 1466,
+   "wyswietlenia": 1469,
    "tytul_krotki": "Herdr: baca dla agentów AI.",
    "seria": null,
    "zajawka": "Odpalasz jednego agenta AI, potem drugiego, trzeciego… i nagle nie wiesz, który pracuje, który skończył, a który od godziny czeka na Twoją decyzję. 🐑",
